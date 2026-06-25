@@ -6,6 +6,7 @@ import '../../../../../../core/components/app_button.dart';
 import '../../../../../../core/components/app_textfield.dart';
 import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
+import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../controller/add_property_bloc.dart';
 import '../widgets/ai_price_card.dart';
@@ -128,7 +129,7 @@ class _PriceInputSection extends StatelessWidget {
                 ),
               ),
               Text(
-                'ريال',
+                '${AppStrings.currency}',
                 style: TextStyle(
                   fontSize: context.responsiveFontScale(16),
                   color: tc.textFieldTitle,

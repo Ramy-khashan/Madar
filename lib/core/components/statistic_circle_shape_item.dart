@@ -1,10 +1,10 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'outline_section.dart';
-import '../utils/functions/responsive.dart';
 
 import '../../config/theme/app_theme_colors.dart';
 import '../model/statistic_circle_model.dart';
+import '../utils/functions/responsive.dart';
+import 'outline_section.dart';
 
 class StatisticCircleShapeItem extends StatefulWidget {
   const StatisticCircleShapeItem({

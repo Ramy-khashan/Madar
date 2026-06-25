@@ -61,7 +61,7 @@ class BusinessPortflioPropertyItem extends StatelessWidget {
           PropertyInfo(
             info:
                 '${AppStrings.occupancyRate}: ${portfolio.occupancyRate.toInt()}%',
-            icon: AppImages.occupancyIcon,
+            icon: AppImages.occupancyRateIcon,
             colors: colors,
           ),
           PropertyInfo(
@@ -110,7 +110,7 @@ class PropertyInfo extends StatelessWidget {
             style: TextStyle(
               fontSize: context.responsiveFontScale(16),
               fontFamily: AppConstant.appHeaderFont,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w800,
               color: colors.textSecondary,
             ),
           ),

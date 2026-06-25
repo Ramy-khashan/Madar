@@ -2,24 +2,26 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../../core/utils/functions/router_handler.dart';
+
 import '../../../../../../config/router/app_router_keys.dart';
-import '../../../../../../core/components/is_scrollable_widget.dart';
-import '../../../../../../core/components/outline_section.dart';
-import '../../../../../../core/components/responsive_row_column.dart';
-import '../../../../../../core/utils/constants/app_images.dart';
-import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_button.dart';
 import '../../../../../../core/components/image_item.dart';
+import '../../../../../../core/components/is_scrollable_widget.dart';
+import '../../../../../../core/components/outline_section.dart';
+import '../../../../../../core/components/responsive_row_column.dart';
 import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
+import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../../auction_deposit/view/widgets/auction_deposit_amount_card_widget.dart';
 import '../../controller/auction_details_bloc.dart';
 import '../../model/auction_details_model.dart';
 import 'acution_timer_part.dart';
+
 part 'auction_details_info_row.dart';
 part 'property_spec_item.dart';
 

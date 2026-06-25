@@ -8,8 +8,8 @@ import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 import '../controller/my_bids_bloc.dart';
-import 'widgets/my_bid_card_widget.dart';
 import 'widgets/filter_tabbar_item.dart';
+import 'widgets/my_bid_card_widget.dart';
 
 class MyBidsScreen extends StatelessWidget {
   const MyBidsScreen({super.key});

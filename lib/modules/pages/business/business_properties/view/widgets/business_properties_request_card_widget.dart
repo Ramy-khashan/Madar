@@ -192,7 +192,7 @@ class BusinessPropertiesRequestCardWidget extends StatelessWidget {
                     child: AppButton(
                       childText: AppStrings.businessPropertiesReject,
                       childIcon: Icons.close,
-                      isOutline: true,
+                       colorBG: AppColors.errorColor.shade100,
                       textColor: AppColors.errorColor,
                       borderColor: AppColors.errorColor,
                       onTap: () => context.read<BusinessPropertiesBloc>().add(

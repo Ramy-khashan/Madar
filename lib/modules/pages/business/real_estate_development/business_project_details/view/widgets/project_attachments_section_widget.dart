@@ -14,13 +14,11 @@ class ProjectAttachmentsSectionWidget extends StatelessWidget {
   const ProjectAttachmentsSectionWidget({
     super.key,
     required this.smartNotes,
-    required this.isManager,
-    this.attachmentUrl,
+     this.attachmentUrl,
   });
 
   final List<String> smartNotes;
-  final bool isManager;
-  final String? attachmentUrl;
+   final String? attachmentUrl;
 
   static const List<bool> _noteHasPdf = [false, false, false, true];
 
@@ -35,10 +33,7 @@ class ProjectAttachmentsSectionWidget extends StatelessWidget {
         children: [
          
           
-          if (isManager) ...[
-             _FilePickerRow(colors: colors),
-            SizedBox(height: 16.height),
-          ],
+          
            Text(
             AppStrings.smartNotesLabel,
             style: TextStyle(
@@ -70,42 +65,7 @@ class ProjectAttachmentsSectionWidget extends StatelessWidget {
   }
 }
 
-class _FilePickerRow extends StatelessWidget {
-  const _FilePickerRow({required this.colors});
-
-  final AppThemeColors colors;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.width, vertical: 12.height),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24.radius),
-        border: Border.all(color: colors.borderColor, style: BorderStyle.solid),
-      ),
-      child: Row(
-        children: [
-         
-          Expanded(
-            child: Text(
-              AppStrings.chooseFile,
-              style: TextStyle(
-                fontSize: context.responsiveFontScale(14),
-                color: colors.textSecondary,
-                fontFamily: AppConstant.appFont,
-              ),
-            ),
-          ),
-           ImageItem(
-            AppImages.chooseDocumentIcon,
-             color: colors.textSecondary,
-          ),
-         ],
-      ),
-    );
-  }
-}
-
+ 
 class _SmartNoteItem extends StatelessWidget {
   const _SmartNoteItem({
     required this.note,

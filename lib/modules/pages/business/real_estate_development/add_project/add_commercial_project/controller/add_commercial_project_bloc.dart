@@ -12,6 +12,7 @@ class AddCommercialProjectBloc
   AddCommercialProjectBloc() : super(const AddCommercialProjectState()) {
     on<AddCommercialPropertyTypeChanged>(_onPropertyTypeChanged);
     on<AddCommercialAreaTypeChanged>(_onAreaTypeChanged);
+    on<AddCommercialManagerToggled>(_onManagerToggled);
     on<AddCommercialPickDateRequested>(_onPickDateRequested);
     on<AddCommercialDatePicked>(_onDatePicked);
     on<AddCommercialDatePickCancelled>(_onDatePickCancelled);
@@ -25,23 +26,23 @@ class AddCommercialProjectBloc
   final formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final locationController = TextEditingController();
-  final unitsController = TextEditingController();
-  final parkingController = TextEditingController();
   final budgetController = TextEditingController();
   final startDateController = TextEditingController();
   final endDateController = TextEditingController();
-  final tenantsController = TextEditingController();
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
+  final phoneController = TextEditingController();
 
   @override
   Future<void> close() {
     nameController.dispose();
     locationController.dispose();
-    unitsController.dispose();
-    parkingController.dispose();
     budgetController.dispose();
     startDateController.dispose();
     endDateController.dispose();
-    tenantsController.dispose();
+    usernameController.dispose();
+    passwordController.dispose();
+    phoneController.dispose();
     return super.close();
   }
 
@@ -57,6 +58,13 @@ class AddCommercialProjectBloc
     Emitter<AddCommercialProjectState> emit,
   ) {
     emit(state.copyWith(selectedAreaType: event.areaType));
+  }
+
+  void _onManagerToggled(
+    AddCommercialManagerToggled event,
+    Emitter<AddCommercialProjectState> emit,
+  ) {
+    emit(state.copyWith(showManagerForm: event.show));
   }
 
   void _onPickDateRequested(

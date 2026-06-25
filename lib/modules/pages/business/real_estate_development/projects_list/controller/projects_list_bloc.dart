@@ -35,8 +35,7 @@ class ProjectsListBloc
         completionPercentage: 40,
         lastUpdate: 'قبل اسبوع',
         imageUrl: AppImages.propertyImage,
-        type: event.role,
-        inProgressPhasesCount: 4,
+         inProgressPhasesCount: 4,
         delayedPhasesCount: 4,
         budget: 5000000,
         startDate: '20/1/2026',
@@ -67,8 +66,7 @@ class ProjectsListBloc
         completionPercentage: 0,
         lastUpdate: 'قبل اسبوع',
         imageUrl: AppImages.propertyImage,
-        type: event.role,
-        inProgressPhasesCount: 0,
+         inProgressPhasesCount: 0,
         delayedPhasesCount: 2,
         phases: const [],
         timeline: const [],
@@ -82,8 +80,7 @@ class ProjectsListBloc
         completionPercentage: 100,
         lastUpdate: 'قبل اسبوع',
         imageUrl: AppImages.propertyImage,
-        type: event.role,
-        inProgressPhasesCount: 0,
+         inProgressPhasesCount: 0,
         delayedPhasesCount: 0,
         phases: const [],
         timeline: const [],
@@ -98,8 +95,7 @@ class ProjectsListBloc
         state.copyWith(
           status: RequestStatus.success,
           projects: mockProjects,
-          role: event.role,
-        ),
+         ),
       );
     }
   }

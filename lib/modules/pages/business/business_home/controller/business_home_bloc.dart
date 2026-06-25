@@ -7,8 +7,7 @@ import '../../../individual/individual_home/model/portfolio_property_model.dart'
 import '../../../individual/individual_home/model/property_model.dart';
 import '../../../individual/individual_home/model/smart_service_model.dart';
 import '../../business_properties/model/business_property_request_model.dart';
-import '../model/business_portfolio_property_model.dart';
- 
+  
 part 'business_home_event.dart';
 part 'business_home_state.dart';
 
@@ -148,7 +147,7 @@ class BusinessHomeBloc extends Bloc<BusinessHomeEvent, BusinessHomeState> {
   ];
   static List<SmartServiceModel> get mockSmartServices => [
     SmartServiceModel(
-      route: AppRouterKeys.realEstateDevelopmentRole,
+      route: AppRouterKeys.realEstateDevelopmentList,
       id: '1',
       title: AppStrings.realEstateDevelopment,
       description: AppStrings.realEstateDevelopmentDescription,

@@ -7,6 +7,7 @@ import '../../../../../core/components/app_button.dart';
 import '../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
+import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 import '../../property_file/model/property_file_model.dart';
 import '../controller/unit_details_bloc.dart';
@@ -198,7 +199,7 @@ class _UnitDetailsView extends StatelessWidget {
                         UnitInfoRow(
                           label: 'الايجار الشهري',
                           value:
-                              '${unit.monthlyRent.toStringAsFixed(0)} ريال',
+                              '${unit.monthlyRent.toStringAsFixed(0)} ${AppStrings.currency}',
                           trailingIcon: Icons.receipt_long_outlined,
                           colors: colors,
                         ),

@@ -24,28 +24,28 @@ class FinancialReportsBloc
   static final List<FinancialPropertyItem> _mockCategoryItems = [
     FinancialPropertyItem(
       name: 'برج الياسمين',
-      amount: '45,000 ر.س',
+      amount: '45,000',
       paid: true,
       status: 'مدفوع',
       date: DateTime(2026, 1, 5),
     ),
     FinancialPropertyItem(
       name: 'فيلا النخيل',
-      amount: '28,000 ر.س',
+      amount: '28,000',
       paid: true,
       status: 'مدفوع',
       date: DateTime(2026, 1, 10),
     ),
     FinancialPropertyItem(
       name: 'شقق الورود',
-      amount: '35,000 ر.س',
+      amount: '35,000',
       paid: false,
       status: 'دفع جزئي',
       date: DateTime(2026, 1, 15),
     ),
     FinancialPropertyItem(
       name: 'مجمع السلام',
-      amount: '52,000 ر.س',
+      amount: '52,000',
       paid: true,
       status: 'مدفوع',
       date: DateTime(2026, 1, 20),
@@ -57,31 +57,31 @@ class FinancialReportsBloc
       name: 'برج الياسمين',
       date: DateTime(2026, 1, 5),
       desc: 'صيانة المصاعد',
-      amount: '3,500 ر.س',
+      amount: '3,500',
     ),
     FinancialTransaction(
       name: 'فيلا النخيل',
       date: DateTime(2026, 1, 8),
       desc: 'إصلاح السكنية',
-      amount: '1,200 ر.س',
+      amount: '1,200',
     ),
     FinancialTransaction(
       name: 'شقق الورود',
       date: DateTime(2026, 1, 12),
       desc: 'تأمين شامل',
-      amount: '4,000 ر.س',
+      amount: '4,000',
     ),
     FinancialTransaction(
       name: 'مجمع السلام',
       date: DateTime(2026, 1, 15),
       desc: 'عمولة تسويقية',
-      amount: '2,500 ر.س',
+      amount: '2,500',
     ),
     FinancialTransaction(
       name: 'برج الياسمين',
       date: DateTime(2026, 1, 20),
       desc: 'خدمات نظافة',
-      amount: '1,500 ر.س',
+      amount: '1,500',
     ),
   ];
 
@@ -135,19 +135,19 @@ class FinancialReportsBloc
     FinancialSettlement(
       label: 'تسوية إيجار فيلا النرجس',
       date: DateTime(2025, 3, 1),
-      amount: '8,500 ر.س',
+      amount: '8,500',
       status: 'مكتملة',
     ),
     FinancialSettlement(
       label: 'تسوية صيانة شقة العليا',
       date: DateTime(2025, 2, 15),
-      amount: '1,200 ر.س',
+      amount: '1,200',
       status: 'قيد المراجعة',
     ),
     FinancialSettlement(
       label: 'تسوية رسوم إدارية',
       date: DateTime(2025, 1, 20),
-      amount: '650 ر.س',
+      amount: '650',
       status: 'مكتملة',
     ),
   ];

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../../core/components/outline_section.dart';
+
 import '../../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../core/components/outline_section.dart';
 import '../../controller/financial_reports_bloc.dart';
 import '../../model/financial_report_models.dart';
 import 'shared/financial_property_row.dart';

@@ -171,7 +171,7 @@ class InsuranceOptionsContentWidget extends StatelessWidget {
                                 vertical: 12.height,
                               ),
                               child: Text(
-                                ' 1,145 ريال',
+                                ' 1,145${AppStrings.currency}',
                                 style: TextStyle(
                                   fontSize: context.responsiveFontScale(16),
                                   color: colors.primaryBrand,
@@ -181,7 +181,7 @@ class InsuranceOptionsContentWidget extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              'وفرت 96 ريال 🎉',
+                              'وفرت 96 ${AppStrings.currency} 🎉',
                               style: TextStyle(
                                 fontSize: context.responsiveFontScale(14),
                                 color: colors.textSecondary,

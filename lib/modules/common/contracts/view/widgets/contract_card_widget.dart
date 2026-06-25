@@ -73,16 +73,16 @@ class ContractCardWidget extends StatelessWidget {
               child: Text(
                 contract.propertyName,
                 style: TextStyle(
-                  fontSize: context.responsiveFontScale(12),
-                  color: colors.textSecondary,
+                  fontSize: context.responsiveFontScale(14),
+                  fontWeight: FontWeight.w500,
+                  color: colors.primaryBrand,
                 ),
               ),
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+               children: [
                 TypeBadge(type: contract.type, colors: colors),
-
+SizedBox(width: 12.width),
                 Text(
                   contract.date,
                   style: TextStyle(
@@ -90,12 +90,14 @@ class ContractCardWidget extends StatelessWidget {
                     color: colors.textSecondary,
                   ),
                 ),
+                Spacer(),
                 if(PreferenceUtils().getString(StorageKeys.accountType)==AppConstant.business)
                   Text(
                     '${formatPrice(contract.amount,)} ${AppStrings.currency}',
                     style: TextStyle(
-                      fontSize: context.responsiveFontScale(12),
-                      color: colors.textSecondary,
+                      fontSize: context.responsiveFontScale(16),
+                      fontWeight: FontWeight.w700,
+                      color: colors.primaryBrand,
                     ),
                   ),
               ],

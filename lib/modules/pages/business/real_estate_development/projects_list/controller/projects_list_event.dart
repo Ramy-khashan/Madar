@@ -8,11 +8,10 @@ sealed class ProjectsListEvent extends Equatable {
 }
 
 final class ProjectsListLoad extends ProjectsListEvent {
-  const ProjectsListLoad(this.role);
+  const ProjectsListLoad( );
 
-  /// 'owner' | 'manager'
-  final String role;
+ 
 
   @override
-  List<Object?> get props => [role];
+  List<Object?> get props => [];
 }

@@ -122,7 +122,7 @@ class FinancialReportsExpensesTabWidget extends StatelessWidget {
                                 ],
                               ),
                               Text(
-                                t.amount,
+                                t.amount+AppStrings.currency,
                                 style: TextStyle(
                                   fontSize: context.responsiveFontScale(13),
                                   fontWeight: FontWeight.w600,

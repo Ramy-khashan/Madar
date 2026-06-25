@@ -136,7 +136,7 @@ class UnitExpensesSection extends StatelessWidget {
                         SizedBox(width: 8.width),
                         Expanded(
                           child: Text(
-                            '${entry.value.amount.toStringAsFixed(0)} ر.س — ${entry.value.description}',
+                            '${entry.value.amount.toStringAsFixed(0)}  — ${entry.value.description}',
                             textAlign: TextAlign.end,
                             style: TextStyle(
                               fontSize: context.responsiveFontScale(13),

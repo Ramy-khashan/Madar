@@ -8,10 +8,12 @@ class AppStrings {
   static String get onBoardingDesc2 => 'on_boarding_desc_2'.trans;
   static String get onBoardingDesc3 => 'on_boarding_desc_3'.trans;
   static String get propertyName => 'property_name'.trans;
+  static String get personalAccountHint => 'personal_account_hint'.trans;
   static String get propertiesMapTitle => 'properties_map_title'.trans;
   static String get propertyNameHint => 'property_name_hint'.trans;
   static String get deleteAccountHint => 'delete_account_hint'.trans;
   static String get search => 'search'.trans;
+  static String get orDragImagesHere => 'or_drag_images_here'.trans;
   static String get propertyLicenseNumber => 'property_license_number'.trans;
   static String get propertyLicenseNumberHint =>
       'property_license_number_hint'.trans;
@@ -857,6 +859,7 @@ class AppStrings {
   static String get parkingLabel => 'parking_label'.trans;
   static String get approximateBudgetLabel => 'approximate_budget_label'.trans;
   static String get expectedEndDateLabel => 'expected_end_date_label'.trans;
+  static String get totalBudgetLabel => 'total_budget_label'.trans;
   static String get mainTenantsActivitiesLabel =>
       'main_tenants_activities_label'.trans;
   static String get mainTenantsActivitiesHint =>

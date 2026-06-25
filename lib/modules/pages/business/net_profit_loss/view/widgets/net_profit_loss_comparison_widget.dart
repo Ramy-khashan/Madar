@@ -25,7 +25,7 @@ class NetProfitLossComparisonWidget extends StatelessWidget {
           
           _ComparisonRow(
             label: AppStrings.income,
-            amount: 'ر.س +٢٠،٠٠٠',
+            amount: '+٢٠،٠٠٠ ${AppStrings.currency}',
             percent: '+٢٠٪',
             bgColor: AppColors.successColor.withValues(alpha: 0.08),
             borderColor: AppColors.successColor.withValues(alpha: 0.3),
@@ -35,7 +35,7 @@ class NetProfitLossComparisonWidget extends StatelessWidget {
           SizedBox(height: 8.height),
           _ComparisonRow(
             label: AppStrings.expenses,
-            amount: 'ر.س +٥،٠٠٠',
+            amount: '+٥،٠٠٠ ${AppStrings.currency}',
             percent: '+٧٪',
             bgColor: AppColors.errorColor.withValues(alpha: 0.08),
             borderColor: AppColors.errorColor.withValues(alpha: 0.3),
@@ -45,7 +45,7 @@ class NetProfitLossComparisonWidget extends StatelessWidget {
           SizedBox(height: 8.height),
           _ComparisonRow(
             label: AppStrings.netProfit,
-            amount: 'ر.س +١٥،٠٠٠',
+            amount: '+١٥،٠٠٠ ${AppStrings.currency}',
             percent: '+٣٠٪',
             bgColor: AppColors.secondBrand.withValues(alpha: 0.08),
             borderColor: AppColors.secondBrand.withValues(alpha: 0.3),

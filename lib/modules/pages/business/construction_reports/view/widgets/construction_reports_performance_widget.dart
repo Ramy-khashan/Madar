@@ -49,7 +49,7 @@ class ConstructionReportsPerformanceWidget extends StatelessWidget {
                       label: AppStrings.occupancyRate,
                       value:
                           '${(state.occupancyRate * 100).toStringAsFixed(0)}%',
-                      icon: AppImages.occupancyIcon,
+                      icon: AppImages.occupancyRateIcon,
                       colors: colors,
                       valueColor: colors.primaryBrand,
                     ),
@@ -62,7 +62,7 @@ class ConstructionReportsPerformanceWidget extends StatelessWidget {
                 child: FinancialMetricCard(
                   isStartedTextVal: true,
                   label: AppStrings.monthlyIncome,
-                  value: '${_formatNumber(state.monthlyIncome)} ر.س',
+                  value: '${_formatNumber(state.monthlyIncome)}',
                   icon: AppImages.monthlyIncomeIcon,
                   colors: colors,
                   valueColor: colors.primaryBrand,

@@ -48,6 +48,13 @@ final class AddCommercialDatePickCancelled extends AddCommercialProjectEvent {
   const AddCommercialDatePickCancelled();
 }
 
+final class AddCommercialManagerToggled extends AddCommercialProjectEvent {
+  const AddCommercialManagerToggled(this.show);
+  final bool show;
+  @override
+  List<Object?> get props => [show];
+}
+
 final class AddCommercialSendToManagerRequested
     extends AddCommercialProjectEvent {
   const AddCommercialSendToManagerRequested();

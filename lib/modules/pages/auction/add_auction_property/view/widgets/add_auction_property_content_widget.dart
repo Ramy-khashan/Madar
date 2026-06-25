@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../../core/components/is_scrollable_widget.dart';
-import '../../../../../../core/components/responsive_row_column.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_button.dart';
 import '../../../../../../core/components/app_textfield.dart';
+import '../../../../../../core/components/is_scrollable_widget.dart';
+import '../../../../../../core/components/property_type_item.dart';
+import '../../../../../../core/components/responsive_row_column.dart';
 import '../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
-import '../../../../../../core/components/property_type_item.dart';
 import '../../controller/add_auction_property_bloc.dart';
 import 'auction_date_time_item.dart';
 import 'auction_doc_item.dart';

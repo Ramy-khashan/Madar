@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../../../../../core/components/image_item.dart';
 
 import '../../../../../../../config/theme/app_theme_colors.dart';
+import '../../../../../../../core/components/image_item.dart';
 import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../../core/utils/constants/app_strings.dart';
@@ -54,7 +54,16 @@ class FileUploadWidget extends StatelessWidget {
                 const ImageItem(AppImages.uploadIcon),
                 SizedBox(height: 8.height),
                 Text(
-                  AppStrings.clickToUploadAttachment,
+                  AppStrings.clickToUpload,
+                  style: TextStyle(
+                    fontSize: context.responsiveFontScale(14),
+                    color: colors.primaryBrand,
+                    fontFamily: AppConstant.appFont,
+                  ),
+                ),
+                SizedBox(height: 12.height),
+                Text(
+                  AppStrings.orDragImagesHere,
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(14),
                     color: colors.textSecondary,

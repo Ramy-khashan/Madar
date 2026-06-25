@@ -9,14 +9,12 @@ import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
-import '../../role_selection/view/widgets/project_type_selection_dialog.dart';
 import '../controller/projects_list_bloc.dart';
 import 'widgets/project_list_item_widget.dart';
+import 'widgets/project_type_selection_dialog.dart';
 
 class ProjectsListScreen extends StatelessWidget {
-  const ProjectsListScreen({super.key, required this.role});
-
-  final String role;
+  const ProjectsListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +48,7 @@ class ProjectsListScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 4.height),
                       Text(
-                        role == 'owner'
-                            ? AppStrings.ownerProjectsViewOnly
-                            : AppStrings.managerProjectsViewEdit,
+                        AppStrings.ownerProjectsViewOnly,
                         style: TextStyle(
                           fontSize: context.responsiveFontScale(16),
                           color: colors.textSecondary,
@@ -77,7 +73,7 @@ class ProjectsListScreen extends StatelessWidget {
                         tabletLandscape: 3,
                       ).toInt(),
                       mainAxisSpacing: 12.height,
-                       mainAxisExtent: ResponsiveUtils.types(
+                      mainAxisExtent: ResponsiveUtils.types(
                         context,
                         mobilePortrait: 250,
                         mobileLandscape: 220,
@@ -88,8 +84,7 @@ class ProjectsListScreen extends StatelessWidget {
                     itemCount: state.projects.length,
                     itemBuilder: (_, i) => ProjectListItemWidget(
                       project: state.projects[i],
-                      role: state.role,
-                    ),
+                     ),
                   ),
                 ),
 

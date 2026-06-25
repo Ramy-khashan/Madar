@@ -8,15 +8,13 @@ sealed class BusinessProjectDetailsEvent extends Equatable {
 }
 
 final class BusinessProjectDetailsLoad extends BusinessProjectDetailsEvent {
-  const BusinessProjectDetailsLoad({required this.project, required this.role});
+  const BusinessProjectDetailsLoad({required this.project,  });
 
   final RealEstateProjectModel project;
-
-  /// 'owner' | 'manager'
-  final String role;
-
+ 
+ 
   @override
-  List<Object?> get props => [project, role];
+  List<Object?> get props => [project, ];
 }
 
 final class BusinessProjectDetailsAddTimeline extends BusinessProjectDetailsEvent {

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+
 import '../../../../../../config/theme/app_theme_colors.dart';
-import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 
 class AuctionDepositAmountCardWidget extends StatelessWidget {

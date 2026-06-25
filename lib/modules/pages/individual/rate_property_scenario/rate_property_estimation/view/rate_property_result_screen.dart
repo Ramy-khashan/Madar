@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../../core/components/image_item.dart';
-import '../../../../../../core/components/outline_section.dart';
+
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_appbar.dart';
 import '../../../../../../core/components/app_button.dart';
+import '../../../../../../core/components/image_item.dart';
+import '../../../../../../core/components/outline_section.dart';
 import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
-import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../add_property/view/widgets/ai_price_card.dart';
 import '../controller/rate_property_estimation_bloc.dart';

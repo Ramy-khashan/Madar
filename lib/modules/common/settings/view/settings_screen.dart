@@ -17,6 +17,8 @@ import '../../../../core/utils/constants/storage_keys.dart';
 import '../../../../core/utils/functions/preference_utils.dart';
 import '../../../../core/utils/functions/router_handler.dart';
 import '../controller/settings_bloc.dart';
+import 'widgets/business_subscription_item.dart';
+import 'widgets/change_account_item.dart';
 import 'widgets/general_settings_section_widget.dart';
 import 'widgets/language_bottom_sheet_widget.dart';
 import 'widgets/logout_button_widget.dart';
@@ -107,6 +109,11 @@ class SettingsScreen extends StatelessWidget {
                                     onEditName: () {},
                                     onEditPhone: () {},
                                   ),
+                                  if (PreferenceUtils().getString(
+                                        StorageKeys.accountType,
+                                      ) ==
+                                      AppConstant.business)
+                                    BusinessSubscriptionItem(onTap: () {}),
                                   Text(
                                     AppStrings.saved,
                                     style: TextStyle(
@@ -196,103 +203,7 @@ class SettingsScreen extends StatelessWidget {
                                     );
                                   },
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 12.width,
-                                  ),
-                                  child: InkWell(
-                                    onTap: () {
-                                      // Handle tap
-                                    },
-                                    borderRadius: BorderRadius.circular(16),
-
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 12.width,
-                                        vertical: 16.height,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: AppThemeColors.of(
-                                          context,
-                                        ).primaryBrand,
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            width: 50.width,
-                                            height: 50.width,
-                                            padding: EdgeInsetsDirectional.all(
-                                              8.width,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: AppThemeColors.of(
-                                                context,
-                                              ).borderColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                            child: ImageItem(
-                                              AppImages.changeAccountIcon,
-                                              color: AppThemeColors.of(
-                                                context,
-                                              ).primaryBrand,
-                                            ),
-                                          ),
-                                          SizedBox(width: 16.width),
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  PreferenceUtils().getString(
-                                                            StorageKeys
-                                                                .accountType,
-                                                          ) ==
-                                                          AppConstant.business
-                                                      ? AppStrings.changeAccount
-                                                      : AppStrings
-                                                            .changeAccountIndividual,
-                                                  style: TextStyle(
-                                                    fontSize: context
-                                                        .responsiveFontScale(
-                                                          14,
-                                                        ),
-                                                    fontWeight: FontWeight.w500,
-                                                    color: AppThemeColors.of(
-                                                      context,
-                                                    ).onPrimary,
-                                                  ),
-                                                ),
-                                                SizedBox(height: 4.height),
-                                                Text(
-                                                  AppStrings.changeAccountHint,
-                                                  style: TextStyle(
-                                                    fontSize: context
-                                                        .responsiveFontScale(
-                                                          12,
-                                                        ),
-                                                    color: AppThemeColors.of(
-                                                      context,
-                                                    ).onPrimary,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Icon(
-                                            Icons.arrow_forward_ios,
-                                            color: AppThemeColors.of(
-                                              context,
-                                            ).onPrimary,
-                                            size: 16.width,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                                ChangeAccountItem(),
                                 LogoutButtonWidget(
                                   onTap: () => showDialog(
                                     context: context,

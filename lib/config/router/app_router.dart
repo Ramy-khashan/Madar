@@ -21,8 +21,7 @@ import '../../modules/pages/business/real_estate_development/business_project_de
 import '../../modules/pages/business/real_estate_development/business_project_details/view/business_project_details_screen.dart';
 import '../../modules/pages/business/real_estate_development/projects_list/controller/projects_list_bloc.dart';
 import '../../modules/pages/business/real_estate_development/projects_list/view/projects_list_screen.dart';
-import '../../modules/pages/business/real_estate_development/role_selection/controller/role_selection_bloc.dart';
-import '../../modules/pages/business/real_estate_development/role_selection/view/role_selection_screen.dart';
+
 import '../../modules/pages/business/real_estate_development/shared/models/real_estate_project_model.dart';
 import '../../modules/pages/individual/add_property/controller/add_property_bloc.dart';
 import '../../modules/pages/individual/add_property/view/add_property_screen.dart';
@@ -509,20 +508,14 @@ final GoRouter appRouter = GoRouter(
       ),
     ),
     getRouteInstance(
-      AppRouterKeys.realEstateDevelopmentRole,
-      (state) => BlocProvider(
-        create: (_) => RoleSelectionBloc(),
-        child: const RoleSelectionScreen(),
-      ),
-    ),
-    getRouteInstance(
       AppRouterKeys.realEstateDevelopmentList,
       (state) => BlocProvider(
         create: (_) =>
-            ProjectsListBloc()..add(ProjectsListLoad(state.extra as String)),
-        child: ProjectsListScreen(role: state.extra as String),
+            ProjectsListBloc() ..add(ProjectsListLoad()),
+        child: const ProjectsListScreen( ),
       ),
     ),
+    
     getRouteInstance(AppRouterKeys.realEstateDevelopmentDetails, (state) {
       final map = state.extra as Map<String, dynamic>;
       return BlocProvider(
@@ -530,10 +523,10 @@ final GoRouter appRouter = GoRouter(
           ..add(
             BusinessProjectDetailsLoad(
               project: map['project'] as RealEstateProjectModel,
-              role: map['role'] as String,
+            
             ),
           ),
-        child: BusinessProjectDetailsScreen(role: map['role'] as String),
+        child: BusinessProjectDetailsScreen( ),
       );
     }),
     getRouteInstance(

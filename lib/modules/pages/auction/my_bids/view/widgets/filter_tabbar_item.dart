@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
- 
+
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/functions/responsive.dart';

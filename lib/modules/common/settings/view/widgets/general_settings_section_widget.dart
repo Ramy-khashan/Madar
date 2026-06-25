@@ -1,4 +1,4 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/utils/constants/app_colors.dart';
@@ -7,7 +7,7 @@ import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/translation.dart';
 import '../../../../../core/components/image_item.dart';
- 
+
 class GeneralSettingsSectionWidget extends StatelessWidget {
   const GeneralSettingsSectionWidget({
     super.key,
@@ -19,7 +19,7 @@ class GeneralSettingsSectionWidget extends StatelessWidget {
     required this.onLanguageTap,
     required this.onTermsTap,
     required this.onHelpTap,
-   });
+  });
 
   final String selectedLanguage;
   final bool notificationsEnabled;
@@ -29,17 +29,14 @@ class GeneralSettingsSectionWidget extends StatelessWidget {
   final VoidCallback onLanguageTap;
   final VoidCallback onTermsTap;
   final VoidCallback onHelpTap;
- 
+
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
     return Container(
-      margin: EdgeInsetsDirectional.only(
-        bottom: 8.height,
- 
-      ),
+      margin: EdgeInsetsDirectional.only(bottom: 8.height),
       padding: EdgeInsets.all(16.width),
-       
+
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -52,7 +49,7 @@ class GeneralSettingsSectionWidget extends StatelessWidget {
             ),
           ),
           SizedBox(height: 8.height),
-         
+
           SettingsActionRow(
             icon: Icons.language_outlined,
             label: selectedLanguage.trans,
@@ -85,13 +82,13 @@ class GeneralSettingsSectionWidget extends StatelessWidget {
             colors: colors,
             onTap: onHelpTap,
           ),
+
           // SettingsActionRow(
           //   icon: Icons.switch_account_outlined,
           //   label: ,
           //   colors: colors,
           //   onTap: onSwitchAccountTap,
           // ),
-        
         ],
       ),
     );
@@ -101,9 +98,9 @@ class GeneralSettingsSectionWidget extends StatelessWidget {
 class SettingsActionRow extends StatelessWidget {
   const SettingsActionRow({
     super.key,
-      this.icon,
-      this.image,
-      this.trailing,
+    this.icon,
+    this.image,
+    this.trailing,
     required this.label,
     required this.colors,
     required this.onTap,
@@ -145,15 +142,13 @@ class SettingsActionRow extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: image != null
-                  ? ImageItem(
-                      image!,
-                      width: 20.width,
-                      height: 20.width,
-                    )
+                  ? ImageItem(image!, width: 20.width, height: 20.width)
                   : Icon(
                       icon,
                       size: 20.width,
-                      color: isReadTag ? AppColors.errorColor : colors.primaryBrand,
+                      color: isReadTag
+                          ? AppColors.errorColor
+                          : colors.primaryBrand,
                     ),
             ),
             SizedBox(width: 12.width),
@@ -164,12 +159,13 @@ class SettingsActionRow extends StatelessWidget {
                 style: TextStyle(
                   fontSize: context.responsiveFontScale(14),
                   fontWeight: FontWeight.w500,
-                  color: isReadTag ? AppColors.errorColor : colors.textFieldTitle,
+                  color: isReadTag
+                      ? AppColors.errorColor
+                      : colors.textFieldTitle,
                 ),
               ),
             ),
-            trailing??SizedBox.shrink(),
-
+            trailing ?? SizedBox.shrink(),
           ],
         ),
       ),

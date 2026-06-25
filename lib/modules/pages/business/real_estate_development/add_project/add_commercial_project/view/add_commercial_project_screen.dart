@@ -1,28 +1,58 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../../core/components/app_appbar.dart';
 import '../../../../../../../core/components/app_button.dart';
-import '../../../../../../../core/components/app_drop_down.dart';
 import '../../../../../../../core/components/app_textfield.dart';
-import '../../../../../../../core/components/property_type_item.dart';
 import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../auth/common/password_item.dart';
 import '../../shared/widgets/file_upload_widget.dart';
 import '../../shared/widgets/link_sent_success_dialog.dart';
 import '../../shared/widgets/project_manager_login_dialog.dart';
+import '../../shared/widgets/project_phases_checklist_widget.dart';
 import '../controller/add_commercial_project_bloc.dart';
+
+const _commercialPhases = [
+  ProjectPhaseEntry(
+    title: 'المرحلة الأولى: التخطيط والترخيص التجاري',
+    subtitle: 'استخراج رخصة البناء التجاري',
+    tasks: [
+      'اعداد المخططات الهندسية',
+      'اعتماد المخططات الانشائية',
+      'اعداد مخططات الكهرباء والتكييف',
+      'فتح قسم تجاري',
+      'التعاقد مع شركة إشراف هندسي',
+    ],
+  ),
+  ProjectPhaseEntry(
+    title: 'المرحلة الثانية: الاعمال الاساسية',
+    subtitle: 'تمهيد الأرض وإنشاء الأساسات',
+  ),
+  ProjectPhaseEntry(
+    title: 'المرحلة الثالثة: الاعمال الانشائية',
+    subtitle: 'تنفيذ الهيكل الخرساني والجدران',
+  ),
+  ProjectPhaseEntry(
+    title: 'المرحلة الرابعة: التشطيبات والتجهيزات',
+    subtitle: 'أعمال التشطيب الداخلي والخارجي',
+  ),
+  ProjectPhaseEntry(
+    title: 'المرحلة الخامسة: التسليم والتشغيل',
+    subtitle: 'اختبار الأنظمة وتجهيز المشروع',
+  ),
+  ProjectPhaseEntry(
+    title: 'المرحلة السادسة: الفحص والتسليم',
+    subtitle: 'الفحوصات النهائية والتسليم الرسمي',
+  ),
+];
 
 class AddCommercialProjectScreen extends StatelessWidget {
   const AddCommercialProjectScreen({super.key});
- 
- 
-
 
   Future<void> _handleDatePick(
     BuildContext context,
@@ -103,67 +133,64 @@ class AddCommercialProjectScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                   
-                    PropertyTypeSection(
-                     
-                      selectedItem: state.selectedPropertyType,
-                      onTap: (t) => bloc
-                          .add(AddCommercialPropertyTypeChanged(t)),
-                    ),
                     AppTextField(
                       isWithTitle: true,
                       title: AppStrings.propertyName,
                       hint: AppStrings.propertyNameHint,
+                      controller: bloc.nameController,
                       textInputType: TextInputType.text,
                     ),
                     AppTextField(
                       isWithTitle: true,
                       title: AppStrings.locationLabel,
                       hint: AppStrings.locationFieldHint,
+                      controller: bloc.locationController,
                       textInputType: TextInputType.text,
                       suffixImage: AppImages.locationIcon,
                     ),
-                    AppDropDownItem(
-                      title: AppStrings.areaTypeLabel,
-                      value: state.selectedAreaType,
-                      items:[],
-                      hintText: AppStrings.chooseAreaType,
-                       onChanged: (v) =>
-                          bloc.add(AddCommercialAreaTypeChanged(v)) ,
-                     
-                    ),
-                    AppTextField(
-                      title: AppStrings.unitsCountLabel,
-                      hint: '5',
-                      controller: bloc.unitsController,
-                      textInputType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: AppTextField(
+                            title: AppStrings.startDateLabel,
+                            hint: 'MM/YY',
+                            controller: bloc.startDateController,
+                            isReadOnly: true,
+                            onTapField: () => bloc.add(
+                              const AddCommercialPickDateRequested(
+                                CommercialDateField.start,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 8.width),
+                        Expanded(
+                          child: AppTextField(
+                            title: AppStrings.expectedEndDateLabel,
+                            hint: 'MM/YY',
+                            controller: bloc.endDateController,
+                            isReadOnly: true,
+                            onTapField: () => bloc.add(
+                              const AddCommercialPickDateRequested(
+                                CommercialDateField.end,
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                     AppTextField(
-                      title: AppStrings.parkingLabel,
-                      hint: '5',
-                      controller: bloc.parkingController,
-                      textInputType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                    ),
-                    AppTextField(
+                      isWithTitle: true,
                       title: AppStrings.approximateBudgetLabel,
                       hint: AppStrings.priceFieldHint,
                       controller: bloc.budgetController,
                       textInputType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
                       prefixIconWidget: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 12.width),
                         child: Text(
-                          '\$',
+                          'ر.س',
                           style: TextStyle(
-                            fontSize: context.responsiveFontScale(18),
+                            fontSize: context.responsiveFontScale(14),
                             color: colors.textSecondary,
                             fontFamily: AppConstant.appFont,
                           ),
@@ -174,55 +201,46 @@ class AddCommercialProjectScreen extends StatelessWidget {
                         minHeight: 44.width,
                       ),
                     ),
-                    AppTextField(
-                      title: AppStrings.startDateLabel,
-                      hint: '12/12/2020',
-                      controller: bloc.startDateController,
-                      isReadOnly: true,
-                      onTapField: () => bloc.add(
-                        const AddCommercialPickDateRequested(
-                          CommercialDateField.start,
-                        ),
-                      ),
-                    ),
-                    AppTextField(
-                      title: AppStrings.expectedEndDateLabel,
-                      hint: '12/12/2020',
-                      controller: bloc.endDateController,
-                      isReadOnly: true,
-                      onTapField: () => bloc.add(
-                        const AddCommercialPickDateRequested(
-                          CommercialDateField.end,
-                        ),
-                      ),
-                    ),
-                    AppTextField(
-                      title: AppStrings.mainTenantsActivitiesLabel,
-                      hint: AppStrings.mainTenantsActivitiesHint,
-                      controller: bloc.tenantsController,
-                      maxLines: 4,
-                      textInputAction: TextInputAction.newline,
-                      textInputType: TextInputType.multiline,
+                    ProjectPhasesChecklistWidget(
+                      label: AppStrings.mainPhasesLabel,
+                      subtitle: 'يمكنك بدء البناء من أي مرحلة تريدها',
+                      phases: _commercialPhases,
                     ),
                     FileUploadWidget(
-                      title: AppStrings.otherAttachmentsOptional,
+                      title: AppStrings.images,
                       onTap: () {},
                     ),
                     SizedBox(height: 20.height),
-                    AppButton(
-                      text: AppStrings.chooseProjectManager,
-                      isOutline: true,
-                      height: 52,
-                      onTap: () => bloc.add(
-                        const AddCommercialSendToManagerRequested(),
+                    if (!state.showManagerForm)
+                      AppButton(
+                        text: AppStrings.chooseProjectManager,
+                        isOutline: true,
+                        height: 52,
+                        onTap: () => bloc.add(
+                          const AddCommercialManagerToggled(true),
+                        ),
                       ),
-                    ),
+                    if (state.showManagerForm) ...[
+                      _ManagerFormSection(
+                        usernameController: bloc.usernameController,
+                        passwordController: bloc.passwordController,
+                        phoneController: bloc.phoneController,
+                        colors: colors,
+                      ),
+                      SizedBox(height: 12.height),
+                      AppButton(
+                        text: AppStrings.chooseProjectManager,
+                        isOutline: true,
+                        onTap: () => bloc.add(
+                          const AddCommercialSendToManagerRequested(),
+                        ),
+                      ),
+                    ],
                     SizedBox(height: 12.height),
                     AppButton(
                       text: AppStrings.confirmAddProperty,
                       height: 52,
-                      isLoading:
-                          state.submitStatus == RequestStatus.loading,
+                      isLoading: state.submitStatus == RequestStatus.loading,
                       onTap: () => bloc.add(const AddCommercialSubmit()),
                     ),
                     SizedBox(height: 24.height),
@@ -233,6 +251,55 @@ class AddCommercialProjectScreen extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _ManagerFormSection extends StatelessWidget {
+  const _ManagerFormSection({
+    required this.usernameController,
+    required this.passwordController,
+    required this.phoneController,
+    required this.colors,
+  });
+
+  final TextEditingController usernameController;
+  final TextEditingController passwordController;
+  final TextEditingController phoneController;
+  final AppThemeColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        AppTextField(
+          title: AppStrings.usernameLabel,
+          hint: AppStrings.usernameLabel,
+          controller: usernameController,
+          textInputType: TextInputType.text,
+        ),
+        PasswordItem(
+          title: AppStrings.password,
+          hint: AppStrings.password,
+          controller: passwordController,
+        ),
+        SizedBox(height: 10.height),
+        Text(
+          AppStrings.sendLinkToManagerDesc,
+          style: TextStyle(
+            fontSize: context.responsiveFontScale(14),
+            color: colors.textFieldTitle,
+            fontFamily: AppConstant.appFont,
+          ),
+        ),
+        AppTextField(
+          title: AppStrings.managerPhoneLabel,
+          hint: AppStrings.enterPhoneHint,
+          controller: phoneController,
+          textInputType: TextInputType.phone,
+        ),
+      ],
     );
   }
 }

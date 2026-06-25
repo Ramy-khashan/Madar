@@ -91,25 +91,29 @@ class AppButton extends StatelessWidget {
           : childText != null || childIcon != null || childImage != null
           ? Row(
               mainAxisSize: MainAxisSize.min,
-              children: [
+                children: [
+                  Center(
+                    child: Padding(
+                    padding: EdgeInsetsDirectional.only(
+                      top: childText != null ? 8.height : 0,
+                      end: childText != null ? 6.width : 0,
+                      bottom: childText != null ? 5.height : 0,
+                    ),
+                    child: childIcon != null
+                        ? Icon(childIcon, color: textStyle.color)
+                        : (childImage != null
+                              ? ImageItem(
+                                  childImage!,
+                                  width: 20.width,
+                                  height: 20.width,
+                                  color: textStyle.color,
+                                )
+                              : const SizedBox()),
+                                    ),
+                  ),
                 if (childText != null) Text(childText ?? '', style: textStyle),
 
-                Padding(
-                  padding: EdgeInsetsDirectional.only(
-                    start: childText != null ? 8.width : 0,
-                    bottom: childText != null ? 5.height : 0,
-                  ),
-                  child: childIcon != null
-                      ? Icon(childIcon, color: textStyle.color)
-                      : (childImage != null
-                            ? ImageItem(
-                                childImage!,
-                                width: 20.width,
-                                height: 20.width,
-                                color: textStyle.color,
-                              )
-                            : const SizedBox()),
-                ),
+              
               ],
             )
           : SizedBox(

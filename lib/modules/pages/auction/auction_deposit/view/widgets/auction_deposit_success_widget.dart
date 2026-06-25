@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../../core/utils/functions/common_fun.dart';
+
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_button.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../controller/auction_deposit_bloc.dart';
 

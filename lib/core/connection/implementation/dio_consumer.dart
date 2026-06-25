@@ -9,6 +9,8 @@ import 'package:dio_http_formatter/dio_http_formatter.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../../config/router/app_router_keys.dart';
+import '../../../madar_app.dart';
 import '../../model/api_model.dart';
 import '../../model/error_handler_model.dart';
 import '../../repository/error_tracking/crashlytics_collector.dart';
@@ -20,8 +22,6 @@ import '../../utils/functions/handle_multi_callback.dart';
 import '../../utils/functions/preference_utils.dart';
 import '../../utils/functions/router_handler.dart';
 import '../../utils/functions/service_locator.dart';
-import '../../../config/router/app_router_keys.dart';
-import '../../../madar_app.dart';
 import '../concept/end_points.dart';
 import '../concept/exceptions.dart';
 import '../concept/status_code.dart';

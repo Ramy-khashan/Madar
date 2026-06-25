@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../../../../../core/components/image_item.dart';
+
 import '../../../../../../../config/theme/app_theme_colors.dart';
+import '../../../../../../../core/components/image_item.dart';
 import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../../core/utils/constants/app_strings.dart';
@@ -72,7 +73,7 @@ class _StatCard extends StatelessWidget {
                 radius: 15.width,
                 backgroundColor: colors.primaryBrand.withValues(alpha: 0.08),
                 child: ImageItem(
-                  AppImages.occupancyIcon,
+                  AppImages.occupancyRateIcon,
                   color: colors.primaryBrand,
                 ),
               ),

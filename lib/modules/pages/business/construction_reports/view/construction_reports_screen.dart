@@ -19,7 +19,7 @@ class ConstructionReportsScreen extends StatelessWidget {
     final colors = AppThemeColors.of(context);
     return Scaffold(
       backgroundColor: colors.backgroundPrimary,
-      appBar: AppAppbar(title: AppStrings.constructionReportsTitle),
+      appBar: AppAppbar(title: AppStrings.performanceReports),
       body: BlocBuilder<ConstructionReportsBloc, ConstructionReportsState>(
         builder: (context, state) {
           if (state.status == RequestStatus.loading) {

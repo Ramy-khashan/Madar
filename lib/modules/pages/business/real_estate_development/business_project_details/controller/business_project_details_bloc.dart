@@ -28,8 +28,7 @@ class BusinessProjectDetailsBloc
       state.copyWith(
         status: RequestStatus.success,
         project: event.project,
-        role: event.role,
-      ),
+       ),
     );
   }
 

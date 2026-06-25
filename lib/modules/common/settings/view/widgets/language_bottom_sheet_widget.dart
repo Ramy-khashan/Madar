@@ -1,12 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../../../config/router/app_router_keys.dart';
-import '../../../../../../core/utils/constants/app_enums.dart';
-import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
+import '../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../../../../../core/utils/functions/translation.dart';
 import '../../controller/settings_bloc.dart';
 

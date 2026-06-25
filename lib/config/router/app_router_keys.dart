@@ -43,8 +43,7 @@ class AppRouterKeys {
   static const String propertyLocationMap = '/propertyLocationMap';
   static const String projectManagerHome = '/projectManagerHome';
   static const String projectManagerDetails = '/projectManagerDetails';
-  static const String realEstateDevelopmentRole = '/realEstateDevelopmentRole';
-  static const String realEstateDevelopmentList = '/realEstateDevelopmentList';
+   static const String realEstateDevelopmentList = '/realEstateDevelopmentList';
   static const String realEstateDevelopmentDetails = '/realEstateDevelopmentDetails';
   static const String realEstateDevelopmentAddProject = '/realEstateDevelopmentAddProject';
   static const String realEstateDevelopmentAddCommercial = '/realEstateDevelopmentAddCommercial';

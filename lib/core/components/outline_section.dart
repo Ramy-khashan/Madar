@@ -50,7 +50,10 @@ class OutlinedSection extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16.height),
-          child,
+          Material(
+            color: Colors.transparent,
+            child: child,
+          ),
         ],
       ),
     );

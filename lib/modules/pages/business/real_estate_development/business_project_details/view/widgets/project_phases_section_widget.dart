@@ -12,12 +12,10 @@ class ProjectPhasesSectionWidget extends StatelessWidget {
   const ProjectPhasesSectionWidget({
     super.key,
     required this.phases,
-    required this.isManager,
-  });
+   });
 
   final List<ProjectPhaseModel> phases;
-  final bool isManager;
-
+ 
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
@@ -28,13 +26,7 @@ class ProjectPhasesSectionWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Table(
-            columnWidths: isManager
-                ? {
-                    0: const FlexColumnWidth(2),
-                    1: const FlexColumnWidth(2),
-                    2: const FlexColumnWidth(1.5),
-                  }
-                : {0: const FlexColumnWidth(1), 1: const FlexColumnWidth(1)},
+            columnWidths:  {0: const FlexColumnWidth(1), 1: const FlexColumnWidth(1)},
             children: [
               TableRow(
                 decoration: BoxDecoration(
@@ -73,20 +65,7 @@ class ProjectPhasesSectionWidget extends StatelessWidget {
                     ),
                   ),
 
-                  if (isManager)
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.height),
-                      child: Text(
-                        AppStrings.actionHeader,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: context.responsiveFontScale(16),
-                          fontWeight: FontWeight.w600,
-                          fontFamily: AppConstant.appHeaderFont,
-                          color: colors.textFieldTitle,
-                        ),
-                      ),
-                    ),
+                  
                 ],
               ),
               ...phases.map(
@@ -122,41 +101,7 @@ class ProjectPhasesSectionWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (isManager)
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 6.height),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () {},
-                              child: Container(
-                                width: 24.width,
-                                height: 24.width,
-                                decoration: BoxDecoration(
-                                  color: colors.primaryBrand,
-                                  borderRadius: BorderRadius.circular(6.radius),
-                                ),
-                                child: Icon(
-                                  Icons.check_rounded,
-                                  size: 16.width,
-                                  color: colors.onPrimary,
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 7.width),
-                            Text(
-                              AppStrings.doneLabel,
-                              style: TextStyle(
-                                fontSize: context.responsiveFontScale(14),
-                                color: colors.textSecondary,
-                                fontFamily: AppConstant.appFont,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                  ],
+                   ],
                 ),
               ),
             ],

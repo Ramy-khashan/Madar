@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../../../../../core/components/image_item.dart';
- 
+
 import '../../../../../../../config/router/app_router_keys.dart';
 import '../../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../../core/components/app_button.dart';
+import '../../../../../../../core/components/image_item.dart';
 import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../../core/utils/constants/app_strings.dart';
@@ -12,24 +12,20 @@ import '../../../../../../../core/utils/functions/router_handler.dart';
 import '../../../../../../../core/utils/functions/translation.dart';
 import '../../../../business_home/view/widget/business_portflio_property_item.dart';
 import '../../../shared/models/real_estate_project_model.dart';
+
 part 'property_development_status.dart';
 
 class ProjectListItemWidget extends StatelessWidget {
-  const ProjectListItemWidget({
-    super.key,
-    required this.project,
-    required this.role,
-  });
+  const ProjectListItemWidget({super.key, required this.project});
 
   final RealEstateProjectModel project;
-  final String role;
 
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
 
     return Container(
-       padding: EdgeInsets.all(8.width),
+      padding: EdgeInsets.all(8.width),
       decoration: BoxDecoration(
         color: colors.cardBackground,
         borderRadius: BorderRadius.circular(20.radius),
@@ -93,7 +89,7 @@ class ProjectListItemWidget extends StatelessWidget {
           PropertyInfo(
             info:
                 '${AppStrings.occupancyRate}: ${project.completionPercentage.toInt()}%',
-            icon: AppImages.occupancyIcon,
+            icon: AppImages.occupancyRateIcon,
             colors: colors,
           ),
           PropertyInfo(
@@ -109,7 +105,7 @@ class ProjectListItemWidget extends StatelessWidget {
             onTap: () => RouterHandler.navigate(
               context,
               AppRouterKeys.realEstateDevelopmentDetails,
-              extra: {'project': project, 'role': role},
+              extra: {'project': project},
             ),
           ),
         ],

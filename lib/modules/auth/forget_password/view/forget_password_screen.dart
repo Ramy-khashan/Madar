@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import '../../../../core/components/app_appbar.dart';
-import '../../../../config/router/app_router_keys.dart';
-import '../../../../core/components/is_scrollable_widget.dart';
 
+import '../../../../config/router/app_router_keys.dart';
 import '../../../../config/theme/app_theme_colors.dart';
+import '../../../../core/components/app_appbar.dart';
 import '../../../../core/components/app_button.dart';
- import '../../../../core/components/phone_number_field.dart';
- import '../../../../core/utils/constants/app_strings.dart';
+import '../../../../core/components/is_scrollable_widget.dart';
+import '../../../../core/components/phone_number_field.dart';
+import '../../../../core/utils/constants/app_strings.dart';
 import '../../../../core/utils/functions/responsive.dart';
 import '../../../../core/utils/functions/router_handler.dart';
+
 part 'widgets/forget_password_action.dart';
 
 class ForgetPasswordScreen extends StatelessWidget {

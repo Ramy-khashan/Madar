@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../../../../../core/components/image_item.dart';
-import '../../../../../../core/utils/functions/common_fun.dart';
+
 import '../../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
+import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../controller/net_profit_loss_bloc.dart';
 
 class NetProfitLossHeaderWidget extends StatelessWidget {
@@ -37,7 +38,7 @@ class NetProfitLossHeaderWidget extends StatelessWidget {
           ),
           SizedBox(height: 6.height),
           Text(
-            '${formatPrice(state.netProfit)} ر.س',
+            '${formatPrice(state.netProfit)} ${AppStrings.currency}',
             style: TextStyle(
               fontSize: context.responsiveFontScale(36),
               fontWeight: FontWeight.w800,

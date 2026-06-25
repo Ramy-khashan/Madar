@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../../../config/router/app_router_keys.dart';
-import '../../../../../../core/utils/functions/router_handler.dart';
-import '../../../../../../core/components/image_item.dart';
-import '../../../../../../core/components/outline_section.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_button.dart';
-import '../../../../../../core/components/info_card_item.dart'; 
+import '../../../../../../core/components/image_item.dart';
+import '../../../../../../core/components/info_card_item.dart';
+import '../../../../../../core/components/outline_section.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../controller/rent_installment_bloc.dart';
 import 'how_it_work_section.dart';
 import 'service_description_item.dart';

@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/connection/concept/end_points.dart';
 import '../../../../../core/connection/interfaces/api_consumer.dart';
+import '../../../../../core/model/property_filter_model.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
- import '../../../../../core/utils/functions/service_locator.dart';
- import '../../../../../core/model/property_filter_model.dart';
+import '../../../../../core/utils/functions/service_locator.dart';
 import '../model/properties_item_model.dart';
 
 part 'properties_event.dart';

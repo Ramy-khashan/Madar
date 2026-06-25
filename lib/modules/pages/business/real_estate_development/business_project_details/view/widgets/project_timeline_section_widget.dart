@@ -4,24 +4,18 @@ import '../../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../../core/utils/constants/app_strings.dart';
 
 import '../../../../../../../config/theme/app_theme_colors.dart';
-import '../../../../../../../core/components/app_button.dart';
-import '../../../../../../../core/utils/constants/app_constant.dart';
+ import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
 import '../../../shared/models/project_timeline_model.dart';
-import '../../controller/business_project_details_bloc.dart';
-import 'add_timeline_dialog.dart';
- import 'package:flutter_bloc/flutter_bloc.dart';
-
+ 
 class ProjectTimelineSectionWidget extends StatelessWidget {
   const ProjectTimelineSectionWidget({
     super.key,
     required this.timeline,
-    required this.isManager,
-  });
+   });
 
   final List<ProjectTimelineModel> timeline;
-  final bool isManager;
-
+ 
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
@@ -49,21 +43,8 @@ class ProjectTimelineSectionWidget extends StatelessWidget {
               final item = timeline[i];
               return _TimelineItem(index: i + 1, item: item, colors: colors);
             }),
-          if (isManager) ...[
-            SizedBox(height: 12.height),
-            AppButton(
-              text: AppStrings.addTimelineUpdate,
-              height: 46,
-              textSize: 15,
-              onTap: () => showDialog<void>(
-                context: context,
-                builder: (_) => BlocProvider.value(
-                  value: context.read<BusinessProjectDetailsBloc>(),
-                  child: const AddTimelineDialog(),
-                ),
-              ),
-            ),
-          ],
+          
+ 
         ],
       ),
     );

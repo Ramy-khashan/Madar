@@ -7,6 +7,7 @@ import '../../../../core/connection/interfaces/api_consumer.dart';
 import '../../../../core/utils/constants/app_enums.dart';
 import '../../../../core/utils/functions/service_locator.dart';
 import '../model/real_estate_news_item_model.dart';
+
 part 'real_estate_news_event.dart';
 part 'real_estate_news_state.dart';
 

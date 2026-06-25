@@ -5,7 +5,6 @@ import '../../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../../core/components/app_appbar.dart';
 import '../../../../../../../core/components/app_button.dart';
 import '../../../../../../../core/components/app_textfield.dart';
-import '../../../../../../../core/components/property_type_item.dart';
 import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../../core/utils/constants/app_images.dart';
@@ -15,8 +14,40 @@ import '../../../../../../auth/common/password_item.dart';
 import '../../shared/widgets/file_upload_widget.dart';
 import '../../shared/widgets/link_sent_success_dialog.dart';
 import '../../shared/widgets/project_manager_login_dialog.dart';
+import '../../shared/widgets/project_phases_checklist_widget.dart';
 import '../controller/add_residential_project_bloc.dart';
-import 'widgets/property_details_item.dart';
+
+const _residentialPhases = [
+  ProjectPhaseEntry(
+    title: 'المرحلة الأولى: التخطيط والترخيص',
+    subtitle: 'شاملة كل اجراءات التخطيط والحصول على التراخيص اللازمة',
+    tasks: [
+      'اصدار رخصة بناء',
+      'اعتماد المخططات المعمارية والانشائية',
+      'اعتماد مخططات الكهرباء والسباكة',
+      'اعتماد مخططات الحريق والسلامة',
+      'اعتماد مخططات التكييف المركزي',
+      'تقرير فحص التربة',
+      'التعاقد مع مكتب إشراف هندسي',
+    ],
+  ),
+  ProjectPhaseEntry(
+    title: 'المرحلة الثانية: الاعمال الاساسية',
+    subtitle: 'شاملة الاعمال الانشائية الاساسية للمشروع',
+  ),
+  ProjectPhaseEntry(
+    title: 'المرحلة الثالثة: الاعمال الانشائية',
+    subtitle: 'شاملة تنفيذ الهيكل الخرساني والجدران',
+  ),
+  ProjectPhaseEntry(
+    title: 'المرحلة الرابعة: التشطيبات',
+    subtitle: 'اعمال التشطيب الداخلي والخارجي',
+  ),
+  ProjectPhaseEntry(
+    title: 'المرحلة الخامسة: التسليم والتشغيل',
+    subtitle: 'شاملة الفحوصات النهائية وتسليم المشروع',
+  ),
+];
 
 class AddResidentialProjectScreen extends StatelessWidget {
   const AddResidentialProjectScreen({super.key});
@@ -112,67 +143,71 @@ class _AddResidentialProjectView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    PropertyTypeSection(
-                      selectedItem: state.selectedPropertyType,
-                      onTap: (t) =>
-                          bloc.add(AddResidentialPropertyTypeChanged(t)),
-                    ),
                     AppTextField(
                       isWithTitle: true,
                       title: AppStrings.propertyName,
                       hint: AppStrings.propertyNameHint,
+                      controller: bloc.nameController,
                       textInputType: TextInputType.text,
                     ),
                     AppTextField(
                       isWithTitle: true,
                       title: AppStrings.locationLabel,
                       hint: AppStrings.locationFieldHint,
+                      controller: bloc.locationController,
                       textInputType: TextInputType.text,
                       suffixImage: AppImages.locationIcon,
                     ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: AppTextField(
+                            title: AppStrings.startDateLabel,
+                            hint: 'MM/YY',
+                            controller: bloc.startDateController,
+                            isReadOnly: true,
+                            onTapField: () => bloc.add(
+                              const AddResidentialPickDateRequested(
+                                ResidentialDateField.start,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 8.width),
+                        Expanded(
+                          child: AppTextField(
+                            title: AppStrings.expectedEndDateLabel,
+                            hint: 'MM/YY',
+                            controller: bloc.endDateController,
+                            isReadOnly: true,
+                            onTapField: () => bloc.add(
+                              const AddResidentialPickDateRequested(
+                                ResidentialDateField.end,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     AppTextField(
                       isWithTitle: true,
-                      title: AppStrings.approximateBudgetLabel,
+                      title: AppStrings.totalBudgetLabel,
                       hint: AppStrings.priceFieldHint,
-                      textInputType: TextInputType.text,
+                      controller: bloc.budgetController,
+                      textInputType: TextInputType.number,
                       suffixImage: AppImages.rentIcon,
-                      suffixIconColor: colors.textSecondary,
-                    ),
-
-                    AppTextField(
-                      title: AppStrings.startDateLabel,
-                      hint: '12/12/2020',
-                      controller: bloc.startDateController,
-                      isReadOnly: true,
-                      onTapField: () => bloc.add(
-                        const AddResidentialPickDateRequested(
-                          ResidentialDateField.start,
-                        ),
+                      prefixIconConstraints: BoxConstraints(
+                        minWidth: 40.width,
+                        minHeight: 44.width,
                       ),
                     ),
-                    AppTextField(
-                      title: AppStrings.expectedEndDateLabel,
-                      hint: '12/12/2020',
-                      controller: bloc.endDateController,
-                      isReadOnly: true,
-                      onTapField: () => bloc.add(
-                        const AddResidentialPickDateRequested(
-                          ResidentialDateField.end,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 14.height),
-                    PropertyDetailsItem(counterItems: bloc.counterItems),
-                    AppTextField(
-                      title: AppStrings.mainPhasesLabel,
-                      hint: AppStrings.mainPhasesHint,
-                      controller: bloc.phasesController,
-                      maxLines: 4,
-                      textInputAction: TextInputAction.newline,
-                      textInputType: TextInputType.multiline,
+                    ProjectPhasesChecklistWidget(
+                      label: AppStrings.mainPhasesLabel,
+                      subtitle: 'يمكنك بدء البناء من أي مرحلة تريدها',
+                      phases: _residentialPhases,
                     ),
                     FileUploadWidget(
-                      title: AppStrings.otherAttachmentsOptional,
+                      title: AppStrings.images,
                       onTap: () {},
                     ),
                     SizedBox(height: 20.height),
@@ -188,14 +223,12 @@ class _AddResidentialProjectView extends StatelessWidget {
                       _ManagerFormSection(
                         usernameController: bloc.usernameController,
                         passwordController: bloc.passwordController,
-                        emailController: bloc.emailController,
                         phoneController: bloc.phoneController,
-
                         colors: colors,
                       ),
                       SizedBox(height: 12.height),
                       AppButton(
-                        text: AppStrings.sendToProjectManager,
+                        text: AppStrings.chooseProjectManager,
                         isOutline: true,
                         onTap: () => bloc.add(
                           const AddResidentialSendToManagerRequested(),
@@ -224,14 +257,12 @@ class _ManagerFormSection extends StatelessWidget {
   const _ManagerFormSection({
     required this.usernameController,
     required this.passwordController,
-    required this.emailController,
     required this.phoneController,
     required this.colors,
   });
 
   final TextEditingController usernameController;
   final TextEditingController passwordController;
-  final TextEditingController emailController;
   final TextEditingController phoneController;
   final AppThemeColors colors;
 
@@ -242,13 +273,13 @@ class _ManagerFormSection extends StatelessWidget {
       children: [
         AppTextField(
           title: AppStrings.usernameLabel,
-          hint: AppStrings.enterIdentityHint,
+          hint: AppStrings.usernameLabel,
           controller: usernameController,
-          textInputType: TextInputType.number,
+          textInputType: TextInputType.text,
         ),
         PasswordItem(
           title: AppStrings.password,
-          hint: AppStrings.enterPassword,
+          hint: AppStrings.password,
           controller: passwordController,
         ),
         SizedBox(height: 10.height),
@@ -259,12 +290,6 @@ class _ManagerFormSection extends StatelessWidget {
             color: colors.textFieldTitle,
             fontFamily: AppConstant.appFont,
           ),
-        ),
-        AppTextField(
-          title: AppStrings.managerEmailLabel,
-          hint: AppStrings.enterEmailHint,
-          controller: emailController,
-          textInputType: TextInputType.emailAddress,
         ),
         AppTextField(
           title: AppStrings.managerPhoneLabel,

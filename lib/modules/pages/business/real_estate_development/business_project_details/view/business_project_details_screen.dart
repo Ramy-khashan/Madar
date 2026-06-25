@@ -19,10 +19,9 @@ import 'widgets/project_stats_row_widget.dart';
 import 'widgets/project_timeline_section_widget.dart';
 
 class BusinessProjectDetailsScreen extends StatelessWidget {
-  const BusinessProjectDetailsScreen({super.key, required this.role});
+  const BusinessProjectDetailsScreen({super.key,  });
 
-  final String role;
-
+ 
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
@@ -30,91 +29,85 @@ class BusinessProjectDetailsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: colors.backgroundPrimary,
       appBar: AppAppbar(title: AppStrings.realEstateDevelopment),
-      body: BlocBuilder<BusinessProjectDetailsBloc, BusinessProjectDetailsState>(
-        builder: (context, state) {
-          if (state.status == RequestStatus.loading ||
-              state.status == RequestStatus.init) {
-            return const LoadingItem();
-          }
+      body:
+          BlocBuilder<BusinessProjectDetailsBloc, BusinessProjectDetailsState>(
+            builder: (context, state) {
+              if (state.status == RequestStatus.loading ||
+                  state.status == RequestStatus.init) {
+                return const LoadingItem();
+              }
 
-          if (state.status == RequestStatus.failed || state.project == null) {
-            return FailedShape(
-              msg: AppStrings.failedLoadProjectDetails,
-              onTapRefresh: () {},
-            );
-          }
+              if (state.status == RequestStatus.failed ||
+                  state.project == null) {
+                return FailedShape(
+                  msg: AppStrings.failedLoadProjectDetails,
+                  onTapRefresh: () {},
+                );
+              }
 
-          final p = state.project!;
-          final isManager = state.role == 'manager';
+              final p = state.project!;
 
-          return SafeArea(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(
-                horizontal: 16.width,
-                vertical: 12.height,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    p.name,
-                    style: TextStyle(
-                      fontSize: context.responsiveFontScale(18),
-                      fontWeight: FontWeight.w700,
-                      fontFamily: AppConstant.appHeaderFont,
-                      color: colors.textFieldTitle,
-                    ),
+              return SafeArea(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.width,
+                    vertical: 12.height,
                   ),
-                  SizedBox(height: 4.height),
-                  Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      ImageItem(
-                         AppImages.locationIcon,
-                        color: colors.textSecondary,
-                      ),
-                      SizedBox(width: 4.width),
                       Text(
-                        p.location,
+                        p.name,
                         style: TextStyle(
-                          fontSize: context.responsiveFontScale(14),
-                          color: colors.textSecondary,
-                          fontFamily: AppConstant.appFont,
+                          fontSize: context.responsiveFontScale(18),
+                          fontWeight: FontWeight.w700,
+                          fontFamily: AppConstant.appHeaderFont,
+                          color: colors.textFieldTitle,
                         ),
                       ),
+                      SizedBox(height: 4.height),
+                      Row(
+                        children: [
+                          ImageItem(
+                            AppImages.locationIcon,
+                            color: colors.textSecondary,
+                          ),
+                          SizedBox(width: 4.width),
+                          Text(
+                            p.location,
+                            style: TextStyle(
+                              fontSize: context.responsiveFontScale(14),
+                              color: colors.textSecondary,
+                              fontFamily: AppConstant.appFont,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20.height),
+                      ProjectCompletionChartWidget(
+                        percentage: p.completionPercentage,
+                      ),
+                      SizedBox(height: 14.height),
+                      ProjectStatsRowWidget(
+                        inProgressCount: p.inProgressPhasesCount,
+                        delayedCount: p.delayedPhasesCount,
+                      ),
+                      SizedBox(height: 14.height),
+                      ProjectTimelineSectionWidget(timeline: p.timeline),
+                      SizedBox(height: 14.height),
+                      ProjectPhasesSectionWidget(phases: p.phases),
+                      SizedBox(height: 14.height),
+                      ProjectAttachmentsSectionWidget(
+                        smartNotes: p.smartNotes,
+                        attachmentUrl: p.attachmentUrl,
+                      ),
+                      SizedBox(height: 24.height),
                     ],
                   ),
-                  SizedBox(height: 20.height),
-                  ProjectCompletionChartWidget(
-                    percentage: p.completionPercentage,
-                  ),
-                  SizedBox(height: 14.height),
-                  ProjectStatsRowWidget(
-                    inProgressCount: p.inProgressPhasesCount,
-                    delayedCount: p.delayedPhasesCount,
-                  ),
-                  SizedBox(height: 14.height),
-                  ProjectTimelineSectionWidget(
-                    timeline: p.timeline,
-                    isManager: isManager,
-                  ),
-                  SizedBox(height: 14.height),
-                  ProjectPhasesSectionWidget(
-                    phases: p.phases,
-                    isManager: isManager,
-                  ),
-                  SizedBox(height: 14.height),
-                  ProjectAttachmentsSectionWidget(
-                    smartNotes: p.smartNotes,
-                    isManager: isManager,
-                    attachmentUrl: p.attachmentUrl,
-                  ),
-                  SizedBox(height: 24.height),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
+                ),
+              );
+            },
+          ),
     );
   }
 }
