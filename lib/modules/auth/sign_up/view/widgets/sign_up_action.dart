@@ -17,10 +17,24 @@ class SignUpAction extends StatelessWidget {
             BlocBuilder<SignUpBloc, SignUpState>(
               builder: (context, state) {
                 return AppButton(
-                  isLoading: state.signUpStatus == RequestStatus.loading,
+                  // isLoading: state.signUpStatus == RequestStatus.loading,
                   text: AppStrings.signUp,
                   onTap: () {
-                    SignUpBloc.get(context).add(SignUpActionEvent());
+                      if (PreferenceUtils().getString(StorageKeys.accountType) ==
+                AppConstant.business) {
+              RouterHandler.navigate(
+                context,
+                AppRouterKeys.subscriptionPlans,
+                routerType: RouterType.goName,
+              );
+            } else {
+              RouterHandler.navigate(
+                context,
+                AppRouterKeys.navbar,
+                routerType: RouterType.goName,
+              );
+            }
+                    // SignUpBloc.get(context).add(SignUpActionEvent());
                   },
                   width: 560.width,
                 );

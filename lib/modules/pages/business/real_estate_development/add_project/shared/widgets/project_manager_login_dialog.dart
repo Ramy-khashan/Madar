@@ -103,7 +103,7 @@ class _ProjectManagerLoginDialogState
                 SizedBox(width: 12.width),
                 Expanded(
                   child: AppButton(
-                    text: 'تسجيل الدخول',
+                    text: AppStrings.signIn,
                     height: 48,
                     textSize: 15,
                     onTap: () => Navigator.of(context).pop(true),

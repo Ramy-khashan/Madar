@@ -3,31 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../core/components/app_appbar.dart';
+import '../../../../../core/components/image_item.dart';
 import '../../../../../core/components/loading_process.dart';
 import '../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../core/utils/constants/app_constant.dart';
+import '../../../../../core/utils/constants/app_images.dart';
+import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/responsive.dart';
-import '../../unit_details/view/unit_details_screen.dart';
 import '../controller/property_file_bloc.dart';
-import '../model/property_file_model.dart';
-import 'widgets/property_file_header_widget.dart';
-import 'widgets/unit_card.dart';
-import 'widgets/units_filter_tab_bar.dart';
+import 'widgets/property_files_content_item.dart';
 
 class PropertyFileScreen extends StatelessWidget {
   const PropertyFileScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => PropertyFileBloc()..add(const PropertyFileLoad()),
-      child: const _PropertyFileView(),
-    );
-  }
-}
-
-class _PropertyFileView extends StatelessWidget {
-  const _PropertyFileView();
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +27,7 @@ class _PropertyFileView extends StatelessWidget {
       child: Scaffold(
         backgroundColor: colors.backgroundPrimary,
         appBar: AppAppbar(
-          title: 'ملف العقار',
+          title: AppStrings.propertyFileTitle,
           actions: [
             PopupMenuButton<String>(
               icon: const Icon(Icons.more_vert),
@@ -53,16 +40,44 @@ class _PropertyFileView extends StatelessWidget {
                 PopupMenuItem(
                   value: 'delete',
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Icon(Icons.delete_outline, color: AppColors.errorColor),
-                      SizedBox(width: 8.width),
                       Text(
-                        'حذف العقار',
+                        AppStrings.sendPropertyFileToBroker,
+                        style: TextStyle(
+                          color: colors.textFieldTitle,
+                          fontFamily: AppConstant.appFont,
+                          fontSize: context.responsiveFontScale(14),
+                        ),
+                      ),
+                      SizedBox(width: 10.width),
+
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        size: 16.width,
+                        color: colors.textFieldTitle,
+                      ),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  value: 'delete',
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        AppStrings.deleteProperty,
                         style: TextStyle(
                           color: AppColors.errorColor,
                           fontFamily: AppConstant.appFont,
                           fontSize: context.responsiveFontScale(14),
                         ),
+                      ),
+                      SizedBox(width: 8.width),
+
+                      ImageItem(
+                        AppImages.deleteIcon,
+                        color: AppColors.errorColor,
                       ),
                     ],
                   ),
@@ -71,25 +86,27 @@ class _PropertyFileView extends StatelessWidget {
             ),
           ],
         ),
-        body: BlocBuilder<PropertyFileBloc, PropertyFileState>(
-          builder: (context, state) {
-            return LoadingProcess(
-              status: state.status,
-              errorMsg: state.errorMsg,
-              onTapRefresh: () => bloc.add(const PropertyFileLoad()),
-              emptyMsg: '',
-              isEmptyList: false,
-              childIsLoader: true,
-              child: state.property == null
-                  ? const SizedBox()
-                  : _PropertyFileContent(
-                      property: state.property!,
-                      colors: colors,
-                      state: state,
-                      bloc: bloc,
-                    ),
-            );
-          },
+        body: SafeArea(
+          child: BlocBuilder<PropertyFileBloc, PropertyFileState>(
+            builder: (context, state) {
+              return LoadingProcess(
+                status: state.status,
+                errorMsg: state.errorMsg,
+                onTapRefresh: () => bloc.add(const PropertyFileLoad()),
+                emptyMsg: '',
+                isEmptyList: false,
+                childIsLoader: true,
+                child: state.property == null
+                    ? const SizedBox()
+                    : PropertyFileContentItem(
+                        property: state.property!,
+                        colors: colors,
+                        state: state,
+                        bloc: bloc,
+                      ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -99,128 +116,25 @@ class _PropertyFileView extends StatelessWidget {
     showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('حذف العقار'),
-        content: const Text('هل أنت متأكد من حذف هذا العقار؟'),
+        title: Text(AppStrings.deleteProperty),
+        content: Text(AppStrings.deletePropertyConfirmation),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('إلغاء'),
+            child: Text(AppStrings.cancel),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
               bloc.add(const PropertyFileDeleteProperty());
             },
-            child: const Text(
-              'حذف',
-              style: TextStyle(color: AppColors.errorColor),
+            child: Text(
+              AppStrings.deleteBtn,
+              style: const TextStyle(color: AppColors.errorColor),
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class _PropertyFileContent extends StatelessWidget {
-  const _PropertyFileContent({
-    required this.property,
-    required this.colors,
-    required this.state,
-    required this.bloc,
-  });
-
-  final PropertyFileModel property;
-  final AppThemeColors colors;
-  final PropertyFileState state;
-  final PropertyFileBloc bloc;
-
-  @override
-  Widget build(BuildContext context) {
-    final units = state.filteredUnits;
-
-    return CustomScrollView(
-      slivers: [
-        SliverPadding(
-          padding: EdgeInsets.fromLTRB(16.width, 16.height, 16.width, 0),
-          sliver: SliverToBoxAdapter(
-            child: PropertyFileHeaderWidget(
-              property: property,
-              colors: colors,
-              onBookmarkTap: () => bloc.add(const PropertyFileToggleBookmark()),
-            ),
-          ),
-        ),
-        SliverPadding(
-          padding: EdgeInsets.fromLTRB(16.width, 20.height, 16.width, 8.height),
-          sliver: SliverToBoxAdapter(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '${property.rentedCount} مؤجرة من ${property.totalUnits}',
-                  style: TextStyle(
-                    fontSize: context.responsiveFontScale(13),
-                    color: colors.textSecondary,
-                    fontFamily: AppConstant.appFont,
-                  ),
-                ),
-                Text(
-                  'الشقق',
-                  style: TextStyle(
-                    fontSize: context.responsiveFontScale(16),
-                    fontWeight: FontWeight.w700,
-                    color: colors.textFieldTitle,
-                    fontFamily: AppConstant.appHeaderFont,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        SliverPadding(
-          padding: EdgeInsets.fromLTRB(16.width, 0, 16.width, 8.height),
-          sliver: SliverToBoxAdapter(
-            child: UnitsFilterTabBar(
-              colors: colors,
-              selected: state.unitFilter,
-              rentedCount: property.rentedCount,
-              vacantCount: property.vacantCount,
-              onFilterChanged: (s) =>
-                  bloc.add(PropertyFileFilterChanged(s)),
-            ),
-          ),
-        ),
-        SliverPadding(
-          padding: EdgeInsets.fromLTRB(16.width, 0, 16.width, 24.height),
-          sliver: SliverGrid(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final unit = units[index];
-                return UnitCard(
-                  unit: unit,
-                  colors: colors,
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => UnitDetailsScreen(
-                        unit: unit,
-                        propertyName: property.name,
-                      ),
-                    ),
-                  ),
-                );
-              },
-              childCount: units.length,
-            ),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 8,
-              childAspectRatio: 0.78,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

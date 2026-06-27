@@ -123,7 +123,7 @@ class PortfolioCardWidget extends StatelessWidget {
                   onTap: () {
                     RouterHandler.navigate(
                       context,
-                      AppRouterKeys.myPropertyDetails,
+                      AppRouterKeys.propertyFileDetails,
                       extra: portfolio.id,
                     );
                   },

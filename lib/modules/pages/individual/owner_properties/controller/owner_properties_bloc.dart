@@ -6,8 +6,7 @@ import '../../../../../core/model/property_listing_user_model.dart';
 import '../../../../../core/utils/constants/app_images.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../pages/individual/individual_home/model/property_model.dart';
-import '../../properties/model/properties_item_model.dart';
-
+ 
 part 'owner_properties_event.dart';
 part 'owner_properties_state.dart';
 

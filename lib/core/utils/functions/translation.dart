@@ -28,4 +28,6 @@ Future<void> changeLanguage(BuildContext context, String lang) async {
 
 extension Translation on String {
   String get trans => this.tr();
+
+  String transNamed(Map<String, String> args) => tr(this,namedArgs: args);
 }

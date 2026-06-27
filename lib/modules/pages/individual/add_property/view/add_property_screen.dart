@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../config/theme/app_theme_colors.dart';
+import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 import '../controller/add_property_bloc.dart';
 import 'steps/step1_type_screen.dart';
@@ -48,7 +49,7 @@ class _AddPropertyView extends StatelessWidget {
           scrolledUnderElevation: 0,
           centerTitle: true,
           title: Text(
-            'إضافة عقار',
+            AppStrings.addPropertyTitle,
             style: TextStyle(
               fontSize: context.responsiveFontScale(18),
               fontWeight: FontWeight.w700,

@@ -138,30 +138,32 @@ class InstallmentServiceCard extends StatelessWidget {
             color: colors.hoverColor ,
               borderRadius: BorderRadius.circular(8.radius),
             ),
-            child: Column(children:[
-               ServiceRow(
-            label: AppStrings.annualRentValue,
-            value:
-                '${rentInfo?.annualRentValue.toInt() ?? 0} ${AppStrings.currency}',
-            colors: colors,
-            context: context,
-          ),
-          SizedBox(height: 8.height),
-          ServiceRow(
-            label: AppStrings.minMonthlyInstallment,
-            value:
-                '${rentInfo?.minMonthlyInstallment.toInt() ?? 0} ${AppStrings.currency}',
-            colors: colors,
-            context: context,
-          ),
-          SizedBox(height: 8.height),
-          ServiceRow(
-            label: AppStrings.installmentProvidersCount,
-            value: '${rentInfo?.providersCount ?? 0}',
-            colors: colors,
-            context: context,
-          ),
-            ])),
+            child: SingleChildScrollView(
+              child: Column(children:[
+                 ServiceRow(
+              label: AppStrings.annualRentValue,
+              value:
+                  '${rentInfo?.annualRentValue.toInt() ?? 0} ${AppStrings.currency}',
+              colors: colors,
+              context: context,
+                        ),
+                        SizedBox(height: 8.height),
+                        ServiceRow(
+              label: AppStrings.minMonthlyInstallment,
+              value:
+                  '${rentInfo?.minMonthlyInstallment.toInt() ?? 0} ${AppStrings.currency}',
+              colors: colors,
+              context: context,
+                        ),
+                        SizedBox(height: 8.height),
+                        ServiceRow(
+              label: AppStrings.installmentProvidersCount,
+              value: '${rentInfo?.providersCount ?? 0}',
+              colors: colors,
+              context: context,
+                        ),
+              ]),
+            )),
           SizedBox(height: 16.height),
           AppButton(
             key: Key('installment_service_card_button_${property?.id ?? '1'}'),
@@ -318,12 +320,14 @@ class ServiceRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: ctx.responsiveFontScale(10),
-              color: colors.textSecondary,
-              fontFamily: AppConstant.appFont,
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: ctx.responsiveFontScale(10),
+                color: colors.textSecondary,
+                fontFamily: AppConstant.appFont,
+              ),
             ),
           ),
           Text(

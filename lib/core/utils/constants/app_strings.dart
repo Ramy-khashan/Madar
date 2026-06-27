@@ -1025,5 +1025,196 @@ class AppStrings {
       'subscription_featured_badge'.trans;
   static String amountVal(String amount) => '$amount $currency';
   static String get passwordsNotMatch => 'passwords_not_match'.trans;
-  
+
+  // Property File Operation
+  static String get propertyFileTitle => 'property_file_title'.trans;
+  static String get sendPropertyFileToBroker =>
+      'send_property_file_to_broker'.trans;
+  static String get propertySentToBrokerSuccess =>
+      'property_sent_to_broker_success'.trans;
+  static String get deleteProperty => 'delete_property'.trans;
+  static String get deletePropertyFile => 'delete_property_file'.trans;
+  static String get deletePropertyConfirmation =>
+      'delete_property_confirmation'.trans;
+  static String get deletePropertyFileConfirmation =>
+      'delete_property_file_confirmation'.trans;
+  static String get deleteBtn => 'delete_btn'.trans;
+  static String get apartmentNumber => 'apartment_number'.trans;
+  static String get rentStatus => 'rent_status'.trans;
+  static String get statusLabel => 'status_label'.trans;
+  static String get dateType => 'date_type'.trans;
+  static String get gregorian => 'gregorian'.trans;
+  static String get hijri => 'hijri'.trans;
+  static String get rentStartDate => 'rent_start_date'.trans;
+  static String get rentEndDate => 'rent_end_date'.trans;
+  static String get saveChanges => 'save_changes'.trans;
+  static String get apartments => 'apartments'.trans;
+  static String get apartmentsCount => 'apartments_count'.trans;
+  static String get monthlyRevenue => 'monthly_revenue'.trans;
+  static String get unitExpenses => 'unit_expenses'.trans;
+  static String get addNewExpense => 'add_new_expense'.trans;
+  static String get expenseHint => 'expense_hint'.trans;
+  static String get addExpenseBtn => 'add_expense_btn'.trans;
+  static String get rentedStatus => 'rented_status'.trans;
+  static String get vacantStatus => 'vacant_status'.trans;
+  static String rentedFromTotal(int rented, int total) =>
+      'rented_from_total'.transNamed({'rented': '$rented', 'total': '$total'});
+  static String roomsCount(int count) =>
+      'rooms_count'.transNamed({'count': '$count'});
+  static String areaWithUnit(num area) =>
+      'area_with_unit'.transNamed({'area': '${area.toInt()}'});
+  static String contractDateRange(String start, String end) =>
+      'contract_date_range'.transNamed({'start': start, 'end': end});
+
+  // Add Property Flow
+  static String get addPropertyTitle => 'add_property_title'.trans;
+  static String get propertyTypeAndOperation =>
+      'property_type_and_operation'.trans;
+  static String get startWithBasicsHint => 'start_with_basics_hint'.trans;
+  static String get doYouWant => 'do_you_want'.trans;
+  static String get sellLabel => 'sell_label'.trans;
+  static String get rentLabel => 'rent_label'.trans;
+  static String get rentDuration => 'rent_duration'.trans;
+  static String get chooseRentDuration => 'choose_rent_duration'.trans;
+  static String get monthlyRentRenewable => 'monthly_rent_renewable'.trans;
+  static String get rentEvery6Months => 'rent_every_6_months'.trans;
+  static String get yearlyRentLabel => 'yearly_rent'.trans;
+  static String get halfYearlyLabel => 'half_yearly_label'.trans;
+  static String get yearLabel => 'year_label'.trans;
+  static String get locationAndDeed => 'location_and_deed'.trans;
+  static String get setLocationAndDeed => 'set_location_and_deed'.trans;
+  static String get searchNeighborhoodHint => 'search_neighborhood_hint'.trans;
+  static String get buildingNumber => 'building_number'.trans;
+  static String get streetName => 'street_name'.trans;
+  static String get deed => 'deed'.trans;
+  static String get chooseDeedTypeHint => 'choose_deed_type_hint'.trans;
+  static String get enterDeedNumber => 'enter_deed_number'.trans;
+  static String get deedNumber => 'deed_number'.trans;
+  static String get deedDate => 'deed_date'.trans;
+  static String get enterHijriDateHint => 'enter_hijri_date_hint'.trans;
+  static String get propertyPhotos => 'property_photos'.trans;
+  static String get uploadPhotosHint => 'upload_photos_hint'.trans;
+  static String get tour360 => 'tour_360'.trans;
+  static String get strongerEngagement => 'stronger_engagement'.trans;
+  static String get videoLabel => 'video_label'.trans;
+  static String get upTo60Seconds => 'up_to_60_seconds'.trans;
+  static String get clickToUploadPhotos => 'click_to_upload_photos'.trans;
+  static String get aiAutoEnhance => 'ai_auto_enhance'.trans;
+  static String get basicDetails => 'basic_details'.trans;
+  static String get buyerDecisionInfo => 'buyer_decision_info'.trans;
+  static String get areaSqmRequired => 'area_sqm_required'.trans;
+  static String get facadeLabel => 'facade_label'.trans;
+  static String get streetWidth => 'street_width'.trans;
+  static String get bedroomsCount => 'bedrooms_count'.trans;
+  static String get bathroomsCount => 'bathrooms_count'.trans;
+  static String get majlisCountOptional => 'majlis_count_optional'.trans;
+  static String get hallsCountOptional => 'halls_count_optional'.trans;
+  static String get apartmentNumberOptional =>
+      'apartment_number_optional'.trans;
+  static String get enterApartmentNumber => 'enter_apartment_number'.trans;
+  static String get totalFloorsInBuilding => 'total_floors_in_building'.trans;
+  static String get apartmentsPerFloorOptional =>
+      'apartments_per_floor_optional'.trans;
+  static String get floorLabelShort => 'floor_label_short'.trans;
+  static String get furnishingStatus => 'furnishing_status'.trans;
+  static String get propertyCondition => 'property_condition'.trans;
+  static String get developerNameOptional => 'developer_name_optional'.trans;
+  static String get enterDeveloperName => 'enter_developer_name'.trans;
+  static String get amenitiesLabel => 'amenities_label'.trans;
+  static String chooseLabel(String label) =>
+      'choose_label'.transNamed({'label': label});
+  static String get priceAndReview => 'price_and_review'.trans;
+  static String get setPriceAiHint => 'set_price_ai_hint'.trans;
+  static String get competitivePriceInRange =>
+      'competitive_price_in_range'.trans;
+  static String get propertyInsuranceLabel => 'property_insurance_label'.trans;
+  static String get comprehensiveProtection => 'comprehensive_protection'.trans;
+  static String get rentInstallmentLabel => 'rent_installment_label'.trans;
+  static String get marketReport => 'market_report'.trans;
+  static String get generateWithAi => 'generate_with_ai'.trans;
+  static String get forSale => 'for_sale'.trans;
+  static String get forRent => 'for_rent'.trans;
+  static String bathroomsShort(int count) =>
+      'bathrooms_short'.transNamed({'count': '$count'});
+  static String get typeLabel => 'type_label'.trans;
+  static String photosCount(int count) =>
+      'photos_count'.transNamed({'count': '$count'});
+  static String amenitiesCount(int count) =>
+      'amenities_count'.transNamed({'count': '$count'});
+  static String get adSummary => 'ad_summary'.trans;
+  static String get saveToMyPropertyFiles => 'save_to_my_property_files'.trans;
+  static String get chooseSaveLocation => 'choose_save_location'.trans;
+  static String get saveBtn => 'save_btn'.trans;
+  static String get saveToExistingFile => 'save_to_existing_file'.trans;
+  static String get addToExistingFileHint => 'add_to_existing_file_hint'.trans;
+  static String get saveAsNewFile => 'save_as_new_file'.trans;
+  static String get createNewPropertyFile => 'create_new_property_file'.trans;
+  static String get newFileNameHint => 'new_file_name_hint'.trans;
+  static String get fileNameLabel => 'file_name_label'.trans;
+  static String get aiSmartSuggestion => 'ai_smart_suggestion'.trans;
+  static String get suggestedPrice => 'suggested_price'.trans;
+  static String get basedOnTransactions => 'based_on_transactions'.trans;
+
+  // Business Project Phases - Residential
+  static String get resPhase1Title => 'res_phase_1_title'.trans;
+  static String get resPhase1Subtitle => 'res_phase_1_subtitle'.trans;
+  static String get resPhase1Item1 => 'res_phase_1_item_1'.trans;
+  static String get resPhase1Item2 => 'res_phase_1_item_2'.trans;
+  static String get resPhase1Item3 => 'res_phase_1_item_3'.trans;
+  static String get resPhase1Item4 => 'res_phase_1_item_4'.trans;
+  static String get resPhase1Item5 => 'res_phase_1_item_5'.trans;
+  static String get resPhase1Item6 => 'res_phase_1_item_6'.trans;
+  static String get resPhase1Item7 => 'res_phase_1_item_7'.trans;
+  static String get resPhase2Title => 'res_phase_2_title'.trans;
+  static String get resPhase2Subtitle => 'res_phase_2_subtitle'.trans;
+  static String get resPhase3Title => 'res_phase_3_title'.trans;
+  static String get resPhase3Subtitle => 'res_phase_3_subtitle'.trans;
+  static String get resPhase4Title => 'res_phase_4_title'.trans;
+  static String get resPhase4Subtitle => 'res_phase_4_subtitle'.trans;
+  static String get resPhase5Title => 'res_phase_5_title'.trans;
+  static String get resPhase5Subtitle => 'res_phase_5_subtitle'.trans;
+  static String get startFromAnyPhase => 'start_from_any_phase'.trans;
+
+  // Business Project Phases - Commercial
+  static String get comPhase1Title => 'com_phase_1_title'.trans;
+  static String get comPhase1Subtitle => 'com_phase_1_subtitle'.trans;
+  static String get comPhase1Item1 => 'com_phase_1_item_1'.trans;
+  static String get comPhase1Item2 => 'com_phase_1_item_2'.trans;
+  static String get comPhase1Item3 => 'com_phase_1_item_3'.trans;
+  static String get comPhase1Item4 => 'com_phase_1_item_4'.trans;
+  static String get comPhase1Item5 => 'com_phase_1_item_5'.trans;
+  static String get comPhase2Title => 'com_phase_2_title'.trans;
+  static String get comPhase2Subtitle => 'com_phase_2_subtitle'.trans;
+  static String get comPhase3Title => 'com_phase_3_title'.trans;
+  static String get comPhase3Subtitle => 'com_phase_3_subtitle'.trans;
+  static String get comPhase4Title => 'com_phase_4_title'.trans;
+  static String get comPhase4Subtitle => 'com_phase_4_subtitle'.trans;
+  static String get comPhase5Title => 'com_phase_5_title'.trans;
+  static String get comPhase5Subtitle => 'com_phase_5_subtitle'.trans;
+  static String get comPhase6Title => 'com_phase_6_title'.trans;
+  static String get comPhase6Subtitle => 'com_phase_6_subtitle'.trans;
+
+  // Financial / Misc
+  static String totalAmountLabel(String amount) => 'total_amount_label'
+      .transNamed({'amount': amount, 'currency': currency});
+  static String remainingAmount(String amount) =>
+      'remaining_amount'.transNamed({'amount': amount, 'currency': currency});
+  static String get netProfitNote1 => 'net_profit_note_1'.trans;
+  static String get netProfitNote2 => 'net_profit_note_2'.trans;
+  static String get netProfitNote3 => 'net_profit_note_3'.trans;
+  static String get ratePropertyWhyEvaluation =>
+      'rate_property_why_evaluation'.trans;
+  static String get ratePropertyReason1 => 'rate_property_reason_1'.trans;
+  static String get ratePropertyReason2 => 'rate_property_reason_2'.trans;
+  static String get ratePropertyReason3 => 'rate_property_reason_3'.trans;
+  static String get ratePropertyReason4 => 'rate_property_reason_4'.trans;
+  static String get ratePropertyReason5 => 'rate_property_reason_5'.trans;
+  static String get annualCostAfterDiscount => 'annual_cost_after_discount'.trans;
+  static String youSavedAmount(String amount) =>
+      'you_saved_amount'.transNamed({'amount': amount, 'currency': currency});
+  static String get paymentMethodLabel => 'payment_method_label'.trans;
+  static String subscriptionValidUntil(String date) =>
+      'subscription_valid_until'.transNamed({'date': date});
+  static String get subscriptionValidUntilDemo =>
+      'subscription_valid_until_demo'.trans;
 }

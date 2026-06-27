@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_button.dart';
 import '../../../../../../core/components/image_item.dart';
+import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../controller/add_property_bloc.dart';
 
@@ -23,7 +24,7 @@ class AddPropertyStep1Screen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                  Text(
-                  'نوع العقار والعملية',
+                  AppStrings.propertyTypeAndOperation,
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(16),
                     fontWeight: FontWeight.w700,
@@ -32,7 +33,7 @@ class AddPropertyStep1Screen extends StatelessWidget {
                 ),
                 6.height.toSizedBox,
                 Text(
-                  'ابدأ بالاساسيات - هذه تساعدنا توصلك للعميل المناسب.',
+                  AppStrings.startWithBasicsHint,
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(12),
                     fontWeight: FontWeight.w400,
@@ -42,7 +43,7 @@ class AddPropertyStep1Screen extends StatelessWidget {
                 12.height.toSizedBox,
 
                 Text(
-                  'هل تريد:',
+                  AppStrings.doYouWant,
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(16),
                     fontWeight: FontWeight.w600,
@@ -85,14 +86,14 @@ class _OperationToggle extends StatelessWidget {
           child: Row(
             children: [
               _ToggleOption(
-                label: 'بيع',
+                label: AppStrings.sellLabel,
                 isActive: isSell,
                 onTap: () => AddPropertyBloc.get(context)
                     .add(const SelectOperationTypeEvent('sell')),
                 tc: tc,
               ),
               _ToggleOption(
-                label: 'إيجار',
+                label: AppStrings.rentLabel,
                 isActive: !isSell,
                 onTap: () => AddPropertyBloc.get(context)
                     .add(const SelectOperationTypeEvent('rent')),
@@ -263,7 +264,7 @@ class _Step1NextButton extends StatelessWidget {
           padding: EdgeInsets.fromLTRB(
               16.width, 8.height, 16.width, 24.height),
           child: AppButton(
-            text: 'التالي',
+            text: AppStrings.next,
             onTap: enabled
                 ? () => AddPropertyBloc.get(context).add(const NextStepEvent())
                 : null,

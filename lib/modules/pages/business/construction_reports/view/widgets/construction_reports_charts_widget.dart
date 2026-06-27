@@ -21,11 +21,10 @@ class ConstructionReportsLineChartWidget extends StatelessWidget {
     23.0,
     22.5,
   ];
-  static const List<String> _xLabels = ['يناير', 'فبراير', 'مارس', 'أبريل'];
-
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
+    final xLabels = [AppStrings.jan, AppStrings.feb, AppStrings.mar, AppStrings.apr];
     return OutlinedSection(
       title: AppStrings.occupancyOverTime,
 
@@ -72,7 +71,7 @@ class ConstructionReportsLineChartWidget extends StatelessWidget {
                   interval: 3,
                   getTitlesWidget: (value, meta) {
                     final idx = value.toInt();
-                    const labels = _xLabels;
+                    final labels = xLabels;
                     final labelIdx = (idx ~/ 3);
                     if (labelIdx >= labels.length) {
                       return const SizedBox.shrink();

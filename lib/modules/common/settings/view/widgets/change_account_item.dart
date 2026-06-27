@@ -44,8 +44,8 @@ class ChangeAccountItem extends StatelessWidget {
                 child: ImageItem(
                   (PreferenceUtils().getString(StorageKeys.accountType) ==
                           AppConstant.business)
-                      ?   AppImages.accountIcon:AppImages.changeAccountIcon
-                     ,
+                      ? AppImages.accountIcon
+                      : AppImages.changeAccountIcon,
                   color: AppThemeColors.of(context).primaryBrand,
                 ),
               ),
@@ -57,8 +57,8 @@ class ChangeAccountItem extends StatelessWidget {
                     Text(
                       PreferenceUtils().getString(StorageKeys.accountType) ==
                               AppConstant.business
-                          ? 
-                          AppStrings.changeAccountIndividual:AppStrings.changeAccount,
+                          ? AppStrings.changeAccountIndividual
+                          : AppStrings.changeAccount,
                       style: TextStyle(
                         fontSize: context.responsiveFontScale(14),
                         fontWeight: FontWeight.w500,

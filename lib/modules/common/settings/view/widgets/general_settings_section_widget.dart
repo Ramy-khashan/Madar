@@ -117,56 +117,63 @@ class SettingsActionRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(24.radius),
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 8.height),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24.radius),
-          color: colors.hoverColor.withValues(alpha: 0.1),
-          border: Border.all(color: colors.borderColor),
-        ),
-        padding: EdgeInsets.symmetric(
-          horizontal: 8.height,
-          vertical: 14.height,
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: EdgeInsets.all(8.width),
-              decoration: BoxDecoration(
-                color: isReadTag
-                    ? AppColors.errorColor.withValues(alpha: 0.08)
-                    : colors.primaryBrand.withValues(alpha: 0.08),
-                shape: BoxShape.circle,
-              ),
-              child: image != null
-                  ? ImageItem(image!, width: 20.width, height: 20.width)
-                  : Icon(
-                      icon,
-                      size: 20.width,
-                      color: isReadTag
-                          ? AppColors.errorColor
-                          : colors.primaryBrand,
-                    ),
-            ),
-            SizedBox(width: 12.width),
+    return Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.height),
 
-            Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: context.responsiveFontScale(14),
-                  fontWeight: FontWeight.w500,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(24.radius),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24.radius),
+            color: colors.hoverColor.withValues(alpha: 0.1),
+            border: Border.all(color: colors.borderColor),
+          ),
+          padding: EdgeInsets.symmetric(
+            horizontal: 8.height,
+            vertical: 14.height,
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(8.width),
+                decoration: BoxDecoration(
                   color: isReadTag
-                      ? AppColors.errorColor
-                      : colors.textFieldTitle,
+                      ? AppColors.errorColor.withValues(alpha: 0.08)
+                      : colors.primaryBrand.withValues(alpha: 0.08),
+                  shape: BoxShape.circle,
+                ),
+                child: image != null
+                    ? ImageItem(image!, width: 20.width, height: 20.width,
+                        color: isReadTag
+                            ? AppColors.errorColor
+                            : colors.primaryBrand,
+                      )
+                    : Icon(
+                        icon,
+                        size: 20.width,
+                        color: isReadTag
+                            ? AppColors.errorColor
+                            : colors.primaryBrand,
+                      ),
+              ),
+              SizedBox(width: 12.width),
+      
+              Expanded(
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: context.responsiveFontScale(14),
+                    fontWeight: FontWeight.w500,
+                    color: isReadTag
+                        ? AppColors.errorColor
+                        : colors.textFieldTitle,
+                  ),
                 ),
               ),
-            ),
-            trailing ?? SizedBox.shrink(),
-          ],
+              trailing ?? SizedBox.shrink(),
+            ],
+          ),
         ),
       ),
     );

@@ -232,12 +232,15 @@ class SettingsScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                Text(
-                                  AppStrings.deleteAccountHint,
-                                  style: TextStyle(
-                                    color: AppThemeColors.of(
-                                      context,
-                                    ).textFieldTitle,
+                                Padding(
+                                  padding:   EdgeInsets.symmetric(horizontal: 16.width),
+                                  child: Text(
+                                    AppStrings.deleteAccountHint,
+                                    style: TextStyle(
+                                      color: AppThemeColors.of(
+                                        context,
+                                      ).textFieldTitle,
+                                    ),
                                   ),
                                 ),
                                 SizedBox(height: 22.height),

@@ -19,7 +19,7 @@ class NetProfitLossNotesWidget extends StatelessWidget {
         children: [
           _InsightCard(
             emoji: '💡',
-            message: 'أداء مالي قوي هذا الشهر بزيادة ٢٠٪ في صافي الربح',
+            message: AppStrings.netProfitNote1,
             bgColor: AppColors.backgroundLight,
             borderColor: AppColors.secondBrand.withValues(alpha: 0.2),
             textColor: colors.textPrimary,
@@ -27,7 +27,7 @@ class NetProfitLossNotesWidget extends StatelessWidget {
           SizedBox(height: 8.height),
           _InsightCard(
             emoji: '⚠️',
-            message: 'انتبه: المصروفات زادت ٧٪ - راجع بنود الصيانة',
+            message: AppStrings.netProfitNote2,
             bgColor: AppColors.rate.withValues(alpha: 0.08),
             borderColor: AppColors.rate.withValues(alpha: 0.3),
             textColor: AppColors.brownColor,
@@ -35,7 +35,7 @@ class NetProfitLossNotesWidget extends StatelessWidget {
           SizedBox(height: 8.height),
           _InsightCard(
             emoji: '✅',
-            message: 'نسبة التحصيل ممتازة: ٩٧٪ من الإيجارات المستحقة',
+            message: AppStrings.netProfitNote3,
             bgColor: AppColors.successColor.withValues(alpha: 0.06),
             borderColor: AppColors.successColor.withValues(alpha: 0.25),
             textColor: AppColors.successColor,

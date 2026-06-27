@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
+import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
+import '../../../../../../core/utils/constants/app_images.dart';
+import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../property_file/model/property_file_model.dart';
 
@@ -21,9 +24,11 @@ class UnitCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isRented = unit.status == UnitStatus.rented;
-    final statusColor =
-        isRented ? AppColors.lightSuccessColor : AppColors.errorColor;
-    final statusLabel = isRented ? 'مؤجرة' : 'شاغرة';
+    final statusColor = isRented
+        ? AppColors.lightSuccessColor
+        : colors.textFieldBorder;
+    final statusLabel =
+        isRented ? AppStrings.rentedStatus : AppStrings.vacantStatus;
 
     return GestureDetector(
       onTap: onTap,
@@ -33,14 +38,38 @@ class UnitCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16.radius),
           border: Border.all(color: colors.borderColor),
         ),
-        padding: EdgeInsets.all(10.width),
+        padding: EdgeInsets.all(8.width),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Status badge
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                Center(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 7.width,
+                      vertical: 4.height,
+                    ),
+                    decoration: BoxDecoration(
+                      color: colors.primaryBrand,
+                      borderRadius: BorderRadius.circular(4.radius),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      unit.number,
+                      style: TextStyle(
+                        fontSize: context.responsiveFontScale(14),
+                        fontWeight: FontWeight.w500,
+                        color: colors.onPrimary,
+                        fontFamily: AppConstant.appHeaderFont,
+                      ),
+                    ),
+                  ),
+                ),
+
                 Container(
                   padding: EdgeInsets.symmetric(
                     horizontal: 8.width,
@@ -62,57 +91,37 @@ class UnitCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 6.height),
-            // Unit number box
-            Center(
-              child: Container(
-                width: 44.width,
-                height: 44.width,
-                decoration: BoxDecoration(
-                  color: colors.primaryBrand,
-                  borderRadius: BorderRadius.circular(10.radius),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  unit.number,
-                  style: TextStyle(
-                    fontSize: context.responsiveFontScale(14),
-                    fontWeight: FontWeight.w700,
-                    color: colors.onPrimary,
-                    fontFamily: AppConstant.appHeaderFont,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 8.height),
+            Spacer(),
             // Label
-            Center(
-              child: Text(
-                unit.label,
-                style: TextStyle(
-                  fontSize: context.responsiveFontScale(12),
-                  fontWeight: FontWeight.w700,
-                  color: colors.textFieldTitle,
-                  fontFamily: AppConstant.appHeaderFont,
-                ),
+            Text(
+              unit.label,
+              style: TextStyle(
+                fontSize: context.responsiveFontScale(14),
+                fontWeight: FontWeight.w500,
+                color: colors.textFieldTitle,
+                fontFamily: AppConstant.appHeaderFont,
               ),
             ),
             SizedBox(height: 4.height),
             // Stats row
             Center(
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _Stat(
-                    icon: Icons.king_bed_outlined,
-                    value: '${unit.rooms} غرف',
-                    colors: colors,
+                  Expanded(
+                    child: PropertyInfoItem(
+                      icon: AppImages.bedroomIcon,
+                      value: AppStrings.roomsCount(unit.rooms),
+                      colors: colors,
+                    ),
                   ),
                   SizedBox(width: 6.width),
-                  _Stat(
-                    icon: Icons.straighten,
-                    value: '${unit.area.toInt()} م2',
-                    colors: colors,
+                  Expanded(
+                    child: PropertyInfoItem(
+                      icon: AppImages.totalSpaceIcon,
+                      value: AppStrings.areaWithUnit(unit.area),
+                      colors: colors,
+                    ),
                   ),
                 ],
               ),
@@ -124,14 +133,15 @@ class UnitCard extends StatelessWidget {
   }
 }
 
-class _Stat extends StatelessWidget {
-  const _Stat({
+class PropertyInfoItem extends StatelessWidget {
+  const PropertyInfoItem({
+    super.key,
     required this.icon,
     required this.value,
     required this.colors,
   });
 
-  final IconData icon;
+  final String icon;
   final String value;
   final AppThemeColors colors;
 
@@ -139,14 +149,22 @@ class _Stat extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 12.width, color: colors.textSecondary),
+        ImageItem(
+          icon,
+          color: colors.textSecondary,
+          width: 12.width,
+          height: 12.width,
+        ),
         SizedBox(width: 2.width),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: context.responsiveFontScale(10),
-            color: colors.textSecondary,
-            fontFamily: AppConstant.appFont,
+        Expanded(
+          child: Text(
+            value,
+            style: TextStyle(
+              fontSize: context.responsiveFontScale(9),
+              color: colors.textFieldTitle,
+              fontWeight: FontWeight.w500,
+              fontFamily: AppConstant.appFont,
+            ),
           ),
         ),
       ],

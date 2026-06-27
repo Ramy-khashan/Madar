@@ -73,6 +73,7 @@ class PropertiesListingScreen extends StatelessWidget {
                         final property = state.properties[index];
                         return PropertyCardWidget(
                           property: property,
+                          isViewAll:true,
                           footer: PropertyCardDualFooter(
                             onSendRequest: () {},
                             onChat: () {
@@ -99,7 +100,7 @@ class PropertiesListingScreen extends StatelessWidget {
                       onLoadMore: (int page) {
                         PropertiesBloc.get(
                           context,
-                        ).add(PropertiesLoad(isLoadMore: true, page: page));
+                        ).add(PropertiesLoad(isLoadMore: true, page: page,));
                       },
                     ),
                   );

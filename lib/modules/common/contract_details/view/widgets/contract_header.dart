@@ -11,9 +11,9 @@ class ContractSummaryCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.width),
       decoration: BoxDecoration(
-        color: colors.primaryBrand.withValues(alpha: 0.05),
+        color: AppColors.blueColor.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(20.radius),
-        border: Border.all(color: colors.primaryBrand),
+        border: Border.all(color: AppColors.blueColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

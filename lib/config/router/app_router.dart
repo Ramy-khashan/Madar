@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../modules/common/broker_properties/controller/broker_properties_bloc.dart';
+import '../../modules/common/broker_properties/view/broker_properties_screen.dart';
 import '../../modules/common/chats/smart_assistant_chat/controller/smart_assistant_chat_bloc.dart';
 import '../../modules/common/chats/smart_assistant_chat/view/smart_assistant_chat_screen.dart';
 import '../../modules/common/contract_details/controller/contract_details_bloc.dart';
 import '../../modules/common/contract_details/view/contract_details_screen.dart';
+import '../../modules/common/my_wishlist/controller/my_wishlist_bloc.dart';
+import '../../modules/common/my_wishlist/view/my_wishlist_screen.dart';
 import '../../modules/common/settings/view/widgets/delete_account_screen.dart';
 import '../../modules/pages/business/business_properties/controller/business_properties_bloc.dart';
 import '../../modules/pages/business/business_properties/view/business_properties_screen.dart';
@@ -32,6 +36,10 @@ import '../../modules/pages/project_manager/project_details/controller/project_d
 import '../../modules/pages/project_manager/project_details/view/project_details_screen.dart';
 import '../../modules/pages/project_manager/phase_details/controller/phase_details_bloc.dart';
 import '../../modules/pages/project_manager/phase_details/view/phase_details_screen.dart';
+import '../../modules/pages/properties_file_operation/property_file/controller/property_file_bloc.dart';
+import '../../modules/pages/properties_file_operation/property_file/model/property_file_model.dart';
+import '../../modules/pages/properties_file_operation/property_file/view/property_file_screen.dart';
+import '../../modules/pages/properties_file_operation/unit_details/view/unit_details_screen.dart';
 import '../../madar_app.dart';
 import '../../modules/auth/business_sign_up_scenario/loading_pay/view/loading_pay_screen.dart';
 import '../../modules/auth/business_sign_up_scenario/payment_type/view/payment_type_screen.dart';
@@ -170,11 +178,12 @@ final GoRouter appRouter = GoRouter(
         value: state.extra as SubscriptionBloc,
         child: const PaymentTypeScreen(),
       ),
-    ), getRouteInstance(
+    ),
+    getRouteInstance(
       AppRouterKeys.deleteAccountScreen,
       (state) => const DeleteAccountScreen(),
     ),
-      getRouteInstance(
+    getRouteInstance(
       AppRouterKeys.businessPropertiesScreen,
       (state) => BlocProvider(
         create: (_) =>
@@ -224,6 +233,21 @@ final GoRouter appRouter = GoRouter(
         child: const MyPropertiesScreen(),
       ),
     ),
+    getRouteInstance(
+      AppRouterKeys.propertyFileDetails,
+      (state) => BlocProvider(
+        create: (_) => PropertyFileBloc()..add(const PropertyFileLoad()),
+        child: const PropertyFileScreen(),
+      ),
+    ),
+
+    getRouteInstance(AppRouterKeys.unitDetailsScreen, (state) {
+      final extra = state.extra as Map<String, dynamic>;
+      return UnitDetailsScreen(
+        unit: extra['unit'] as UnitModel,
+        propertyName: extra['propertyName'] as String,
+      );
+    }),
     getRouteInstance(
       AppRouterKeys.myPropertyDetails,
       (state) => BlocProvider(
@@ -484,7 +508,7 @@ final GoRouter appRouter = GoRouter(
       ),
     ),
 
-     getRouteInstance(
+    getRouteInstance(
       AppRouterKeys.constructionReportsScreen,
       (state) => BlocProvider(
         create: (_) =>
@@ -510,12 +534,11 @@ final GoRouter appRouter = GoRouter(
     getRouteInstance(
       AppRouterKeys.realEstateDevelopmentList,
       (state) => BlocProvider(
-        create: (_) =>
-            ProjectsListBloc() ..add(ProjectsListLoad()),
-        child: const ProjectsListScreen( ),
+        create: (_) => ProjectsListBloc()..add(ProjectsListLoad()),
+        child: const ProjectsListScreen(),
       ),
     ),
-    
+
     getRouteInstance(AppRouterKeys.realEstateDevelopmentDetails, (state) {
       final map = state.extra as Map<String, dynamic>;
       return BlocProvider(
@@ -523,10 +546,9 @@ final GoRouter appRouter = GoRouter(
           ..add(
             BusinessProjectDetailsLoad(
               project: map['project'] as RealEstateProjectModel,
-            
             ),
           ),
-        child: BusinessProjectDetailsScreen( ),
+        child: BusinessProjectDetailsScreen(),
       );
     }),
     getRouteInstance(
@@ -540,7 +562,21 @@ final GoRouter appRouter = GoRouter(
         child: const AddCommercialProjectScreen(),
       ),
     ),
-   
+    getRouteInstance(
+      AppRouterKeys.myWishlist,
+      (state) => BlocProvider(
+        create: (context) => MyWishlistBloc(),
+        child: const MyWishlistScreen(),
+      ),
+    ),
+    getRouteInstance(
+      AppRouterKeys.brokerProperties,
+      (state) => BlocProvider(
+        create: (_) =>
+            BrokerPropertiesBloc()..add(const BrokerPropertiesLoad()),
+        child: const BrokerPropertiesScreen(),
+      ),
+    ),
   ],
 );
 

@@ -61,5 +61,7 @@ class AppRouterKeys {
   static const String subscriptionSummary = '/subscriptionSummary';
   static const String otpVerification = '/otp_verification';
   static const String phaseDetails = '/phaseDetails';
+  static const String propertyFileDetails = '/propertyFileDetails';
+  static const String unitDetailsScreen = '/unitDetailsScreen';
 }
 

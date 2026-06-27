@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_colors.dart';
+import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../model/project_model.dart';
 import 'project_status_badge.dart';
@@ -78,7 +79,7 @@ class ProjectSummaryCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      'التقدم',
+                      AppStrings.progress,
                       style: TextStyle(
                         fontSize: context.responsiveFontScale(12),
                         color: tc.textSecondary,

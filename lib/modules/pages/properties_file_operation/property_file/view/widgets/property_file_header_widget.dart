@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:madar_app/core/utils/constants/storage_keys.dart';
+import 'package:madar_app/core/utils/functions/preference_utils.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/image_item.dart';
-import '../../../../../../core/utils/constants/app_constant.dart';
+ import '../../../../../../core/utils/constants/app_constant.dart';
+import '../../../../../../core/utils/constants/app_images.dart';
+import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../property_file/model/property_file_model.dart';
+import 'property_status_card.dart';
 
 class PropertyFileHeaderWidget extends StatelessWidget {
   const PropertyFileHeaderWidget({
@@ -21,7 +26,7 @@ class PropertyFileHeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Hero image with overlay badges
         Stack(
@@ -79,8 +84,11 @@ class PropertyFileHeaderWidget extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.home_outlined,
-                        color: colors.onPrimary, size: 14.width),
+                    ImageItem(
+                      AppImages.propertyShapeIcon,
+                      width: 16.width,
+                      height: 16.width,
+                    ),
                     SizedBox(width: 4.width),
                     Text(
                       property.propertyType,
@@ -110,8 +118,15 @@ class PropertyFileHeaderWidget extends StatelessWidget {
         SizedBox(height: 4.height),
         // Location
         Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            Icon(
+              Icons.location_on_rounded,
+              size: 16.width,
+              color: colors.textSecondary,
+            ),
+            SizedBox(width: 4.width),
+
             Text(
               property.location,
               style: TextStyle(
@@ -120,98 +135,96 @@ class PropertyFileHeaderWidget extends StatelessWidget {
                 fontFamily: AppConstant.appFont,
               ),
             ),
-            SizedBox(width: 4.width),
-            Icon(Icons.location_on_outlined,
-                size: 16.width, color: colors.textSecondary),
           ],
         ),
         SizedBox(height: 16.height),
         // Stats row
-        Row(
-          children: [
-            Expanded(
-              child: _StatCard(
-                icon: Icons.home_outlined,
-                value: '${property.totalUnits}',
-                label: 'الشقق',
-                colors: colors,
+        PreferenceUtils().getString(StorageKeys.accountType) ==
+                AppConstant.business
+            ? Row(
+                children: [
+                  Expanded(
+                    child: PropertyStatusCard(
+                      icon: Icons.home_outlined,
+                      value: '${property.totalUnits}',
+                      label: AppStrings.apartments,
+                      colors: colors,
+                    ),
+                  ),
+
+                  SizedBox(width: 8.width),
+                  Expanded(
+                    child: PropertyStatusCard(
+                      icon: Icons.bar_chart,
+                      value: '${property.occupancyRate}%',
+                      label: AppStrings.occupancyRate,
+                      colors: colors,
+                    ),
+                  ),
+                  SizedBox(width: 8.width),
+                  Expanded(
+                    child: PropertyStatusCard(
+                      icon: Icons.description_outlined,
+                      value: '${property.monthlyRevenue}',
+                      label: AppStrings.monthlyRevenue,
+                      colors: colors,
+                    ),
+                  ),
+                ],
+              )
+            : Container(
+                padding: EdgeInsets.all(16.width),
+                decoration: BoxDecoration(
+                  color: colors.cardBackground,
+                  borderRadius: BorderRadius.circular(20.radius),
+                  border: Border.all(color: colors.borderColor),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(12.width),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.radius),
+                        color: colors.primaryBrand.withValues(alpha: 0.3),
+                      ),
+                      child: ImageItem(
+                        AppImages.apartmentIcon,
+                        color: colors.primaryBrand,
+                        width: 20.width,
+                        height: 20.width,
+                      ),
+                    ),
+                    SizedBox(width: 12.width),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${property.totalUnits}',
+                          style: TextStyle(
+                            fontSize: context.responsiveFontScale(16),
+                            fontWeight: FontWeight.w700,
+                            color: colors.textFieldTitle,
+                            fontFamily: AppConstant.appHeaderFont,
+                          ),
+                        ),
+                        SizedBox(height: 4.height),
+
+                        Text(
+                          AppStrings.apartmentsCount,
+                          style: TextStyle(
+                            fontSize: context.responsiveFontScale(14),
+                            color: colors.textSecondary,
+                            fontFamily: AppConstant.appFont,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(width: 8.width),
-            Expanded(
-              child: _StatCard(
-                icon: Icons.bar_chart,
-                value: '${property.occupancyRate}%',
-                label: 'نسبة الاشغال',
-                colors: colors,
-              ),
-            ),
-            SizedBox(width: 8.width),
-            Expanded(
-              child: _StatCard(
-                icon: Icons.description_outlined,
-                value: _formatRevenue(property.monthlyRevenue),
-                label: 'الإيراد الشهري',
-                colors: colors,
-              ),
-            ),
-          ],
-        ),
       ],
     );
   }
-
-  String _formatRevenue(double val) {
-    if (val >= 1000) return '${(val / 1000).toStringAsFixed(1)}K';
-    return val.toStringAsFixed(0);
-  }
+ 
 }
 
-class _StatCard extends StatelessWidget {
-  const _StatCard({
-    required this.icon,
-    required this.value,
-    required this.label,
-    required this.colors,
-  });
-
-  final IconData icon;
-  final String value;
-  final String label;
-  final AppThemeColors colors;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 12.height, horizontal: 8.width),
-      decoration: BoxDecoration(
-        color: colors.cardBackground,
-        borderRadius: BorderRadius.circular(16.radius),
-        border: Border.all(color: colors.borderColor),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: colors.primaryBrand, size: 24.width),
-          SizedBox(height: 4.height),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: context.responsiveFontScale(16),
-              fontWeight: FontWeight.w700,
-              color: colors.textFieldTitle,
-              fontFamily: AppConstant.appHeaderFont,
-            ),
-          ),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: context.responsiveFontScale(11),
-              color: colors.textSecondary,
-              fontFamily: AppConstant.appFont,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

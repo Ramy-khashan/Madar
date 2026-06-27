@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
+import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
+import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 
-/// An editable row field with a leading edit icon and a trailing icon
 class UnitInfoRow extends StatelessWidget {
   const UnitInfoRow({
     super.key,
     required this.label,
     required this.value,
-    required this.trailingIcon,
+    required this.leadingImage,
+    this.showLeadingImage = true,
     required this.colors,
     this.controller,
     this.isEditable = true,
@@ -19,7 +21,8 @@ class UnitInfoRow extends StatelessWidget {
 
   final String label;
   final String value;
-  final IconData trailingIcon;
+  final String leadingImage;
+  final bool showLeadingImage;
   final AppThemeColors colors;
   final TextEditingController? controller;
   final bool isEditable;
@@ -28,10 +31,7 @@ class UnitInfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 14.width,
-        vertical: 12.height,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 14.width, vertical: 12.height),
       decoration: BoxDecoration(
         color: colors.cardBackground,
         borderRadius: BorderRadius.circular(14.radius),
@@ -39,18 +39,27 @@ class UnitInfoRow extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Edit icon
-          if (isEditable)
-            Icon(
-              Icons.edit_outlined,
-              size: 18.width,
-              color: colors.textSecondary,
+          if (leadingImage.isNotEmpty) ...[
+            Container(
+              padding: EdgeInsets.all(10.width),
+              decoration: BoxDecoration(
+                color: colors.primaryBrand.withValues(alpha: 0.18),
+                borderRadius: BorderRadius.circular(8.radius),
+              ),
+              child: ImageItem(
+                leadingImage,
+                color: colors.primaryBrand,
+                width: 12.width,
+                height: 12.width,
+              ),
             ),
-          SizedBox(width: 8.width),
-          // Label & value column (RTL: value on left, label on right)
+
+            SizedBox(width: 8.width),
+          ],
+
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   label,
@@ -64,7 +73,7 @@ class UnitInfoRow extends StatelessWidget {
                 controller != null
                     ? TextField(
                         controller: controller,
-                        textAlign: TextAlign.end,
+                        textAlign: TextAlign.start,
                         keyboardType: keyboardType,
                         style: TextStyle(
                           fontSize: context.responsiveFontScale(14),
@@ -74,7 +83,10 @@ class UnitInfoRow extends StatelessWidget {
                         ),
                         decoration: const InputDecoration(
                           border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
                           isDense: true,
+
                           contentPadding: EdgeInsets.zero,
                         ),
                       )
@@ -91,8 +103,9 @@ class UnitInfoRow extends StatelessWidget {
             ),
           ),
           SizedBox(width: 8.width),
-          // Trailing icon
-          Icon(trailingIcon, size: 22.width, color: colors.primaryBrand),
+
+          if (isEditable)
+            ImageItem(AppImages.editPencilIcon, color: colors.textFieldTitle),
         ],
       ),
     );

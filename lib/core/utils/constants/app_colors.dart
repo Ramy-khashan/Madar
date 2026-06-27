@@ -8,7 +8,8 @@ class AppColors {
   static const lightSuccessColor = Color.fromARGB(255, 1, 162, 109);
   static const successColor = Color(0xFF00875A);
   static const darkGreenColor = Color.fromARGB(255, 2, 78, 52);
-  static const secondBrand = Color(0xFF1B3553);
+  static const secondBrand = Color.fromARGB(255, 52, 103, 162);
+  static const blueColor = Color(0xFFBEDBFF);
   static const rate = Colors.amber;
   static const backgroundLight = Color(0xFFEFF6FF);
   static const brownColor = Color(0xFF7B3306);

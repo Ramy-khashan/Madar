@@ -51,18 +51,18 @@ class RatePropertyResultScreen extends StatelessWidget {
                           ),
                           child: Column(
                             children: [
-                              const AiPriceCard(),
+                                AiPriceCard(),
                               SizedBox(height: 24.height),
                               OutlinedSection(
-                                title: 'لماذا هذا التقييم؟',
+                                title: AppStrings.ratePropertyWhyEvaluation,
                                 child: Column(
                                   children: [
                                     ...[
-                                      "تحليل 47 صفقة مشابهة",
-                                      " مقارنة أسعار الحي",
-                                      "مساحة العقار",
-                                      "عمر العقار",
-                                      "قرب الخدمات",
+                                      AppStrings.ratePropertyReason1,
+                                      AppStrings.ratePropertyReason2,
+                                      AppStrings.ratePropertyReason3,
+                                      AppStrings.ratePropertyReason4,
+                                      AppStrings.ratePropertyReason5,
                                     ].map((e) {
                                       return Padding
                                       (

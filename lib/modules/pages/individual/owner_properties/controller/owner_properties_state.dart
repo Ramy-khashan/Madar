@@ -17,7 +17,7 @@ class OwnerPropertiesLoaded extends OwnerPropertiesState {
   });
 
   final PropertyListingUserModel owner;
-  final List<PropertiesItemModel> properties;
+  final List<PropertyModel> properties;
   final PropertyFilterModel filter;
 
   @override

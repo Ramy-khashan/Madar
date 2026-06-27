@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madar_app/core/utils/functions/preference_utils.dart';
 
+import '../../../../../config/router/app_router_keys.dart';
 import '../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../core/components/app_appbar.dart';
 import '../../../../../core/components/app_button.dart';
+import '../../../../../core/components/image_item.dart';
 import '../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
+import '../../../../../core/utils/constants/app_images.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../core/utils/constants/storage_keys.dart';
 import '../../../../../core/utils/functions/responsive.dart';
+import '../../../../../core/utils/functions/router_handler.dart';
 import '../../property_file/model/property_file_model.dart';
 import '../controller/unit_details_bloc.dart';
 import 'widgets/two_option_toggle.dart';
@@ -53,7 +59,7 @@ class _UnitDetailsView extends StatelessWidget {
           Navigator.of(context).pop();
         } else if (state.isSentToBroker) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('تم إرسال الملف إلى وسيط عقاري')),
+            SnackBar(content: Text(AppStrings.propertySentToBrokerSuccess)),
           );
         }
       },
@@ -63,289 +69,307 @@ class _UnitDetailsView extends StatelessWidget {
           appBar: AppAppbar(
             title: outerState.unit?.label ?? '',
             actions: [
-            PopupMenuButton<String>(
-              icon: const Icon(Icons.more_vert),
-              onSelected: (val) {
-                if (val == 'send') {
-                  bloc.add(const UnitDetailsSentToBroker());
-                } else if (val == 'delete') {
-                  _confirmDelete(context, bloc);
-                }
-              },
-              itemBuilder: (_) => [
-                PopupMenuItem(
-                  value: 'send',
-                  child: Row(
-                    children: [
-                      Icon(Icons.send_outlined,
-                          color: colors.primaryBrand, size: 18.width),
-                      SizedBox(width: 8.width),
-                      Text(
-                        'ارسال الملف الى وسيط عقاري',
-                        style: TextStyle(
-                          fontFamily: AppConstant.appFont,
-                          fontSize: context.responsiveFontScale(13),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                PopupMenuItem(
-                  value: 'delete',
-                  child: Row(
-                    children: [
-                      const Icon(Icons.delete_outline,
-                          color: AppColors.errorColor),
-                      SizedBox(width: 8.width),
-                      Text(
-                        'حذف الملف العقاري',
-                        style: TextStyle(
-                          color: AppColors.errorColor,
-                          fontFamily: AppConstant.appFont,
-                          fontSize: context.responsiveFontScale(13),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        body: BlocBuilder<UnitDetailsBloc, UnitDetailsState>(
-          builder: (context, state) {
-            final unit = state.unit;
-            if (unit == null) return const SizedBox();
-
-            return SingleChildScrollView(
-              padding: EdgeInsets.fromLTRB(
-                  16.width, 16.height, 16.width, 32.height),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  // Unit title + property name
-                  Text(
-                    unit.label,
-                    style: TextStyle(
-                      fontSize: context.responsiveFontScale(22),
-                      fontWeight: FontWeight.w700,
-                      color: colors.textFieldTitle,
-                      fontFamily: AppConstant.appHeaderFont,
-                    ),
-                  ),
-                  Text(
-                    propertyName,
-                    style: TextStyle(
-                      fontSize: context.responsiveFontScale(13),
-                      color: colors.textSecondary,
-                      fontFamily: AppConstant.appFont,
-                    ),
-                  ),
-                  SizedBox(height: 16.height),
-
-                  // ── Basic info ────────────────────────────────────────────
-                  Container(
-                    padding: EdgeInsets.all(16.width),
-                    decoration: BoxDecoration(
-                      color: colors.cardBackground,
-                      borderRadius: BorderRadius.circular(20.radius),
-                      border: Border.all(color: colors.borderColor),
-                    ),
-                    child: Column(
+              PopupMenuButton<String>(
+                icon: const Icon(Icons.more_vert),
+                onSelected: (val) {
+                  if (val == 'send') {
+                    RouterHandler.navigate(context, AppRouterKeys.chooseBroker);
+                  } else if (val == 'delete') {
+                    _confirmDelete(context, bloc);
+                  }
+                },
+                itemBuilder: (_) => [
+                  PopupMenuItem(
+                    value: 'send',
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        UnitInfoRow(
-                          label: 'رقم الشقة',
-                          value: unit.number,
-                          trailingIcon: Icons.tag,
-                          colors: colors,
-                          isEditable: true,
-                        ),
-                        SizedBox(height: 10.height),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: UnitInfoRow(
-                                label: 'المساحة',
-                                value: '${unit.area.toInt()} م2',
-                                trailingIcon: Icons.fullscreen,
-                                colors: colors,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10.height),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: UnitInfoRow(
-                                label: 'الحمامات',
-                                value: '${unit.bathrooms}',
-                                trailingIcon: Icons.bathtub_outlined,
-                                colors: colors,
-                              ),
-                            ),
-                            SizedBox(width: 10.width),
-                            Expanded(
-                              child: UnitInfoRow(
-                                label: 'الغرف',
-                                value: '${unit.rooms}',
-                                trailingIcon: Icons.king_bed_outlined,
-                                colors: colors,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10.height),
-                        UnitInfoRow(
-                          label: 'الايجار الشهري',
-                          value:
-                              '${unit.monthlyRent.toStringAsFixed(0)} ${AppStrings.currency}',
-                          trailingIcon: Icons.receipt_long_outlined,
-                          colors: colors,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 20.height),
-
-                  // ── Rental status ─────────────────────────────────────────
-                  Text(
-                    'حالة الايجار',
-                    style: TextStyle(
-                      fontSize: context.responsiveFontScale(18),
-                      fontWeight: FontWeight.w700,
-                      color: colors.textFieldTitle,
-                      fontFamily: AppConstant.appHeaderFont,
-                    ),
-                  ),
-                  SizedBox(height: 12.height),
-                  Container(
-                    padding: EdgeInsets.all(16.width),
-                    decoration: BoxDecoration(
-                      color: colors.cardBackground,
-                      borderRadius: BorderRadius.circular(20.radius),
-                      border: Border.all(color: colors.borderColor),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        // الحالة label
                         Text(
-                          'الحالة',
+                          AppStrings.sendPropertyFileToBroker,
                           style: TextStyle(
                             fontSize: context.responsiveFontScale(13),
-                            color: colors.textSecondary,
-                            fontFamily: AppConstant.appFont,
+                            color: colors.textFieldTitle,
                           ),
                         ),
-                        SizedBox(height: 8.height),
-                        TwoOptionToggle(
-                          leftLabel: 'شاغرة',
-                          rightLabel: 'مؤجرة',
-                          isRightSelected:
-                              unit.status == UnitStatus.rented,
-                          colors: colors,
-                          onChanged: (isRight) => bloc.add(
-                            UnitDetailsStatusToggled(
-                              isRight
-                                  ? UnitStatus.rented
-                                  : UnitStatus.vacant,
-                            ),
-                          ),
+                        SizedBox(width: 8.width),
+
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          color: colors.textFieldTitle,
+                          size: 18.width,
                         ),
-                        if (unit.status == UnitStatus.rented) ...[
-                          SizedBox(height: 14.height),
-                          Text(
-                            'نوع التاريخ',
-                            style: TextStyle(
-                              fontSize: context.responsiveFontScale(13),
-                              color: colors.textSecondary,
-                              fontFamily: AppConstant.appFont,
-                            ),
-                          ),
-                          SizedBox(height: 8.height),
-                          TwoOptionToggle(
-                            leftLabel: 'ميلادي',
-                            rightLabel: 'هجري',
-                            isRightSelected: unit.isHijriDate,
-                            colors: colors,
-                            onChanged: (isRight) =>
-                                bloc.add(UnitDetailsDateTypeToggled(isRight)),
-                          ),
-                          SizedBox(height: 12.height),
-                          UnitInfoRow(
-                            label: 'تاريخ بدء الايجار',
-                            value: unit.rentStartDate,
-                            trailingIcon: Icons.calendar_today_outlined,
-                            colors: colors,
-                            controller: bloc.rentStartController,
-                          ),
-                          SizedBox(height: 10.height),
-                          UnitInfoRow(
-                            label: 'تاريخ انتهاء الايجار',
-                            value: unit.rentEndDate,
-                            trailingIcon: Icons.calendar_today_outlined,
-                            colors: colors,
-                            controller: bloc.rentEndController,
-                          ),
-                          SizedBox(height: 10.height),
-                          UnitInfoRow(
-                            label: 'اسم المستأجر',
-                            value: unit.tenantName,
-                            trailingIcon: Icons.person_outline,
-                            colors: colors,
-                            controller: bloc.tenantNameController,
-                          ),
-                          SizedBox(height: 10.height),
-                          UnitInfoRow(
-                            label: 'رقم الجوال',
-                            value: unit.tenantPhone,
-                            trailingIcon: Icons.phone_outlined,
-                            colors: colors,
-                            controller: bloc.tenantPhoneController,
-                            keyboardType: TextInputType.phone,
-                          ),
-                        ],
                       ],
                     ),
                   ),
-                  SizedBox(height: 16.height),
+                  PopupMenuItem(
+                    value: 'delete',
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
-                  // ── Action buttons ────────────────────────────────────────
-                  Row(
-                    children: [
-                      Expanded(
-                        child: AppButton(
-                          onTap: () => bloc.add(const UnitDetailsSaved()),
-                          text: 'حفظ التعديلات',
-                          isOutline: true,
-                          isLoading: state.saveStatus == RequestStatus.loading,
+                      children: [
+                        Text(
+                          AppStrings.deletePropertyFile,
+                          style: TextStyle(
+                            color: AppColors.errorColor,
+                            fontFamily: AppConstant.appFont,
+                            fontSize: context.responsiveFontScale(13),
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 10.width),
-                      Expanded(
-                        child: AppButton(
-                          onTap: () =>
-                              bloc.add(const UnitDetailsSentToBroker()),
-                          text: 'ارسال الى وسيط عقاري',
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 24.height),
+                        SizedBox(width: 8.width),
 
-                  // ── Expenses ──────────────────────────────────────────────
-                  UnitExpensesSection(
-                    expenses: unit.expenses,
-                    bloc: bloc,
-                    colors: colors,
+                        ImageItem(
+                          AppImages.deleteIcon,
+                          color: AppColors.errorColor,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
-            );
-          },
+            ],
+          ),
+          body: BlocBuilder<UnitDetailsBloc, UnitDetailsState>(
+            builder: (context, state) {
+              final unit = state.unit;
+              if (unit == null) return const SizedBox();
+
+              return SingleChildScrollView(
+                padding: EdgeInsets.fromLTRB(
+                  16.width,
+                  16.height,
+                  16.width,
+                  32.height,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      unit.label,
+                      style: TextStyle(
+                        fontSize: context.responsiveFontScale(22),
+                        fontWeight: FontWeight.w700,
+                        color: colors.textFieldTitle,
+                        fontFamily: AppConstant.appHeaderFont,
+                      ),
+                    ),
+                    Text(
+                      propertyName,
+                      style: TextStyle(
+                        fontSize: context.responsiveFontScale(13),
+                        color: colors.textSecondary,
+                        fontFamily: AppConstant.appFont,
+                      ),
+                    ),
+                    SizedBox(height: 16.height),
+
+                    Container(
+                      padding: EdgeInsets.all(16.width),
+                      decoration: BoxDecoration(
+                        color: colors.cardBackground,
+                        borderRadius: BorderRadius.circular(20.radius),
+                        border: Border.all(color: colors.borderColor),
+                      ),
+                      child: Column(
+                        children: [
+                          UnitInfoRow(
+                            label: AppStrings.apartmentNumber,
+                            value: unit.number,
+                            leadingImage: "",
+                            showLeadingImage: false,
+                            colors: colors,
+                            isEditable: true,
+                          ),
+                          SizedBox(height: 10.height),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: UnitInfoRow(
+                                  label: AppStrings.areaLabel,
+                                  value: AppStrings.areaWithUnit(unit.area),
+                                  leadingImage: AppImages.totalSpaceIcon,
+                                  colors: colors,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10.height),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: UnitInfoRow(
+                                  label: AppStrings.beds,
+                                  value: '${unit.rooms}',
+                                  leadingImage: AppImages.bedroomIcon,
+                                  colors: colors,
+                                ),
+                              ),
+                              SizedBox(width: 10.width),
+
+                              Expanded(
+                                child: UnitInfoRow(
+                                  label: AppStrings.baths,
+                                  value: '${unit.bathrooms}',
+                                  leadingImage: AppImages.bathroomIcon,
+                                  colors: colors,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10.height),
+                          UnitInfoRow(
+                            label: AppStrings.monthlyRent,
+                            value:
+                                '${unit.monthlyRent.toStringAsFixed(0)} ${AppStrings.currency}',
+                            leadingImage: AppImages.monthlyRentIcon,
+                            colors: colors,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20.height),
+                    if (PreferenceUtils().getString(StorageKeys.accountType) ==
+                        AppConstant.business)
+                      Text(
+                        AppStrings.rentStatus,
+                        style: TextStyle(
+                          fontSize: context.responsiveFontScale(18),
+                          fontWeight: FontWeight.w700,
+                          color: colors.textFieldTitle,
+                          fontFamily: AppConstant.appHeaderFont,
+                        ),
+                      ),
+
+                    if (PreferenceUtils().getString(StorageKeys.accountType) ==
+                        AppConstant.business)
+                      Container(
+                        margin: EdgeInsets.only(
+                          top: 12.height,
+                          bottom: 16.height,
+                        ),
+                        padding: EdgeInsets.all(16.width),
+                        decoration: BoxDecoration(
+                          color: colors.cardBackground,
+                          borderRadius: BorderRadius.circular(20.radius),
+                          border: Border.all(color: colors.borderColor),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              AppStrings.statusLabel,
+                              style: TextStyle(
+                                fontSize: context.responsiveFontScale(13),
+                                color: colors.textSecondary,
+                                fontFamily: AppConstant.appFont,
+                              ),
+                            ),
+                            SizedBox(height: 8.height),
+                            TwoOptionToggle(
+                              leftLabel: AppStrings.vacantStatus,
+                              rightLabel: AppStrings.rentedStatus,
+                              isRightSelected: unit.status == UnitStatus.rented,
+                              colors: colors,
+                              onChanged: (isRight) => bloc.add(
+                                UnitDetailsStatusToggled(
+                                  isRight
+                                      ? UnitStatus.rented
+                                      : UnitStatus.vacant,
+                                ),
+                              ),
+                            ),
+                            if (unit.status == UnitStatus.rented) ...[
+                              SizedBox(height: 14.height),
+                              Text(
+                                AppStrings.dateType,
+                                style: TextStyle(
+                                  fontSize: context.responsiveFontScale(13),
+                                  color: colors.textSecondary,
+                                  fontFamily: AppConstant.appFont,
+                                ),
+                              ),
+                              SizedBox(height: 8.height),
+                              TwoOptionToggle(
+                                leftLabel: AppStrings.gregorian,
+                                rightLabel: AppStrings.hijri,
+                                isRightSelected: unit.isHijriDate,
+                                colors: colors,
+                                onChanged: (isRight) => bloc.add(
+                                  UnitDetailsDateTypeToggled(isRight),
+                                ),
+                              ),
+                              SizedBox(height: 12.height),
+                              UnitInfoRow(
+                                label: AppStrings.rentStartDate,
+                                value: unit.rentStartDate,
+                                leadingImage: AppImages.updateIcon,
+                                colors: colors,
+                                controller: bloc.rentStartController,
+                              ),
+                              SizedBox(height: 10.height),
+                              UnitInfoRow(
+                                label: AppStrings.rentEndDate,
+                                value: unit.rentEndDate,
+                                leadingImage: AppImages.updateIcon,
+                                colors: colors,
+                                controller: bloc.rentEndController,
+                              ),
+                              SizedBox(height: 10.height),
+                              UnitInfoRow(
+                                label: AppStrings.tenantNameLabel,
+                                value: unit.tenantName,
+                                leadingImage: AppImages.accountIcon,
+                                colors: colors,
+                                controller: bloc.tenantNameController,
+                              ),
+                              SizedBox(height: 10.height),
+                              UnitInfoRow(
+                                label: AppStrings.phoneNumber,
+                                value: unit.tenantPhone,
+                                leadingImage: AppImages.phoneNumberIcon,
+                                colors: colors,
+                                controller: bloc.tenantPhoneController,
+                                keyboardType: TextInputType.phone,
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+
+                    Row(
+                      children: [
+                        Expanded(
+                          child: AppButton(
+                            onTap: () => bloc.add(const UnitDetailsSaved()),
+                            text: AppStrings.saveChanges,
+                            isOutline: true,
+                            isLoading:
+                                state.saveStatus == RequestStatus.loading,
+                          ),
+                        ),
+                        SizedBox(width: 10.width),
+                        Expanded(
+                          child: AppButton(
+                            onTap: () =>
+                                bloc.add(const UnitDetailsSentToBroker()),
+                            text: AppStrings.sendToBrokerProperty,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 24.height),
+                    if (PreferenceUtils().getString(StorageKeys.accountType) ==
+                        AppConstant.business)
+                      UnitExpensesSection(
+                        expenses: unit.expenses,
+                        bloc: bloc,
+                        colors: colors,
+                      ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
-        ),  // closes BlocBuilder<UnitDetailsBloc>
       ),
     );
   }
@@ -354,20 +378,20 @@ class _UnitDetailsView extends StatelessWidget {
     showDialog<void>(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('حذف الملف العقاري'),
-        content: const Text('هل أنت متأكد من حذف هذا الملف؟'),
+        title: Text(AppStrings.deletePropertyFile),
+        content: Text(AppStrings.deletePropertyFileConfirmation),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('إلغاء'),
+            child: Text(AppStrings.cancel),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
               bloc.add(const UnitDetailsDeleted());
             },
-            child: const Text(
-              'حذف',
+            child: Text(
+              AppStrings.deleteBtn,
               style: TextStyle(color: AppColors.errorColor),
             ),
           ),

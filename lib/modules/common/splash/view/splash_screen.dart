@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen>
               if (state.isHaveToken) {
                 RouterHandler.navigate(
                   context,
-                  state.role == "developer"
+                  state.role == AppConstant.developer
                       ? AppRouterKeys.projectManagerHome
                       : AppRouterKeys.navbar,
                 );

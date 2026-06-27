@@ -17,37 +17,37 @@ import '../../shared/widgets/project_manager_login_dialog.dart';
 import '../../shared/widgets/project_phases_checklist_widget.dart';
 import '../controller/add_commercial_project_bloc.dart';
 
-const _commercialPhases = [
+List<ProjectPhaseEntry> _commercialPhases() => [
   ProjectPhaseEntry(
-    title: 'المرحلة الأولى: التخطيط والترخيص التجاري',
-    subtitle: 'استخراج رخصة البناء التجاري',
+    title: AppStrings.comPhase1Title,
+    subtitle: AppStrings.comPhase1Subtitle,
     tasks: [
-      'اعداد المخططات الهندسية',
-      'اعتماد المخططات الانشائية',
-      'اعداد مخططات الكهرباء والتكييف',
-      'فتح قسم تجاري',
-      'التعاقد مع شركة إشراف هندسي',
+      AppStrings.comPhase1Item1,
+      AppStrings.comPhase1Item2,
+      AppStrings.comPhase1Item3,
+      AppStrings.comPhase1Item4,
+      AppStrings.comPhase1Item5,
     ],
   ),
   ProjectPhaseEntry(
-    title: 'المرحلة الثانية: الاعمال الاساسية',
-    subtitle: 'تمهيد الأرض وإنشاء الأساسات',
+    title: AppStrings.comPhase2Title,
+    subtitle: AppStrings.comPhase2Subtitle,
   ),
   ProjectPhaseEntry(
-    title: 'المرحلة الثالثة: الاعمال الانشائية',
-    subtitle: 'تنفيذ الهيكل الخرساني والجدران',
+    title: AppStrings.comPhase3Title,
+    subtitle: AppStrings.comPhase3Subtitle,
   ),
   ProjectPhaseEntry(
-    title: 'المرحلة الرابعة: التشطيبات والتجهيزات',
-    subtitle: 'أعمال التشطيب الداخلي والخارجي',
+    title: AppStrings.comPhase4Title,
+    subtitle: AppStrings.comPhase4Subtitle,
   ),
   ProjectPhaseEntry(
-    title: 'المرحلة الخامسة: التسليم والتشغيل',
-    subtitle: 'اختبار الأنظمة وتجهيز المشروع',
+    title: AppStrings.comPhase5Title,
+    subtitle: AppStrings.comPhase5Subtitle,
   ),
   ProjectPhaseEntry(
-    title: 'المرحلة السادسة: الفحص والتسليم',
-    subtitle: 'الفحوصات النهائية والتسليم الرسمي',
+    title: AppStrings.comPhase6Title,
+    subtitle: AppStrings.comPhase6Subtitle,
   ),
 ];
 
@@ -188,7 +188,7 @@ class AddCommercialProjectScreen extends StatelessWidget {
                       prefixIconWidget: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 12.width),
                         child: Text(
-                          'ر.س',
+                          AppStrings.currency,
                           style: TextStyle(
                             fontSize: context.responsiveFontScale(14),
                             color: colors.textSecondary,
@@ -203,8 +203,8 @@ class AddCommercialProjectScreen extends StatelessWidget {
                     ),
                     ProjectPhasesChecklistWidget(
                       label: AppStrings.mainPhasesLabel,
-                      subtitle: 'يمكنك بدء البناء من أي مرحلة تريدها',
-                      phases: _commercialPhases,
+                      subtitle: AppStrings.startFromAnyPhase,
+                      phases: _commercialPhases(),
                     ),
                     FileUploadWidget(
                       title: AppStrings.images,

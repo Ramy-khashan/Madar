@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:madar_app/core/components/image_item.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_button.dart';
+import '../../../../../../core/components/app_textfield.dart';
 import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
+import '../../../../../../core/utils/constants/app_images.dart';
+import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../property_file/model/property_file_model.dart';
 import '../../controller/unit_details_bloc.dart';
@@ -24,11 +28,11 @@ class UnitExpensesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Section title
         Text(
-          'مصاريف الشقة',
+          AppStrings.unitExpenses,
           style: TextStyle(
             fontSize: context.responsiveFontScale(18),
             fontWeight: FontWeight.w700,
@@ -45,14 +49,22 @@ class UnitExpensesSection extends StatelessWidget {
             border: Border.all(color: colors.borderColor),
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Add new row header
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  ImageItem(
+                    AppImages.addIcon,
+                    color: colors.primaryBrand,
+                    width: 20.width,
+                    height: 20.width,
+                  ),
+                  SizedBox(width: 4.width),
+
                   Text(
-                    'اضافة مصروف جديد',
+                    AppStrings.addNewExpense,
                     style: TextStyle(
                       fontSize: context.responsiveFontScale(14),
                       color: colors.primaryBrand,
@@ -60,8 +72,6 @@ class UnitExpensesSection extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  SizedBox(width: 4.width),
-                  Icon(Icons.add, color: colors.primaryBrand, size: 18.width),
                 ],
               ),
               SizedBox(height: 10.height),
@@ -69,50 +79,22 @@ class UnitExpensesSection extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: TextField(
+                    child: AppTextField(
+                      isWithTitle: false,
+                      hint: '500',
                       controller: bloc.expenseAmountController,
-                      keyboardType: TextInputType.number,
+                      textInputType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      textAlign: TextAlign.end,
-                      decoration: InputDecoration(
-                        hintText: '500',
-                        hintStyle: TextStyle(color: colors.textSecondary),
-                        filled: true,
-                        fillColor: colors.hoverColor,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.radius),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 12.width,
-                          vertical: 10.height,
-                        ),
-                      ),
+                      textAlign: TextAlign.start,
                     ),
                   ),
                   SizedBox(width: 8.width),
                   Expanded(
                     flex: 2,
-                    child: TextField(
+                    child: AppTextField(
                       controller: bloc.expenseDescController,
-                      textAlign: TextAlign.end,
-                      decoration: InputDecoration(
-                        hintText: 'مثل : اصلاحات الكهرباء',
-                        hintStyle: TextStyle(
-                          color: colors.textSecondary,
-                          fontSize: context.responsiveFontScale(12),
-                        ),
-                        filled: true,
-                        fillColor: colors.hoverColor,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.radius),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 12.width,
-                          vertical: 10.height,
-                        ),
-                      ),
+                      hint: AppStrings.expenseHint,
+                      isWithTitle: false,
                     ),
                   ),
                 ],
@@ -126,8 +108,11 @@ class UnitExpensesSection extends StatelessWidget {
                     child: Row(
                       children: [
                         IconButton(
-                          icon: Icon(Icons.delete_outline,
-                              color: AppColors.errorColor, size: 18.width),
+                          icon: Icon(
+                            Icons.delete_outline,
+                            color: AppColors.errorColor,
+                            size: 18.width,
+                          ),
                           onPressed: () =>
                               bloc.add(UnitDetailsExpenseRemoved(entry.key)),
                           padding: EdgeInsets.zero,
@@ -137,7 +122,7 @@ class UnitExpensesSection extends StatelessWidget {
                         Expanded(
                           child: Text(
                             '${entry.value.amount.toStringAsFixed(0)}  — ${entry.value.description}',
-                            textAlign: TextAlign.end,
+                            textAlign: TextAlign.start,
                             style: TextStyle(
                               fontSize: context.responsiveFontScale(13),
                               color: colors.textFieldTitle,
@@ -161,9 +146,11 @@ class UnitExpensesSection extends StatelessWidget {
             final amtStr = bloc.expenseAmountController.text.trim();
             if (desc.isEmpty || amtStr.isEmpty) return;
             final amount = double.tryParse(amtStr) ?? 0;
-            bloc.add(UnitDetailsExpenseAdded(description: desc, amount: amount));
+            bloc.add(
+              UnitDetailsExpenseAdded(description: desc, amount: amount),
+            );
           },
-          text: 'اضافة مصروف',
+          childText: AppStrings.addExpenseBtn,
           childIcon: Icons.add,
         ),
       ],

@@ -44,7 +44,7 @@ class AuctionDepositPaymentStepWidget extends StatelessWidget {
                     ),
                     SizedBox(height: 24.height),
                     Text(
-                      'طريقة الدفع',
+                      AppStrings.paymentMethodLabel,
                       style: TextStyle(
                         fontSize: context.responsiveFontScale(15),
                         fontFamily: AppConstant.appHeaderFont,

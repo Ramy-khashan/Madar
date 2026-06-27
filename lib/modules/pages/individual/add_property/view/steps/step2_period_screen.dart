@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_button.dart';
+import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../controller/add_property_bloc.dart';
 
@@ -22,7 +23,7 @@ class AddPropertyStep2Screen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'مدة الإيجار',
+                  AppStrings.rentDuration,
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(18),
                     fontWeight: FontWeight.w700,
@@ -31,31 +32,31 @@ class AddPropertyStep2Screen extends StatelessWidget {
                 ),
                 8.height.toSizedBox,
                 Text(
-                  'اختر مدة الإيجار المناسبة لعقارك',
+                  AppStrings.chooseRentDuration,
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(14),
                     color: tc.textSecondary,
                   ),
                 ),
                 24.height.toSizedBox,
-                const _PeriodOption(
+                _PeriodOption(
                   period: 'monthly',
-                  label: 'شهري',
-                  subtitle: 'إيجار شهري متجدد',
+                  label: AppStrings.monthly,
+                  subtitle: AppStrings.monthlyRentRenewable,
                   icon: Icons.calendar_view_month_rounded,
                 ),
                 12.height.toSizedBox,
-                const _PeriodOption(
+                _PeriodOption(
                   period: 'semi_annual',
-                  label: 'نصف سنوي',
-                  subtitle: 'إيجار كل 6 أشهر',
+                  label: AppStrings.halfYearlyLabel,
+                  subtitle: AppStrings.rentEvery6Months,
                   icon: Icons.calendar_view_week_rounded,
                 ),
                 12.height.toSizedBox,
-                const _PeriodOption(
+                _PeriodOption(
                   period: 'annual',
-                  label: 'سنة',
-                  subtitle: 'إيجار سنوي',
+                  label: AppStrings.yearLabel,
+                  subtitle: AppStrings.yearlyRentLabel,
                   icon: Icons.calendar_today_rounded,
                 ),
               ],
@@ -96,26 +97,23 @@ class _PeriodOption extends StatelessWidget {
             padding: EdgeInsets.symmetric(
                 horizontal: 16.width, vertical: 8.height),
             decoration: BoxDecoration(
-             
               borderRadius: BorderRadius.circular(14),
-              
             ),
             child: Row(
               children: [
-                 Container(
-                        width: 25.width,
-                        height: 25.width,
-                        padding: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: tc.primaryBrand),
-                          shape: BoxShape.circle,
-                        ),
-                        child: CircleAvatar(
-                          backgroundColor: isSelected
-                              ? tc.primaryBrand
-                              : tc.onPrimary,
-                        ),
-                      ),
+                Container(
+                  width: 25.width,
+                  height: 25.width,
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: tc.primaryBrand),
+                    shape: BoxShape.circle,
+                  ),
+                  child: CircleAvatar(
+                    backgroundColor:
+                        isSelected ? tc.primaryBrand : tc.onPrimary,
+                  ),
+                ),
                 12.width.toSizedBox,
                 Expanded(
                   child: Text(
@@ -127,7 +125,6 @@ class _PeriodOption extends StatelessWidget {
                     ),
                   ),
                 ),
-                
               ],
             ),
           ),
@@ -150,7 +147,7 @@ class _Step2Buttons extends StatelessWidget {
         children: [
           Expanded(
             child: AppButton(
-              text: 'رجوع',
+              text: AppStrings.back,
               isOutline: true,
               onTap: () =>
                   AddPropertyBloc.get(context).add(const PreviousStepEvent()),
@@ -159,7 +156,7 @@ class _Step2Buttons extends StatelessWidget {
           12.width.toSizedBox,
           Expanded(
             child: AppButton(
-              text: 'التالي',
+              text: AppStrings.next,
               onTap: () =>
                   AddPropertyBloc.get(context).add(const NextStepEvent()),
             ),

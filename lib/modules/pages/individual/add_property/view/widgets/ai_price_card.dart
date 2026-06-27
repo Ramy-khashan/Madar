@@ -4,10 +4,11 @@ import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
+import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 
 class AiPriceCard extends StatelessWidget {
-  const AiPriceCard({super.key});
+  AiPriceCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +55,7 @@ class AiPriceCard extends StatelessWidget {
                     ),
                     SizedBox(width: 6.width),
                     Text(
-                      'اقتراح ذكي - مدار AI',
+                      AppStrings.aiSmartSuggestion,
                       style: TextStyle(
                         fontSize: context.responsiveFontScale(11),
                         color: Colors.white70,
@@ -65,7 +66,7 @@ class AiPriceCard extends StatelessWidget {
                 ),
                 SizedBox(height: 6.height),
                 Text(
-                  'السعر المقترح',
+                  AppStrings.suggestedPrice,
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(13),
                     color: Colors.white,
@@ -82,7 +83,7 @@ class AiPriceCard extends StatelessWidget {
                 ),
                 SizedBox(height: 4.height),
                 Text(
-                  'بناء على 47 صفقة في النرجس اخر 90 يوم',
+                  AppStrings.basedOnTransactions,
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(11),
                     color: Colors.white70,

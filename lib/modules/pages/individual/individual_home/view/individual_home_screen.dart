@@ -102,10 +102,10 @@ class IndividualHomeView extends StatelessWidget {
                                 separatorBuilder: (_, _) =>
                                     SizedBox(width: 16.width),
                                 itemBuilder: (context, index) {
-                                  // final property = state.properties[index];
+                                  final property = state.properties[index];
                                   return PropertyCardWidget(
                                     isWithWidth: true,
-                                    property: null,
+                                    property: property,
                                   );
                                 },
                               ),
@@ -187,7 +187,7 @@ class IndividualHomeView extends StatelessWidget {
                                     mainAxisSpacing: 12.height,
                                     mainAxisExtent: ResponsiveUtils.types(
                                       context,
-                                      mobilePortrait: 215.height,
+                                      mobilePortrait: 225.height,
                                       mobileLandscape: 210.height,
                                       tabletPortrait: 145.height,
                                       tabletLandscape: 210.height,

@@ -145,7 +145,7 @@ class OtpVerificationScreen extends StatelessWidget {
                                 TextSpan(
                                   text: state is OtpResendLoading
                                       ? '...'
-                                      : AppStrings.resendCode, // 'إعادة إرسال',
+                                      : AppStrings.resendCode,
                                   style: TextStyle(
                                     color: tc.primaryBrand,
                                     fontWeight: FontWeight.w700,

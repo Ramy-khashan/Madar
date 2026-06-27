@@ -4,6 +4,7 @@ import '../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../core/components/is_scrollable_widget.dart';
 import '../../../../../core/components/outline_section.dart';
 import '../../../../../core/components/responsive_row_column.dart';
+import '../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/constants/storage_keys.dart';

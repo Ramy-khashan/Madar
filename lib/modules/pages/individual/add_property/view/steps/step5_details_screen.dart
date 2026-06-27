@@ -6,6 +6,7 @@ import '../../../../../../core/components/app_button.dart';
 import '../../../../../../core/components/app_textfield.dart';
 import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
+import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../controller/add_property_bloc.dart';
 
@@ -27,9 +28,9 @@ class AddPropertyStep5Screen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _SectionLabel(label: 'التفاصيل الاساسية', tc: tc),
+                _SectionLabel(label: AppStrings.basicDetails, tc: tc),
                 Text(
-                  "معلومات تساعد المشتري ياخذ قرار اسرع",
+                  AppStrings.buyerDecisionInfo,
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(12),
                     color: tc.textSecondary,
@@ -38,7 +39,7 @@ class AddPropertyStep5Screen extends StatelessWidget {
                 12.height.toSizedBox,
                 AppTextField(
                   controller: bloc.areaController,
-                  title: 'المساحة(م2)  *',
+                  title: AppStrings.areaSqmRequired,
                   hint: '0',
                   textInputType: TextInputType.number,
                   prefixImage: AppImages.totalSpaceIcon,
@@ -47,7 +48,7 @@ class AddPropertyStep5Screen extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsetsDirectional.only(end: 12.width),
                       child: Text(
-                        "م2",
+                        AppStrings.mesurement,
                         style: TextStyle(
                           fontSize: context.responsiveFontScale(14),
                           color: tc.primaryBrand,
@@ -61,7 +62,7 @@ class AddPropertyStep5Screen extends StatelessWidget {
 
                 // ── Facade dropdown ───────────────────────────────────────
                 _DropdownField(
-                  label: 'الواجهة   *',
+                  label: AppStrings.facadeLabel,
                   field: 'facade',
                   options: AddPropertyBloc.facadeOptions,
                   getValue: (m) => m.facade,
@@ -81,7 +82,7 @@ class AddPropertyStep5Screen extends StatelessWidget {
                 12.height.toSizedBox,
 
                 // ── Street width chips ────────────────────────────────────
-                _SectionLabel(label: 'عرض الشارع', tc: tc),
+                _SectionLabel(label: AppStrings.streetWidth, tc: tc),
                 8.height.toSizedBox,
                 _ChipRow<String>(
                   options: AddPropertyBloc.streetWidthOptions,
@@ -94,7 +95,7 @@ class AddPropertyStep5Screen extends StatelessWidget {
                 16.height.toSizedBox,
 
                 // ── Property age chips ────────────────────────────────────
-                _SectionLabel(label: 'عمر العقار', tc: tc),
+                _SectionLabel(label: AppStrings.propertyAgeLabel, tc: tc),
                 8.height.toSizedBox,
                 _ChipRow<String>(
                   options: AddPropertyBloc.propertyAgeOptions,
@@ -110,7 +111,7 @@ class AddPropertyStep5Screen extends StatelessWidget {
                Row(children:[
                  Expanded(
                    child: _PropertyDetailsRow(
-                    label: 'عدد غرف النوم',
+                    label: AppStrings.bedroomsCount,
                     field: 'beds',
                     getValue: (s) => s.model.beds,
                     onIncrement: const IncrementCounterEvent('beds'),
@@ -120,7 +121,7 @@ class AddPropertyStep5Screen extends StatelessWidget {
                 23.width.toSizedBox,
                 Expanded(
                   child: _PropertyDetailsRow(
-                    label: 'عدد الحمامات',
+                    label: AppStrings.bathroomsCount,
                     field: 'baths',
                     getValue: (s) => s.model.baths,
                     onIncrement: const IncrementCounterEvent('baths'),
@@ -133,7 +134,7 @@ class AddPropertyStep5Screen extends StatelessWidget {
                 Row(children: [
                 Expanded(
                   child: _PropertyDetailsRow(
-                    label:'عدد المجالس (اختياري)',
+                    label: AppStrings.majlisCountOptional,
                     field: 'lounges',
                     getValue: (s) => s.model.lounges,
                     onIncrement: const IncrementCounterEvent('lounges'),
@@ -143,7 +144,7 @@ class AddPropertyStep5Screen extends StatelessWidget {
                 23.width.toSizedBox,
                 Expanded(
                   child: _PropertyDetailsRow(
-                    label: 'عدد الصالات (اختياري)',
+                    label: AppStrings.hallsCountOptional,
                     field: 'majlis',
                     getValue: (s) => s.model.majlis,
                     onIncrement: const IncrementCounterEvent('majlis'),
@@ -156,14 +157,14 @@ class AddPropertyStep5Screen extends StatelessWidget {
                 // ── Optional fields ───────────────────────────────────────
                 AppTextField(
                   controller: bloc.apartmentNumberController,
-                  title: 'رقم الشقة (اختياري)',
-                  hint: 'أدخل رقم الشقة',
+                  title: AppStrings.apartmentNumberOptional,
+                  hint: AppStrings.enterApartmentNumber,
                   textInputType: TextInputType.number,
                 ),
                 12.height.toSizedBox,
 
                 _DropdownField(
-                  label: 'اجمالي الادوار في المبنى',
+                  label: AppStrings.totalFloorsInBuilding,
                   field: 'totalFloors',
                   options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10+'],
                   getValue: (m) => m.totalFloors,
@@ -172,7 +173,7 @@ class AddPropertyStep5Screen extends StatelessWidget {
                 12.height.toSizedBox,
 
                 _DropdownField(
-                  label: 'عدد الشقق في الدور (اختياري)',
+                  label: AppStrings.apartmentsPerFloorOptional,
                   field: 'apartmentsPerFloor',
                   options: ['1', '2', '3', '4', '5', '6', '7', '8'],
                   getValue: (m) => m.apartmentsPerFloor,
@@ -182,7 +183,7 @@ class AddPropertyStep5Screen extends StatelessWidget {
                 12.height.toSizedBox,
 
                 _DropdownField(
-                  label: 'الدور',
+                  label: AppStrings.floorLabelShort,
                   field: 'floorLevel',
                   options: AddPropertyBloc.floorOptions,
                   getValue: (m) => m.floorLevel,
@@ -191,7 +192,7 @@ class AddPropertyStep5Screen extends StatelessWidget {
                 12.height.toSizedBox,
 
                 _DropdownField(
-                  label: 'حالة الفرش',
+                  label: AppStrings.furnishingStatus,
                   field: 'furnishing',
                   options: AddPropertyBloc.furnishingOptions,
                   getValue: (m) => m.furnishing,
@@ -200,7 +201,7 @@ class AddPropertyStep5Screen extends StatelessWidget {
                 12.height.toSizedBox,
 
                 _DropdownField(
-                  label: 'حالة العقار',
+                  label: AppStrings.propertyCondition,
                   field: 'condition',
                   options: AddPropertyBloc.conditionOptions,
                   getValue: (m) => m.condition,
@@ -210,13 +211,13 @@ class AddPropertyStep5Screen extends StatelessWidget {
 
                 AppTextField(
                   controller: bloc.developerNameController,
-                  title: 'اسم المطور (اختياري)',
-                  hint: 'أدخل اسم المطور',
+                  title: AppStrings.developerNameOptional,
+                  hint: AppStrings.enterDeveloperName,
                 ),
                 24.height.toSizedBox,
 
                 // ── Amenities ─────────────────────────────────────────────
-                _SectionLabel(label: 'المميزات', tc: tc),
+                _SectionLabel(label: AppStrings.amenitiesLabel, tc: tc),
                 16.height.toSizedBox,
                 const _AmenitiesSection(),
                 20.height.toSizedBox,
@@ -298,7 +299,7 @@ class _DropdownField extends StatelessWidget {
                     value: selected,
                     isExpanded: true,
                     hint: Text(
-                      'اختر $label',
+                      AppStrings.chooseLabel(label),
                       style: TextStyle(
                         fontSize: context.responsiveFontScale(13),
                         color: tc.textFieldHint,
@@ -732,7 +733,7 @@ class _Step5Buttons extends StatelessWidget {
         children: [
           Expanded(
             child: AppButton(
-              text: 'رجوع',
+              text: AppStrings.back,
               isOutline: true,
               onTap: () =>
                   AddPropertyBloc.get(context).add(const PreviousStepEvent()),
@@ -743,7 +744,7 @@ class _Step5Buttons extends StatelessWidget {
             flex:2,
 
             child: AppButton(
-              text: 'التالي',
+              text: AppStrings.next,
               onTap: () =>
                   AddPropertyBloc.get(context).add(const NextStepEvent()),
             ),

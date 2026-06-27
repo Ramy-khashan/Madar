@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../../../../config/theme/app_theme_colors.dart';
+import '../../../../../core/components/app_appbar.dart';
 import '../../../../../core/components/search_item.dart';
 import '../../../../../core/model/google_map_model.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
@@ -31,7 +32,7 @@ class _PropertiesMapView extends StatelessWidget {
     final colors = AppThemeColors.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text(AppStrings.propertiesMapTitle)),
+      appBar: AppAppbar(title: AppStrings.propertiesMapTitle),
       body: FutureBuilder(
         future: PropertiesMapBloc.buildMarkerIcons(colors.primaryBrand),
         builder: (context, snapshot) {

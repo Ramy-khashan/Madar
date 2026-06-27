@@ -5,6 +5,7 @@ import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_button.dart';
 import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
+import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../controller/add_property_bloc.dart';
 
@@ -25,30 +26,30 @@ class AddPropertyStep4Screen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _SectionLabel(label: 'صور العقار', tc: tc),
+                _SectionLabel(label: AppStrings.propertyPhotos, tc: tc),
                 Text(
-                  "ارفع 5 صور ع الاقل - اول صوره هي الواجهة",
+                  AppStrings.uploadPhotosHint,
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(12),
                     color: tc.textSecondary,
                   ),
                 ),
                 12.height.toSizedBox,
-                const _UploadArea(),
+                _UploadArea(),
                 16.height.toSizedBox,
-                const _AiEnhancementToggle(),
+                _AiEnhancementToggle(),
                 16.height.toSizedBox,
-                const _ImageGrid(),
+                _ImageGrid(),
                 24.height.toSizedBox,
                
                 Row(
                   children: [
                      Expanded(
-                      child: const _MediaToggleRow(
+                      child: _MediaToggleRow(
                         event: Toggle360TourEvent(),
                         field: 'has360Tour',
-                        label: 'جولة 360 درجة',
-                        hint:"+ تفاعل اقوى",
+                        label: AppStrings.tour360,
+                        hint: AppStrings.strongerEngagement,
 
                         icon: Icons.map_outlined,
                       ),
@@ -56,11 +57,11 @@ class AddPropertyStep4Screen extends StatelessWidget {
                  
                     12.height.toSizedBox,
                       Expanded(
-                      child: const _MediaToggleRow(
+                      child: _MediaToggleRow(
                         event: ToggleVideoEvent(),
                         field: 'hasVideo',
-                        label: 'فيديو',
-                        hint:"حتى 60 ثانية",
+                        label: AppStrings.videoLabel,
+                        hint: AppStrings.upTo60Seconds,
                         icon: Icons.camera_alt_outlined,
                       ),
                     ),
@@ -128,7 +129,7 @@ class _UploadArea extends StatelessWidget {
             ),
             12.height.toSizedBox,
             Text(
-              'انقر لتحميل الصور',
+              AppStrings.clickToUploadPhotos,
               style: TextStyle(
                 fontSize: context.responsiveFontScale(14),
                 fontWeight: FontWeight.w600,
@@ -137,7 +138,7 @@ class _UploadArea extends StatelessWidget {
             ),
             6.height.toSizedBox,
             Text(
-              'أو اسحب الصور هنا',
+              AppStrings.orDragImagesHere,
               style: TextStyle(
                 fontSize: context.responsiveFontScale(12),
                 color: tc.textSecondary,
@@ -181,7 +182,7 @@ class _AiEnhancementToggle extends StatelessWidget {
               12.width.toSizedBox,
               Expanded(
                 child: Text(
-                  'تحسين تلقائي بال AI',
+                  AppStrings.aiAutoEnhance,
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(13),
                     fontWeight: FontWeight.w600,
@@ -358,7 +359,7 @@ class _Step4Buttons extends StatelessWidget {
         children: [
           Expanded(
             child: AppButton(
-              text: 'رجوع',
+              text: AppStrings.back,
               isOutline: true,
               onTap: () =>
                   AddPropertyBloc.get(context).add(const PreviousStepEvent()),
@@ -367,7 +368,7 @@ class _Step4Buttons extends StatelessWidget {
           12.width.toSizedBox,
           Expanded(
             child: AppButton(
-              text: 'التالي',
+              text: AppStrings.next,
               onTap: () =>
                   AddPropertyBloc.get(context).add(const NextStepEvent()),
             ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../config/router/app_router_keys.dart';
+import '../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../core/components/chatbot_item.dart';
 import '../../../../../core/components/portfolio_card_widget.dart';
 import '../../../../../core/components/property_card_widget.dart';
@@ -51,7 +52,7 @@ class BusinessHomeScreen extends StatelessWidget {
                     //     ),
                     //   ),
                     // ),
-     SliverToBoxAdapter(
+                    SliverToBoxAdapter(
                       child: Padding(
                         padding: EdgeInsets.only(
                           bottom: 20.height,
@@ -68,6 +69,32 @@ class BusinessHomeScreen extends StatelessWidget {
                                   AppRouterKeys.propertiesListing,
                                 );
                               },
+                              trailing: Padding(
+                                padding: EdgeInsetsDirectional.only(
+                                  start: 12.width,
+                                ),
+                                child: InkWell(
+                                  onTap: () {
+                                    RouterHandler.navigate(
+                                      context,
+                                      AppRouterKeys.propertyLocationMap,
+                                    );
+                                  },
+                                  child: CircleAvatar(
+                                    radius: 16.width,
+                                    backgroundColor: AppThemeColors.of(
+                                      context,
+                                    ).primaryBrand,
+                                    child: Icon(
+                                      Icons.map_outlined,
+                                      size: 20.width,
+                                      color: AppThemeColors.of(
+                                        context,
+                                      ).onPrimary,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                             SizedBox(
                               height: ResponsiveUtils.types(
@@ -88,10 +115,10 @@ class BusinessHomeScreen extends StatelessWidget {
                                 separatorBuilder: (_, _) =>
                                     SizedBox(width: 16.width),
                                 itemBuilder: (context, index) {
-                                  // final property = state.properties[index];
+                                  final property = state.properties[index];
                                   return PropertyCardWidget(
                                     isWithWidth: true,
-                                    property: null,
+                                    property: property,
                                   );
                                 },
                               ),
@@ -145,7 +172,7 @@ class BusinessHomeScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                 
+
                     // SliverToBoxAdapter(
                     //   child: Padding(
                     //     padding: EdgeInsets.only(
@@ -174,7 +201,7 @@ class BusinessHomeScreen extends StatelessWidget {
                     //                 );
                     //               },
                     //               child: Container(
-                                    
+
                     //                 padding: EdgeInsets.all(4.width),
                     //                 decoration: BoxDecoration(
                     //                   color: AppThemeColors.of(
@@ -227,7 +254,6 @@ class BusinessHomeScreen extends StatelessWidget {
                     //     ),
                     //   ),
                     // ),
-
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: EdgeInsets.only(bottom: 20.height),
@@ -263,7 +289,9 @@ class BusinessHomeScreen extends StatelessWidget {
                                 itemBuilder: (context, index) {
                                   final item = state.requests[index];
                                   return SizedBox(
-                                    width: context.screenWidth * (context.isTablet ? 0.4 : 0.9),
+                                    width:
+                                        context.screenWidth *
+                                        (context.isTablet ? 0.4 : 0.9),
                                     child: BusinessPropertiesRequestCardWidget(
                                       isWithActionButtons: false,
                                       item: item,

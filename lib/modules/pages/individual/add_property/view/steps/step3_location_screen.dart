@@ -9,6 +9,7 @@ import '../../../../../../core/components/app_textfield.dart';
 import '../../../../../../core/model/google_map_model.dart';
 import '../../../../../../core/repository/maps/map_service.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
+import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/service_locator.dart';
 import '../../controller/add_property_bloc.dart';
@@ -31,11 +32,11 @@ class AddPropertyStep3Screen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _SectionLabel(label: 'الموقع والصك', tc: tc),
+                _SectionLabel(label: AppStrings.locationAndDeed, tc: tc),
                 4.height.toSizedBox,
 
                 Text(
-                  'حدد موقع العقار واضف بيانات الصك',
+                  AppStrings.setLocationAndDeed,
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(12),
                     fontWeight: FontWeight.w400,
@@ -45,7 +46,7 @@ class AddPropertyStep3Screen extends StatelessWidget {
                 12.height.toSizedBox,
                 AppTextField(
                   controller: bloc.locationSearchController,
-                  hint: 'ابحث عن حي ، مدينة ، شارع',
+                  hint: AppStrings.searchNeighborhoodHint,
                   prefixImage: AppImages.searchIcon,
                   onChanged: (v) => bloc.add(UpdateLocationEvent(v)),
                 ),
@@ -68,8 +69,8 @@ class AddPropertyStep3Screen extends StatelessWidget {
                 ),
                  AppTextField(
                   controller: bloc.buildingNumberController,
-                  hint: 'رقم المبنى',
-                  title: 'رقم المبنى',
+                  hint: AppStrings.buildingNumber,
+                  title: AppStrings.buildingNumber,
                   textInputType: TextInputType.number,
                   prefixImage:AppImages.floor ,
 
@@ -77,8 +78,8 @@ class AddPropertyStep3Screen extends StatelessWidget {
                 12.height.toSizedBox,
                 AppTextField(
                   controller: bloc.streetController,
-                  hint: 'اسم الشارع',
-                  title: 'الشارع',
+                  hint: AppStrings.streetName,
+                  title: AppStrings.streetName,
                   prefixImage:AppImages.locationDone ,
                 ),
                 24.height.toSizedBox,
@@ -103,7 +104,7 @@ class AddPropertyStep3Screen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                             Text(
-'الصك',
+AppStrings.deed,
   style: TextStyle(
                               fontSize: context.responsiveFontScale(14),
                               fontWeight: FontWeight.w600,
@@ -113,7 +114,7 @@ class AddPropertyStep3Screen extends StatelessWidget {
                             ),
 
                           Text(
-                            'اختر نوع السك وادخل بياناته',
+                            AppStrings.chooseDeedTypeHint,
                             style: TextStyle(
                               fontSize: context.responsiveFontScale(12),
                               fontWeight: FontWeight.w400,
@@ -130,19 +131,19 @@ class AddPropertyStep3Screen extends StatelessWidget {
                 12.height.toSizedBox,
                 AppTextField(
                   controller: bloc.deedNumberController,
-                  hint: 'ادخل رقم الصك',
+                  hint: AppStrings.enterDeedNumber,
                   prefixImage: AppImages.instrument,
-                  title: 'رقم الصك',
+                  title: AppStrings.deedNumber,
                   textInputType: TextInputType.number,
                 ),
                 12.height.toSizedBox,
-                _SectionLabel(label: 'تاريخ الصك', tc: tc),
+                _SectionLabel(label: AppStrings.deedDate, tc: tc),
                 8.height.toSizedBox,
-                const _DateTypeToggle(),
+                _DateTypeToggle(),
                 12.height.toSizedBox,
                 AppTextField(
                   controller: bloc.dateController,
-                  hint: 'ادخل التاريخ - هجري',
+                  hint: AppStrings.enterHijriDateHint,
                   prefixIcon: Icons.calendar_today_rounded,
                   textInputType: TextInputType.datetime,
                 ),
@@ -434,7 +435,7 @@ class _DateTypeToggle extends StatelessWidget {
           child: Row(
             children: [
               _DateTypeOption(
-                label: 'ميلادي',
+                label: AppStrings.gregorian,
                 isActive: isGregorian,
                 onTap: () => AddPropertyBloc.get(
                   context,
@@ -442,7 +443,7 @@ class _DateTypeToggle extends StatelessWidget {
                 tc: tc,
               ),
               _DateTypeOption(
-                label: 'هجري',
+                label: AppStrings.hijri,
                 isActive: !isGregorian,
                 onTap: () => AddPropertyBloc.get(
                   context,
@@ -508,7 +509,7 @@ class _Step3Buttons extends StatelessWidget {
         children: [
           Expanded(
             child: AppButton(
-              text: 'رجوع',
+              text: AppStrings.back,
               isOutline: true,
               onTap: () =>
                   AddPropertyBloc.get(context).add(const PreviousStepEvent()),
@@ -517,7 +518,7 @@ class _Step3Buttons extends StatelessWidget {
           12.width.toSizedBox,
           Expanded(
             child: AppButton(
-              text: 'التالي',
+              text: AppStrings.next,
               onTap: () =>
                   AddPropertyBloc.get(context).add(const NextStepEvent()),
             ),

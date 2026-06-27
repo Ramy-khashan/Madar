@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:share_plus/share_plus.dart';
+// import 'package:share_plus/share_plus.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/image_item.dart';
@@ -88,33 +88,34 @@ class PropertyDetailsImageSectionWidget extends StatelessWidget {
               },
             ),
           ),
-          Positioned(
-            bottom: 12.height,
-            left: 12.width,
-            child: GestureDetector(
-              onTap: () => Share.share(
-                '${property?.tag ?? ''}\n${property?.imageUrls.isNotEmpty == true ? property!.imageUrls.first : ''}',
-              ),
-              child: Container(
-                padding: EdgeInsets.all(8.width),
-                decoration: BoxDecoration(
-                  color: colors.cardBackground.withValues(alpha: 0.2),
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.1),
-                      blurRadius: 6,
-                    ),
-                  ],
-                ),
-                child: Icon(
-                  Icons.share_outlined,
-                  size: 20.width,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
+          // Positioned(
+          //   bottom: 12.height,
+          //   left: 12.width,
+          //   child: GestureDetector(
+          //     onTap: () => Share.share(
+          //       '${property?.tag ?? ''}\n${property?.imageUrls.isNotEmpty == true ? property!.imageUrls.first : ''}',
+          //     ),
+          //     child: Container(
+          //       padding: EdgeInsets.all(8.width),
+          //       decoration: BoxDecoration(
+          //         color: colors.cardBackground.withValues(alpha: 0.2),
+          //         shape: BoxShape.circle,
+          //         boxShadow: [
+          //           BoxShadow(
+          //             color: Colors.black.withValues(alpha: 0.1),
+          //             blurRadius: 6,
+          //           ),
+          //         ],
+          //       ),
+          //       child: Icon(
+          //         Icons.share_outlined,
+          //         size: 20.width,
+          //         color: Colors.white,
+          //       ),
+          //     ),
+          //   ),
+          // ),
+      
         ],
       ),
     );

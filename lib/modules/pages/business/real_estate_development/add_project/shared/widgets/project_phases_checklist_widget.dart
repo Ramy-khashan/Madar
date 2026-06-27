@@ -5,6 +5,7 @@ import '../../../../../../../core/components/image_item.dart';
 import '../../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/constants/app_images.dart';
+import '../../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
 
 class ProjectPhaseEntry {
@@ -216,7 +217,7 @@ class _ProjectPhasesChecklistWidgetState
                               );
                             }),
                              Text(
-                                'أخرى',
+                                AppStrings.other,
                                 style: TextStyle(
                                   fontSize: context.responsiveFontScale(14),
                                   color: colors.textFieldTitle,
@@ -232,7 +233,7 @@ class _ProjectPhasesChecklistWidgetState
                                 fontFamily: AppConstant.appFont,
                               ),
                               decoration: InputDecoration(
-                                hintText: 'اكتب مرحلة أخرى تريدها',
+                                hintText: AppStrings.otherHint,
                                 hintStyle: TextStyle(
                                   fontSize: context.responsiveFontScale(13),
                                   color: colors.textSecondary,

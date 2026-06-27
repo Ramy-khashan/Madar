@@ -96,7 +96,7 @@ class _UploadArea extends StatelessWidget {
             SizedBox(height: 10.height),
 
             Text(
-              'انقر لتحميل الصور',
+              AppStrings.clickToUploadPhotos,
               style: TextStyle(
                 fontSize: context.responsiveFontScale(14),
                 fontWeight: FontWeight.w600,
@@ -105,7 +105,7 @@ class _UploadArea extends StatelessWidget {
             ),
             SizedBox(height: 4.height),
             Text(
-              'أو اسحب الصور هنا',
+              AppStrings.orDragImagesHere,
               style: TextStyle(
                 fontSize: context.responsiveFontScale(12),
                 color: tc.textSecondary,

@@ -10,7 +10,7 @@ class PropertiesState extends Equatable {
     this.filter,
   });
   final String errorMsg;
-  final List<PropertiesItemModel> properties;
+  final List<PropertyModel> properties;
   final RequestStatus propertiesStatus;
   final int totalCount;
   final bool isLoadMore;
@@ -28,7 +28,7 @@ class PropertiesState extends Equatable {
 
   PropertiesState copyWith({
     String? errorMsg,
-    List<PropertiesItemModel>? properties,
+    List<PropertyModel>? properties,
     RequestStatus? propertiesStatus,
     int? totalCount,
     bool? isLoadMore,

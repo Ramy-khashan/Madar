@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../../config/router/app_router_keys.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_button.dart';
 import '../../../../../../core/components/app_textfield.dart';
@@ -8,6 +9,7 @@ import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../controller/add_property_bloc.dart';
 import '../widgets/ai_price_card.dart';
 
@@ -27,10 +29,8 @@ class AddPropertyStep6Screen extends StatelessWidget {
             context: context,
             isScrollControlled: true,
             backgroundColor: Colors.transparent,
-            builder: (_) => BlocProvider.value(
-              value: bloc,
-              child: const _SavePortfolioSheet(),
-            ),
+            builder: (_) =>
+                BlocProvider.value(value: bloc, child: _SavePortfolioSheet()),
           ).whenComplete(() {
             if (bloc.state.showPortfolioSheet) {
               bloc.add(const HidePortfolioSheetEvent());
@@ -50,7 +50,7 @@ class AddPropertyStep6Screen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'السعر والمراجعة',
+                    AppStrings.priceAndReview,
                     style: TextStyle(
                       fontSize: context.responsiveFontScale(16),
                       fontWeight: FontWeight.w700,
@@ -59,20 +59,20 @@ class AddPropertyStep6Screen extends StatelessWidget {
                   ),
                   4.height.toSizedBox,
                   Text(
-                    'حدد السعر - مدار AI يقترح لك بناء ع السوق',
+                    AppStrings.setPriceAiHint,
                     style: TextStyle(
                       fontSize: context.responsiveFontScale(12),
                       color: tc.textSecondary,
                     ),
                   ),
                   16.height.toSizedBox,
-                  const AiPriceCard(),
+                  AiPriceCard(),
                   16.height.toSizedBox,
                   _PriceInputSection(controller: bloc.priceController, tc: tc),
                   20.height.toSizedBox,
                   _TitleSection(controller: bloc.titleController, tc: tc),
                   20.height.toSizedBox,
-                  const _ServiceCardsRow(),
+                  _ServiceCardsRow(),
                   16.height.toSizedBox,
                   _AiGenerateButton(onTap: () {}, tc: tc),
                   12.height.toSizedBox,
@@ -82,7 +82,7 @@ class AddPropertyStep6Screen extends StatelessWidget {
                   ),
                   20.height.toSizedBox,
 
-                  const _AdSummaryTable(),
+                  _AdSummaryTable(),
                   32.height.toSizedBox,
                 ],
               ),
@@ -150,7 +150,7 @@ class _PriceInputSection extends StatelessWidget {
             ),
             SizedBox(width: 4.width),
             Text(
-              'سعر تنافسي - ضمن النطاق المقترح',
+              AppStrings.competitivePriceInRange,
               style: TextStyle(
                 fontSize: context.responsiveFontScale(11),
                 fontWeight: FontWeight.w500,
@@ -203,7 +203,7 @@ class _TitleSection extends StatelessWidget {
             ),
             SizedBox(width: 4.width),
             Text(
-              'سعر تنافسي - ضمن النطاق المقترح',
+              AppStrings.competitivePriceInRange,
               style: TextStyle(
                 fontSize: context.responsiveFontScale(11),
                 fontWeight: FontWeight.w500,
@@ -233,8 +233,8 @@ class _ServiceCardsRow extends StatelessWidget {
             Expanded(
               child: _ServiceCard(
                 icon: AppImages.safetyIcon,
-                label: 'تأمين العقار',
-                subtitle: 'حماية شاملة لعقارك ضد المخاطر',
+                label: AppStrings.propertyInsuranceLabel,
+                subtitle: AppStrings.comprehensiveProtection,
                 isSelected: state.model.hasInsurance,
                 onTap: () => AddPropertyBloc.get(
                   context,
@@ -247,8 +247,8 @@ class _ServiceCardsRow extends StatelessWidget {
             Expanded(
               child: _ServiceCard(
                 icon: AppImages.rentIcon,
-                label: 'تقسيط الايجار',
-                subtitle: 'تقرير سوقي',
+                label: AppStrings.rentInstallmentLabel,
+                subtitle: AppStrings.marketReport,
                 isSelected: state.model.hasRentInstallment,
                 onTap: () => AddPropertyBloc.get(
                   context,
@@ -371,7 +371,7 @@ class _AiGenerateButton extends StatelessWidget {
             Icon(Icons.auto_awesome_rounded, color: tc.primaryBrand, size: 14),
             SizedBox(width: 6.width),
             Text(
-              'توليد بال AI',
+              AppStrings.generateWithAi,
               style: TextStyle(
                 fontSize: context.responsiveFontScale(13),
                 fontWeight: FontWeight.w600,
@@ -428,30 +428,38 @@ class _AdSummaryTable extends StatelessWidget {
     return BlocBuilder<AddPropertyBloc, AddPropertyState>(
       builder: (context, state) {
         final m = state.model;
-        final opLabel = m.operationType == 'sell' ? 'للبيع' : 'للإيجار';
+        final opLabel = m.operationType == 'sell'
+            ? AppStrings.forSale
+            : AppStrings.forRent;
         final locationLine = m.location?.split('\n').first ?? '';
         final roomsValue = [
-          if (m.beds > 0) '${m.beds} غرف',
-          if (m.baths > 0) '${m.baths} حمام',
+          if (m.beds > 0) AppStrings.roomsCount(m.beds),
+          if (m.baths > 0) AppStrings.bathroomsShort(m.baths),
         ].join(' - ');
 
         final rows = <_SummaryRow>[
           _SummaryRow(
-            label: 'النوع',
+            label: AppStrings.typeLabel,
             value: '${_propertyLabel(m.propertyType)} $opLabel',
           ),
           if (locationLine.isNotEmpty)
-            _SummaryRow(label: 'الموقع', value: locationLine),
+            _SummaryRow(label: AppStrings.locationLabel, value: locationLine),
           if (m.area.isNotEmpty)
-            _SummaryRow(label: 'المساحة', value: '${m.area} م²'),
+            _SummaryRow(
+              label: AppStrings.areaLabel,
+              value: '${m.area} ${AppStrings.mesurement}',
+            ),
           if (roomsValue.isNotEmpty)
-            _SummaryRow(label: 'الغرف', value: roomsValue),
+            _SummaryRow(label: AppStrings.beds, value: roomsValue),
           if (m.imagePaths.isNotEmpty)
-            _SummaryRow(label: 'الصور', value: '${m.imagePaths.length} صور'),
+            _SummaryRow(
+              label: AppStrings.images,
+              value: AppStrings.photosCount(m.imagePaths.length),
+            ),
           if (m.amenities.isNotEmpty)
             _SummaryRow(
-              label: 'المميزات',
-              value: '${m.amenities.length} مميزات',
+              label: AppStrings.amenitiesLabel,
+              value: AppStrings.amenitiesCount(m.amenities.length),
             ),
         ];
 
@@ -467,7 +475,7 @@ class _AdSummaryTable extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'ملخص الإعلان',
+                  AppStrings.adSummary,
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(15),
                     fontWeight: FontWeight.w700,
@@ -550,17 +558,18 @@ class _Step6Buttons extends StatelessWidget {
       child: Column(
         children: [
           AppButton(
-            text: 'حفظ في ملفاتي العقارية',
+            text: AppStrings.saveToMyPropertyFiles,
             onTap: () => AddPropertyBloc.get(
               context,
             ).add(const ShowPortfolioSheetEvent()),
           ),
           12.height.toSizedBox,
           AppButton(
-            text: 'ارسال الى وسيط عقاري',
+            text: AppStrings.sendToBrokerProperty,
             isOutline: true,
             onTap: () =>
-                AddPropertyBloc.get(context).add(const SendToBrokerEvent()),
+                RouterHandler.navigate(context, AppRouterKeys.chooseBroker),
+            // AddPropertyBloc.get(context).add(const SendToBrokerEvent()),
           ),
         ],
       ),
@@ -602,7 +611,7 @@ class _SavePortfolioSheet extends StatelessWidget {
           ),
           16.height.toSizedBox,
           Text(
-            'حفظ في ملفاتي العقارية',
+            AppStrings.saveToMyPropertyFiles,
             style: TextStyle(
               fontSize: context.responsiveFontScale(18),
               fontWeight: FontWeight.w700,
@@ -611,19 +620,19 @@ class _SavePortfolioSheet extends StatelessWidget {
           ),
           4.height.toSizedBox,
           Text(
-            'اختر مكان حفظ هذ العقار',
+            AppStrings.chooseSaveLocation,
             style: TextStyle(
               fontSize: context.responsiveFontScale(13),
               color: tc.textSecondary,
             ),
           ),
           20.height.toSizedBox,
-          const _PortfolioModeToggle(),
+          _PortfolioModeToggle(),
           16.height.toSizedBox,
-          const _PortfolioContent(),
+          _PortfolioContent(),
           20.height.toSizedBox,
           AppButton(
-            text: 'حفظ',
+            text: AppStrings.saveBtn,
             onTap: () {
               bloc.add(const ConfirmSaveEvent());
               Navigator.of(context).pop();
@@ -647,9 +656,9 @@ class _PortfolioModeToggle extends StatelessWidget {
         return Row(
           children: [
             _ModeOption(
-              label: 'حفظ في ملف قديم',
+              label: AppStrings.saveToExistingFile,
               image: AppImages.instrument,
-              hint: "اضف لملف عقاري موجود ",
+              hint: AppStrings.addToExistingFileHint,
 
               isActive: !state.isNewFolder,
               onTap: () => AddPropertyBloc.get(
@@ -660,9 +669,9 @@ class _PortfolioModeToggle extends StatelessWidget {
             12.width.toSizedBox,
 
             _ModeOption(
-              label: 'حفظ كملف جديد',
+              label: AppStrings.saveAsNewFile,
               image: AppImages.addIcon,
-              hint: "انشئ ملف عقاري جديد",
+              hint: AppStrings.createNewPropertyFile,
               isActive: state.isNewFolder,
               onTap: () => AddPropertyBloc.get(
                 context,
@@ -761,12 +770,12 @@ class _PortfolioContent extends StatelessWidget {
         if (state.isNewFolder) {
           return AppTextField(
             controller: AddPropertyBloc.get(context).portfolioNameController,
-            hint: 'اسم الملف الجديد',
-            title: 'اسم الملف',
+            hint: AppStrings.newFileNameHint,
+            title: AppStrings.fileNameLabel,
             prefixIcon: Icons.folder_outlined,
           );
         }
-        return const _ExistingFolderList();
+        return _ExistingFolderList();
       },
     );
   }

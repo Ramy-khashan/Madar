@@ -17,35 +17,35 @@ import '../../shared/widgets/project_manager_login_dialog.dart';
 import '../../shared/widgets/project_phases_checklist_widget.dart';
 import '../controller/add_residential_project_bloc.dart';
 
-const _residentialPhases = [
+List<ProjectPhaseEntry> _residentialPhases() => [
   ProjectPhaseEntry(
-    title: 'المرحلة الأولى: التخطيط والترخيص',
-    subtitle: 'شاملة كل اجراءات التخطيط والحصول على التراخيص اللازمة',
+    title: AppStrings.resPhase1Title,
+    subtitle: AppStrings.resPhase1Subtitle,
     tasks: [
-      'اصدار رخصة بناء',
-      'اعتماد المخططات المعمارية والانشائية',
-      'اعتماد مخططات الكهرباء والسباكة',
-      'اعتماد مخططات الحريق والسلامة',
-      'اعتماد مخططات التكييف المركزي',
-      'تقرير فحص التربة',
-      'التعاقد مع مكتب إشراف هندسي',
+      AppStrings.resPhase1Item1,
+      AppStrings.resPhase1Item2,
+      AppStrings.resPhase1Item3,
+      AppStrings.resPhase1Item4,
+      AppStrings.resPhase1Item5,
+      AppStrings.resPhase1Item6,
+      AppStrings.resPhase1Item7,
     ],
   ),
   ProjectPhaseEntry(
-    title: 'المرحلة الثانية: الاعمال الاساسية',
-    subtitle: 'شاملة الاعمال الانشائية الاساسية للمشروع',
+    title: AppStrings.resPhase2Title,
+    subtitle: AppStrings.resPhase2Subtitle,
   ),
   ProjectPhaseEntry(
-    title: 'المرحلة الثالثة: الاعمال الانشائية',
-    subtitle: 'شاملة تنفيذ الهيكل الخرساني والجدران',
+    title: AppStrings.resPhase3Title,
+    subtitle: AppStrings.resPhase3Subtitle,
   ),
   ProjectPhaseEntry(
-    title: 'المرحلة الرابعة: التشطيبات',
-    subtitle: 'اعمال التشطيب الداخلي والخارجي',
+    title: AppStrings.resPhase4Title,
+    subtitle: AppStrings.resPhase4Subtitle,
   ),
   ProjectPhaseEntry(
-    title: 'المرحلة الخامسة: التسليم والتشغيل',
-    subtitle: 'شاملة الفحوصات النهائية وتسليم المشروع',
+    title: AppStrings.resPhase5Title,
+    subtitle: AppStrings.resPhase5Subtitle,
   ),
 ];
 
@@ -203,8 +203,8 @@ class _AddResidentialProjectView extends StatelessWidget {
                     ),
                     ProjectPhasesChecklistWidget(
                       label: AppStrings.mainPhasesLabel,
-                      subtitle: 'يمكنك بدء البناء من أي مرحلة تريدها',
-                      phases: _residentialPhases,
+                      subtitle: AppStrings.startFromAnyPhase,
+                      phases: _residentialPhases(),
                     ),
                     FileUploadWidget(
                       title: AppStrings.images,

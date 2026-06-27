@@ -13,8 +13,7 @@ class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState> {
   PropertyFileBloc() : super(const PropertyFileState()) {
     on<PropertyFileLoad>(_onLoad);
     on<PropertyFileToggleBookmark>(_onToggleBookmark);
-    on<PropertyFileFilterChanged>(_onFilterChanged);
-    on<PropertyFileDeleteProperty>(_onDeleteProperty);
+     on<PropertyFileDeleteProperty>(_onDeleteProperty);
   }
 
   static PropertyFileBloc get(BuildContext context) =>
@@ -74,13 +73,7 @@ class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState> {
     emit(state.copyWith(property: p.copyWith(isBookmarked: !p.isBookmarked)));
   }
 
-  void _onFilterChanged(
-    PropertyFileFilterChanged event,
-    Emitter<PropertyFileState> emit,
-  ) {
-    emit(state.copyWith(unitFilter: () => event.status));
-  }
-
+ 
   void _onDeleteProperty(
     PropertyFileDeleteProperty event,
     Emitter<PropertyFileState> emit,

@@ -27,7 +27,7 @@ class FinancialReportsRevenueTabWidget extends StatelessWidget {
               // إيجارات مدفوعة
               _RevenueSection(
                 title: AppStrings.paidRentsLabel,
-                trailing:   'المجموع ٦،٠٠٠ ${AppStrings.currency}',
+                trailing: AppStrings.totalAmountLabel('٦،٠٠٠'),
                
                 colors: colors,
                 child: Column(
@@ -37,7 +37,7 @@ class FinancialReportsRevenueTabWidget extends StatelessWidget {
                           date: item.date,
                           status: item.status,
                           name: item.name,
-                          amount: '${item.amount} ${AppStrings.currency}',
+                          amount: AppStrings.amountVal(item.amount),
                           paid: item.paid,
                           colors: colors,
                         ),
@@ -170,14 +170,14 @@ class _PartialPaymentCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          '${item.amount} ${AppStrings.currency}',
+                          AppStrings.amountVal(item.amount),
                           style: TextStyle(
                             fontSize: context.responsiveFontScale(14),
                             fontWeight: FontWeight.w600,
                             color: colors.textPrimary,
                           ),
                         ),Text(
-                          'متبقي: ١٥٬٠٠٠ ${AppStrings.currency}',
+                          AppStrings.remainingAmount('١٥٬٠٠٠'),
                           style: TextStyle(
                             fontSize: context.responsiveFontScale(14),
                             fontWeight: FontWeight.w600,
@@ -228,7 +228,7 @@ class _OtherIncomeCard extends StatelessWidget {
                 ),
               ),
               Text(
-                'المجموع ٦،٠٠٠ ${AppStrings.currency}',
+                AppStrings.totalAmountLabel('٦،٠٠٠'),
                 style: TextStyle(
                   fontSize: context.responsiveFontScale(16),
                   color: colors.textFieldTitle,
@@ -250,7 +250,7 @@ class _OtherIncomeCard extends StatelessWidget {
                 ),
               ),
               Text(
-                '٥،٠٠٠ ${AppStrings.currency}',
+                AppStrings.amountVal('٥،٠٠٠'),
                 style: TextStyle(
                   fontSize: context.responsiveFontScale(13),
                   color: AppColors.secondBrand,

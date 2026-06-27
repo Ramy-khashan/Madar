@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../../core/utils/constants/app_colors.dart';
+import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 
 class LogoutButtonWidget extends StatelessWidget {
@@ -30,7 +31,7 @@ class LogoutButtonWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'تسجيل الخروج',
+                AppStrings.logout,
                 style: TextStyle(
                   fontSize: context.responsiveFontScale(16),
                   fontWeight: FontWeight.w700,

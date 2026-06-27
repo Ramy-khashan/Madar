@@ -27,7 +27,7 @@ class ConversationHeader extends StatelessWidget {
               IconButton(
                 onPressed: () => Navigator.of(context).maybePop(),
                 icon: Icon(
-                  Icons.chevron_left_rounded,
+                  Icons.arrow_back_ios,
                   size: 30.fontSize,
                   color: colors.textPrimary,
                 ),

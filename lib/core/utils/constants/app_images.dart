@@ -15,8 +15,10 @@ class AppImages {
   static const String occupancyRateIcon = 'assets/icons/occupancy_rate_icon.svg';
   static const String documentsIcon = 'assets/icons/documents.svg';
   static const String propertyShapeIcon = 'assets/icons/property_shape.svg';
+  static const String editPencilIcon = 'assets/icons/edit_pencil.svg';
   static const String accountIcon = 'assets/icons/account.svg';
   static const String filterImage = 'assets/icons/filter.svg';
+  static const String monthlyRentIcon = 'assets/icons/monthly_rent_icon.svg';
   static const String homeIcon = 'assets/icons/home.svg';
   static const String settingsIcon = 'assets/icons/setting.svg';
   static const String searchIcon = 'assets/icons/search.svg';
@@ -96,6 +98,8 @@ class AppImages {
   static const String sell = 'assets/images/sell.png';
   static const String instrument = 'assets/images/instrument.png';
   static const String locationDone = 'assets/icons/location_done.svg';
+  static const String apartmentIcon = 'assets/icons/apartment_icon.svg';
+  static const String deleteIcon = 'assets/icons/trash.svg';
 
 
 

@@ -158,7 +158,7 @@ class InsuranceOptionsContentWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              'التكلفة السنوية بعد الخصم',
+                              AppStrings.annualCostAfterDiscount,
                               style: TextStyle(
                                 fontSize: context.responsiveFontScale(16),
                                 color: colors.textSecondary,
@@ -181,7 +181,7 @@ class InsuranceOptionsContentWidget extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              'وفرت 96 ${AppStrings.currency} 🎉',
+                              AppStrings.youSavedAmount('96'),
                               style: TextStyle(
                                 fontSize: context.responsiveFontScale(14),
                                 color: colors.textSecondary,

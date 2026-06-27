@@ -111,14 +111,14 @@ class AppButton extends StatelessWidget {
                               : const SizedBox()),
                                     ),
                   ),
-                if (childText != null) Text(childText ?? '', style: textStyle),
+                if (childText != null) Text(childText ?? '', style: textStyle,textAlign: TextAlign.center,),
 
               
               ],
             )
           : SizedBox(
               width: width,
-              child: Center(child: Text(text ?? '', style: textStyle)),
+              child: Center(child: Text(text ?? '', style: textStyle,textAlign: TextAlign.center,)),
             ),
     );
   }

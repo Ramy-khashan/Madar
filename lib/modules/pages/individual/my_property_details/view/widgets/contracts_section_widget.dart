@@ -123,7 +123,7 @@ class ContractCardWidget extends StatelessWidget {
         // ),
         // SizedBox(height: 4.height),
          Text(
-          'من ${contract.startDate} الي ${contract.endDate}',
+          AppStrings.contractDateRange(contract.startDate, contract.endDate),
           style: TextStyle(
             fontSize: context.responsiveFontScale(16),
             color: colors.textSecondary,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../core/components/image_item.dart';
 import '../../../../../core/utils/constants/app_images.dart';
+import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 
 class BusinessSubscriptionItem extends StatelessWidget {
@@ -53,7 +54,7 @@ class BusinessSubscriptionItem extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          "الباقة الاحترافية",
+                          AppStrings.subscriptionProBadge,
                           style: TextStyle(
                             fontSize: context.responsiveFontScale(14),
                             fontWeight: FontWeight.w700,
@@ -70,7 +71,7 @@ class BusinessSubscriptionItem extends StatelessWidget {
                   ),
                   SizedBox(height: 4.height),
                   Text(
-                    "صالحة حتى 6 يونيو 2026",
+                    AppStrings.subscriptionValidUntilDemo,
                     style: TextStyle(
                       fontSize: context.responsiveFontScale(14),
                       fontWeight: FontWeight.w500,
