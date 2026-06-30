@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,9 +11,10 @@ import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../add_property/view/widgets/counter_button_item.dart';
 import '../../controller/choose_broker_bloc.dart';
 import '../../model/broker_model.dart';
-import 'agent_details_row_item.dart';
+import 'commission_fee_item.dart';
 
 part 'broker_summary_card_item.dart';
 
@@ -47,8 +49,13 @@ class BrokerDetailsContentWidget extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 16.height),
-                    BrokerSummaryCard(broker: broker, colors: colors),
-                    Padding(
+                    Stack(
+                      children: [
+                        BrokerSummaryCard(broker: broker, colors: colors),
+                        Positioned(bottom: 0, left: 0, right: 0, child: const CommissionFeeItem()),
+                      ],
+                    ),
+                   Padding(
                       padding: EdgeInsets.symmetric(vertical: 16.height),
                       child: OutlinedSection(
                         title: AppStrings.brokerResponsibilities,
@@ -110,7 +117,7 @@ class BrokerDetailsContentWidget extends StatelessWidget {
                       child: Text(
                         AppStrings.brokerContactNote,
                         style: TextStyle(
-                          fontSize: context.responsiveFontScale(13),
+                          fontSize: context.responsiveFontScale(14),
                           fontFamily: AppConstant.appHeaderFont,
                           color: colors.primaryBrand,
                         ),

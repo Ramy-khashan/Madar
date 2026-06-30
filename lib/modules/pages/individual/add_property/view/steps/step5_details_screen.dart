@@ -9,6 +9,7 @@ import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../controller/add_property_bloc.dart';
+import '../widgets/counter_button_item.dart';
 
 class AddPropertyStep5Screen extends StatelessWidget {
   const AddPropertyStep5Screen({super.key});
@@ -108,50 +109,53 @@ class AddPropertyStep5Screen extends StatelessWidget {
                 16.height.toSizedBox,
 
                 // ── Room counters ─────────────────────────────────────────
-               Row(children:[
-                 Expanded(
-                   child: _PropertyDetailsRow(
-                    label: AppStrings.bedroomsCount,
-                    field: 'beds',
-                    getValue: (s) => s.model.beds,
-                    onIncrement: const IncrementCounterEvent('beds'),
-                    onDecrement: const DecrementCounterEvent('beds'),
-                                   ),
-                 ),
-                23.width.toSizedBox,
-                Expanded(
-                  child: _PropertyDetailsRow(
-                    label: AppStrings.bathroomsCount,
-                    field: 'baths',
-                    getValue: (s) => s.model.baths,
-                    onIncrement: const IncrementCounterEvent('baths'),
-                    onDecrement: const DecrementCounterEvent('baths'),
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _PropertyDetailsRow(
+                        label: AppStrings.bedroomsCount,
+                        field: 'beds',
+                        getValue: (s) => s.model.beds,
+                        onIncrement: const IncrementCounterEvent('beds'),
+                        onDecrement: const DecrementCounterEvent('beds'),
+                      ),
+                    ),
+                    23.width.toSizedBox,
+                    Expanded(
+                      child: _PropertyDetailsRow(
+                        label: AppStrings.bathroomsCount,
+                        field: 'baths',
+                        getValue: (s) => s.model.baths,
+                        onIncrement: const IncrementCounterEvent('baths'),
+                        onDecrement: const DecrementCounterEvent('baths'),
+                      ),
+                    ),
+                  ],
                 ),
-               ]
-               ),
                 8.height.toSizedBox,
-                Row(children: [
-                Expanded(
-                  child: _PropertyDetailsRow(
-                    label: AppStrings.majlisCountOptional,
-                    field: 'lounges',
-                    getValue: (s) => s.model.lounges,
-                    onIncrement: const IncrementCounterEvent('lounges'),
-                    onDecrement: const DecrementCounterEvent('lounges'),
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _PropertyDetailsRow(
+                        label: AppStrings.majlisCountOptional,
+                        field: 'lounges',
+                        getValue: (s) => s.model.lounges,
+                        onIncrement: const IncrementCounterEvent('lounges'),
+                        onDecrement: const DecrementCounterEvent('lounges'),
+                      ),
+                    ),
+                    23.width.toSizedBox,
+                    Expanded(
+                      child: _PropertyDetailsRow(
+                        label: AppStrings.hallsCountOptional,
+                        field: 'majlis',
+                        getValue: (s) => s.model.majlis,
+                        onIncrement: const IncrementCounterEvent('majlis'),
+                        onDecrement: const DecrementCounterEvent('majlis'),
+                      ),
+                    ),
+                  ],
                 ),
-                23.width.toSizedBox,
-                Expanded(
-                  child: _PropertyDetailsRow(
-                    label: AppStrings.hallsCountOptional,
-                    field: 'majlis',
-                    getValue: (s) => s.model.majlis,
-                    onIncrement: const IncrementCounterEvent('majlis'),
-                    onDecrement: const DecrementCounterEvent('majlis'),
-                  ),
-                ),
-                ],),
                 16.height.toSizedBox,
 
                 // ── Optional fields ───────────────────────────────────────
@@ -389,7 +393,7 @@ class _CounterRow extends StatelessWidget {
                 ),
               Row(
                 children: [
-                  _CounterButton(
+                  CounterButton(
                     icon: Icons.add_rounded,
                     onTap: () => AddPropertyBloc.get(context).add(onIncrement),
                     tc: tc,
@@ -408,7 +412,7 @@ class _CounterRow extends StatelessWidget {
                       ),
                     ),
                   ),
-                  _CounterButton(
+                  CounterButton(
                     icon: Icons.remove_rounded,
                     onTap: () => AddPropertyBloc.get(context).add(onDecrement),
                     tc: tc,
@@ -423,17 +427,18 @@ class _CounterRow extends StatelessWidget {
     );
   }
 }
+
 class _PropertyDetailsRow extends StatelessWidget {
   const _PropertyDetailsRow({
     required this.label,
- 
+
     required this.field,
     required this.getValue,
     required this.onIncrement,
     required this.onDecrement,
   });
   final String label;
-   final String field;
+  final String field;
   final int Function(AddPropertyState state) getValue;
   final AddPropertyEvent onIncrement;
   final AddPropertyEvent onDecrement;
@@ -448,18 +453,18 @@ class _PropertyDetailsRow extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical:4),
-                child: Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: context.responsiveFontScale(14),
-                      fontWeight: FontWeight.w600,
-                      color: tc.textFieldTitle.withValues(alpha: 0.6),
-                    ),
-                  ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: context.responsiveFontScale(14),
+                  fontWeight: FontWeight.w600,
+                  color: tc.textFieldTitle.withValues(alpha: 0.6),
+                ),
               ),
-                4.height.toSizedBox,
+            ),
+            4.height.toSizedBox,
             Container(
               padding: EdgeInsets.symmetric(
                 horizontal: 16.width,
@@ -472,10 +477,12 @@ class _PropertyDetailsRow extends StatelessWidget {
               ),
               child: Center(
                 child: Row(
-mainAxisSize: MainAxisSize.min,                  children: [
-                    _CounterButton(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CounterButton(
                       icon: Icons.add_rounded,
-                      onTap: () => AddPropertyBloc.get(context).add(onIncrement),
+                      onTap: () =>
+                          AddPropertyBloc.get(context).add(onIncrement),
                       tc: tc,
                       enabled: true,
                       isPrimery: true,
@@ -492,9 +499,10 @@ mainAxisSize: MainAxisSize.min,                  children: [
                         ),
                       ),
                     ),
-                    _CounterButton(
+                    CounterButton(
                       icon: Icons.remove_rounded,
-                      onTap: () => AddPropertyBloc.get(context).add(onDecrement),
+                      onTap: () =>
+                          AddPropertyBloc.get(context).add(onDecrement),
                       tc: tc,
                       enabled: value > 0,
                     ),
@@ -505,49 +513,6 @@ mainAxisSize: MainAxisSize.min,                  children: [
           ],
         );
       },
-    );
-  }
-}
-
-class _CounterButton extends StatelessWidget {
-  const _CounterButton({
-    required this.icon,
-    required this.onTap,
-    required this.tc,
-    required this.enabled,
-    this.isPrimery = false,
-  });
-  final bool isPrimery;
-  final IconData icon;
-  final VoidCallback onTap;
-  final AppThemeColors tc;
-  final bool enabled;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: enabled ? onTap : null,
-      child: Container(
-        width: 32,
-        height: 32,
-        decoration: BoxDecoration(
-          color: isPrimery
-              ? tc.primaryBrand
-              : enabled
-              ? tc.primaryBrand.withValues(alpha: 0.1)
-              : tc.borderColor.withValues(alpha: 0.3),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(
-          icon,
-          size: 18,
-          color: isPrimery
-              ? tc.onPrimary
-              : enabled
-              ? tc.primaryBrand
-              : tc.textSecondary,
-        ),
-      ),
     );
   }
 }
@@ -583,9 +548,7 @@ class _ChipRow<T> extends StatelessWidget {
                   vertical: 8.height,
                 ),
                 decoration: BoxDecoration(
-                  color: selected
-                      ? tc.primaryBrand 
-                      : tc.cardBackground,
+                  color: selected ? tc.primaryBrand : tc.cardBackground,
                   borderRadius: BorderRadius.circular(24),
                   border: Border.all(
                     color: selected ? tc.primaryBrand : tc.borderColor,
@@ -595,19 +558,17 @@ class _ChipRow<T> extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if(selected) ...[
-                      Icon(
-                        Icons.check_rounded,
-                        size: 14,
-                        color: tc.onPrimary,
-                      ),
+                    if (selected) ...[
+                      Icon(Icons.check_rounded, size: 14, color: tc.onPrimary),
                       2.width.toSizedBox,
                     ],
                     Text(
                       getLabel(option),
                       style: TextStyle(
                         fontSize: context.responsiveFontScale(12),
-                        fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                        fontWeight: selected
+                            ? FontWeight.w700
+                            : FontWeight.w500,
                         color: selected ? tc.onPrimary : tc.primaryBrand,
                       ),
                     ),
@@ -680,9 +641,7 @@ class _AmenityCategoryWrap extends StatelessWidget {
                   vertical: 7.height,
                 ),
                 decoration: BoxDecoration(
-                  color: isSelected
-                      ? tc.primaryBrand 
-                      : tc.cardBackground,
+                  color: isSelected ? tc.primaryBrand : tc.cardBackground,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
                     color: isSelected ? tc.primaryBrand : tc.borderColor,
@@ -693,11 +652,7 @@ class _AmenityCategoryWrap extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     if (isSelected) ...[
-                      Icon(
-                        Icons.check_rounded,
-                        size: 14,
-                        color: tc.onPrimary,
-                      ),
+                      Icon(Icons.check_rounded, size: 14, color: tc.onPrimary),
                       2.width.toSizedBox,
                     ],
                     Text(
@@ -741,7 +696,7 @@ class _Step5Buttons extends StatelessWidget {
           ),
           12.width.toSizedBox,
           Expanded(
-            flex:2,
+            flex: 2,
 
             child: AppButton(
               text: AppStrings.next,

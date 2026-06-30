@@ -176,7 +176,8 @@ class AppStrings {
   static String get generalSettings => 'general_settings'.trans;
   static String get notifications => 'notifications'.trans;
   static String get changeAccountHint => 'change_account_hint'.trans;
-  static String get changeAccountIndividual => 'change_account_individual'.trans;
+  static String get changeAccountIndividual =>
+      'change_account_individual'.trans;
   static String get noNotifications => 'no_notifications'.trans;
   static String get notificationTypeMessage =>
       'notification_type_message'.trans;
@@ -1195,8 +1196,8 @@ class AppStrings {
   static String get comPhase6Subtitle => 'com_phase_6_subtitle'.trans;
 
   // Financial / Misc
-  static String totalAmountLabel(String amount) => 'total_amount_label'
-      .transNamed({'amount': amount, 'currency': currency});
+  static String totalAmountLabel(String amount) =>
+      'total_amount_label'.transNamed({'amount': amount, 'currency': currency});
   static String remainingAmount(String amount) =>
       'remaining_amount'.transNamed({'amount': amount, 'currency': currency});
   static String get netProfitNote1 => 'net_profit_note_1'.trans;
@@ -1209,7 +1210,8 @@ class AppStrings {
   static String get ratePropertyReason3 => 'rate_property_reason_3'.trans;
   static String get ratePropertyReason4 => 'rate_property_reason_4'.trans;
   static String get ratePropertyReason5 => 'rate_property_reason_5'.trans;
-  static String get annualCostAfterDiscount => 'annual_cost_after_discount'.trans;
+  static String get annualCostAfterDiscount =>
+      'annual_cost_after_discount'.trans;
   static String youSavedAmount(String amount) =>
       'you_saved_amount'.transNamed({'amount': amount, 'currency': currency});
   static String get paymentMethodLabel => 'payment_method_label'.trans;
@@ -1217,4 +1219,9 @@ class AppStrings {
       'subscription_valid_until'.transNamed({'date': date});
   static String get subscriptionValidUntilDemo =>
       'subscription_valid_until_demo'.trans;
+  static String get commissionFee => 'commission_fee'.trans;
+  static String get defaultRate => 'default_rate'.trans;
+  static String get youCanAdjustRate => 'you_can_adjust_rate'.trans;
+  static String get propertySeeker => 'property_seeker'.trans;
+  static String get propertyOwner => 'property_owner'.trans;
 }

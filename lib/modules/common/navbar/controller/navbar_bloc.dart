@@ -111,8 +111,8 @@ class NavbarBloc extends Bloc<NavbarEvent, NavbarState> {
       ),
     ),
     NavbarModel(
-      title: 'settings',
-      icon: AppImages.settingsIcon,
+      title: 'account',
+      icon: AppImages.accountIcon,
       screen: BlocProvider(
         create: (_) => SettingsBloc()..add(const SettingsLoad()),
         child: const SettingsScreen(),

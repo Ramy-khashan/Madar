@@ -1026,5 +1026,10 @@
   "you_saved_amount": "وفرت {amount} {currency} 🎉",
   "payment_method_label": "طريقة الدفع",
   "subscription_valid_until": "صالحة حتى {date}",
-  "subscription_valid_until_demo": "صالحة حتى 6 يونيو 2026"
+  "subscription_valid_until_demo": "صالحة حتى 6 يونيو 2026",
+    "commission_fee": "نسبة السعي",
+  "default_rate": "النسبة الافتراضية",
+  "you_can_adjust_rate": "يمكنك تعديل النسبة حسب الاتفاق مع الوسيط العقاري",
+  "property_seeker": "الباحث عن عقار",
+  "property_owner": "مالك العقار"
 }

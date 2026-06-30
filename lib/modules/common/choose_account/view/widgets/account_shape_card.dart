@@ -62,13 +62,17 @@ class AccountShapeCard extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            Text(
-                              account.title,
-                              style: TextStyle(
-                                fontSize: context.responsiveFontScale(16),
-                                fontWeight: FontWeight.w700,
-                                fontFamily: AppConstant.appFont,
-                                color: colors.textFieldTitle,
+                            Expanded(
+                              child: Text(
+                                account.title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: context.responsiveFontScale(16),
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: AppConstant.appFont,
+                                  color: colors.textFieldTitle,
+                                ),
                               ),
                             ),
                             SizedBox(width: 8.width),
@@ -87,7 +91,7 @@ class AccountShapeCard extends StatelessWidget {
                                 child: Text(
                                   account.badge,
                                   style: TextStyle(
-                                    fontSize: context.responsiveFontScale(10),
+                                    fontSize: context.responsiveFontScale(locale(context).languageCode=='ar'?10:8),
                                     color: colors.textSecondary,
                                     fontFamily: AppConstant.appFont,
                                   ),

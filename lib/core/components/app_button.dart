@@ -61,7 +61,7 @@ class AppButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         padding: btnPadding ?? EdgeInsets.zero,
         backgroundColor: isOutline
-            ? tc.primaryBrand.withValues(alpha: 0.15)
+            ? colorBG??tc.primaryBrand.withValues(alpha: 0.15)
             : colorBG ?? tc.primaryBrand,
         shadowColor: AppColors.transparent,
         maximumSize: Size(width ?? double.infinity, height ?? 56),

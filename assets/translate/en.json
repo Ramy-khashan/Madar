@@ -1026,5 +1026,9 @@
   "you_saved_amount": "You saved {amount} {currency} 🎉",
   "payment_method_label": "Payment method",
   "subscription_valid_until": "Valid until {date}",
-  "subscription_valid_until_demo": "Valid until 6 June 2026"
+  "commission_fee": "Commission fee",
+  "default_rate": "Default rate",
+  "you_can_adjust_rate": "You can adjust the rate as agreed upon with the real estate agent.",
+  "property_seeker": "Property seeker",
+  "property_owner": "Property owner"
 }

@@ -13,10 +13,11 @@ class BrokerSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(bottom: 210.height),
       padding: EdgeInsets.all(16.width),
       decoration: BoxDecoration(
         color: colors.cardBackground,
-        borderRadius: BorderRadius.circular(16.radius),
+        borderRadius: BorderRadius.circular(12.radius),
         border: Border.all(color: colors.borderColor),
       ),
       child: Column(
@@ -51,7 +52,7 @@ class BrokerSummaryCard extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 6.width),
-                        const ImageItem(AppImages.safetyIcon),
+                        const ImageItem(AppImages.secureIcon),
                       ],
                     ),
                     SizedBox(height: 4.height),
@@ -103,30 +104,32 @@ class BrokerSummaryCard extends StatelessWidget {
             ],
           ),
 
-          SizedBox(height: 10.height),
+          SizedBox(height: 20.height),
 
           Text(
             '${AppStrings.licensePrefix}: ${broker.licenseNumber}',
             style: TextStyle(
-              fontSize: context.responsiveFontScale(13),
+              fontSize: context.responsiveFontScale(14),
               fontFamily: AppConstant.appHeaderFont,
               fontWeight: FontWeight.w600,
-              color: colors.textSecondary,
+              color: colors.textSecondary.withValues(alpha: 0.8),
             ),
           ),
-          SizedBox(height: 6.height),
-          AgentDetailsRow(
-            icon: AppImages.experienceIcon,
-            text:
-                '${AppStrings.experiencePrefix} ${broker.experienceYears} ${AppStrings.experienceSuffix}',
-            colors: colors,
-          ),
-          SizedBox(height: 6.height),
-          AgentDetailsRow(
-            icon: AppImages.occupancyIcon,
-            text: '${AppStrings.commissionPrefix} ${broker.commissionPercent}%',
-            colors: colors,
-          ),
+          SizedBox(height: 10.height),
+
+          // SizedBox(height: 6.height),
+          // AgentDetailsRow(
+          //   icon: AppImages.experienceIcon,
+          //   text:
+          //       '${AppStrings.experiencePrefix} ${broker.experienceYears} ${AppStrings.experienceSuffix}',
+          //   colors: colors,
+          // ),
+          // SizedBox(height: 6.height),
+          // AgentDetailsRow(
+          //   icon: AppImages.occupancyIcon,
+          //   text: '${AppStrings.commissionPrefix} ${broker.commissionPercent}%',
+          //   colors: colors,
+          // ),
         ],
       ),
     );

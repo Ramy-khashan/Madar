@@ -9,6 +9,7 @@ class AppImages {
   static const String businessIcon = 'assets/icons/business.svg';
   static const String changeAccountIcon = 'assets/icons/change_account.svg';
   static const String savedIcon = 'assets/icons/saved.svg';
+  static const String mapPropertyIcon = 'assets/images/map_property_icon.png';
   static const String authBg = 'assets/images/auth_img.png';
   static const String individualIcon = 'assets/icons/individual.svg';
   static const String chatIcon = 'assets/icons/chat.svg';
@@ -41,6 +42,7 @@ class AppImages {
   static const String financialReportsIcon =
       'assets/icons/financial_reports.svg';
   static const String safetyIcon = 'assets/icons/safety.svg';
+  static const String secureIcon = 'assets/icons/secure.svg';
   static const String occupancyIcon = 'assets/icons/occupancy.svg';
   static const String updateIcon = 'assets/icons/last_update.svg';
   static const String propertyCountIcon = 'assets/icons/property_count.svg';
