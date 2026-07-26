@@ -2,7 +2,12 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/connection/concept/end_points.dart';
+import '../../../../core/connection/interfaces/api_consumer.dart';
 import '../../../../core/utils/constants/app_enums.dart';
+import '../../../../core/utils/constants/app_strings.dart';
+import '../../../../core/utils/functions/print_state.dart';
+import '../../../../core/utils/functions/service_locator.dart';
 import '../model/contract_details_model.dart';
 
 part 'contract_details_event.dart';
@@ -21,42 +26,43 @@ class ContractDetailsBloc
     ContractDetailsLoad event,
     Emitter<ContractDetailsState> emit,
   ) async {
-    emit(state.copyWith(loadStatus: RequestStatus.loading));
- 
-    const ContractDetailsModel data = ContractDetailsModel(
-      id: '1',
-      title: 'عقد شراء - شقة الملقا',
-      propertyName: 'شقة الملقا، الرياض',
-      location: 'الرياض',
-      tenantName: 'أحمد محمد',
-      ownerName: 'شركة مدار العقارية',
-      brokerName: 'خالد العتيبي',
-      status: 'active',
-      type: 'buy',
-      startDate: '2024-01-15',
-      endDate: '2025-01-14',
-      paymentCycle: 'سنوي',
-      securityDeposit: 20000,
-      annualRent: 850000,
-      monthlyRent: 70833,
-      totalContractValue: 850000,
-      terms: 
-        'يلتزم المستأجر بسداد الدفعات في موعدها المحدد.'
-        'يحظر إجراء أي تعديلات إنشائية دون موافقة خطية.'
-        'يتحمل المستأجر تكاليف الخدمات التشغيلية الدورية.'
-      ,
-      attachments: [
-        'contract-main.pdf',
-        'national-id.pdf',
-        'payment-receipt.pdf',
-      ],
-    );
-    emit(
-      state.copyWith(
-        loadStatus: RequestStatus.success,
-        contract: data,
-        errorMsg: '',
-      ),
-    );
+    try {
+      emit(state.copyWith(loadStatus: RequestStatus.loading));
+
+      final response = await sl.get<ApiConsumer>().get(
+        EndPoints.contractDetails(event.contractId),
+      );
+
+      await response.fold(
+        (failedResponse) async {
+          emit(
+            state.copyWith(
+              loadStatus: RequestStatus.failed,
+              errorMsg: failedResponse,
+            ),
+          );
+        },
+        (successResponse) async {
+          final data = ContractDetailsModel.fromJson(
+            successResponse.response,
+          );
+          emit(
+            state.copyWith(
+              loadStatus: RequestStatus.success,
+              contract: data,
+              errorMsg: '',
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      printState(e.toString());
+      emit(
+        state.copyWith(
+          loadStatus: RequestStatus.failed,
+          errorMsg: AppStrings.somethingWentWrong,
+        ),
+      );
+    }
   }
 }

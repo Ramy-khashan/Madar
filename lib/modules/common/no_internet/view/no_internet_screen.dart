@@ -1,6 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:madar_app/core/utils/functions/print_state.dart';
 
 import '../../../../config/router/app_router_keys.dart';
 import '../../../../config/theme/app_theme_colors.dart';
@@ -11,9 +12,13 @@ class NoInternetScreen extends StatelessWidget {
   const NoInternetScreen({super.key});
 
   Future<void> _retry(BuildContext context) async {
+    printState('Retrying...');
     final results = await Connectivity().checkConnectivity();
-    if (!results.contains(ConnectivityResult.none)) {
+    if (!results.contains(ConnectivityResult.mobile) &&
+        !results.contains(ConnectivityResult.wifi)) {
+      printState('Internet connection restored.');
       if (context.mounted) {
+        printState('Enter Here');
         RouterHandler.navigate(
           context,
           AppRouterKeys.splash,
@@ -37,10 +42,9 @@ class NoInternetScreen extends StatelessWidget {
               const SizedBox(height: 24),
               Text(
                 'no_internet'.tr(),
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 12),

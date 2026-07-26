@@ -27,13 +27,10 @@ class HomeHeaderWidget extends StatelessWidget {
             backgroundColor: colors.primaryBrand,
             child: Padding(
               padding: EdgeInsets.all(7.width),
-              child: Icon(
-                Icons.person_outline,
-                 color: colors.onPrimary,
-               ),
+              child: Icon(Icons.person_outline, color: colors.onPrimary),
             ),
           ),
-         SizedBox(width: 8.width),
+          SizedBox(width: 8.width),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,28 +45,31 @@ class HomeHeaderWidget extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 4.height),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.location_on,
-                      size: 20.width,
-                      color: colors.primaryBrand,
-                    ),
-                    SizedBox(width: 8.width),
-
-                    Text(
-                      userLocation,
-                      style: TextStyle(
-                        fontSize: context.responsiveFontScale(12),
-                        fontFamily: AppConstant.appHeaderFont,
-
-                        color:AppColors.grey900,
+                if (userLocation.isNotEmpty)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.location_on,
+                        size: 20.width,
+                        color: colors.primaryBrand,
                       ),
-                    ),
-                  ],
-                ),
+                      SizedBox(width: 8.width),
+
+                      Expanded(
+                        child: Text(
+                          userLocation,
+                          style: TextStyle(
+                            fontSize: context.responsiveFontScale(12),
+                            fontFamily: AppConstant.appHeaderFont,
+
+                            color: AppColors.grey900,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
               ],
             ),
           ),

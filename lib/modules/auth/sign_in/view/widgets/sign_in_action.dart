@@ -18,37 +18,10 @@ class SignInAction extends StatelessWidget {
             BlocBuilder<SignInBloc, SignInState>(
               builder: (context, state) {
                 return AppButton(
-                  // isLoading: state.signInStatus == RequestStatus.loading,
+                  isLoading: state.signInStatus == RequestStatus.loading,
                   text: AppStrings.signIn,
                   onTap: () {
-                       if (PreferenceUtils().getString(StorageKeys.accountType) ==
-                  AppConstant.developer) {
-                RouterHandler.navigate(
-                  context,
-                  AppRouterKeys.projectManagerHome,
-                  routerType: RouterType.goName,
-                );
-              } else {
-                RouterHandler.navigate(
-                  context,
-                  AppRouterKeys.navbar,
-                  routerType: RouterType.goName,
-                );
-              }
-                    // SignInBloc.get(context).add(const SignInActionEvent());
-                    // if (accountType == AppConstant.developer) {
-                    //   RouterHandler.navigate(
-                    //     context,
-                    //     AppRouterKeys.realEstateDevelopmentList,
-                    //     routerType: RouterType.goName,
-                    //   );
-                    // } else {
-                    //   RouterHandler.navigate(
-                    //     context,
-                    //     AppRouterKeys.navbar,
-                    //     routerType: RouterType.goName,
-                    //   );
-                    // }
+                    SignInBloc.get(context).add(const SignInActionEvent());
                   },
                   width: 560.width,
                 );

@@ -94,7 +94,7 @@ class SignUpScreen extends StatelessWidget {
                                       context,
                                     ).nameController,
                                     validator: (p0) =>
-                                        Validate.notEmpty(p0 ?? ""),
+                                        Validate.notEmpty(p0 ?? ''),
                                   ),
 
                                   PhoneNumberField(
@@ -120,7 +120,7 @@ class SignUpScreen extends StatelessWidget {
                                       context,
                                     ).passwordController,
                                     validator: (p0) =>
-                                        Validate.validatePassword(p0 ?? ""),
+                                        Validate.validatePassword(p0 ?? ''),
                                   ),
                                   PasswordItem(
                                     title: AppStrings.confirmPassword,
@@ -133,7 +133,7 @@ class SignUpScreen extends StatelessWidget {
                                           SignUpBloc.get(
                                             context,
                                           ).passwordController.text,
-                                          value ?? "",
+                                          value ?? '',
                                         ),
                                   ),
                                   SizedBox(height: 24.height),

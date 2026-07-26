@@ -1,42 +1,41 @@
-import 'package:equatable/equatable.dart';
+class NotificationModel {
+  String? id;
+  String? userId;
+  String? type;
+  String? title;
+  String? body;
+  bool? isRead;
+  String? createdAt;
 
-enum NotificationType { message, property, system }
+  NotificationModel(
+      {this.id,
+      this.userId,
+      this.type,
+      this.title,
+      this.body,
+      this.isRead,
+      this.createdAt});
 
-class NotificationModel extends Equatable {
-  final String id;
-  final String title;
-  final String body;
-  final String time;
-  final NotificationType type;
-  final bool isRead;
-
-  const NotificationModel({
-    required this.id,
-    required this.title,
-    required this.body,
-    required this.time,
-    required this.type,
-    this.isRead = false,
-  });
-
-  NotificationModel copyWith({
-    String? id,
-    String? title,
-    String? body,
-    String? time,
-    NotificationType? type,
-    bool? isRead,
-  }) {
-    return NotificationModel(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      body: body ?? this.body,
-      time: time ?? this.time,
-      type: type ?? this.type,
-      isRead: isRead ?? this.isRead,
-    );
+  NotificationModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    userId = json['userId'];
+    type = json['type'];
+    title = json['title'];
+    body = json['body'];
+    isRead = json['isRead'];
+    createdAt = json['createdAt'];
   }
 
-  @override
-  List<Object?> get props => [id, title, body, time, type, isRead];
+  Map<String, dynamic> toJson() {
+    // ignore: prefer_collection_literals
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['id'] = id;
+    data['userId'] = userId;
+    data['type'] = type;
+    data['title'] = title;
+    data['body'] = body;
+    data['isRead'] = isRead;
+    data['createdAt'] = createdAt;
+    return data;
+  }
 }

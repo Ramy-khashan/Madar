@@ -11,6 +11,8 @@ class ChooseBrokerState extends Equatable {
     this.loadStatus = RequestStatus.init,
     this.confirmStatus = RequestStatus.init,
     this.errorMsg = '',
+    this.isLoadMore = false,
+    this.totalCount = 0,
   });
 
   final List<BrokerModel> brokers;
@@ -20,6 +22,8 @@ class ChooseBrokerState extends Equatable {
   final RequestStatus loadStatus;
   final RequestStatus confirmStatus;
   final String errorMsg;
+  final bool isLoadMore;
+  final int totalCount;
 
   List<BrokerModel> get filteredBrokers {
     if (searchQuery.isEmpty) return brokers;
@@ -37,7 +41,7 @@ class ChooseBrokerState extends Equatable {
   @override
   List<Object?> get props => [
         brokers, searchQuery, selectedBrokerId, step,
-        loadStatus, confirmStatus, errorMsg,
+        loadStatus, confirmStatus, errorMsg, isLoadMore, totalCount,
       ];
 
   ChooseBrokerState copyWith({
@@ -49,6 +53,8 @@ class ChooseBrokerState extends Equatable {
     RequestStatus? loadStatus,
     RequestStatus? confirmStatus,
     String? errorMsg,
+    bool? isLoadMore,
+    int? totalCount,
   }) {
     return ChooseBrokerState(
       brokers: brokers ?? this.brokers,
@@ -60,6 +66,8 @@ class ChooseBrokerState extends Equatable {
       loadStatus: loadStatus ?? this.loadStatus,
       confirmStatus: confirmStatus ?? this.confirmStatus,
       errorMsg: errorMsg ?? this.errorMsg,
+      isLoadMore: isLoadMore ?? this.isLoadMore,
+      totalCount: totalCount ?? this.totalCount,
     );
   }
 }

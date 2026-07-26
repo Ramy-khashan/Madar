@@ -42,4 +42,37 @@ class AuctionItemModel extends Equatable {
         tag,
         status,
       ];
+
+  factory AuctionItemModel.fromJson(Map<String, dynamic> json) {
+    final property = json['property'] as Map<String, dynamic>? ?? {};
+    final price = (json['startingPrice'] ?? 0).toDouble();
+    return AuctionItemModel(
+      id: json['id'] ?? '',
+      title: property['title'] ?? '',
+      location: property['description'] ?? '',
+      currentBid: price,
+      startingBid: price,
+      imageUrl: '',
+      endTime: json['endAt'] != null
+          ? DateTime.parse(json['endAt'])
+          : DateTime.now(),
+      bidsCount: 0,
+      tag: property['type'] ?? '',
+      status: _parseStatus(json['status']),
+    );
+  }
+
+  static AuctionStatus _parseStatus(String? status) {
+    switch (status?.toUpperCase()) {
+      case 'ACTIVE':
+      case 'LIVE':
+        return AuctionStatus.live;
+      case 'UPCOMING':
+        return AuctionStatus.upcoming;
+      case 'CLOSED':
+      case 'CANCELLED':
+      default:
+        return AuctionStatus.ended;
+    }
+  }
 }

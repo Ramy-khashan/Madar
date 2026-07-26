@@ -13,7 +13,7 @@ class NotificationItem extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        color: (item != null && !item!.isRead)
+        color: (item != null && !(item!.isRead ?? true))
             ? colors.primaryBrand.withValues(alpha: 0.06)
             : Colors.transparent,
         padding: EdgeInsets.symmetric(
@@ -28,7 +28,7 @@ class NotificationItem extends StatelessWidget {
               height: 48.width,
               decoration: BoxDecoration(
                 color: colors.borderColor.withValues(
-                  alpha: item != null && !item!.isRead ? 0.85 : 0.3,
+                  alpha: item != null && !(item!.isRead ?? true) ? 0.85 : 0.3,
                 ),
                 shape: BoxShape.circle,
               ),
@@ -63,7 +63,9 @@ class NotificationItem extends StatelessWidget {
                       ),
                       SizedBox(width: 8.width),
                       Text(
-                        item?.time ?? 'Date Time',
+                        item?.createdAt == null
+                            ? 'Date Time'
+                            : DateTimeHandler.formatDate(item!.createdAt!),
                         style: TextStyle(
                           color: colors.textSecondary,
                           fontSize: context.responsiveFontScale(11),
@@ -85,9 +87,12 @@ class NotificationItem extends StatelessWidget {
                 ],
               ),
             ),
-            if (item != null && !item!.isRead)
+            if (item != null && !(item!.isRead ?? true))
               Padding(
-                padding: EdgeInsetsDirectional.only(top: 4.height, start: 8.width),
+                padding: EdgeInsetsDirectional.only(
+                  top: 4.height,
+                  start: 8.width,
+                ),
                 child: CircleAvatar(
                   radius: 5.width,
                   backgroundColor: colors.primaryBrand,

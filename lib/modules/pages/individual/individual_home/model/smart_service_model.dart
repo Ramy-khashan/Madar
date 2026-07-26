@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
- 
+
 class SmartServiceModel extends Equatable {
   final String id;
   final String title;
@@ -11,7 +11,8 @@ class SmartServiceModel extends Equatable {
     required this.id,
     required this.title,
     required this.description,
-    required this.icon, required this.route,
+    required this.icon,
+    this.route = '',
   });
 
   @override

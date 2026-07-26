@@ -7,7 +7,13 @@ abstract class AuctionListEvent extends Equatable {
 }
 
 class AuctionListLoad extends AuctionListEvent {
-  const AuctionListLoad();
+  const AuctionListLoad({this.page = 1, this.isLoadMore = false});
+
+  final int page;
+  final bool isLoadMore;
+
+  @override
+  List<Object?> get props => [page, isLoadMore];
 }
 
 class AuctionListFilterChanged extends AuctionListEvent {

@@ -11,7 +11,7 @@ final class PropertiesMapInitial extends PropertiesMapState {}
 
 final class PropertiesMapMarkerSelected extends PropertiesMapState {
   final int selectedIndex;
-  final PropertyBuyerModel property;
+  final PropertyDetailsModel property;
 
   const PropertiesMapMarkerSelected({
     required this.selectedIndex,
@@ -21,4 +21,3 @@ final class PropertiesMapMarkerSelected extends PropertiesMapState {
   @override
   List<Object?> get props => [selectedIndex, property];
 }
-

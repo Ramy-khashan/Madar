@@ -88,7 +88,8 @@ class OwnerPropertiesScreen extends StatelessWidget {
                     ),
                     itemBuilder: (context, index) {
                       return PropertyCardWidget(
-                        property: state.properties[index],
+                        property: null,
+                        // property: state.properties[index],
                         footer: PropertyCardChatFooter(
                           onChat: () {
                             RouterHandler.navigate(

@@ -6,6 +6,12 @@ sealed class MyWishlistEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+class MyWishlistLoad extends MyWishlistEvent {
+  const MyWishlistLoad();
+
+  @override
+  List<Object> get props => [];
+}
 class PropertiesFilterApplied extends MyWishlistEvent {
   final PropertyFilterModel filter;
 

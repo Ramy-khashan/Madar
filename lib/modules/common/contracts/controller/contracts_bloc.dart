@@ -2,7 +2,12 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/connection/concept/end_points.dart';
+import '../../../../core/connection/interfaces/api_consumer.dart';
+import '../../../../core/utils/constants/app_enums.dart';
 import '../../../../core/utils/constants/app_strings.dart';
+import '../../../../core/utils/functions/print_state.dart';
+import '../../../../core/utils/functions/service_locator.dart';
 import '../model/contract_model.dart';
 import '../model/tabs_model.dart';
 
@@ -18,58 +23,84 @@ class ContractsBloc extends Bloc<ContractsEvent, ContractsState> {
   static ContractsBloc get(BuildContext context) =>
       context.read<ContractsBloc>();
 
-  static final List<ContractModel> _mockContracts = [
-    const ContractModel(
-      id: '1',
-      title: 'عقد شراء - شقة الملقا',
-      propertyName: 'شقة الملقا، الرياض',
-      location: 'الرياض',
-      amount: 850000,
-      date: '2024-01-15',
-      status: 'active',
-      type: 'buy',
-    ),
-    const ContractModel(
-      id: '2',
-      title: 'عقد إيجار - فيلا جدة',
-      propertyName: 'فيلا الشاطئ، جدة',
-      location: 'جدة',
-      amount: 850000,
-      date: '2024-02-01',
-      status: 'underReview',
-      type: 'monthlyRent',
-    ),
-    const ContractModel(
-      id: '3',
-      title: 'عقد شراء - دوبلكس الدمام',
-      propertyName: 'دوبلكس الشاطئ، الدمام',
-      location: 'الدمام',
-      amount: 850000,
-      date: '2023-12-10',
-      status: 'completed',
-      type: 'buy',
-    ),
-  ];
+  int pageSize = 10;
 
-  void _onLoad(ContractsLoad event, Emitter<ContractsState> emit) {
-    emit(
-      state.copyWith(
-        allContracts: _mockContracts,
-        selectedFilter: 'all',
-      ),
-    );
+  Future<void> _onLoad(
+    ContractsLoad event,
+    Emitter<ContractsState> emit,
+  ) async {
+    try {
+      emit(
+        state.copyWith(
+          contractsStatus: RequestStatus.loading,
+          isLoadMore: event.isLoadMore,
+        ),
+      );
+
+      final queryParams = <String, dynamic>{
+        'page': event.page,
+        'limit': pageSize,
+        if (state.selectedFilter != 'ALL') 'status': state.selectedFilter,
+      };
+
+      final response = await sl.get<ApiConsumer>().get(
+        EndPoints.getContracts,
+        queryParameters: queryParams,
+      );
+
+      await response.fold(
+        (failedResponse) async {
+          emit(
+            state.copyWith(
+              contractsStatus: RequestStatus.failed,
+              errorMsg: failedResponse,
+              isLoadMore: false,
+            ),
+          );
+        },
+        (successResponse) async {
+          final List<ContractModel> items = [];
+          for (var item in List.from(
+            successResponse.response['contracts'] ?? [],
+          )) {
+            items.add(ContractModel.fromJson(item));
+          }
+
+          emit(
+            state.copyWith(
+              contractsStatus: RequestStatus.success,
+              contracts: items,
+              totalCount: successResponse.response['total'] ?? 0,
+              isLoadMore: false,
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      printState(e.toString());
+      emit(
+        state.copyWith(
+          contractsStatus: RequestStatus.failed,
+          errorMsg: AppStrings.somethingWentWrong,
+          isLoadMore: false,
+        ),
+      );
+    }
   }
 
   void _onFilterChanged(
     ContractsFilterChanged event,
     Emitter<ContractsState> emit,
   ) {
-    emit(state.copyWith(selectedFilter: event.filter));
+    emit(state.copyWith(selectedFilter: event.filter, contracts: [], totalCount: 0));
+    add(const ContractsLoad());
   }
 
   static List<ContractTabsModel> tabs = [
-    ContractTabsModel(id: 'all', title: AppStrings.allTab),
-    ContractTabsModel(id: 'active', title: AppStrings.activeStatus),
-    ContractTabsModel(id: 'completed', title: AppStrings.completedStatus),
+    ContractTabsModel(id: 'ALL', title: AppStrings.allTab),
+    ContractTabsModel(id: 'ACTIVE', title: AppStrings.activeStatus),
+    ContractTabsModel(id: 'PENDING', title: AppStrings.pendingStatus),
+    ContractTabsModel(id: 'UNDER_REVIEW', title: AppStrings.underReviewStatus),
+    ContractTabsModel(id: 'COMPLETED', title: AppStrings.completedStatus),
   ];
 }

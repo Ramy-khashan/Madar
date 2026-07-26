@@ -15,6 +15,7 @@ import '../../../../../core/components/property_card_widget.dart';
 import '../../../../common/chats/conversation_detail/model/conversation_info.dart';
 import '../../../../common/filter/view/filter_sheet_view.dart';
 import '../controller/properties_bloc.dart';
+import 'widgets/properties_loading_item.dart';
 
 class PropertiesListingScreen extends StatelessWidget {
   const PropertiesListingScreen({super.key});
@@ -59,21 +60,26 @@ class PropertiesListingScreen extends StatelessWidget {
               child: BlocBuilder<PropertiesBloc, PropertiesState>(
                 builder: (context, state) {
                   return LoadingProcess(
-                    status: state.propertiesStatus,
+                    status: state.isLoadMore
+                        ? RequestStatus.success
+                        : state.propertiesStatus,
                     errorMsg: state.errorMsg,
-                    onTapRefresh: () {},
+                    onTapRefresh: () {
+                      context.read<PropertiesBloc>().add(
+                        const PropertiesLoad(isLoadMore: false, page: 1),
+                      );
+                    },
                     emptyMsg: AppStrings.noPropertiesFound,
                     isEmptyList:
                         state.propertiesStatus == RequestStatus.success &&
                         state.properties.isEmpty,
-                    childIsLoader: true,
+                    loader: const PropertiesLoadingItem(),
                     child: PaginationView(
                       isListView: context.isMobilePortrait,
                       itemBuilder: (context, index) {
-                        final property = state.properties[index];
                         return PropertyCardWidget(
-                          property: property,
-                          isViewAll:true,
+                          property: state.properties[index],
+                          isViewAll: true,
                           footer: PropertyCardDualFooter(
                             onSendRequest: () {},
                             onChat: () {
@@ -81,9 +87,9 @@ class PropertiesListingScreen extends StatelessWidget {
                                 context,
                                 AppRouterKeys.conversationDetail,
                                 extra: ConversationInfo(
-                                  conversationId: "",
-                                  participantName: "",
-                                  participantAvatarUrl: "",
+                                  conversationId: '',
+                                  participantName: '',
+                                  participantAvatarUrl: '',
                                 ),
                               );
                             },
@@ -100,7 +106,7 @@ class PropertiesListingScreen extends StatelessWidget {
                       onLoadMore: (int page) {
                         PropertiesBloc.get(
                           context,
-                        ).add(PropertiesLoad(isLoadMore: true, page: page,));
+                        ).add(PropertiesLoad(isLoadMore: true, page: page));
                       },
                     ),
                   );

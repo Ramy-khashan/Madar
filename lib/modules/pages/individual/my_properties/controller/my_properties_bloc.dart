@@ -1,112 +1,81 @@
- import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../core/connection/concept/end_points.dart';
+import '../../../../../core/connection/interfaces/api_consumer.dart';
 import '../../../../../core/model/property_filter_model.dart';
-import '../../../../../core/utils/constants/app_images.dart';
+import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../core/utils/functions/print_state.dart';
+import '../../../../../core/utils/functions/service_locator.dart';
 import '../../individual_home/model/portfolio_property_model.dart';
 
 part 'my_properties_event.dart';
 part 'my_properties_state.dart';
 
 class MyPropertiesBloc extends Bloc<MyPropertiesEvent, MyPropertiesState> {
-  MyPropertiesBloc() : super(MyPropertiesInitial()) {
+  MyPropertiesBloc() : super(const MyPropertiesState()) {
     on<MyPropertiesLoad>(_onLoad);
-    on<MyPropertiesFilterApplied>(_onFilterApplied);
   }
-
-  static final List<PortfolioPropertyModel> _allProperties = [
-      PortfolioPropertyModel(
-      id: '1',
-      title: 'شقة فاخرة في الملقا',
-      location: 'الرياض - حي الملقا',
-      imageUrl: AppImages.propertyImage,
-      status: 'مؤجر',
-      bath:2 ,
-      bed: 3,
-      area: '150 ${AppStrings.mesurement}',
-      typeId: 'apartment',
-      isForSale: false,
-    ),
-      PortfolioPropertyModel(
-      id: '2',
-      title: 'فيلا النرجس',
-      location: 'الرياض - حي النرجس',
-      imageUrl: AppImages.propertyImage,
-      status: 'شاغر',
-      bed: 5,
-      bath: 4,
-      area: '350 ${AppStrings.mesurement}',
-      typeId: 'villa',
-      isForSale: true,
-    ),
-      PortfolioPropertyModel(
-      id: '3',
-      title: 'شقة في حي العليا',
-      location: 'الرياض - حي العليا',
-      imageUrl: AppImages.propertyImage,
-      status: 'مؤجر',
-      bed: 2,
-      bath: 1,
-      area: '110 ${AppStrings.mesurement}',
-      typeId: 'apartment',
-      isForSale: false,
-    ),
-      PortfolioPropertyModel(
-      id: '4',
-      title: 'دور في حي الورود',
-      location: 'الرياض - حي الورود',
-      imageUrl: AppImages.propertyImage,
-      status: 'شاغر',
-      bed: 1,
-      bath: 1,
-      area: '50 ${AppStrings.mesurement}',
-      typeId: 'floor',
-      isForSale: true,
-    ),
-      PortfolioPropertyModel(
-      id: '5',
-      title: 'أرض في حي الصحافة',
-      location: 'الرياض - حي الصحافة',
-      imageUrl: AppImages.propertyImage,
-      status: 'شاغر',
-      bed: 0,
-      bath: 0,
-      area: '0 ${AppStrings.mesurement}',
-      typeId: 'land',
-      isForSale: true,
-    ),
-      PortfolioPropertyModel(
-      id: '6',
-      title: 'فيلا حي الربوة',
-      location: 'الرياض - حي الربوة',
-      imageUrl: AppImages.propertyImage,
-      status: 'مؤجر',
-      bed: 4,
-      bath: 3,
-      area: '300 ${AppStrings.mesurement}',
-      typeId: 'villa',
-      isForSale: false,
-    ),
-  ];
-
-  // Keep static getter for backward compatibility with any other screen that may reference it
-  static List<PortfolioPropertyModel> get myPropertiesItems => _allProperties;
-
-  void _onLoad(MyPropertiesLoad event, Emitter<MyPropertiesState> emit) {
-    emit(MyPropertiesLoaded(properties: _allProperties));
-  }
-
-  void _onFilterApplied(
-    MyPropertiesFilterApplied event,
+  static MyPropertiesBloc get(BuildContext context) =>
+      BlocProvider.of<MyPropertiesBloc>(context);
+  int pageSize = 10;
+  Future<void> _onLoad(
+    MyPropertiesLoad event,
     Emitter<MyPropertiesState> emit,
-  ) {
-    final f = event.filter;
-    final filtered = _allProperties.where((p) {
-      if (p.isForSale != f.isForSale) return false;
-      if (f.propertyTypeId != null && p.typeId != f.propertyTypeId) return false;
-      return true;
-    }).toList();
-    emit(MyPropertiesLoaded(properties: filtered, filter: f));
+  ) async {
+    try {
+      emit(
+        state.copyWith(
+          propertiesStatus: RequestStatus.loading,
+          isLoadMore: event.isLoadMore,
+        ),
+      );
+      final response = await sl.get<ApiConsumer>().get(
+        EndPoints.portfolio,
+        queryParameters: {'page': event.page, 'page_size': pageSize},
+        // queryParameters: {
+        // 'isForSale': state.filter?.isForSale,
+        // 'propertyTypeId': state.filter?.propertyTypeId,
+        // 'maxPrice': state.filter?.maxPrice,
+        // },
+      );
+
+      response.fold(
+        (failedResponse) {
+          emit(
+            state.copyWith(
+              propertiesStatus: RequestStatus.failed,
+              errorMsg: failedResponse,
+            ),
+          );
+        },
+        (successResponse) {
+          final List<PortfolioPropertyModel> properties = [...state.properties];
+          for (var element in List.from(
+            successResponse.response['data']['properties'],
+          )) {
+            properties.add(PortfolioPropertyModel.fromJson(element));
+          }
+
+          emit(
+            state.copyWith(
+              propertiesStatus: RequestStatus.success,
+              properties: properties,
+              totalCount: successResponse.response['data']['total'] ?? 0,
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      printState(e);
+      emit(
+        state.copyWith(
+          propertiesStatus: RequestStatus.failed,
+          errorMsg: AppStrings.somethingWentWrong,
+        ),
+      );
+    }
   }
 }

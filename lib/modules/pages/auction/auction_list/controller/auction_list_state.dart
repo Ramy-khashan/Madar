@@ -6,43 +6,37 @@ class AuctionListState extends Equatable {
     this.activeFilter = AuctionFilterTab.all,
     this.loadStatus = RequestStatus.init,
     this.errorMsg = '',
+    this.isLoadMore = false,
+    this.totalCount = 0,
   });
 
   final List<AuctionItemModel> allItems;
   final AuctionFilterTab activeFilter;
   final RequestStatus loadStatus;
   final String errorMsg;
-
-  List<AuctionItemModel> get filteredItems {
-    if (activeFilter == AuctionFilterTab.all) return allItems;
-    return allItems.where((item) {
-      switch (activeFilter) {
-        case AuctionFilterTab.live:
-          return item.status == AuctionStatus.live;
-        case AuctionFilterTab.upcoming:
-          return item.status == AuctionStatus.upcoming;
-        case AuctionFilterTab.ended:
-          return item.status == AuctionStatus.ended;
-        default:
-          return true;
-      }
-    }).toList();
-  }
+  final bool isLoadMore;
+  final int totalCount;
 
   @override
-  List<Object?> get props => [allItems, activeFilter, loadStatus, errorMsg];
+  List<Object?> get props => [
+    allItems, activeFilter, loadStatus, errorMsg, isLoadMore, totalCount,
+  ];
 
   AuctionListState copyWith({
     List<AuctionItemModel>? allItems,
     AuctionFilterTab? activeFilter,
     RequestStatus? loadStatus,
     String? errorMsg,
+    bool? isLoadMore,
+    int? totalCount,
   }) {
     return AuctionListState(
-      allItems: allItems ?? this.allItems,
+      allItems:     allItems     ?? this.allItems,
       activeFilter: activeFilter ?? this.activeFilter,
-      loadStatus: loadStatus ?? this.loadStatus,
-      errorMsg: errorMsg ?? this.errorMsg,
+      loadStatus:   loadStatus   ?? this.loadStatus,
+      errorMsg:     errorMsg     ?? this.errorMsg,
+      isLoadMore:   isLoadMore   ?? this.isLoadMore,
+      totalCount:   totalCount   ?? this.totalCount,
     );
   }
 }

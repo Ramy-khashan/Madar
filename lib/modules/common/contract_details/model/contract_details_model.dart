@@ -66,6 +66,33 @@ class ContractDetailsModel extends Equatable {
         attachments,
       ];
 
+  factory ContractDetailsModel.fromJson(Map<String, dynamic> json) {
+    final buyer = json['buyer'] as Map<String, dynamic>?;
+    final seller = json['seller'] as Map<String, dynamic>?;
+    final property = json['property'] as Map<String, dynamic>?;
+    final price = (json['price'] ?? 0).toDouble();
+    return ContractDetailsModel(
+      id: json['id'] ?? '',
+      title: json['contractNo'] ?? '',
+      propertyName: property?['title'] ?? property?['projectName'] ?? '',
+      location: property?['location'] ?? '',
+      tenantName: buyer?['fullName'] ?? '',
+      ownerName: seller?['fullName'] ?? '',
+      brokerName: json['broker'] ?? '',
+      status: json['status'] ?? '',
+      type: json['type'] ?? '',
+      startDate: json['startDate'] ?? '',
+      endDate: json['endDate'] ?? '',
+      paymentCycle: json['paymentCycle'] ?? '',
+      securityDeposit: (json['commissionAmount'] ?? 0).toDouble(),
+      annualRent: price,
+      monthlyRent: price / 12,
+      totalContractValue: price,
+      terms: json['terms'] ?? '',
+      attachments: List<String>.from(json['attachments'] ?? []),
+    );
+  }
+
   static String typeLabel(String type) {
     return switch (type) {
       'buy' => AppStrings.buyType,

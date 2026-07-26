@@ -76,4 +76,5 @@ class AppConstant {
       _ =>   AppColors.orangeColor,
     };
     return color;}
+ 
 }

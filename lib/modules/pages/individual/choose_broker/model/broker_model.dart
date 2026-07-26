@@ -32,4 +32,20 @@ class BrokerModel extends Equatable {
         id, name, licenseNumber, rating, reviewsCount, propertiesCount,
         location, experienceYears, commissionPercent, description, imageUrl,
       ];
+
+  factory BrokerModel.fromJson(Map<String, dynamic> json) {
+    return BrokerModel(
+      id: json['id'] ?? '',
+      name: json['officeName'] ?? '',
+      licenseNumber: json['license'] ?? '',
+      propertiesCount: json['propertiesCount'] ?? 0,
+      description: json['description'] ?? '',
+      rating: (json['rating'] ?? 0).toDouble(),
+      reviewsCount: json['reviewsCount'] ?? 0,
+      location: json['location'] ?? '',
+      experienceYears: json['experienceYears'] ?? 0,
+      commissionPercent: (json['commissionPercent'] ?? 0).toDouble(),
+      imageUrl: json['imageUrl'] ?? '',
+    );
+  }
 }

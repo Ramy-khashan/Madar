@@ -83,7 +83,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
           ) !=
           null;
     });
-    bool isOnboardingCompleted = PreferenceUtils().getBool(
+    final bool isOnboardingCompleted = PreferenceUtils().getBool(
       StorageKeys.onboardingCompleted,
     );
 

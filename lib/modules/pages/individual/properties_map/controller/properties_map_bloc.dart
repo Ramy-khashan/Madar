@@ -214,8 +214,8 @@ static Future<ui.Image> _loadAssetImage(String asset) async {
   // Static sample data
   // ---------------------------------------------------------------------------
 
-  static const _defaultAdvertiser = AdvertiserModel(
-    name: 'أحمد محمد',
+  static  final _defaultAdvertiser = Broker(
+    fullName: 'أحمد محمد',
     role: 'وسيط عقاري',
     isVerified: true,
     falLicenseNumber: '2023456789',
@@ -223,18 +223,18 @@ static Future<ui.Image> _loadAssetImage(String asset) async {
     totalProperties: 12,
   );
 
-  static const _defaultRentInfo = RentInstallmentInfoModel(
-    isEligible: true,
-    annualRentValue: 120000,
-    minMonthlyInstallment: 2500,
-    providersCount: 3,
-  );
+// static  final_defaultRentInfo = RentInstallmentInfoModel(
+//     isEligible: true,
+//     annualRentValue: 120000,
+//     minMonthlyInstallment: 2500,
+//     providersCount: 3,
+//   );
 
-  static const _defaultInsuranceInfo = InsuranceInfoModel(
-    isInsured: true,
-    availableTypes: ['شامل', 'جزئي'],
-    companiesCount: 5,
-  );
+//   static const _defaultInsuranceInfo = InsuranceInfoModel(
+//     isInsured: true,
+//     availableTypes: ['شامل', 'جزئي'],
+//     companiesCount: 5,
+//   );
 
   static final List<PositionModel> propertyMarkers = [
     PositionModel(latitude: 24.7136, longitude: 46.6753),
@@ -244,116 +244,6 @@ static Future<ui.Image> _loadAssetImage(String asset) async {
     PositionModel(latitude: 24.7210, longitude: 46.6780),
   ];
 
-  static final List<PropertyBuyerModel> sampleProperties = [
-    const PropertyBuyerModel(
-      id: '1',
-      title: 'شقة فاخرة في حي النرجس',
-      location: 'الرياض، حي النرجس',
-      price: 750000,
-      imageUrls: [AppImages.propertyImage],
-      beds: 3,
-      balconies: 2,
-      baths: 2,
-      area: '185',
-      floor: 3,
-      propertyNumber: 'AD001',
-      paymentMethod: 'نقدي',
-      tag: 'للبيع',
-      isBookmarked: false,
-      description: 'شقة فاخرة بتشطيبات عالية الجودة',
-      advertiser: _defaultAdvertiser,
-      rentInfo: _defaultRentInfo,
-      insuranceInfo: _defaultInsuranceInfo,
-      occupancyRate: '100%',
-      latLng: LatLng(24.7136, 46.6753),
-    ),
-    const PropertyBuyerModel(
-      id: '2',
-      title: 'فيلا راقية في حي الملقا',
-      location: 'الرياض، حي الملقا',
-      price: 2100000,
-      imageUrls: [AppImages.propertyImage],
-      beds: 5,
-      balconies: 3,
-      baths: 4,
-      area: '450',
-      floor: 1,
-      propertyNumber: 'AD002',
-      paymentMethod: 'تقسيط',
-      tag: 'للبيع',
-      isBookmarked: false,
-      description: 'فيلا مستقلة مع مسبح خاص',
-      advertiser: _defaultAdvertiser,
-      rentInfo: _defaultRentInfo,
-      insuranceInfo: _defaultInsuranceInfo,
-      occupancyRate: '100%',
-      latLng: LatLng(24.7180, 46.6700),
-    ),
-    const PropertyBuyerModel(
-      id: '3',
-      title: 'شقة للإيجار في حي العليا',
-      location: 'الرياض، حي العليا',
-      price: 55000,
-      imageUrls: [AppImages.propertyImage],
-      beds: 2,
-      balconies: 1,
-      baths: 1,
-      area: '120',
-      floor: 5,
-      propertyNumber: 'AD003',
-      paymentMethod: 'سنوي',
-      tag: 'للإيجار',
-      isBookmarked: true,
-      description: 'شقة مفروشة بالكامل',
-      advertiser: _defaultAdvertiser,
-      rentInfo: _defaultRentInfo,
-      insuranceInfo: _defaultInsuranceInfo,
-      occupancyRate: '100%',
-      latLng: LatLng(24.7095, 46.6810),
-    ),
-    const PropertyBuyerModel(
-      id: '4',
-      title: 'أرض سكنية في حي الياسمين',
-      location: 'الرياض، حي الياسمين',
-      price: 980000,
-      imageUrls: [AppImages.propertyImage],
-      beds: 0,
-      balconies: 0,
-      baths: 0,
-      area: '625',
-      floor: 0,
-      propertyNumber: 'AD004',
-      paymentMethod: 'نقدي',
-      tag: 'للبيع',
-      isBookmarked: false,
-      description: 'أرض سكنية في موقع متميز',
-      advertiser: _defaultAdvertiser,
-      rentInfo: _defaultRentInfo,
-      insuranceInfo: _defaultInsuranceInfo,
-      occupancyRate: '0%',
-      latLng: LatLng(24.7060, 46.6650),
-    ),
-    const PropertyBuyerModel(
-      id: '5',
-      title: 'مكتب تجاري في برج العرب',
-      location: 'الرياض، طريق الملك فهد',
-      price: 350000,
-      imageUrls: [AppImages.propertyImage],
-      beds: 0,
-      balconies: 0,
-      baths: 2,
-      area: '200',
-      floor: 8,
-      propertyNumber: 'AD005',
-      paymentMethod: 'نقدي',
-      tag: 'للإيجار',
-      isBookmarked: false,
-      description: 'مكتب تجاري في موقع استراتيجي',
-      advertiser: _defaultAdvertiser,
-      rentInfo: _defaultRentInfo,
-      insuranceInfo: _defaultInsuranceInfo,
-      occupancyRate: '100%',
-      latLng: LatLng(24.7210, 46.6780),
-    ),
+  static final List<PropertyDetailsModel> sampleProperties = [
   ];
 }

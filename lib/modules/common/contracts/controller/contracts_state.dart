@@ -1,56 +1,47 @@
 part of 'contracts_bloc.dart';
 
 class ContractsState extends Equatable {
-  final List<ContractModel> allContracts;
-  final String selectedFilter;
-
   const ContractsState({
-      this.allContracts = const [],
-      this.selectedFilter = 'all',
+    this.contracts = const [],
+    this.contractsStatus = RequestStatus.init,
+    this.errorMsg = '',
+    this.isLoadMore = false,
+    this.totalCount = 0,
+    this.selectedFilter = 'ALL',
   });
 
-  List<ContractModel> get filtered {
-    switch (selectedFilter) {
-      case 'all':
-        return allContracts;
-      case 'active':
-        return allContracts
-            .where((c) => c.status == 'active')
-            .toList();
-      case 'completed':
-        return allContracts
-            .where((c) => c.status == 'completed')
-            .toList();
-      default:
-        return allContracts;
-    }
-  }
-
-  int countFor(String tab) {
-    switch (tab) {
-      case 'all':
-        return allContracts.length;
-      case 'active':
-        return allContracts
-            .where((c) => c.status == 'active')
-            .length;
-      case 'completed':
-        return allContracts
-            .where((c) => c.status == 'completed')
-            .length;
-      default:
-        return allContracts.length;
-    }
-  }
+  final List<ContractModel> contracts;
+  final RequestStatus contractsStatus;
+  final String errorMsg;
+  final bool isLoadMore;
+  final int totalCount;
+  final String selectedFilter;
 
   ContractsState copyWith({
-    List<ContractModel>? allContracts,
+    List<ContractModel>? contracts,
+    RequestStatus? contractsStatus,
+    String? errorMsg,
+    bool? isLoadMore,
+    int? totalCount,
     String? selectedFilter,
-  }) => ContractsState(
-    allContracts: allContracts ?? this.allContracts,
-    selectedFilter: selectedFilter ?? this.selectedFilter,
-  );
+  }) {
+    return ContractsState(
+      contracts: contracts ?? this.contracts,
+      contractsStatus: contractsStatus ?? this.contractsStatus,
+      errorMsg: errorMsg ?? this.errorMsg,
+      isLoadMore: isLoadMore ?? this.isLoadMore,
+      totalCount: totalCount ?? this.totalCount,
+      selectedFilter: selectedFilter ?? this.selectedFilter,
+    );
+  }
 
   @override
-  List<Object> get props => [allContracts, selectedFilter];
+  List<Object> get props => [
+    contracts,
+    contractsStatus,
+    errorMsg,
+    isLoadMore,
+    totalCount,
+    selectedFilter,
+  ];
 }

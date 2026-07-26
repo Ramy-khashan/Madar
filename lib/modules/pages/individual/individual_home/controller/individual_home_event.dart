@@ -10,3 +10,14 @@ sealed class IndividualHomeEvent extends Equatable {
 final class IndividualHomeLoad extends IndividualHomeEvent {
   const IndividualHomeLoad();
 }
+class IndividualHomeLoadProperties extends IndividualHomeEvent {
+  const IndividualHomeLoadProperties();
+}
+class IndividualHomeLoadPortfolio extends IndividualHomeEvent {
+  const IndividualHomeLoadPortfolio();
+}
+final class IndividualHomeLoadAds extends IndividualHomeEvent {
+  const IndividualHomeLoadAds();
+}final class IndividualHomeLoadUserLocation extends IndividualHomeEvent {
+  const IndividualHomeLoadUserLocation();
+}

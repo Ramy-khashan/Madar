@@ -2,8 +2,12 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../core/connection/concept/end_points.dart';
+import '../../../../../core/connection/interfaces/api_consumer.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
-import '../../../../../core/utils/constants/app_images.dart';
+import '../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../core/utils/functions/print_state.dart';
+import '../../../../../core/utils/functions/service_locator.dart';
 import '../model/auction_item_model.dart';
 
 part 'auction_list_event.dart';
@@ -18,72 +22,94 @@ class AuctionListBloc extends Bloc<AuctionListEvent, AuctionListState> {
   static AuctionListBloc get(BuildContext context) =>
       BlocProvider.of<AuctionListBloc>(context);
 
-  static final List<AuctionItemModel> _allItems = [
-    AuctionItemModel(
-      id: '1',
-      title: 'شقة فاخرة في الملقا',
-      location: 'الرياض - حي الملقا',
-      currentBid: 850000,
-      startingBid: 700000,
-      imageUrl: AppImages.propertyImage,
-      endTime: DateTime.now().add(const Duration(hours: 2)),
-      bidsCount: 12,
-      tag: 'شقة',
-      status: AuctionStatus.live,
-    ),
-    AuctionItemModel(
-      id: '2',
-      title: 'فيلا في حي النرجس',
-      location: 'الرياض - حي النرجس',
-      currentBid: 2400000,
-      startingBid: 2000000,
-      imageUrl: AppImages.propertyImage,
-      endTime: DateTime.now().add(const Duration(hours: 5)),
-      bidsCount: 8,
-      tag: 'فيلا',
-      status: AuctionStatus.live,
-    ),
-    AuctionItemModel(
-      id: '3',
-      title: 'أرض سكنية في الدرعية',
-      location: 'الرياض - الدرعية',
-      currentBid: 500000,
-      startingBid: 450000,
-      imageUrl: AppImages.propertyImage,
-      endTime: DateTime.now().add(const Duration(days: 1)),
-      bidsCount: 5,
-      tag: 'أرض',
-      status: AuctionStatus.upcoming,
-    ),
-    AuctionItemModel(
-      id: '4',
-      title: 'شقة في حي العقيق',
-      location: 'الرياض - حي العقيق',
-      currentBid: 650000,
-      startingBid: 600000,
-      imageUrl: AppImages.propertyImage,
-      endTime: DateTime.now().subtract(const Duration(hours: 1)),
-      bidsCount: 20,
-      tag: 'شقة',
-      status: AuctionStatus.ended,
-    ),
-  ];
+  int pageSize = 10;
+
+  static String? _filterToStatus(AuctionFilterTab filter) {
+    switch (filter) {
+      case AuctionFilterTab.live:
+        return 'ACTIVE';
+      case AuctionFilterTab.upcoming:
+        return 'UPCOMING';
+      case AuctionFilterTab.ended:
+        return 'CLOSED';
+      default:
+        return null;
+    }
+  }
 
   Future<void> _onLoad(
     AuctionListLoad event,
     Emitter<AuctionListState> emit,
   ) async {
-    emit(state.copyWith(loadStatus: RequestStatus.loading));
-     emit(state.copyWith(
-      loadStatus: RequestStatus.success,
-      allItems: _allItems,
-    ));
+    try {
+      emit(
+        state.copyWith(
+          loadStatus: RequestStatus.loading,
+          isLoadMore: event.isLoadMore,
+        ),
+      );
+
+      final statusParam = _filterToStatus(state.activeFilter);
+      final queryParams = <String, dynamic>{
+        'page': event.page,
+        'limit': pageSize,
+        if (statusParam != null) 'status': statusParam,
+      };
+
+      final response = await sl.get<ApiConsumer>().get(
+        EndPoints.myAuctions,
+        queryParameters: queryParams,
+      );
+
+      await response.fold(
+        (failedResponse) async {
+          emit(
+            state.copyWith(
+              loadStatus: RequestStatus.failed,
+              errorMsg: failedResponse,
+              isLoadMore: false,
+            ),
+          );
+        },
+        (successResponse) async {
+          final auctionsData =
+              successResponse.response['auctions'] as Map<String, dynamic>? ??
+              {};
+          final List<AuctionItemModel> items = [];
+          for (var item in List.from(auctionsData['data'] ?? [])) {
+            items.add(AuctionItemModel.fromJson(item));
+          }
+          final pagination =
+              auctionsData['pagination'] as Map<String, dynamic>? ?? {};
+          final total = pagination['total'] ?? 0;
+
+          emit(
+            state.copyWith(
+              loadStatus: RequestStatus.success,
+              allItems: items,
+              totalCount: total,
+              isLoadMore: false,
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      printState(e.toString());
+      emit(
+        state.copyWith(
+          loadStatus: RequestStatus.failed,
+          errorMsg: AppStrings.somethingWentWrong,
+          isLoadMore: false,
+        ),
+      );
+    }
   }
 
   void _onFilterChanged(
     AuctionListFilterChanged event,
     Emitter<AuctionListState> emit,
   ) {
-    emit(state.copyWith(activeFilter: event.filter));
+    emit(state.copyWith(activeFilter: event.filter, allItems: [], totalCount: 0));
+    add(const AuctionListLoad());
   }
 }

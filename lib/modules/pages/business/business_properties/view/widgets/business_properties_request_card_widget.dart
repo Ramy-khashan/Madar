@@ -15,11 +15,11 @@ import '../../model/business_property_request_model.dart';
 class BusinessPropertiesRequestCardWidget extends StatelessWidget {
   const BusinessPropertiesRequestCardWidget({
     super.key,
-    required this.item,
+      this.item,
     this.isWithActionButtons = true,
   });
   final bool isWithActionButtons;
-  final BusinessPropertyRequestModel item;
+  final BusinessPropertyRequestModel? item;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +51,7 @@ class BusinessPropertiesRequestCardWidget extends StatelessWidget {
                   // Property image
                   Center(
                     child: ImageItem(
-                      item.imageUrl,
+                      item?.imageUrl ?? '',
                       width: 83.width,
                       height: 71.height,
                       fit: BoxFit.cover,
@@ -73,7 +73,7 @@ class BusinessPropertiesRequestCardWidget extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Text(
-                                item.title,
+                                item?.title ?? 'Request Title',
                                 textAlign: TextAlign.start,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
@@ -96,7 +96,7 @@ class BusinessPropertiesRequestCardWidget extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(20.radius),
                               ),
                               child: Text(
-                                item.status,
+                                item?.status ?? 'Pending',
                                 style: TextStyle(
                                   fontSize: context.responsiveFontScale(12),
                                   fontWeight: FontWeight.w600,
@@ -120,7 +120,7 @@ class BusinessPropertiesRequestCardWidget extends StatelessWidget {
                             SizedBox(width: 4.width),
 
                             Text(
-                              item.location,
+                              item?.location ?? 'Unknown location',
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                 fontSize: context.responsiveFontScale(14),
@@ -140,7 +140,7 @@ class BusinessPropertiesRequestCardWidget extends StatelessWidget {
                             ),
                             Expanded(
                               child: Text(
-                                ' ${item.individualName}',
+                                ' ${item?.individualName ?? 'Unknown'}',
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontSize: context.responsiveFontScale(14),
@@ -155,7 +155,7 @@ class BusinessPropertiesRequestCardWidget extends StatelessWidget {
                               color: colors.textSecondary,
                             ),
                             Text(
-                              '  ${item.requestDate}',
+                              '  ${item?.requestDate ?? 'Unknown'}',
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                 fontSize: context.responsiveFontScale(14),
@@ -182,7 +182,7 @@ class BusinessPropertiesRequestCardWidget extends StatelessWidget {
                       childIcon: Icons.check,
                       colorBG: AppColors.successColor,
                       onTap: () => context.read<BusinessPropertiesBloc>().add(
-                        BusinessPropertiesAccept(item.id),
+                        BusinessPropertiesAccept(item?.id ?? ''),
                       ),
                     ),
                   ),
@@ -196,7 +196,7 @@ class BusinessPropertiesRequestCardWidget extends StatelessWidget {
                       textColor: AppColors.errorColor,
                       borderColor: AppColors.errorColor,
                       onTap: () => context.read<BusinessPropertiesBloc>().add(
-                        BusinessPropertiesReject(item.id),
+                        BusinessPropertiesReject(item?.id ?? ''),
                       ),
                     ),
                   ),

@@ -11,7 +11,7 @@ import '../../model/property_details_buyer_model.dart';
 class PropertyDetailsInfoCardWidget extends StatelessWidget {
   const PropertyDetailsInfoCardWidget({super.key, required this.property});
 
-  final PropertyBuyerModel? property;
+  final PropertyDetailsModel? property;
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +43,13 @@ class PropertyDetailsInfoCardWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
            
-              InfoRowWithIcon(label: AppStrings.bedrooms, value: property?.beds.toString() ?? '0', icon: AppImages.bedroomIcon),
-              InfoRowWithIcon(label: AppStrings.balcony, value: property?.balconies.toString() ?? '0', icon: AppImages.balconyIcon),
-              InfoRowWithIcon(label: AppStrings.bathrooms, value: property?.baths.toString() ?? '0', icon: AppImages.bathroomIcon),
-              InfoRowWithIcon(label: AppStrings.area, value: property?.area ?? '0', icon: AppImages.totalSpaceIcon),
-              InfoRowWithIcon(label: AppStrings.floor, value: property?.floor.toString() ?? '0', icon: AppImages.floorIcon),
-              InfoRowWithIcon(label: AppStrings.propertyNumber, value: property?.propertyNumber ?? '', icon: AppImages.propertyNumberIcon),
-              InfoRowWithIcon(label: AppStrings.paymentMethod, value: property?.paymentMethod ?? '', icon: AppImages.rentIcon, isLast: true),
+              // InfoRowWithIcon(label: AppStrings.bedrooms, value: property?.details.floorsCount.toString() ?? '0', icon: AppImages.bedroomIcon),
+              // InfoRowWithIcon(label: AppStrings.balcony, value: property?.details.balconies.toString() ?? '0', icon: AppImages.balconyIcon),
+              // InfoRowWithIcon(label: AppStrings.bathrooms, value: property?.details.baths.toString() ?? '0', icon: AppImages.bathroomIcon),
+              // InfoRowWithIcon(label: AppStrings.area, value: property?.details.area ?? '0', icon: AppImages.totalSpaceIcon),
+              // InfoRowWithIcon(label: AppStrings.floor, value: property?.details.floor.toString() ?? '0', icon: AppImages.floorIcon),
+              // InfoRowWithIcon(label: AppStrings.propertyNumber, value: property?.details.propertyNumber ?? '', icon: AppImages.propertyNumberIcon),
+              // InfoRowWithIcon(label: AppStrings.paymentMethod, value: property?.details.paymentMethod ?? '', icon: AppImages.rentIcon, isLast: true),
             ],
           ),
         ),

@@ -30,7 +30,7 @@ class PaginationView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    EnhancedStatus status = getStatus();
+    final EnhancedStatus status = getStatus();
     return EnhancedPaginatedView(
       onLoadMore: onLoadMore,
       refreshBuilder: (context, onRefresh, child) {

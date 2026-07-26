@@ -13,7 +13,7 @@ import '../../model/property_details_buyer_model.dart';
 class AdvertiserSectionWidget extends StatelessWidget {
   const AdvertiserSectionWidget({super.key, required this.advertiser});
 
-  final AdvertiserModel? advertiser;
+  final Broker? advertiser;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,7 @@ class AdvertiserSectionWidget extends StatelessWidget {
                   SizedBox(width: 10.width),
                   Expanded(
                     child: Text(
-                      advertiser?.name ?? '',
+                      advertiser?.fullName ?? '',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       style: TextStyle(

@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import '../../../../../../core/components/section_header_widget.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
-import '../../controller/business_home_bloc.dart';
-import 'performance_summary_shape.dart';
+import '../../../../individual/individual_home/model/smart_service_model.dart';
+ import 'performance_summary_shape.dart';
 
 class PerformaceSummaryItem extends StatelessWidget {
-  const PerformaceSummaryItem({super.key});
+  final List<SmartServiceModel> performanceSummary;
+
+  const PerformaceSummaryItem({super.key, required this.performanceSummary});
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +45,9 @@ class PerformaceSummaryItem extends StatelessWidget {
                 tabletLandscape: 210.height,
               ),
             ),
-            itemCount:
-                BusinessHomeBloc.mockPerformanceSummary.length -
-                (isTablet ? 0 : 1),
+            itemCount: performanceSummary.length - (isTablet ? 0 : 1),
             itemBuilder: (context, index) {
-              final service = BusinessHomeBloc.mockPerformanceSummary[index];
+              final service = performanceSummary[index];
               return PerformanceSummaryShape(
                 title: service.title,
                 image: service.icon,
@@ -65,9 +65,9 @@ class PerformaceSummaryItem extends StatelessWidget {
               width: double.infinity,
 
               child: PerformanceSummaryShape(
-                title: BusinessHomeBloc.mockPerformanceSummary.last.title,
-                image: BusinessHomeBloc.mockPerformanceSummary.last.icon,
-                value: BusinessHomeBloc.mockPerformanceSummary.last.description,
+                title: performanceSummary.last.title,
+                image: performanceSummary.last.icon,
+                value: performanceSummary.last.description,
               ),
             ),
         ],

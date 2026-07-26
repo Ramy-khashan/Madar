@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../config/theme/app_theme_colors.dart';
 import '../../../madar_app.dart';
 import '../constants/app_colors.dart';
 
-
 String formatPrice(double price) {
   final formatter = NumberFormat('#,###');
   return formatter.format(price);
+}
+
+Future<void> urlLauncher(String url) async {
+  print('urlLauncher: $url');
+  if (await canLaunchUrl(Uri.parse(url))) {
+    await launchUrl(Uri.parse(url));
+  } else {
+    throw 'Could not launch $url';
+  }
 }
 
 class AppToast {

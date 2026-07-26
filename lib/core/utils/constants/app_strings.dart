@@ -7,12 +7,17 @@ class AppStrings {
   static String get onBoardingDesc1 => 'on_boarding_desc_1'.trans;
   static String get onBoardingDesc2 => 'on_boarding_desc_2'.trans;
   static String get onBoardingDesc3 => 'on_boarding_desc_3'.trans;
+  static String get noPortfolioFound => 'no_portfolio_found'.trans;
   static String get propertyName => 'property_name'.trans;
+  static String get noPropertyFound => 'no_property_found'.trans;
   static String get personalAccountHint => 'personal_account_hint'.trans;
   static String get propertiesMapTitle => 'properties_map_title'.trans;
+  static String get noSavedProperties => 'no_saved_properties'.trans;
   static String get propertyNameHint => 'property_name_hint'.trans;
+  static String get noRequestsFound => 'no_requests_found'.trans;
   static String get deleteAccountHint => 'delete_account_hint'.trans;
   static String get search => 'search'.trans;
+  static String get pendingStatus => 'pending_status'.trans;
   static String get orDragImagesHere => 'or_drag_images_here'.trans;
   static String get propertyLicenseNumber => 'property_license_number'.trans;
   static String get propertyLicenseNumberHint =>

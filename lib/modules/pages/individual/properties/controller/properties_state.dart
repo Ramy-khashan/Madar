@@ -2,7 +2,7 @@ part of 'properties_bloc.dart';
 
 class PropertiesState extends Equatable {
   const PropertiesState({
-    this.errorMsg = "",
+    this.errorMsg = '',
     this.properties = const [],
     this.propertiesStatus = RequestStatus.init,
     this.totalCount = 0,
@@ -10,7 +10,7 @@ class PropertiesState extends Equatable {
     this.filter,
   });
   final String errorMsg;
-  final List<PropertyModel> properties;
+  final List<PropertiesItemModel> properties;
   final RequestStatus propertiesStatus;
   final int totalCount;
   final bool isLoadMore;
@@ -28,7 +28,7 @@ class PropertiesState extends Equatable {
 
   PropertiesState copyWith({
     String? errorMsg,
-    List<PropertyModel>? properties,
+    List<PropertiesItemModel>? properties,
     RequestStatus? propertiesStatus,
     int? totalCount,
     bool? isLoadMore,

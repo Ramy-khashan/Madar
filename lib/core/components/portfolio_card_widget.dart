@@ -16,7 +16,7 @@ class PortfolioCardWidget extends StatelessWidget {
     this.isWithWidth = false,
   });
   final bool isWithWidth;
-  final PortfolioPropertyModel portfolio;
+  final PortfolioPropertyModel? portfolio;
 
   @override
   Widget build(BuildContext context) {
@@ -44,87 +44,24 @@ class PortfolioCardWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           PortfolioCardHeader(
-            title: portfolio.title,
-            location: portfolio.location,
-            status: portfolio.status,
-            imageUrl: portfolio.imageUrl,
+            title: portfolio?.title ?? 'Property Title',
+            location: portfolio?.location ?? 'Location',
+            status: portfolio?.status ?? 'Status',
+            imageUrl: portfolio?.imageUrl ?? '',
             colors: colors,
           ),
           SizedBox(height: 10.height),
-          // PropertyInfo(
-          //   info: '${AppStrings.contractsCount}: ${portfolio.contractCount}',
-          //   icon: AppImages.documentsIcon,
-          //   colors: colors,
-          // ),
-          // PropertyInfo(
-          //   info:
-          //       '${AppStrings.occupancyRate}: ${portfolio.occupancyRate.toInt()}%',
-          //   icon: AppImages.occupancyIcon,
-          //   colors: colors,
-          // ),
-          // PropertyInfo(
-          //   info: '${AppStrings.lastUpdate}: ${portfolio.lastUpdate}',
-          //   icon: AppImages.updateIcon,
-          //   colors: colors,
-          // ),
-          // Row(
-          //   children: [
-          //     Icon(
-          //       Icons.location_on_outlined,
-          //       size: 16.width,
-          //       color: colors.textFieldTitle.withValues(alpha: 0.7),
-          //     ),
 
-          //     SizedBox(width: 4.width),
-          //     Expanded(
-          //       child: Text(
-          //         portfolio.location,
-          //         style: TextStyle(
-          //           fontSize: context.responsiveFontScale(14),
-          //           fontFamily: AppConstant.appHeaderFont,
-          //           fontWeight: FontWeight.w500,
-          //           color: colors.textFieldTitle.withValues(alpha: 0.7),
-          //         ),
-          //         maxLines: 1,
-          //         overflow: TextOverflow.ellipsis,
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // SizedBox(height: 12.height),
-          // Row(
-          //   children: [
-          //     PropertyItem(
-          //       label: '${portfolio.bed} ${AppStrings.beds}',
-          //       icon: AppImages.bedroomIcon,
-          //       colors: colors,
-          //     ),
-          //     SizedBox(width: 10.width),
-          //     PropertyItem(
-          //       label: '${portfolio.bath} ${AppStrings.baths}',
-          //       icon: AppImages.bathroomIcon,
-          //       colors: colors,
-          //     ),
-          //     SizedBox(width: 10.width),
-          //     PropertyItem(
-          //       label: portfolio.area,
-          //       icon: AppImages.totalSpaceIcon,
-          //       colors: colors,
-          //     ),
-          //   ],
-          // ),
-
-          // SizedBox(height: 10.height),
           Row(
             children: [
               Expanded(
                 child: AppButton(
-                  key: Key('view_details_${portfolio.id}'),
+                  key: Key('view_details_${portfolio?.id}'),
                   onTap: () {
                     RouterHandler.navigate(
                       context,
                       AppRouterKeys.propertyFileDetails,
-                      extra: portfolio.id,
+                      extra: portfolio?.id,
                     );
                   },
                   text: AppStrings.viewDetails,
@@ -134,13 +71,13 @@ class PortfolioCardWidget extends StatelessWidget {
               SizedBox(width: 12.width),
               Expanded(
                 child: AppButton(
-                  key: Key('send_to_broker_${portfolio.id}'),
+                  key: Key('send_to_broker_${portfolio?.id}'),
                   isOutline: true,
                   onTap: () {
                     RouterHandler.navigate(
                       context,
                       AppRouterKeys.chooseBroker,
-                      extra: portfolio.id,
+                      extra: portfolio?.id,
                     );
                   },
                   text: AppStrings.sendToBrokerProperty,
@@ -226,31 +163,6 @@ class PortfolioCardHeader extends StatelessWidget {
           ),
         ),
         SizedBox(width: 8.width),
-
-        // Container(
-        //   padding: EdgeInsets.symmetric(
-        //     horizontal: 10.width,
-        //     vertical: 4.height,
-        //   ),
-        //   decoration: BoxDecoration(
-        //     border: Border.all(
-        //       color: isRented ? AppColors.successColor : AppColors.errorColor,
-        //     ),
-        //     color: isRented
-        //         ? AppColors.successColor.withValues(alpha: 0.12)
-        //         : AppColors.errorColor.withValues(alpha: 0.12),
-        //     borderRadius: BorderRadius.circular(20.radius),
-        //   ),
-        //   child: Text(
-        //     status,
-        //     style: TextStyle(
-        //       fontSize: context.responsiveFontScale(14),
-        //       fontWeight: FontWeight.w600,
-        //       fontFamily: AppConstant.appHeaderFont,
-        //       color: isRented ? AppColors.successColor : AppColors.errorColor,
-        //     ),
-        //   ),
-        // ),
       ],
     );
   }

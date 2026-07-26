@@ -10,14 +10,24 @@ import '../../model/property_details_buyer_model.dart';
 class PropertyLocationSectionWidget extends StatelessWidget {
   const PropertyLocationSectionWidget({super.key, required this.property});
 
-  final PropertyBuyerModel? property;
+  final PropertyDetailsModel? property;
 
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
-    final latLng = property?.latLng;
-    final nearby = property?.nearbyPlaces ?? [];
-    final location = property?.location ?? '';
+    final latLng = LatLng(
+      property?.location?.latitude ?? 0,
+      property?.location?.longitude ?? 0,
+    );
+    final nearby = property?.location?.nearby ?? [];
+    final location =
+        (property?.location?.city ?? '') +
+        (property?.location?.district != null
+            ? ', ${property?.location?.district}'
+            : '') +
+        (property?.location?.street != null
+            ? ', ${property?.location?.street}'
+            : '');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,7 +45,7 @@ class PropertyLocationSectionWidget extends StatelessWidget {
         SizedBox(height: 12.height),
 
         // ── Map ─────────────────────────────────────────────────────────
-        if (latLng != null)
+        
           ClipRRect(
             borderRadius: BorderRadius.circular(16.radius),
             child: SizedBox(
@@ -133,7 +143,7 @@ class PropertyLocationSectionWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          place.name,
+                          place.toString(),
                           style: TextStyle(
                             fontSize: context.responsiveFontScale(13),
                             color: colors.textFieldTitle,
@@ -141,7 +151,7 @@ class PropertyLocationSectionWidget extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          place.distance,
+                          place.toString(),
                           style: TextStyle(
                             fontSize: context.responsiveFontScale(13),
                             color: colors.primaryBrand,

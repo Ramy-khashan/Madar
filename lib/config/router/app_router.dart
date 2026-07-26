@@ -565,7 +565,7 @@ final GoRouter appRouter = GoRouter(
     getRouteInstance(
       AppRouterKeys.myWishlist,
       (state) => BlocProvider(
-        create: (context) => MyWishlistBloc(),
+        create: (context) => MyWishlistBloc()..add(const MyWishlistLoad()),
         child: const MyWishlistScreen(),
       ),
     ),

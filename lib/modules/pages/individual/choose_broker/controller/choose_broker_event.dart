@@ -8,7 +8,13 @@ abstract class ChooseBrokerEvent extends Equatable {
 }
 
 class ChooseBrokerLoad extends ChooseBrokerEvent {
-  const ChooseBrokerLoad();
+  const ChooseBrokerLoad({this.page = 1, this.isLoadMore = false});
+
+  final int page;
+  final bool isLoadMore;
+
+  @override
+  List<Object?> get props => [page, isLoadMore];
 }
 
 class ChooseBrokerSearch extends ChooseBrokerEvent {

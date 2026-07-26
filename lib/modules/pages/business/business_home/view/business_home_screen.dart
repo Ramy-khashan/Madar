@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madar_app/core/components/loading_process.dart';
+import 'package:madar_app/core/utils/constants/app_enums.dart';
 
 import '../../../../../config/router/app_router_keys.dart';
 import '../../../../../config/theme/app_theme_colors.dart';
@@ -32,26 +34,11 @@ class BusinessHomeScreen extends StatelessWidget {
                     SliverToBoxAdapter(
                       child: HomeHeaderWidget(userLocation: state.location),
                     ),
-                    const PerformaceSummaryItem(),
+                    if(state.performanceSummary.isNotEmpty)
+                      PerformaceSummaryItem(
+                      performanceSummary: state.performanceSummary,
+                    ),
 
-                    // SliverToBoxAdapter(
-                    //   child: Padding(
-                    //     padding: EdgeInsets.symmetric(
-                    //       horizontal: context.responsiveHorizontalPadding,
-                    //       vertical: 16.height,
-                    //     ),
-                    //     child: AppButton(
-                    //       onTap: () {
-                    //         RouterHandler.navigate(
-                    //           context,
-                    //           AppRouterKeys.addProperty,
-                    //         );
-                    //       },
-                    //       childText: AppStrings.addProperty,
-                    //       childIcon: Icons.add_circle_outline,
-                    //     ),
-                    //   ),
-                    // ),
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: EdgeInsets.only(
@@ -104,23 +91,43 @@ class BusinessHomeScreen extends StatelessWidget {
                                 tabletPortrait: 310.height,
                                 tabletLandscape: 350.height,
                               ),
-                              child: ListView.separated(
-                                scrollDirection: Axis.horizontal,
-                                padding: EdgeInsets.symmetric(
-                                  horizontal:
-                                      context.responsiveHorizontalPadding,
-                                  vertical: 10.height,
-                                ),
-                                itemCount: state.properties.length,
-                                separatorBuilder: (_, _) =>
-                                    SizedBox(width: 16.width),
-                                itemBuilder: (context, index) {
-                                  final property = state.properties[index];
-                                  return PropertyCardWidget(
-                                    isWithWidth: true,
-                                    property: property,
+                              child: LoadingProcess(
+                                status: state.businessPropertiesLoadStatus,
+                                errorMsg: state.propertiesErrorMessage,
+                                onTapRefresh: () {
+                                  context.read<BusinessHomeBloc>().add(
+                                    const BusinessPropertiesLoad(),
                                   );
                                 },
+                                emptyMsg: AppStrings.noPropertiesFound,
+                                isEmptyList: state.properties.isEmpty,
+                                childIsLoader: true,
+                                child: ListView.separated(
+                                  itemCount:
+                                      state.businessPropertiesLoadStatus ==
+                                          RequestStatus.loading
+                                      ? 10
+                                      : state.properties.length,
+                                  scrollDirection: Axis.horizontal,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        context.responsiveHorizontalPadding,
+                                    vertical: 10.height,
+                                  ),
+
+                                  separatorBuilder: (_, _) =>
+                                      SizedBox(width: 16.width),
+                                  itemBuilder: (context, index) {
+                                    return PropertyCardWidget(
+                                      isWithWidth: true,
+                                      property:
+                                          state.businessPropertiesLoadStatus ==
+                                              RequestStatus.loading
+                                          ? null
+                                          : state.properties[index],
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                           ],
@@ -150,22 +157,43 @@ class BusinessHomeScreen extends StatelessWidget {
                                 tabletPortrait: 150.height,
                                 tabletLandscape: 270.height,
                               ),
-                              child: ListView.separated(
-                                scrollDirection: Axis.horizontal,
-                                padding: EdgeInsets.symmetric(
-                                  horizontal:
-                                      context.responsiveHorizontalPadding,
-                                ),
-                                itemCount: state.portfolio.length,
-                                separatorBuilder: (_, _) =>
-                                    SizedBox(width: 12.width),
-                                itemBuilder: (context, index) {
-                                  final item = state.portfolio[index];
-                                  return PortfolioCardWidget(
-                                    isWithWidth: true,
-                                    portfolio: item,
+                              child: LoadingProcess(
+                                status: state.portfolioLoadStatus,
+                                errorMsg: state.portfolioErrorMessage,
+                                onTapRefresh: () {
+                                  context.read<BusinessHomeBloc>().add(
+                                    const PortfolioLoad(),
                                   );
                                 },
+                                emptyMsg: AppStrings.noPortfolioFound,
+                                childIsLoader: true,
+
+                                isEmptyList: state.portfolio.isEmpty,
+                                child: ListView.separated(
+                                  itemCount:
+                                      state.portfolioLoadStatus ==
+                                          RequestStatus.loading
+                                      ? 10
+                                      : state.portfolio.length,
+
+                                  scrollDirection: Axis.horizontal,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        context.responsiveHorizontalPadding,
+                                  ),
+                                  separatorBuilder: (_, _) =>
+                                      SizedBox(width: 12.width),
+                                  itemBuilder: (context, index) {
+                                    return PortfolioCardWidget(
+                                      isWithWidth: true,
+                                      portfolio:
+                                          state.portfolioLoadStatus ==
+                                              RequestStatus.loading
+                                          ? null
+                                          : state.portfolio[index],
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                           ],
@@ -173,87 +201,6 @@ class BusinessHomeScreen extends StatelessWidget {
                       ),
                     ),
 
-                    // SliverToBoxAdapter(
-                    //   child: Padding(
-                    //     padding: EdgeInsets.only(
-                    //       bottom: 20.height,
-                    //       top: 15.height,
-                    //     ),
-                    //     child: Column(
-                    //       crossAxisAlignment: CrossAxisAlignment.stretch,
-                    //       children: [
-                    //         SectionHeaderWidget(
-                    //           title: AppStrings.myPortfolio,
-                    //           onViewAll: () {
-                    //             RouterHandler.navigate(
-                    //               context,
-                    //               AppRouterKeys.businessPropertiesScreen,
-                    //             );
-                    //           },
-                    //           trailing: Padding(
-                    //             padding: EdgeInsets.only(right: 8.width),
-                    //             child: InkWell(
-                    //               borderRadius: BorderRadius.circular(100),
-                    //               onTap: () {
-                    //                 RouterHandler.navigate(
-                    //                   context,
-                    //                   AppRouterKeys.propertyLocationMap,
-                    //                 );
-                    //               },
-                    //               child: Container(
-
-                    //                 padding: EdgeInsets.all(4.width),
-                    //                 decoration: BoxDecoration(
-                    //                   color: AppThemeColors.of(
-                    //                     context,
-                    //                   ).primaryBrand,
-                    //                   shape: BoxShape.circle,
-                    //                   border: Border.all(
-                    //                     width: 2.5.width,
-                    //                     color: AppThemeColors.of(
-                    //                       context,
-                    //                     ).borderColor,
-                    //                   ),
-                    //                 ),
-                    //                 child: Icon(
-                    //                   Icons.map_outlined,
-                    //                   size: 16.width,
-                    //                   color: AppThemeColors.of(context).onPrimary,
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //           ),
-                    //         ),
-                    //         SizedBox(
-                    //           height: ResponsiveUtils.types(
-                    //             context,
-                    //             mobilePortrait: 285.height,
-                    //             mobileLandscape: 300.height,
-                    //             tabletPortrait: 280.height,
-                    //             tabletLandscape: 300.height,
-                    //           ),
-                    //           child: ListView.separated(
-                    //             scrollDirection: Axis.horizontal,
-                    //             padding: EdgeInsets.symmetric(
-                    //               horizontal:
-                    //                   context.responsiveHorizontalPadding,
-                    //             ),
-                    //             itemCount: state.portfolio.length,
-                    //             separatorBuilder: (_, _) =>
-                    //                 SizedBox(width: 12.width),
-                    //             itemBuilder: (context, index) {
-                    //               final item = state.portfolio[index];
-                    //               return BusinessPortflioPropertyItem(
-                    //                 isWithWidth: true,
-                    //                 portfolio: item,
-                    //               );
-                    //             },
-                    //           ),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: EdgeInsets.only(bottom: 20.height),
@@ -277,27 +224,48 @@ class BusinessHomeScreen extends StatelessWidget {
                                 tabletPortrait: 150.height,
                                 tabletLandscape: 150.height,
                               ),
-                              child: ListView.separated(
-                                scrollDirection: Axis.horizontal,
-                                padding: EdgeInsets.symmetric(
-                                  horizontal:
-                                      context.responsiveHorizontalPadding,
-                                ),
-                                itemCount: state.requests.length,
-                                separatorBuilder: (_, __) =>
-                                    SizedBox(width: 12.width),
-                                itemBuilder: (context, index) {
-                                  final item = state.requests[index];
-                                  return SizedBox(
-                                    width:
-                                        context.screenWidth *
-                                        (context.isTablet ? 0.4 : 0.9),
-                                    child: BusinessPropertiesRequestCardWidget(
-                                      isWithActionButtons: false,
-                                      item: item,
-                                    ),
+                              child: LoadingProcess(
+                                status: state.requestsLoadStatus,
+                                errorMsg: state.requestsErrorMessage,
+                                onTapRefresh: () {
+                                  context.read<BusinessHomeBloc>().add(
+                                    const RequestsLoad(),
                                   );
                                 },
+                                emptyMsg: AppStrings.noRequestsFound,
+                                isEmptyList: state.requests.isEmpty,
+                                childIsLoader: true,
+
+                                child: ListView.separated(
+                                  itemCount:
+                                      state.requestsLoadStatus ==
+                                          RequestStatus.loading
+                                      ? 10
+                                      : state.requests.length,
+                                  scrollDirection: Axis.horizontal,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        context.responsiveHorizontalPadding,
+                                  ),
+                                  separatorBuilder: (_, _) =>
+                                      SizedBox(width: 12.width),
+                                  itemBuilder: (context, index) {
+                                    return SizedBox(
+                                      width:
+                                          context.screenWidth *
+                                          (context.isTablet ? 0.4 : 0.9),
+                                      child:
+                                          BusinessPropertiesRequestCardWidget(
+                                            isWithActionButtons: false,
+                                            item:
+                                                state.requestsLoadStatus ==
+                                                    RequestStatus.loading
+                                                ? null
+                                                : state.requests[index],
+                                          ),
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                           ],

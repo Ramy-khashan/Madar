@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/components/app_appbar.dart';
+import '../../../../../core/components/loading_process.dart';
+import '../../../../../core/components/pagination.dart';
 import '../../../../../core/components/portfolio_card_widget.dart';
+import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 import '../controller/my_properties_bloc.dart';
+import 'widgets/my_properties_loader.dart';
 
 class MyPropertiesScreen extends StatelessWidget {
   const MyPropertiesScreen({super.key});
@@ -17,59 +21,44 @@ class MyPropertiesScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // BlocBuilder<MyPropertiesBloc, MyPropertiesState>(
-            //   builder: (context, state) {
-            //     final filter = state is MyPropertiesLoaded
-            //         ? state.filter
-            //         : null;
-            //     return SearchItem(
-            //       onFilterTap: () {
-            //         showFilterSheet(
-            //           context,
-            //           initialFilter: filter,
-            //           onApply: (result) {
-            //             context.read<MyPropertiesBloc>().add(
-            //               MyPropertiesFilterApplied(result),
-            //             );
-            //           },
-            //         );
-            //       },
-            //     );
-            //   },
-            // ),
             Expanded(
               child: BlocBuilder<MyPropertiesBloc, MyPropertiesState>(
                 builder: (context, state) {
-                  final items = state is MyPropertiesLoaded
-                      ? state.properties
-                      : MyPropertiesBloc.myPropertiesItems;
-                  return GridView.builder(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16.width,
-                      vertical: 12.height,
-                    ),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: ResponsiveUtils.types(
-                        context,
-                        mobilePortrait: 1,
-                        mobileLandscape: 2,
-                        tabletPortrait: 2,
-                        tabletLandscape: 3,
-                      ).toInt(),
-                      crossAxisSpacing: 12.width,
-                      mainAxisSpacing: 12.height,
-                      mainAxisExtent: ResponsiveUtils.types(
-                        context,
-                        mobilePortrait: 170.height,
-                        mobileLandscape: 200.height,
-                        tabletPortrait: 200.height,
-                        tabletLandscape: 240.height,
-                      ).toDouble(),
-                    ),
-                    itemCount: items.length,
-                    itemBuilder: (context, index) {
-                      return PortfolioCardWidget(portfolio: items[index]);
+                  return LoadingProcess(
+                    status: state.isLoadMore
+                        ? RequestStatus.success
+                        : state.propertiesStatus,
+                    errorMsg: state.errorMsg,
+                    onTapRefresh: () {
+                      context.read<MyPropertiesBloc>().add(
+                        const MyPropertiesLoad(isLoadMore: false, page: 1),
+                      );
                     },
+                    emptyMsg: AppStrings.noPropertiesFound,
+                    isEmptyList:
+                        state.propertiesStatus == RequestStatus.success &&
+                        state.properties.isEmpty,
+                    loader: const MyPropertiesLoader(),
+                    child: PaginationView(
+                      isListView: context.isMobilePortrait,
+                      itemBuilder: (context, index) {
+                        return PortfolioCardWidget(
+                          portfolio: state.properties[index],
+                        );
+                      },
+                      pageSize: MyPropertiesBloc.get(context).pageSize,
+                      items: MyPropertiesBloc.get(context).state.properties,
+                      requestStatus: MyPropertiesBloc.get(
+                        context,
+                      ).state.propertiesStatus,
+                      hasReachedMax:
+                          state.properties.length >= state.totalCount,
+                      onLoadMore: (int page) {
+                        MyPropertiesBloc.get(
+                          context,
+                        ).add(MyPropertiesLoad(isLoadMore: true, page: page));
+                      },
+                    ),
                   );
                 },
               ),

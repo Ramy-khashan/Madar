@@ -10,7 +10,7 @@ import '../../model/property_details_buyer_model.dart';
 class PropertyDetailsHeaderSectionWidget extends StatelessWidget {
   const PropertyDetailsHeaderSectionWidget({super.key, required this.property});
 
-  final PropertyBuyerModel? property;
+  final PropertyDetailsModel? property;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,8 @@ class PropertyDetailsHeaderSectionWidget extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          property?.location ?? '',
+                          property?.location?.city ??
+                              '${property?.location?.district != null ? ', ${property?.location?.district}' : ''}${property?.location?.street != null ? ', ${property?.location?.street}' : ''}',
                           style: TextStyle(
                             fontSize: context.responsiveFontScale(13),
                             color: colors.textSecondary,
@@ -58,7 +59,7 @@ class PropertyDetailsHeaderSectionWidget extends StatelessWidget {
                         ),
                         SizedBox(width: 8.width),
                         ImageItem(AppImages.occupancyIcon, width: 16.width),
-                
+
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 4.width),
                           child: Text(
@@ -70,9 +71,9 @@ class PropertyDetailsHeaderSectionWidget extends StatelessWidget {
                             ),
                           ),
                         ),
-                
+
                         Text(
-                          property?.occupancyRate ?? '0%',
+                          '${property?.details?.occupancyRate ?? 0}%',
                           style: TextStyle(
                             fontSize: context.responsiveFontScale(13),
                             color: colors.primaryBrand,

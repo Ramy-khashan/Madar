@@ -51,7 +51,7 @@ class SignInScreen extends StatelessWidget {
             } else if (state.signInStatus == RequestStatus.failed) {
               AppToast(state.errorMsg);
             }
-           },
+          },
           builder: (context, state) {
             return Form(
               key: SignInBloc.get(context).formKey,
@@ -113,7 +113,7 @@ class SignInScreen extends StatelessWidget {
                                   title: AppStrings.password,
                                   hint: AppStrings.enterPassword,
                                   validator: (val) =>
-                                      Validate.notEmpty(val ?? ""),
+                                      Validate.notEmpty(val ?? ''),
                                   controller: SignInBloc.get(
                                     context,
                                   ).passwordController,

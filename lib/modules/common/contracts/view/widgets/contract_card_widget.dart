@@ -20,8 +20,8 @@ class ContractCardWidget extends StatelessWidget {
     required this.onTap,
   });
 
-  final ContractModel contract;
-  final VoidCallback onTap;
+  final ContractModel? contract;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class ContractCardWidget extends StatelessWidget {
                 SizedBox(width: 10.width),
                 Expanded(
                   child: Text(
-                    contract.title,
+                    contract?.title ?? 'Contract Title',
                     style: TextStyle(
                       fontSize: context.responsiveFontScale(15),
                       fontWeight: FontWeight.w700,
@@ -65,13 +65,13 @@ class ContractCardWidget extends StatelessWidget {
                 ),
                 SizedBox(width: 8.width),
 
-                ContractStatusBadge(status: contract.status),
+                ContractStatusBadge(status: contract?.status ?? 'active'),
               ],
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 8.height),
               child: Text(
-                contract.propertyName,
+                contract?.propertyName ?? 'Property Name',
                 style: TextStyle(
                   fontSize: context.responsiveFontScale(14),
                   fontWeight: FontWeight.w500,
@@ -81,19 +81,19 @@ class ContractCardWidget extends StatelessWidget {
             ),
             Row(
                children: [
-                TypeBadge(type: contract.type, colors: colors),
+                TypeBadge(type: contract?.type ?? 'buy', colors: colors),
 SizedBox(width: 12.width),
                 Text(
-                  contract.date,
+                  contract?.date ?? '12/12/2023',
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(12),
                     color: colors.textSecondary,
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
                 if(PreferenceUtils().getString(StorageKeys.accountType)==AppConstant.business)
                   Text(
-                    '${formatPrice(contract.amount,)} ${AppStrings.currency}',
+                    '${formatPrice(contract?.amount ?? 1110)} ${AppStrings.currency}',
                     style: TextStyle(
                       fontSize: context.responsiveFontScale(16),
                       fontWeight: FontWeight.w700,

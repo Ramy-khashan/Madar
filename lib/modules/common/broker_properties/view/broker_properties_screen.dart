@@ -75,7 +75,7 @@ class BrokerPropertiesScreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final property = state.properties[index];
                       return PropertyCardWidget(
-                        property: property,
+                        property: null,
                         footer: PropertyCardChatFooter(
                           onChat: () {
                             RouterHandler.navigate(

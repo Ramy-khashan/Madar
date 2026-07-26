@@ -7,6 +7,7 @@ import '../../../../core/connection/concept/end_points.dart';
 import '../../../../core/connection/interfaces/api_consumer.dart';
 import '../../../../core/utils/constants/app_constant.dart';
 import '../../../../core/utils/constants/app_enums.dart';
+import '../../../../core/utils/constants/app_strings.dart';
 import '../../../../core/utils/constants/storage_keys.dart';
 import '../../../../core/utils/functions/handle_multi_callback.dart';
 import '../../../../core/utils/functions/preference_utils.dart';
@@ -43,11 +44,11 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       final response = await sl.get<ApiConsumer>().post(
         EndPoints.register,
         body: {
-          "fullName": nameController.text,
-          "password": passwordController.text,
-          "confirmPassword": confirmPasswordController.text,
-          "phone": int.parse(phoneController.text.replaceAll('+', '')),
-          "role": role,
+          'fullName': nameController.text,
+          'password': passwordController.text,
+          'confirmPassword': confirmPasswordController.text,
+          'phone': int.parse(phoneController.text.replaceAll('+', '')),
+          'role': role,
         },
       );
       await response.fold(
@@ -64,22 +65,22 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
               AppConstant.individual) {
             await Future.wait([
               sl.get<HandleMultiCallLocal>().saveLocalData(
-                data: successResponse.response['accessToken'],
+                data: successResponse.response['data']['accessToken'],
                 keyType: LocalEnumKey.accessToken,
               ),
               sl.get<HandleMultiCallLocal>().saveLocalData(
-                data: successResponse.response['refreshToken'],
+                data: successResponse.response['data']['refreshToken'],
                 keyType: LocalEnumKey.refreshToken,
               ),
               sl.get<PreferenceUtils>().setString(
                 StorageKeys.name,
-                successResponse.response['user']['fullName'],
+                successResponse.response['data']['user']['fullName'],
               ),
             ]);
           }
-          await FlutterSecureStorage().write(
+          await const FlutterSecureStorage().write(
             key: StorageKeys.userID,
-            value: successResponse.response['user']['user_id'],
+            value: successResponse.response['data']['user']['user_id'],
           );
           emit(state.copyWith(signUpStatus: RequestStatus.success));
         },
@@ -88,7 +89,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       emit(
         state.copyWith(
           signUpStatus: RequestStatus.failed,
-          errorMsg: e.toString(),
+          errorMsg:AppStrings.somethingWentWrong,
         ),
       );
     }

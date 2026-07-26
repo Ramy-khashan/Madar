@@ -2,8 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../core/connection/concept/end_points.dart';
+import '../../../../../core/connection/interfaces/api_consumer.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../core/utils/functions/print_state.dart';
+import '../../../../../core/utils/functions/service_locator.dart';
 import '../model/broker_model.dart';
 
 part 'choose_broker_event.dart';
@@ -21,15 +25,66 @@ class ChooseBrokerBloc extends Bloc<ChooseBrokerEvent, ChooseBrokerState> {
   static ChooseBrokerBloc get(BuildContext context) =>
       BlocProvider.of<ChooseBrokerBloc>(context);
 
+  int pageSize = 10;
+
   Future<void> _onLoad(
     ChooseBrokerLoad event,
     Emitter<ChooseBrokerState> emit,
   ) async {
-    emit(state.copyWith(loadStatus: RequestStatus.loading));
-     emit(state.copyWith(
-      loadStatus: RequestStatus.success,
-      brokers: _mockBrokers,
-    ));
+    try {
+      emit(
+        state.copyWith(
+          loadStatus: RequestStatus.loading,
+          isLoadMore: event.isLoadMore,
+        ),
+      );
+
+      final response = await sl.get<ApiConsumer>().get(
+        EndPoints.brokers,
+        queryParameters: {'page': event.page, 'limit': pageSize},
+      );
+
+      await response.fold(
+        (failedResponse) async {
+          emit(
+            state.copyWith(
+              loadStatus: RequestStatus.failed,
+              errorMsg: failedResponse,
+              isLoadMore: false,
+            ),
+          );
+        },
+        (successResponse) async {
+          final dataWrapper =
+              successResponse.response['data'] as Map<String, dynamic>? ?? {};
+          final List<BrokerModel> items = [];
+          for (var item in List.from(dataWrapper['data'] ?? [])) {
+            items.add(BrokerModel.fromJson(item));
+          }
+          final pagination =
+              dataWrapper['pagination'] as Map<String, dynamic>? ?? {};
+          final total = pagination['total'] ?? 0;
+
+          emit(
+            state.copyWith(
+              loadStatus: RequestStatus.success,
+              brokers: items,
+              totalCount: total,
+              isLoadMore: false,
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      printState(e.toString());
+      emit(
+        state.copyWith(
+          loadStatus: RequestStatus.failed,
+          errorMsg: AppStrings.somethingWentWrong,
+          isLoadMore: false,
+        ),
+      );
+    }
   }
 
   void _onSearch(ChooseBrokerSearch event, Emitter<ChooseBrokerState> emit) {
@@ -48,7 +103,7 @@ class ChooseBrokerBloc extends Bloc<ChooseBrokerEvent, ChooseBrokerState> {
     Emitter<ChooseBrokerState> emit,
   ) async {
     emit(state.copyWith(confirmStatus: RequestStatus.loading));
-     emit(state.copyWith(confirmStatus: RequestStatus.success));
+    emit(state.copyWith(confirmStatus: RequestStatus.success));
   }
 
   void _onBack(ChooseBrokerBack event, Emitter<ChooseBrokerState> emit) {
@@ -58,53 +113,12 @@ class ChooseBrokerBloc extends Bloc<ChooseBrokerEvent, ChooseBrokerState> {
     ));
   }
 
-  static const List<BrokerModel> _mockBrokers = [
-    BrokerModel(
-      id: '1',
-      name: 'مكتب العقارات المتميزة',
-      licenseNumber: 'REC-2023-1001',
-      rating: 4.9,
-      reviewsCount: 127,
-      propertiesCount: 45,
-      location: 'الرياض وضواحيها',
-      experienceYears: 8,
-      commissionPercent: 2.5,
-      description:
-          'متخصصون في عقارات الرياض الفاخرة مع خدمة تسويق احترافية',
-    ),
-    BrokerModel(
-      id: '2',
-      name: 'وسيط العقار السريع',
-      licenseNumber: 'REC-2023-1001',
-      rating: 4.9,
-      reviewsCount: 127,
-      propertiesCount: 45,
-      location: 'جدة والساحل الغربي',
-      experienceYears: 6,
-      commissionPercent: 2.5,
-      description:
-          'نوفر خدمات سريعة للبيع والإيجار مع متابعة مستمرة',
-    ),
-    BrokerModel(
-      id: '3',
-      name: 'شركة الأفق العقارية',
-      licenseNumber: 'REC-2023-1005',
-      rating: 4.7,
-      reviewsCount: 98,
-      propertiesCount: 32,
-      location: 'الدمام والمنطقة الشرقية',
-      experienceYears: 10,
-      commissionPercent: 2.0,
-      description:
-          'خبرة واسعة في سوق المنطقة الشرقية مع شبكة واسعة من المشترين',
-    ),
+  static List<String> responsibilities = [
+    AppStrings.respReviewDocs,
+    AppStrings.respPhotography,
+    AppStrings.respPublish,
+    AppStrings.respManageContacts,
+    AppStrings.respOrganizeInspections,
+    AppStrings.respCompleteProcedures,
   ];
-   static List<String> responsibilities = [
-      AppStrings.respReviewDocs,
-      AppStrings.respPhotography,
-      AppStrings.respPublish,
-      AppStrings.respManageContacts,
-      AppStrings.respOrganizeInspections,
-      AppStrings.respCompleteProcedures,
-    ];
 }

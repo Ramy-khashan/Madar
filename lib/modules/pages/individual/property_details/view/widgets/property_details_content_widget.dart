@@ -27,7 +27,7 @@ part 'property_actions_part.dart';
 class PropertyDetailsContentWidget extends StatelessWidget {
   const PropertyDetailsContentWidget({super.key, required this.property});
 
-  final PropertyBuyerModel? property;
+  final PropertyDetailsModel? property;
 
   @override
   Widget build(BuildContext context) {
@@ -62,9 +62,9 @@ class PropertyDetailsContentWidget extends StatelessWidget {
                         SizedBox(height: 16.height),
                         PropertyDetailsInfoCardWidget(property: property),
 
-                         SizedBox(height: 16.height),
-                         PropertyLocationSectionWidget(property: property),
-                         SizedBox(height: 16.height),
+                        SizedBox(height: 16.height),
+                        PropertyLocationSectionWidget(property: property),
+                        SizedBox(height: 16.height),
                       ],
                     ),
                   ),
@@ -76,10 +76,11 @@ class PropertyDetailsContentWidget extends StatelessWidget {
                     child: Column(
                       children: [
                         AdvertiserSectionWidget(
-                          advertiser: property?.advertiser,
+                          //TODO: Implement AdvertiserModel and pass it to the widget
+                          advertiser: property?.broker,
                         ),
                         SizedBox(height: 16.height),
-                        BuyerRelatedServicesSectionWidget(property: property),
+                        // BuyerRelatedServicesSectionWidget(property: property),
                         SizedBox(height: 24.height),
                         if (isTablet) const PropertyActionsPart(),
                       ],

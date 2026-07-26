@@ -8,7 +8,13 @@ sealed class ContractsEvent extends Equatable {
 }
 
 final class ContractsLoad extends ContractsEvent {
-  const ContractsLoad();
+  const ContractsLoad({this.page = 1, this.isLoadMore = false});
+
+  final int page;
+  final bool isLoadMore;
+
+  @override
+  List<Object> get props => [page, isLoadMore];
 }
 
 final class ContractsFilterChanged extends ContractsEvent {

@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../config/router/app_router_keys.dart';
 import '../../../../core/components/app_appbar.dart';
+import '../../../../core/components/loading_process.dart';
+import '../../../../core/components/pagination.dart';
+import '../../../../core/utils/constants/app_enums.dart';
 import '../../../../core/utils/constants/app_strings.dart';
 import '../../../../core/utils/functions/responsive.dart';
 import '../../../../core/utils/functions/router_handler.dart';
@@ -25,25 +28,21 @@ class ContractsScreen extends StatelessWidget {
               children: [
                 ContractsFilterTabsWidget(
                   selectedFilter: state.selectedFilter,
-                  counts: {
-                    'all': state.countFor(
-                      'all',
-                    ),
-                    'active': state.countFor(
-                      'active',
-                    ),
-                    'completed': state.countFor(
-                      'completed',
-                    ),
-                  },
+                  totalCount: state.totalCount,
                   onFilterChanged: (filter) => ContractsBloc.get(
                     context,
                   ).add(ContractsFilterChanged(filter)),
                 ),
                 Expanded(
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    child: GridView.builder(
+                  child: LoadingProcess(
+                    status: state.isLoadMore
+                        ? RequestStatus.success
+                        : state.contractsStatus,
+                    errorMsg: AppStrings.somethingWentWrong,
+                    onTapRefresh: () => context.read<ContractsBloc>().add(
+                      const ContractsLoad(),
+                    ),
+                    loader: GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: ResponsiveUtils.types(
                           context,
@@ -62,20 +61,44 @@ class ContractsScreen extends StatelessWidget {
                           tabletLandscape: 120.height,
                         ),
                       ),
+                      itemCount: 6,
+                      itemBuilder: (context, index) =>
+                          const ContractCardWidget(
+                            contract: null,
+                            onTap: null,
+                          ),
+                    ),
+                    emptyMsg: AppStrings.noContracts,
+                    isEmptyList: state.contracts.isEmpty,
+                    child: PaginationView(
                       key: ValueKey(state.selectedFilter),
-                      padding: EdgeInsets.only(
-                        top: 4.height,
-                        bottom: 24.height,
-                        left: 16.width,
-                        right: 16.width,
+                      pageSize: ContractsBloc.get(context).pageSize,
+                      items: state.contracts,
+                      mainAxisExtent: ResponsiveUtils.types(
+                        context,
+                        mobilePortrait: 120.height,
+                        mobileLandscape: 125.height,
+                        tabletPortrait: 85.height,
+                        tabletLandscape: 120.height,
                       ),
-                      itemCount: state.filtered.length,
+                      countItemInRow: ResponsiveUtils.types(
+                        context,
+                        mobilePortrait: 1,
+                        mobileLandscape: 2,
+                        tabletPortrait: 2,
+                        tabletLandscape: 3,
+                      ).toInt(),
+                      requestStatus: state.contractsStatus,
+                      hasReachedMax: state.contracts.length >= state.totalCount,
+                      onLoadMore: (page) => context.read<ContractsBloc>().add(
+                        ContractsLoad(page: page, isLoadMore: true),
+                      ),
                       itemBuilder: (context, index) => ContractCardWidget(
-                        contract: state.filtered[index],
+                        contract: state.contracts[index],
                         onTap: () => RouterHandler.navigate(
                           context,
                           AppRouterKeys.contractDetails,
-                          extra: state.filtered[index].id,
+                          extra: state.contracts[index].id,
                         ),
                       ),
                     ),

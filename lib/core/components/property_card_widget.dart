@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-// import 'package:share_plus/share_plus.dart';
+import 'package:madar_app/core/utils/functions/translation.dart';
+
 import '../../config/theme/app_theme_colors.dart';
-import '../../modules/pages/individual/individual_home/model/property_model.dart';
+import '../../modules/pages/individual/individual_home/model/properties_item_model.dart';
 import 'image_item.dart';
 import '../utils/constants/app_constant.dart';
 import '../utils/constants/app_images.dart';
@@ -23,7 +24,7 @@ class PropertyCardWidget extends StatelessWidget {
   final bool isWithWidth;
   final bool isViewAll;
   final Widget? footer;
-  final PropertyModel? property;
+  final PropertiesItemModel? property;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class PropertyCardWidget extends StatelessWidget {
         RouterHandler.navigate(
           context,
           AppRouterKeys.propertyDetails,
-          extra: property?.id,
+          extra: property?.propertyId,
         );
       },
       child: Container(
@@ -64,7 +65,7 @@ class PropertyCardWidget extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.radius),
                     child: ImageItem(
-                      property?.imageUrl ?? '',
+                      property?.image ?? '',
                       fit: BoxFit.cover,
                       height: 124.height,
                       width: double.infinity,
@@ -72,36 +73,11 @@ class PropertyCardWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Positioned(
-                //   top: 10.height,
-                //   left: 12.width,
-                //   child: GestureDetector(
-                //     onTap: () => SharePlus.instance.share(
-                //       ShareParams(
-                //         text:
-                //             '${property?.title ?? ''}\n${property?.location ?? ''}',
-                //       ),
-                //     ),
-                //     child: Container(
-                //       padding: EdgeInsets.all(6.width),
-                //       decoration: BoxDecoration(
-                //         color: colors.onPrimary,
-                //         shape: BoxShape.circle,
-                //       ),
-                //       child: ImageItem(
-                //         AppImages.savedIcon,
-                //         width: 20.width,
-                //         color: colors.primaryBrand,
-                //       ),
-                //     ),
-                //   ),
-                // ),
-           
               ],
             ),
             Padding(
               padding: EdgeInsets.all(8.width),
-              child: property?.tag != null && property!.tag.isNotEmpty
+              child: property?.type != null && property!.type!.isNotEmpty
                   ? Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 16.width,
@@ -116,10 +92,10 @@ class PropertyCardWidget extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          ImageItem(AppImages.propertyShapeIcon),
+                          const ImageItem(AppImages.propertyShapeIcon),
                           SizedBox(width: 4.width),
                           Text(
-                            property!.tag,
+                            (property!.type ?? '').trans,
                             style: TextStyle(
                               fontSize: context.responsiveFontScale(12),
                               color: AppThemeColors.of(context).primaryBrand,
@@ -159,7 +135,9 @@ class PropertyCardWidget extends StatelessWidget {
                       SizedBox(width: 4.width),
                       Expanded(
                         child: Text(
-                          property?.location ?? 'Property Location',
+                          property != null
+                              ? ('${property?.city ?? " "} - ${property?.district ?? ""}')
+                              : 'Property Location',
                           style: TextStyle(
                             fontSize: context.responsiveFontScale(12),
                             fontFamily: AppConstant.appHeaderFont,
@@ -177,7 +155,8 @@ class PropertyCardWidget extends StatelessWidget {
                             TextSpan(
                               children: [
                                 TextSpan(
-                                  text: '${formatPrice(property?.price ?? 0)} ',
+                                  text:
+                                      '${formatPrice(double.parse(property?.price.toString() ?? '0'))} ',
                                   style: TextStyle(
                                     fontSize: context.responsiveFontScale(20),
                                     fontWeight: FontWeight.w500,
@@ -213,21 +192,23 @@ class PropertyCardWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       PropertyItem(
-                        label: property?.area ?? '0',
+                        label:
+                            '${property?.totalArea ?? '0'} ${AppStrings.mesurement}',
                         icon: AppImages.totalSpaceIcon,
                         colors: colors,
                       ),
                       SizedBox(width: 10.width),
 
                       PropertyItem(
-                        label: '${property?.baths ?? 0} ${AppStrings.baths}',
+                        label:
+                            '${property?.bathrooms ?? 0} ${AppStrings.baths}',
                         icon: AppImages.bathroomIcon,
                         colors: colors,
                       ),
                       SizedBox(width: 10.width),
 
                       PropertyItem(
-                        label: '${property?.beds ?? 0} ${AppStrings.beds}',
+                        label: '${property?.bedrooms ?? 0} ${AppStrings.beds}',
                         icon: AppImages.bedroomIcon,
                         colors: colors,
                       ),
@@ -241,7 +222,8 @@ class PropertyCardWidget extends StatelessWidget {
                         TextSpan(
                           children: [
                             TextSpan(
-                              text: '${formatPrice(property?.price ?? 0)} ',
+                              text:
+                                  '${formatPrice(double.parse((property?.price ?? '0').toString()))} ',
                               style: TextStyle(
                                 fontSize: context.responsiveFontScale(20),
                                 fontWeight: FontWeight.w500,

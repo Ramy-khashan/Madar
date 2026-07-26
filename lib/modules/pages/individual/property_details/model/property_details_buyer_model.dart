@@ -1,180 +1,494 @@
-import 'package:equatable/equatable.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+class PropertyDetailsModel {
+  String? propertyId;
+  String? title;
+  String? projectName;
+  String? type;
+  String? listingType;
+  int? price;
+  int? totalArea;
+  String? paymentType;
+  String? description;
+  bool? isNegotiable;
+  String? status;
+  String? context;
+  bool? isActive;
+  String? createdAt;
+  Details? details;
+  Features? features;
+  Location? location;
+  List<Media>? media;
+  List<Deeds>? deeds;
+  int? evaluation;
+  Owner? owner;
+  Broker? broker;
+  ParentProperty? parentProperty;
+  List<ChildProperties>? childProperties;
+  String? publicationStatus;
+  List<Contracts>? contracts;
+  List<Expenses>? expenses;
+  FinancialPerformance? financialPerformance;
 
-class NearbyPlaceModel extends Equatable {
-  final String name;
-  final String distance; // e.g. "0.8 كم"
-
-  const NearbyPlaceModel({required this.name, required this.distance});
-
-  @override
-  List<Object?> get props => [name, distance];
-}
-
-class PropertyBuyerModel extends Equatable {
-  final String id;
-  final String title;
-  final String location;
-  final double price;
-  final List<String> imageUrls;
-  final int beds;
-  final int balconies;
-  final int baths;
-  final String area;
-  final int floor;
-  final String propertyNumber;
-  final String paymentMethod;
-  final String tag;
-  final bool isBookmarked;
-  final String description;
-  final String propertyType;
-  final String occupancyRate;
-  final AdvertiserModel advertiser;
-  final RentInstallmentInfoModel rentInfo;
-  final InsuranceInfoModel insuranceInfo;
-  final LatLng? latLng;
-  final List<NearbyPlaceModel> nearbyPlaces;
-
-  const PropertyBuyerModel({
-    required this.id,
-    required this.title,
-    required this.location,
-    required this.price,
-    required this.imageUrls,
-    required this.beds,
-    required this.balconies,
-    required this.baths,
-    required this.area,
-    required this.floor,
-    required this.propertyNumber,
-    required this.paymentMethod,
-    required this.tag,
-    required this.isBookmarked,
-    required this.description,
-    required this.advertiser,
-    required this.rentInfo,
-    required this.insuranceInfo,
-    required this.occupancyRate,
-    this.propertyType = 'شقة سكنية',
-    this.latLng,
-    this.nearbyPlaces = const [],
+  PropertyDetailsModel({
+    this.propertyId,
+    this.title,
+    this.projectName,
+    this.type,
+    this.listingType,
+    this.price,
+    this.totalArea,
+    this.paymentType,
+    this.description,
+    this.isNegotiable,
+    this.status,
+    this.context,
+    this.isActive,
+    this.createdAt,
+    this.details,
+    this.features,
+    this.location,
+    this.media,
+    this.deeds,
+    this.evaluation,
+    this.owner,
+    this.broker,
+    this.parentProperty,
+    this.childProperties,
+    this.publicationStatus,
+    this.contracts,
+    this.expenses,
+    this.financialPerformance,
   });
 
-  @override
-  List<Object?> get props => [
-        id, title, location, price, imageUrls, beds, balconies, baths,
-        area, floor, propertyNumber, paymentMethod, tag, isBookmarked,
-        description, advertiser, rentInfo, insuranceInfo, occupancyRate,
-        propertyType, latLng, nearbyPlaces,
-      ];
+  PropertyDetailsModel.fromJson(Map<String, dynamic> json) {
+    propertyId = json['propertyId'];
+    title = json['title'];
+    projectName = json['projectName'];
+    type = json['type'];
+    listingType = json['listingType'];
+    price = json['price'];
+    totalArea = json['totalArea'];
+    paymentType = json['paymentType'];
+    description = json['description'];
+    isNegotiable = json['isNegotiable'];
+    status = json['status'];
+    context = json['context'];
+    isActive = json['isActive'];
+    createdAt = json['createdAt'];
+    details = json['details'] != null
+        ? Details.fromJson(json['details'])
+        : null;
+    features = json['features'] != null
+        ? Features.fromJson(json['features'])
+        : null;
+    location = json['location'] != null
+        ? Location.fromJson(json['location'])
+        : null;
+    if (json['media'] != null) {
+      media = <Media>[];
+      json['media'].forEach((v) {
+        media!.add(Media.fromJson(v));
+      });
+    }
+    if (json['deeds'] != null) {
+      deeds = <Deeds>[];
+      json['deeds'].forEach((v) {
+        deeds!.add(Deeds.fromJson(v));
+      });
+    }
+    evaluation = json['evaluation'];
+    owner = json['owner'] != null ? Owner.fromJson(json['owner']) : null;
+    broker = json['broker'] != null ? Broker.fromJson(json['broker']) : null;
+    parentProperty = json['parentProperty'] != null
+        ? ParentProperty.fromJson(json['parentProperty'])
+        : null;
+    if (json['childProperties'] != null) {
+      childProperties = <ChildProperties>[];
+      json['childProperties'].forEach((v) {
+        childProperties!.add(ChildProperties.fromJson(v));
+      });
+    }
+    publicationStatus = json['publicationStatus'];
+    if (json['contracts'] != null) {
+      contracts = <Contracts>[];
+      json['contracts'].forEach((v) {
+        contracts!.add(Contracts.fromJson(v));
+      });
+    }
+    if (json['expenses'] != null) {
+      expenses = <Expenses>[];
+      json['expenses'].forEach((v) {
+        expenses!.add(Expenses.fromJson(v));
+      });
+    }
+    financialPerformance = json['financialPerformance'] != null
+        ? FinancialPerformance.fromJson(json['financialPerformance'])
+        : null;
+  }
+ }
 
-  PropertyBuyerModel copyWith({
-    String? id,
-    String? title,
-    String? location,
-    double? price,
-    List<String>? imageUrls,
-    int? beds,
-    int? balconies,
-    int? baths,
-    String? area,
-    int? floor,
-    String? propertyNumber,
-    String? paymentMethod,
-    String? tag,
-    bool? isBookmarked,
-    String? description,
-    String? propertyType,
-    AdvertiserModel? advertiser,
-    RentInstallmentInfoModel? rentInfo,
-    InsuranceInfoModel? insuranceInfo,
-    String? occupancyRate,
-    LatLng? latLng,
-    List<NearbyPlaceModel>? nearbyPlaces,
-  }) {
-    return PropertyBuyerModel(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      location: location ?? this.location,
-      price: price ?? this.price,
-      imageUrls: imageUrls ?? this.imageUrls,
-      beds: beds ?? this.beds,
-      balconies: balconies ?? this.balconies,
-      baths: baths ?? this.baths,
-      area: area ?? this.area,
-      floor: floor ?? this.floor,
-      occupancyRate: occupancyRate ?? this.occupancyRate,
-      propertyNumber: propertyNumber ?? this.propertyNumber,
-      paymentMethod: paymentMethod ?? this.paymentMethod,
-      tag: tag ?? this.tag,
-      isBookmarked: isBookmarked ?? this.isBookmarked,
-      description: description ?? this.description,
-      propertyType: propertyType ?? this.propertyType,
-      advertiser: advertiser ?? this.advertiser,
-      rentInfo: rentInfo ?? this.rentInfo,
-      insuranceInfo: insuranceInfo ?? this.insuranceInfo,
-      latLng: latLng ?? this.latLng,
-      nearbyPlaces: nearbyPlaces ?? this.nearbyPlaces,
-    );
+class Details {
+  String? condition;
+  int? shopsCount;
+  int? floorsCount;
+  bool? hasElevator;
+  int? parkingSpots;
+  String? developerName;
+  int? occupancyRate;
+  String? classification;
+  int? estimatedIncome;
+  int? totalApartments;
+
+  Details({
+    this.condition,
+    this.shopsCount,
+    this.floorsCount,
+    this.hasElevator,
+    this.parkingSpots,
+    this.developerName,
+    this.occupancyRate,
+    this.classification,
+    this.estimatedIncome,
+    this.totalApartments,
+  });
+
+  Details.fromJson(Map<String, dynamic> json) {
+    condition = json['condition'];
+    shopsCount = json['shopsCount'];
+    floorsCount = json['floorsCount'];
+    hasElevator = json['hasElevator'];
+    parkingSpots = json['parkingSpots'];
+    developerName = json['developerName'];
+    occupancyRate = json['occupancyRate'];
+    classification = json['classification'];
+    estimatedIncome = json['estimatedIncome'];
+    totalApartments = json['totalApartments'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['condition'] = condition;
+    data['shopsCount'] = shopsCount;
+    data['floorsCount'] = floorsCount;
+    data['hasElevator'] = hasElevator;
+    data['parkingSpots'] = parkingSpots;
+    data['developerName'] = developerName;
+    data['occupancyRate'] = occupancyRate;
+    data['classification'] = classification;
+    data['estimatedIncome'] = estimatedIncome;
+    data['totalApartments'] = totalApartments;
+    return data;
   }
 }
 
-class AdvertiserModel extends Equatable {
-  final String name;
-  final String role;
-  final bool isVerified;
-  final String falLicenseNumber;
-  final String adLicenseNumber;
-  final int totalProperties;
-  final String badgeLabel;
+class Features {
+  bool? hasParking;
+  bool? hasGenerator;
+  bool? hasWaterTank;
 
-  const AdvertiserModel({
-    required this.name,
-    required this.role,
-    required this.isVerified,
-    required this.falLicenseNumber,
-    required this.adLicenseNumber,
-    required this.totalProperties,
-    this.badgeLabel = '',
-  });
+  Features({this.hasParking, this.hasGenerator, this.hasWaterTank});
 
-  @override
-  List<Object?> get props => [
-        name, role, isVerified, falLicenseNumber, adLicenseNumber,
-        totalProperties, badgeLabel,
-      ];
+  Features.fromJson(Map<String, dynamic> json) {
+    hasParking = json['hasParking'];
+    hasGenerator = json['hasGenerator'];
+    hasWaterTank = json['hasWaterTank'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['hasParking'] = hasParking;
+    data['hasGenerator'] = hasGenerator;
+    data['hasWaterTank'] = hasWaterTank;
+    return data;
+  }
 }
 
-class RentInstallmentInfoModel extends Equatable {
-  final bool isEligible;
-  final double annualRentValue;
-  final double minMonthlyInstallment;
-  final int providersCount;
+class Location {
+  String? id;
+  String? city;
+  String? district;
+  String? street;
+  double? latitude;
+  double? longitude;
+  List<Nearby>? nearby;
+  String? propertyId;
 
-  const RentInstallmentInfoModel({
-    required this.isEligible,
-    required this.annualRentValue,
-    required this.minMonthlyInstallment,
-    required this.providersCount,
+  Location({
+    this.id,
+    this.city,
+    this.district,
+    this.street,
+    this.latitude,
+    this.longitude,
+    this.nearby,
+    this.propertyId,
   });
 
-  @override
-  List<Object?> get props => [
-        isEligible, annualRentValue, minMonthlyInstallment, providersCount,
-      ];
+  Location.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    city = json['city'];
+    district = json['district'];
+    street = json['street'];
+    latitude = json['latitude'];
+    longitude = json['longitude'];
+    if (json['nearby'] != null) {
+      nearby = <Nearby>[];
+      json['nearby'].forEach((v) {
+        nearby!.add(Nearby.fromJson(v));
+      });
+    }
+    propertyId = json['propertyId'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['city'] = city;
+    data['district'] = district;
+    data['street'] = street;
+    data['latitude'] = latitude;
+    data['longitude'] = longitude;
+    if (nearby != null) {
+      data['nearby'] = nearby!.map((v) => v.toJson()).toList();
+    }
+    data['propertyId'] = propertyId;
+    return data;
+  }
 }
 
-class InsuranceInfoModel extends Equatable {
-  final bool isInsured;
-  final List<String> availableTypes;
-  final int companiesCount;
+class Nearby {
+  String? title;
+  double? lat;
+  double? long;
 
-  const InsuranceInfoModel({
-    required this.isInsured,
-    required this.availableTypes,
-    required this.companiesCount,
+  Nearby({this.title, this.lat, this.long});
+
+  Nearby.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
+    lat = json['lat'];
+    long = json['long'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['title'] = title;
+    data['lat'] = lat;
+    data['long'] = long;
+    return data;
+  }
+}
+
+class Media {
+  String? id;
+  String? propertyId;
+  String? type;
+  String? url;
+  bool? isMain;
+  int? order;
+  String? createdAt;
+
+  Media({
+    this.id,
+    this.propertyId,
+    this.type,
+    this.url,
+    this.isMain,
+    this.order,
+    this.createdAt,
   });
 
-  @override
-  List<Object?> get props => [isInsured, availableTypes, companiesCount];
+  Media.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    propertyId = json['propertyId'];
+    type = json['type'];
+    url = json['url'];
+    isMain = json['isMain'];
+    order = json['order'];
+    createdAt = json['createdAt'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['propertyId'] = propertyId;
+    data['type'] = type;
+    data['url'] = url;
+    data['isMain'] = isMain;
+    data['order'] = order;
+    data['createdAt'] = createdAt;
+    return data;
+  }
+}
+
+class Deeds {
+  String? title;
+  String? data;
+
+  Deeds({this.title, this.data});
+
+  Deeds.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
+    data = json['data'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['title'] = title;
+    data['data'] = this.data;
+    return data;
+  }
+}
+
+class Owner {
+  String? userId;
+  String? fullName;
+  String? role;
+
+  Owner({this.userId, this.fullName, this.role});
+
+  Owner.fromJson(Map<String, dynamic> json) {
+    userId = json['user_id'];
+    fullName = json['fullName'];
+    role = json['role'];
+  }
+
+   
+}
+class Broker {
+  String? userId;
+  String? fullName;
+  String? role;
+  String? falLicenseNumber;
+  String? adLicenseNumber;
+  int? totalProperties;
+  bool? isVerified;
+
+  Broker({this.userId, this.fullName, this.role, this.falLicenseNumber, this.adLicenseNumber, this.totalProperties, this.isVerified});
+
+  Broker.fromJson(Map<String, dynamic> json) {
+    userId = json['user_id'];
+    fullName = json['fullName'];
+    role = json['role'];
+    falLicenseNumber = json['fal_license_number'];
+    adLicenseNumber = json['ad_license_number'];
+    totalProperties = json['total_properties'];
+    isVerified = json['is_verified'];
+  }
+
+   
+}
+
+class ParentProperty {
+  String? title;
+
+  ParentProperty({this.title});
+
+  ParentProperty.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['title'] = title;
+    return data;
+  }
+}
+
+class ChildProperties {
+  String? propertyId;
+  String? title;
+  String? type;
+  String? status;
+  String? listingType;
+  int? price;
+  bool? isActive;
+  String? mainImage;
+
+  ChildProperties({
+    this.propertyId,
+    this.title,
+    this.type,
+    this.status,
+    this.listingType,
+    this.price,
+    this.isActive,
+    this.mainImage,
+  });
+
+  ChildProperties.fromJson(Map<String, dynamic> json) {
+    propertyId = json['propertyId'];
+    title = json['title'];
+    type = json['type'];
+    status = json['status'];
+    listingType = json['listingType'];
+    price = json['price'];
+    isActive = json['isActive'];
+    mainImage = json['mainImage'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['propertyId'] = propertyId;
+    data['title'] = title;
+    data['type'] = type;
+    data['status'] = status;
+    data['listingType'] = listingType;
+    data['price'] = price;
+    data['isActive'] = isActive;
+    data['mainImage'] = mainImage;
+    return data;
+  }
+}
+
+class Contracts {
+  String? title;
+  String? info;
+
+  Contracts({this.title, this.info});
+
+  Contracts.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
+    info = json['info'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['title'] = title;
+    data['info'] = info;
+    return data;
+  }
+}
+
+class Expenses {
+  String? title;
+  String? details;
+
+  Expenses({this.title, this.details});
+
+  Expenses.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
+    details = json['details'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['title'] = title;
+    data['details'] = details;
+    return data;
+  }
+}
+
+class FinancialPerformance {
+  int? totalChildUnits;
+
+  FinancialPerformance({this.totalChildUnits});
+
+  FinancialPerformance.fromJson(Map<String, dynamic> json) {
+    totalChildUnits = json['totalChildUnits'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['totalChildUnits'] = totalChildUnits;
+    return data;
+  }
 }

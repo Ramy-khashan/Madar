@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madar_app/core/utils/constants/app_enums.dart';
 
 import '../../../../config/router/app_router_keys.dart';
 import '../../../../config/theme/app_theme_colors.dart';
@@ -51,12 +52,21 @@ class _SplashScreenState extends State<SplashScreen>
                   state.role == AppConstant.developer
                       ? AppRouterKeys.projectManagerHome
                       : AppRouterKeys.navbar,
+                  routerType: RouterType.pushReplacementNamed,
                 );
               } else {
-                RouterHandler.navigate(context, AppRouterKeys.chooseAccount);
+                RouterHandler.navigate(
+                  context,
+                  AppRouterKeys.chooseAccount,
+                  routerType: RouterType.pushReplacementNamed,
+                );
               }
             } else {
-              RouterHandler.navigate(context, AppRouterKeys.onBoarding);
+              RouterHandler.navigate(
+                context,
+                AppRouterKeys.onBoarding,
+                routerType: RouterType.pushReplacementNamed,
+              );
             }
           }
         },
@@ -119,7 +129,7 @@ class _SplashScreenState extends State<SplashScreen>
                   ],
                 ),
               ),
-              Align(
+              const Align(
                 alignment: Alignment.bottomCenter,
                 child: ImageItem(
                   AppImages.splashBg,

@@ -8,12 +8,12 @@ class ContractsFilterTabsWidget extends StatelessWidget {
   const ContractsFilterTabsWidget({
     super.key,
     required this.selectedFilter,
-    required this.counts,
+    required this.totalCount,
     required this.onFilterChanged,
   });
 
   final String selectedFilter;
-  final Map<String, int> counts;
+  final int totalCount;
   final void Function(String) onFilterChanged;
 
   @override
@@ -30,7 +30,6 @@ class ContractsFilterTabsWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: ContractsBloc.tabs.map((entry) {
           final isSelected = selectedFilter == entry.id;
-          final count = counts[entry.id] ?? 0;
           return SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             padding: EdgeInsetsDirectional.only(start: 8.width),
@@ -54,7 +53,9 @@ class ContractsFilterTabsWidget extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  '${entry.title} ($count)',
+                  isSelected
+                      ? '${entry.title} ($totalCount)'
+                      : entry.title,
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(13),
                     fontWeight: FontWeight.w600,

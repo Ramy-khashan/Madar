@@ -8,7 +8,11 @@ sealed class MyPropertiesEvent extends Equatable {
 }
 
 final class MyPropertiesLoad extends MyPropertiesEvent {
-  const MyPropertiesLoad();
+  final int page;
+  final bool isLoadMore;
+  const MyPropertiesLoad({this.page = 1, this.isLoadMore = false});
+  @override
+  List<Object> get props => [page, isLoadMore];
 }
 
 final class MyPropertiesFilterApplied extends MyPropertiesEvent {

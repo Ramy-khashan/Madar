@@ -1,10 +1,28 @@
 part of 'my_wishlist_bloc.dart';
 
-sealed class MyWishlistState extends Equatable {
-  const MyWishlistState();
+  class MyWishlistState extends Equatable {
+    final String errorMsg;
+    final RequestStatus propertiesStatus;
+    final List<dynamic> savedProperties;
+    
+  const MyWishlistState(
+      {this.errorMsg = '',
+      this.propertiesStatus = RequestStatus.init,
+      this.savedProperties = const []});
   
   @override
-  List<Object> get props => [];
-}
+  List<Object> get props => [errorMsg, propertiesStatus, savedProperties];
+MyWishlistState copyWith({
+    String? errorMsg,
+    RequestStatus? propertiesStatus,
+    List<dynamic>? savedProperties,
+  }) {
+    return MyWishlistState(
+      errorMsg: errorMsg ?? this.errorMsg,
+      propertiesStatus: propertiesStatus ?? this.propertiesStatus,
+      savedProperties: savedProperties ?? this.savedProperties,
+    );
+  }
 
-final class MyWishlistInitial extends MyWishlistState {}
+}
+ 
