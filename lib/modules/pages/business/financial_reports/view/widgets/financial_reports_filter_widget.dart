@@ -12,7 +12,7 @@ class FinancialReportsFilterWidget extends StatelessWidget {
 
   List<Map<String, String>> get _periods => [
     {'id': 'monthly', 'label': AppStrings.monthly},
-    {'id': 'quarterly', 'label': AppStrings.quarterly},
+    {'id': 'halfYearly', 'label': AppStrings.halfYearly},
     {'id': 'yearly', 'label': AppStrings.yearly},
   ];
 

@@ -15,8 +15,7 @@ import '../../../../../common/chats/conversation_detail/model/conversation_info.
 import '../../controller/property_details_bloc.dart';
 import '../../model/property_details_buyer_model.dart';
 import 'advertiser_section_widget.dart';
-import 'buyer_related_services_section_widget.dart';
-import 'property_description_section_widget.dart';
+ import 'property_description_section_widget.dart';
 import 'property_details_header_section_widget.dart';
 import 'property_details_image_section_widget.dart';
 import 'property_details_info_card_widget.dart';

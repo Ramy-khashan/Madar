@@ -11,7 +11,7 @@ class AppConstant {
   static const String appFont = 'app-font';
   static const String appHeaderFont = 'app-header-font';
   static const String individual = 'individual';
-  static const String business = 'business';
+  static const String business = 'broker';
   static const String developer = 'developer';
   static const String realtor = 'realtor';
   static const String owner = 'owner';

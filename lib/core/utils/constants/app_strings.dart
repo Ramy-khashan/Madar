@@ -15,6 +15,7 @@ class AppStrings {
   static String get noSavedProperties => 'no_saved_properties'.trans;
   static String get propertyNameHint => 'property_name_hint'.trans;
   static String get noRequestsFound => 'no_requests_found'.trans;
+  static String get noProjectsExist => 'no_projects_exist'.trans;
   static String get deleteAccountHint => 'delete_account_hint'.trans;
   static String get search => 'search'.trans;
   static String get pendingStatus => 'pending_status'.trans;

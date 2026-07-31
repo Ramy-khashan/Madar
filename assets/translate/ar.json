@@ -1050,5 +1050,6 @@
   "no_saved_properties": "لا توجد عقارات محفوظة",
   "pending_status": "قيد الانتظار",
   "approved_status": "تمت الموافقة",
+  "no_projects_exist": "لا توجد مشاريع",
   "no_requests_found": "لا توجد طلبات"
 }

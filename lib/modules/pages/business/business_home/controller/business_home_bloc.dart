@@ -196,7 +196,7 @@ class BusinessHomeBloc extends Bloc<BusinessHomeEvent, BusinessHomeState> {
         (successResponse) async {
           final List items = [];
           // final List<PortfolioPropertyModel> items = [];
-          for (var item in List.from(successResponse.response['data'])) {
+          for (var item in List.from(successResponse.response['requests'])) {
             items.add(PortfolioPropertyModel.fromJson(item));
           }
           emit(

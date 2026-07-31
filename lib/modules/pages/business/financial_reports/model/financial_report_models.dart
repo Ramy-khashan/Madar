@@ -6,14 +6,15 @@ class FinancialPropertyItem extends Equatable {
     required this.name,
     required this.amount,
     required this.paid,
-    required this.status,    required this.date,
+    this.status,
+    this.date,
   });
 
   final String name;
   final String amount;
   final bool paid;
-  final String status;
-  final DateTime date;
+  final String? status;
+  final DateTime? date;
 
   @override
   List<Object?> get props => [name, amount, paid, status, date];
@@ -23,15 +24,15 @@ class FinancialRentItem extends Equatable {
   const FinancialRentItem({
     required this.name,
     required this.amount,
-    required this.date,
-    required this.status,
+    this.date,
+    this.status,
     required this.paid,
   });
 
   final String name;
   final String amount;
-  final DateTime date;
-  final String status;
+  final DateTime? date;
+  final String? status;
   final bool paid;
 
   @override
@@ -106,4 +107,201 @@ class DonutSectionData extends Equatable {
 
   @override
   List<Object?> get props => [label, value, colorValue];
+}
+
+class FinancialReportsResponse extends Equatable {
+  const FinancialReportsResponse({
+    required this.financialSummary,
+    required this.expenseDistribution,
+    required this.incomeDistribution,
+    required this.incomeVsExpense,
+    required this.transactionHistory,
+    required this.topProperties,
+  });
+
+  final FinancialSummary financialSummary;
+  final List<ExpenseDistributionItem> expenseDistribution;
+  final List<IncomeDistributionItem> incomeDistribution;
+  final List<IncomeVsExpenseItem> incomeVsExpense;
+  final List<TransactionHistoryItem> transactionHistory;
+  final List<TopPropertyIncomeItem> topProperties;
+
+  factory FinancialReportsResponse.fromJson(Map<String, dynamic> json) {
+    return FinancialReportsResponse(
+      financialSummary: FinancialSummary.fromJson(
+        Map<String, dynamic>.from(json['financialSummary'] ?? const {}),
+      ),
+      expenseDistribution: List<Map<String, dynamic>>.from(
+        json['expenseDistribution'] ?? const [],
+      ).map(ExpenseDistributionItem.fromJson).toList(),
+      incomeDistribution: List<Map<String, dynamic>>.from(
+        json['incomeDistribution'] ?? const [],
+      ).map(IncomeDistributionItem.fromJson).toList(),
+      incomeVsExpense: List<Map<String, dynamic>>.from(
+        json['incomeVsExpense'] ?? const [],
+      ).map(IncomeVsExpenseItem.fromJson).toList(),
+      transactionHistory: List<Map<String, dynamic>>.from(
+        json['transactionHistory'] ?? const [],
+      ).map(TransactionHistoryItem.fromJson).toList(),
+      topProperties: List<Map<String, dynamic>>.from(
+        json['topProperties'] ?? const [],
+      ).map(TopPropertyIncomeItem.fromJson).toList(),
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+    financialSummary,
+    expenseDistribution,
+    incomeDistribution,
+    incomeVsExpense,
+    transactionHistory,
+    topProperties,
+  ];
+}
+
+class FinancialSummary extends Equatable {
+  const FinancialSummary({
+    required this.totalIncome,
+    required this.totalExpenses,
+    required this.netProfit,
+  });
+
+  final double totalIncome;
+  final double totalExpenses;
+  final double netProfit;
+
+  factory FinancialSummary.fromJson(Map<String, dynamic> json) {
+    return FinancialSummary(
+      totalIncome: _asDouble(json['totalIncome']),
+      totalExpenses: _asDouble(json['totalExpenses']),
+      netProfit: _asDouble(json['netProfit']),
+    );
+  }
+
+  @override
+  List<Object?> get props => [totalIncome, totalExpenses, netProfit];
+}
+
+class ExpenseDistributionItem extends Equatable {
+  const ExpenseDistributionItem({
+    required this.type,
+    required this.amount,
+    required this.percentage,
+  });
+
+  final String type;
+  final double amount;
+  final double percentage;
+
+  factory ExpenseDistributionItem.fromJson(Map<String, dynamic> json) {
+    return ExpenseDistributionItem(
+      type: (json['type'] ?? '').toString(),
+      amount: _asDouble(json['amount']),
+      percentage: _asDouble(json['percentage']),
+    );
+  }
+
+  @override
+  List<Object?> get props => [type, amount, percentage];
+}
+
+class IncomeDistributionItem extends Equatable {
+  const IncomeDistributionItem({
+    required this.source,
+    required this.amount,
+    required this.percentage,
+  });
+
+  final String source;
+  final double amount;
+  final double percentage;
+
+  factory IncomeDistributionItem.fromJson(Map<String, dynamic> json) {
+    return IncomeDistributionItem(
+      source: (json['source'] ?? '').toString(),
+      amount: _asDouble(json['amount']),
+      percentage: _asDouble(json['percentage']),
+    );
+  }
+
+  @override
+  List<Object?> get props => [source, amount, percentage];
+}
+
+class IncomeVsExpenseItem extends Equatable {
+  const IncomeVsExpenseItem({
+    required this.month,
+    required this.income,
+    required this.expense,
+  });
+
+  final String month;
+  final double income;
+  final double expense;
+
+  factory IncomeVsExpenseItem.fromJson(Map<String, dynamic> json) {
+    return IncomeVsExpenseItem(
+      month: (json['month'] ?? '').toString(),
+      income: _asDouble(json['income']),
+      expense: _asDouble(json['expense']),
+    );
+  }
+
+  @override
+  List<Object?> get props => [month, income, expense];
+}
+
+class TransactionHistoryItem extends Equatable {
+  const TransactionHistoryItem({
+    required this.amount,
+    required this.type,
+    required this.date,
+  });
+
+  final double amount;
+  final String type;
+  final DateTime date;
+
+  factory TransactionHistoryItem.fromJson(Map<String, dynamic> json) {
+    return TransactionHistoryItem(
+      amount: _asDouble(json['amount']),
+      type: (json['type'] ?? '').toString(),
+      date:
+          DateTime.tryParse((json['date'] ?? '').toString()) ?? DateTime.now(),
+    );
+  }
+
+  @override
+  List<Object?> get props => [amount, type, date];
+}
+
+class TopPropertyIncomeItem extends Equatable {
+  const TopPropertyIncomeItem({
+    required this.propertyId,
+    required this.property,
+    required this.income,
+  });
+
+  final String propertyId;
+  final String property;
+  final double income;
+
+  factory TopPropertyIncomeItem.fromJson(Map<String, dynamic> json) {
+    return TopPropertyIncomeItem(
+      propertyId: (json['propertyId'] ?? '').toString(),
+      property: (json['property'] ?? '').toString(),
+      income: _asDouble(json['income']),
+    );
+  }
+
+  @override
+  List<Object?> get props => [propertyId, property, income];
+}
+
+double _asDouble(dynamic value) {
+  if (value is num) {
+    return value.toDouble();
+  }
+  return double.tryParse(value?.toString() ?? '') ?? 0;
 }

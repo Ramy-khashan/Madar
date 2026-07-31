@@ -6,6 +6,7 @@ import '../../../../../../../config/router/app_router_keys.dart';
 import '../../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../../core/components/app_button.dart';
 import '../../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../../core/utils/functions/router_handler.dart';
 import '../../controller/financial_reports_bloc.dart';
@@ -39,7 +40,7 @@ class FinancialReportsExpensesTabWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Row(
-                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           AppStrings.byCategory,
@@ -51,7 +52,9 @@ class FinancialReportsExpensesTabWidget extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          AppStrings.amountVal(state.totalExpenses.toString()),
+                          AppStrings.amountVal(
+                            formatPrice(state.totalExpenses),
+                          ),
                           style: TextStyle(
                             fontSize: context.responsiveFontScale(13),
                             color: colors.textSecondary,
@@ -60,14 +63,16 @@ class FinancialReportsExpensesTabWidget extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 12.height),
-                    ...state.categoryItems.map((item) => FinancialPropertyRow(
-                          name: item.name,
-                          amount: item.amount,
-                          status: item.status,
-                          date: item.date,
-                          paid: item.paid,
-                          colors: colors,
-                        )),
+                    ...state.categoryItems.map(
+                      (item) => FinancialPropertyRow(
+                        name: item.name,
+                        amount: item.amount,
+                        status: item.status,
+                        date: item.date,
+                        paid: item.paid,
+                        colors: colors,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -90,7 +95,7 @@ class FinancialReportsExpensesTabWidget extends StatelessWidget {
                             ),
                           ),
                           child: Row(
-                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,7 +127,7 @@ class FinancialReportsExpensesTabWidget extends StatelessWidget {
                                 ],
                               ),
                               Text(
-                                t.amount+AppStrings.currency,
+                                '${t.amount} ${AppStrings.currency}',
                                 style: TextStyle(
                                   fontSize: context.responsiveFontScale(13),
                                   fontWeight: FontWeight.w600,

@@ -5,6 +5,7 @@ import '../../../../../../config/router/app_router_keys.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_appbar.dart';
 import '../../../../../../core/components/app_button.dart';
+import '../../../../../../core/components/loading_process.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
@@ -59,32 +60,41 @@ class ProjectsListScreen extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  child: GridView.builder(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16.width,
-                      vertical: 4.height,
+                  child: LoadingProcess(
+                    status: state.status,
+                    errorMsg: state.errorMessage,
+                    onTapRefresh: () {
+                      ProjectsListBloc.get(context).add(const ProjectsListLoad());
+                    },
+                    emptyMsg: AppStrings.noProjectsExist,
+                    isEmptyList: state.projects.isEmpty,
+                    child: GridView.builder(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.width,
+                        vertical: 4.height,
+                      ),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: ResponsiveUtils.types(
+                          context,
+                          mobilePortrait: 1,
+                          mobileLandscape: 2,
+                          tabletPortrait: 2,
+                          tabletLandscape: 3,
+                        ).toInt(),
+                        mainAxisSpacing: 12.height,
+                        mainAxisExtent: ResponsiveUtils.types(
+                          context,
+                          mobilePortrait: 250,
+                          mobileLandscape: 220,
+                          tabletPortrait: 300,
+                          tabletLandscape: 320,
+                        ).toDouble(),
+                      ),
+                      itemCount: state.projects.length,
+                      itemBuilder: (_, i) => ProjectListItemWidget(
+                        project: state.projects[i],
+                       ),
                     ),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: ResponsiveUtils.types(
-                        context,
-                        mobilePortrait: 1,
-                        mobileLandscape: 2,
-                        tabletPortrait: 2,
-                        tabletLandscape: 3,
-                      ).toInt(),
-                      mainAxisSpacing: 12.height,
-                      mainAxisExtent: ResponsiveUtils.types(
-                        context,
-                        mobilePortrait: 250,
-                        mobileLandscape: 220,
-                        tabletPortrait: 300,
-                        tabletLandscape: 320,
-                      ).toDouble(),
-                    ),
-                    itemCount: state.projects.length,
-                    itemBuilder: (_, i) => ProjectListItemWidget(
-                      project: state.projects[i],
-                     ),
                   ),
                 ),
 

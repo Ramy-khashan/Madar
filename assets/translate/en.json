@@ -1048,5 +1048,6 @@
   "VILLA_FLOOR": "Villa Floor",
   "no_saved_properties": "No saved properties",
   "pending_status": "Pending",
+  "no_projects_exist": "No projects exist",
   "no_requests_found": "No requests found"
 }

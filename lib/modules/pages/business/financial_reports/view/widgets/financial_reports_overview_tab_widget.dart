@@ -10,12 +10,11 @@ import '../../../../../../core/components/statistic_circle_shape_item.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../controller/financial_reports_bloc.dart';
+import '../../model/financial_report_models.dart';
 import 'shared/financial_metric_card.dart';
 
 class FinancialReportsOverviewTabWidget extends StatelessWidget {
   const FinancialReportsOverviewTabWidget({super.key});
-
- 
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +26,7 @@ class FinancialReportsOverviewTabWidget extends StatelessWidget {
           p.totalExpenses != c.totalExpenses ||
           p.lateRent != c.lateRent ||
           p.lateTenants != c.lateTenants ||
+          p.incomeVsExpense != c.incomeVsExpense ||
           p.incomeSections != c.incomeSections ||
           p.expensesSections != c.expensesSections,
       builder: (context, state) {
@@ -51,7 +51,7 @@ class FinancialReportsOverviewTabWidget extends StatelessWidget {
                     child: FinancialMetricCard(
                       label: AppStrings.totalIncomeLabel,
 
-                      value: formatPrice(state.totalExpenses),
+                      value: formatPrice(state.totalIncome),
                       icon: AppImages.finalPriceIcon,
                       valueColor: AppColors.primary300,
                       colors: colors,
@@ -62,7 +62,7 @@ class FinancialReportsOverviewTabWidget extends StatelessWidget {
                     child: FinancialMetricCard(
                       label: AppStrings.expenses,
 
-                      value: formatPrice(state.totalIncome),
+                      value: formatPrice(state.totalExpenses),
                       icon: AppImages.finalPriceIcon,
                       valueColor: AppColors.orangeColor,
                       colors: colors,
@@ -97,7 +97,10 @@ class FinancialReportsOverviewTabWidget extends StatelessWidget {
               SizedBox(height: 16.height),
               _LateTenantsCard(colors: colors, tenants: state.lateTenants),
               SizedBox(height: 16.height),
-              _IncomeVsExpensesChart(colors: colors),
+              _IncomeVsExpensesChart(
+                colors: colors,
+                points: state.incomeVsExpense,
+              ),
               SizedBox(height: 16.height),
               Row(
                 children: [
@@ -130,7 +133,7 @@ class _LateTenantsCard extends StatelessWidget {
   const _LateTenantsCard({required this.colors, required this.tenants});
 
   final AppThemeColors colors;
-  final List tenants;
+  final List<FinancialTenant> tenants;
 
   @override
   Widget build(BuildContext context) {
@@ -212,80 +215,86 @@ class _LateTenantsCard extends StatelessWidget {
 }
 
 class _IncomeVsExpensesChart extends StatelessWidget {
-  const _IncomeVsExpensesChart({required this.colors});
+  const _IncomeVsExpensesChart({required this.colors, required this.points});
 
   final AppThemeColors colors;
-
-  static const List<double> _income = [
-    60,
-    100,
-    80,
-    110,
-    70,
-    130,
-    90,
-    80,
-    110,
-    60,
-  ];
-  static const List<double> _expenses = [
-    40,
-    60,
-    50,
-    70,
-    45,
-    90,
-    55,
-    50,
-    70,
-    40,
-  ];
+  final List<IncomeVsExpenseItem> points;
 
   @override
   Widget build(BuildContext context) {
-    final maxVal = [..._income, ..._expenses].reduce((a, b) => a > b ? a : b);
+    if (points.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    final maxVal = points
+        .map((item) => item.income > item.expense ? item.income : item.expense)
+        .fold<double>(1, (a, b) => a > b ? a : b);
     return OutlinedSection(
       title: AppStrings.incomeVsExpenses,
-    
+
       child: SizedBox(
-        height: 120.height,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: List.generate(_income.length, (i) {
-            return Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 2.width),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: (_income[i] / maxVal) * 110.height,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF26C6DA),
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(3.radius),
+        height: 145.height,
+        child: Column(
+          children: [
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: List.generate(points.length, (i) {
+                  return Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 2.width),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              height: (points[i].income / maxVal) * 100.height,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF26C6DA),
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(3.radius),
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+                          SizedBox(width: 1.width),
+                          Expanded(
+                            child: Container(
+                              height: (points[i].expense / maxVal) * 100.height,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF6C63FF),
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(3.radius),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(width: 1.width),
-                    Expanded(
-                      child: Container(
-                        height: (_expenses[i] / maxVal) * 110.height,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF6C63FF),
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(3.radius),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  );
+                }),
               ),
-            );
-          }),
+            ),
+            SizedBox(height: 8.height),
+            Row(
+              children: List.generate(points.length, (i) {
+                final month = points[i].month;
+                final shortMonth = month.length > 3
+                    ? month.substring(0, 3)
+                    : month;
+                return Expanded(
+                  child: Text(
+                    shortMonth,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: context.responsiveFontScale(10),
+                      color: colors.textSecondary,
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ],
         ),
       ),
     );

@@ -34,14 +34,14 @@ class SignInScreen extends StatelessWidget {
         child: BlocConsumer<SignInBloc, SignInState>(
           listener: (context, state) {
             if (state.signInStatus == RequestStatus.success) {
-              if (PreferenceUtils().getString(StorageKeys.accountType) ==
-                  AppConstant.developer) {
+              if (state.role == AppConstant.developer) {
                 RouterHandler.navigate(
                   context,
                   AppRouterKeys.projectManagerHome,
                   routerType: RouterType.goName,
                 );
-              } else {
+              } else if (state.role == AppConstant.individual ||
+                  state.role == AppConstant.business) {
                 RouterHandler.navigate(
                   context,
                   AppRouterKeys.navbar,

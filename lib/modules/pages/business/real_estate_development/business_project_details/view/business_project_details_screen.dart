@@ -19,9 +19,8 @@ import 'widgets/project_stats_row_widget.dart';
 import 'widgets/project_timeline_section_widget.dart';
 
 class BusinessProjectDetailsScreen extends StatelessWidget {
-  const BusinessProjectDetailsScreen({super.key,  });
+  const BusinessProjectDetailsScreen({super.key});
 
- 
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);

@@ -15,7 +15,7 @@ class NetProfitLossHeaderWidget extends StatelessWidget {
  
   @override
   Widget build(BuildContext context) {
-    final isPositive = state.profitChange >= 0;
+    final isPositive = 0 >= 0;
     return Container(
       margin: EdgeInsets.all(16.width),
       padding: EdgeInsets.all(20.width),
@@ -56,7 +56,8 @@ class NetProfitLossHeaderWidget extends StatelessWidget {
               SizedBox(width: 6.width),
 
               Text(
-                '${isPositive ? '+' : ''}${state.profitChangePercent.toStringAsFixed(0)}٪ ${AppStrings.comparedToPrevMonth}',
+                "",
+                // '${isPositive ? '+' : ''}${state.profitChangePercent.toStringAsFixed(0)}٪ ${AppStrings.comparedToPrevMonth}',
                 style: TextStyle(
                   fontSize: context.responsiveFontScale(16),
                   color: AppColors.successColor,

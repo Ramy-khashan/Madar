@@ -2,12 +2,14 @@ part of 'net_profit_loss_bloc.dart';
 
 class NetProfitLossState extends Equatable {
   const NetProfitLossState({
-    this.netProfit = 200000,
-    this.annualProfit = 250000,
-    this.totalExpenses = 50000,
-    this.previousPeriodProfit = 180000,
+    this.netProfit = 0,
+    this.annualProfit = 0,
+    this.totalExpenses = 0,
+    this.previousPeriodProfit = 0,
     this.status = RequestStatus.init,
     this.exportStatus = RequestStatus.init,
+    this.downloadStatus = RequestStatus.init,
+    this.errorMessage=''
   });
 
   final double netProfit;
@@ -16,15 +18,9 @@ class NetProfitLossState extends Equatable {
   final double previousPeriodProfit;
   final RequestStatus status;
   final RequestStatus exportStatus;
-
-  double get profitChange => netProfit - previousPeriodProfit;
-
-  double get profitChangePercent =>
-      previousPeriodProfit == 0
-          ? 0
-          : (profitChange / previousPeriodProfit) * 100;
-
-  bool get isProfitable => netProfit >= 0;
+  final RequestStatus downloadStatus;
+  final String errorMessage;
+ 
 
   NetProfitLossState copyWith({
     double? netProfit,
@@ -32,7 +28,9 @@ class NetProfitLossState extends Equatable {
     double? totalExpenses,
     double? previousPeriodProfit,
     RequestStatus? status,
-    RequestStatus? exportStatus,
+     RequestStatus? exportStatus,
+    RequestStatus? downloadStatus,
+    String? errorMessage,
   }) =>
       NetProfitLossState(
         netProfit: netProfit ?? this.netProfit,
@@ -42,8 +40,9 @@ class NetProfitLossState extends Equatable {
             previousPeriodProfit ?? this.previousPeriodProfit,
         status: status ?? this.status,
         exportStatus: exportStatus ?? this.exportStatus,
+        downloadStatus: downloadStatus ?? this.downloadStatus,
+        errorMessage: errorMessage ?? this.errorMessage,
       );
-
   @override
   List<Object?> get props => [
         netProfit,
@@ -52,5 +51,7 @@ class NetProfitLossState extends Equatable {
         previousPeriodProfit,
         status,
         exportStatus,
+        downloadStatus,
+        errorMessage,
       ];
 }

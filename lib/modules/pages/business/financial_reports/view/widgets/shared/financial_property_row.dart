@@ -1,5 +1,5 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../../core/utils/constants/app_colors.dart';
@@ -13,15 +13,15 @@ class FinancialPropertyRow extends StatelessWidget {
     required this.name,
     required this.amount,
     required this.paid,
-    required this.status,
-    required this.date,
+    this.status,
+    this.date,
     required this.colors,
   });
 
   final String name;
   final String amount;
-  final DateTime date;
-  final String status;
+  final DateTime? date;
+  final String? status;
   final bool paid;
   final AppThemeColors colors;
 
@@ -47,8 +47,8 @@ class FinancialPropertyRow extends StatelessWidget {
                         textAlign: TextAlign.right,
                         style: TextStyle(
                           fontSize: context.responsiveFontScale(16),
-                        
-                        fontWeight: FontWeight.w600,
+
+                          fontWeight: FontWeight.w600,
                           color: colors.textFieldTitle,
                         ),
                       ),
@@ -64,28 +64,31 @@ class FinancialPropertyRow extends StatelessWidget {
                     ),
                   ],
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        status,
-                        textAlign: TextAlign.right,
+                if (status != null || date != null)
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          status ?? '',
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                            fontSize: context.responsiveFontScale(13),
+                            color: colors.textSecondary,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        date == null
+                            ? ''
+                            : DateFormat('dd-MM-yyyy').format(date!),
+                        textAlign: TextAlign.left,
                         style: TextStyle(
                           fontSize: context.responsiveFontScale(13),
                           color: colors.textSecondary,
                         ),
                       ),
-                    ),
-                    Text(
-                      DateFormat('dd-MM-yyyy').format(date),
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: context.responsiveFontScale(13),
-                         color: colors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
               ],
             ),
           ),

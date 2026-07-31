@@ -38,6 +38,7 @@ class AddPropertyStep5Screen extends StatelessWidget {
                   ),
                 ),
                 12.height.toSizedBox,
+                
                 AppTextField(
                   controller: bloc.areaController,
                   title: AppStrings.areaSqmRequired,
@@ -158,67 +159,67 @@ class AddPropertyStep5Screen extends StatelessWidget {
                 ),
                 16.height.toSizedBox,
 
-                // ── Optional fields ───────────────────────────────────────
-                AppTextField(
-                  controller: bloc.apartmentNumberController,
-                  title: AppStrings.apartmentNumberOptional,
-                  hint: AppStrings.enterApartmentNumber,
-                  textInputType: TextInputType.number,
-                ),
-                12.height.toSizedBox,
+                // // ── Optional fields ───────────────────────────────────────
+                // AppTextField(
+                //   controller: bloc.apartmentNumberController,
+                //   title: AppStrings.apartmentNumberOptional,
+                //   hint: AppStrings.enterApartmentNumber,
+                //   textInputType: TextInputType.number,
+                // ),
+                // 12.height.toSizedBox,
 
-                _DropdownField(
-                  label: AppStrings.totalFloorsInBuilding,
-                  field: 'totalFloors',
-                  options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10+'],
-                  getValue: (m) => m.totalFloors,
-                  buildEvent: (v) => SelectDropdownEvent('totalFloors', v),
-                ),
-                12.height.toSizedBox,
+                // _DropdownField(
+                //   label: AppStrings.totalFloorsInBuilding,
+                //   field: 'totalFloors',
+                //   options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10+'],
+                //   getValue: (m) => m.totalFloors,
+                //   buildEvent: (v) => SelectDropdownEvent('totalFloors', v),
+                // ),
+                // 12.height.toSizedBox,
 
-                _DropdownField(
-                  label: AppStrings.apartmentsPerFloorOptional,
-                  field: 'apartmentsPerFloor',
-                  options: ['1', '2', '3', '4', '5', '6', '7', '8'],
-                  getValue: (m) => m.apartmentsPerFloor,
-                  buildEvent: (v) =>
-                      SelectDropdownEvent('apartmentsPerFloor', v),
-                ),
-                12.height.toSizedBox,
+                // _DropdownField(
+                //   label: AppStrings.apartmentsPerFloorOptional,
+                //   field: 'apartmentsPerFloor',
+                //   options: ['1', '2', '3', '4', '5', '6', '7', '8'],
+                //   getValue: (m) => m.apartmentsPerFloor,
+                //   buildEvent: (v) =>
+                //       SelectDropdownEvent('apartmentsPerFloor', v),
+                // ),
+                // 12.height.toSizedBox,
 
-                _DropdownField(
-                  label: AppStrings.floorLabelShort,
-                  field: 'floorLevel',
-                  options: AddPropertyBloc.floorOptions,
-                  getValue: (m) => m.floorLevel,
-                  buildEvent: (v) => SelectDropdownEvent('floorLevel', v),
-                ),
-                12.height.toSizedBox,
+                // _DropdownField(
+                //   label: AppStrings.floorLabelShort,
+                //   field: 'floorLevel',
+                //   options: AddPropertyBloc.floorOptions,
+                //   getValue: (m) => m.floorLevel,
+                //   buildEvent: (v) => SelectDropdownEvent('floorLevel', v),
+                // ),
+                // 12.height.toSizedBox,
 
-                _DropdownField(
-                  label: AppStrings.furnishingStatus,
-                  field: 'furnishing',
-                  options: AddPropertyBloc.furnishingOptions,
-                  getValue: (m) => m.furnishing,
-                  buildEvent: (v) => SelectDropdownEvent('furnishing', v),
-                ),
-                12.height.toSizedBox,
+                // _DropdownField(
+                //   label: AppStrings.furnishingStatus,
+                //   field: 'furnishing',
+                //   options: AddPropertyBloc.furnishingOptions,
+                //   getValue: (m) => m.furnishing,
+                //   buildEvent: (v) => SelectDropdownEvent('furnishing', v),
+                // ),
+                // 12.height.toSizedBox,
 
-                _DropdownField(
-                  label: AppStrings.propertyCondition,
-                  field: 'condition',
-                  options: AddPropertyBloc.conditionOptions,
-                  getValue: (m) => m.condition,
-                  buildEvent: (v) => SelectDropdownEvent('condition', v),
-                ),
-                12.height.toSizedBox,
+                // _DropdownField(
+                //   label: AppStrings.propertyCondition,
+                //   field: 'condition',
+                //   options: AddPropertyBloc.conditionOptions,
+                //   getValue: (m) => m.condition,
+                //   buildEvent: (v) => SelectDropdownEvent('condition', v),
+                // ),
+                // 12.height.toSizedBox,
 
-                AppTextField(
-                  controller: bloc.developerNameController,
-                  title: AppStrings.developerNameOptional,
-                  hint: AppStrings.enterDeveloperName,
-                ),
-                24.height.toSizedBox,
+                // AppTextField(
+                //   controller: bloc.developerNameController,
+                //   title: AppStrings.developerNameOptional,
+                //   hint: AppStrings.enterDeveloperName,
+                // ),
+                // 24.height.toSizedBox,
 
                 // ── Amenities ─────────────────────────────────────────────
                 _SectionLabel(label: AppStrings.amenitiesLabel, tc: tc),

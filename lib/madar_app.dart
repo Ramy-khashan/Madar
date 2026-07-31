@@ -30,6 +30,7 @@ class MadarApp extends StatelessWidget {
               themeMode: appState.themeMode,
               title: AppConstant.appName,
               routerConfig: appRouter,
+              
               debugShowCheckedModeBanner: true,
             ),
           );

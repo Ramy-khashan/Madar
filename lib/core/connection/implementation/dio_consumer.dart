@@ -45,7 +45,7 @@ class DioConsumer implements ApiConsumer {
       ..responseType = ResponseType.plain
       ..followRedirects = false
       ..validateStatus = (status) {
-        return status != null && status < 500 && status != 401;
+        return status != null && status < 500 ;
       };
   }
 

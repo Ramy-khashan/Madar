@@ -19,11 +19,13 @@ class AddPropertyStep1Screen extends StatelessWidget {
         Expanded(
           child: SingleChildScrollView(
             padding: EdgeInsets.symmetric(
-                horizontal: 16.width, vertical: 8.height),
+              horizontal: 16.width,
+              vertical: 8.height,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                 Text(
+                Text(
                   AppStrings.propertyTypeAndOperation,
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(16),
@@ -88,15 +90,17 @@ class _OperationToggle extends StatelessWidget {
               _ToggleOption(
                 label: AppStrings.sellLabel,
                 isActive: isSell,
-                onTap: () => AddPropertyBloc.get(context)
-                    .add(const SelectOperationTypeEvent('sell')),
+                onTap: () => AddPropertyBloc.get(
+                  context,
+                ).add(const SelectOperationTypeEvent('sell')),
                 tc: tc,
               ),
               _ToggleOption(
                 label: AppStrings.rentLabel,
                 isActive: !isSell,
-                onTap: () => AddPropertyBloc.get(context)
-                    .add(const SelectOperationTypeEvent('rent')),
+                onTap: () => AddPropertyBloc.get(
+                  context,
+                ).add(const SelectOperationTypeEvent('rent')),
                 tc: tc,
               ),
             ],
@@ -155,7 +159,7 @@ class _PropertyTypeGrid extends StatelessWidget {
       buildWhen: (prev, curr) =>
           prev.model.propertyType != curr.model.propertyType,
       builder: (context, state) {
-        final items = AddPropertyBloc.propertyTypeItems;
+        const items = AddPropertyBloc.propertyTypeItems;
         return GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -205,7 +209,6 @@ class _PropertyTypeCard extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected ? tc.primaryBrand : tc.borderColor,
@@ -222,7 +225,7 @@ class _PropertyTypeCard extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: isSelected
-                    ? tc.primaryBrand 
+                    ? tc.primaryBrand
                     : tc.textFieldHint.withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -261,8 +264,7 @@ class _Step1NextButton extends StatelessWidget {
       builder: (context, state) {
         final enabled = state.model.propertyType != null;
         return Padding(
-          padding: EdgeInsets.fromLTRB(
-              16.width, 8.height, 16.width, 24.height),
+          padding: EdgeInsets.fromLTRB(16.width, 8.height, 16.width, 24.height),
           child: AppButton(
             text: AppStrings.next,
             onTap: enabled

@@ -87,14 +87,14 @@ class _AddResidentialProjectView extends StatelessWidget {
     }
   }
 
-  Future<void> _handleManagerLoginDialog(BuildContext context) async {
-    final bloc = context.read<AddResidentialProjectBloc>();
-    final result = await showDialog<bool>(
-      context: context,
-      builder: (_) => const ProjectManagerLoginDialog(),
-    );
-    bloc.add(AddResidentialManagerLoginResult(result ?? false));
-  }
+  // Future<void> _handleManagerLoginDialog(BuildContext context) async {
+  //   final bloc = context.read<AddResidentialProjectBloc>();
+  //   final result = await showDialog<bool>(
+  //     context: context,
+  //     builder: (_) => const ProjectManagerLoginDialog(),
+  //   );
+  //   bloc.add(AddResidentialManagerLoginResult(result ?? false));
+  // }
 
   Future<void> _handleSuccessDialog(BuildContext context) async {
     final bloc = context.read<AddResidentialProjectBloc>();
@@ -117,8 +117,9 @@ class _AddResidentialProjectView extends StatelessWidget {
           _handleDatePick(context, state.pendingDateField);
         }
         if (state.dialogAction == ResidentialDialogAction.showManagerLogin) {
-          _handleManagerLoginDialog(context);
-        } else if (state.dialogAction == ResidentialDialogAction.showSuccess) {
+          // _handleManagerLoginDialog(context);
+        }
+         else if (state.dialogAction == ResidentialDialogAction.showSuccess) {
           _handleSuccessDialog(context);
         }
         if (state.submitStatus == RequestStatus.success) {

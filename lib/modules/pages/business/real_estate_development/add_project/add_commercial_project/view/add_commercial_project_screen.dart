@@ -77,14 +77,14 @@ class AddCommercialProjectScreen extends StatelessWidget {
     }
   }
 
-  Future<void> _handleManagerLoginDialog(BuildContext context) async {
-    final bloc = context.read<AddCommercialProjectBloc>();
-    final result = await showDialog<bool>(
-      context: context,
-      builder: (_) => const ProjectManagerLoginDialog(),
-    );
-    bloc.add(AddCommercialManagerLoginResult(result ?? false));
-  }
+  // Future<void> _handleManagerLoginDialog(BuildContext context) async {
+  //   final bloc = context.read<AddCommercialProjectBloc>();
+  //   final result = await showDialog<bool>(
+  //     context: context,
+  //     builder: (_) => const ProjectManagerLoginDialog(),
+  //   );
+  //   bloc.add(AddCommercialManagerLoginResult(result ?? false));
+  // }
 
   Future<void> _handleSuccessDialog(BuildContext context) async {
     final bloc = context.read<AddCommercialProjectBloc>();
@@ -107,7 +107,7 @@ class AddCommercialProjectScreen extends StatelessWidget {
           _handleDatePick(context, state.pendingDateField);
         }
         if (state.dialogAction == CommercialDialogAction.showManagerLogin) {
-          _handleManagerLoginDialog(context);
+          // _handleManagerLoginDialog(context);
         } else if (state.dialogAction == CommercialDialogAction.showSuccess) {
           _handleSuccessDialog(context);
         }
@@ -206,19 +206,15 @@ class AddCommercialProjectScreen extends StatelessWidget {
                       subtitle: AppStrings.startFromAnyPhase,
                       phases: _commercialPhases(),
                     ),
-                    FileUploadWidget(
-                      title: AppStrings.images,
-                      onTap: () {},
-                    ),
+                    FileUploadWidget(title: AppStrings.images, onTap: () {}),
                     SizedBox(height: 20.height),
                     if (!state.showManagerForm)
                       AppButton(
                         text: AppStrings.chooseProjectManager,
                         isOutline: true,
                         height: 52,
-                        onTap: () => bloc.add(
-                          const AddCommercialManagerToggled(true),
-                        ),
+                        onTap: () =>
+                            bloc.add(const AddCommercialManagerToggled(true)),
                       ),
                     if (state.showManagerForm) ...[
                       _ManagerFormSection(

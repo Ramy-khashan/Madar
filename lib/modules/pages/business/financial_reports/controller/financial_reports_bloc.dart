@@ -2,8 +2,12 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../core/connection/concept/end_points.dart';
+import '../../../../../core/connection/interfaces/api_consumer.dart';
 import '../../../../../core/model/statistic_circle_model.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
+import '../../../../../core/utils/functions/common_fun.dart';
+import '../../../../../core/utils/functions/service_locator.dart';
 import '../model/financial_report_models.dart';
 
 part 'financial_reports_event.dart';
@@ -21,181 +25,92 @@ class FinancialReportsBloc
   static FinancialReportsBloc get(BuildContext context) =>
       context.read<FinancialReportsBloc>();
 
-  static final List<FinancialPropertyItem> _mockCategoryItems = [
-    FinancialPropertyItem(
-      name: 'برج الياسمين',
-      amount: '45,000',
-      paid: true,
-      status: 'مدفوع',
-      date: DateTime(2026, 1, 5),
-    ),
-    FinancialPropertyItem(
-      name: 'فيلا النخيل',
-      amount: '28,000',
-      paid: true,
-      status: 'مدفوع',
-      date: DateTime(2026, 1, 10),
-    ),
-    FinancialPropertyItem(
-      name: 'شقق الورود',
-      amount: '35,000',
-      paid: false,
-      status: 'دفع جزئي',
-      date: DateTime(2026, 1, 15),
-    ),
-    FinancialPropertyItem(
-      name: 'مجمع السلام',
-      amount: '52,000',
-      paid: true,
-      status: 'مدفوع',
-      date: DateTime(2026, 1, 20),
-    ),
+  static const List<Color> _incomePalette = [
+    Color(0xFF6C63FF),
+    Color(0xFFFF6B9D),
+    Color(0xFF26C6DA),
+    Color(0xFFB39DDB),
+    Color(0xFF81C784),
   ];
 
-  static final List<FinancialTransaction> _mockTransactions = [
-    FinancialTransaction(
-      name: 'برج الياسمين',
-      date: DateTime(2026, 1, 5),
-      desc: 'صيانة المصاعد',
-      amount: '3,500',
-    ),
-    FinancialTransaction(
-      name: 'فيلا النخيل',
-      date: DateTime(2026, 1, 8),
-      desc: 'إصلاح السكنية',
-      amount: '1,200',
-    ),
-    FinancialTransaction(
-      name: 'شقق الورود',
-      date: DateTime(2026, 1, 12),
-      desc: 'تأمين شامل',
-      amount: '4,000',
-    ),
-    FinancialTransaction(
-      name: 'مجمع السلام',
-      date: DateTime(2026, 1, 15),
-      desc: 'عمولة تسويقية',
-      amount: '2,500',
-    ),
-    FinancialTransaction(
-      name: 'برج الياسمين',
-      date: DateTime(2026, 1, 20),
-      desc: 'خدمات نظافة',
-      amount: '1,500',
-    ),
+  static const List<Color> _expensePalette = [
+    Color(0xFFFF7043),
+    Color(0xFFAB47BC),
+    Color(0xFF5C6BC0),
+    Color(0xFF26A69A),
+    Color(0xFFFBC02D),
   ];
 
-  static final List<FinancialRentItem> _mockRentItems = [
-    FinancialRentItem(
-      name: 'برج الياسمين',
-      amount: '45,000',
-      date: DateTime(2026, 1, 5),
-      status: 'مدفوع',
-      paid: true,
-    ),
-    FinancialRentItem(
-      name: 'فيلا النخيل',
-      amount: '28,000',
-      date: DateTime(2026, 1, 10),
-      status: 'مدفوع',
-      paid: true,
-    ),
-    FinancialRentItem(
-      name: 'شقق الورود',
-      amount: '35,000',
-      date: DateTime(2026, 1, 15),
-      status: 'دفع جزئي',
-      paid: false,
-    ),
-    FinancialRentItem(
-      name: 'مجمع السلام',
-      amount: '52,000',
-      date: DateTime(2026, 1, 20),
-      status: 'مدفوع',
-      paid: true,
-    ),
-  ];
-
-  static final List<FinancialTenant> _mockLateTenants = [
-    const FinancialTenant(
-      name: 'أحمد محمد',
-      property: 'برج الياسمين',
-      amount: '2,500',
-      days: '15 يوم',
-    ),
-    const FinancialTenant(
-      name: 'فاطمة علي',
-      property: 'شقق الورود',
-      amount: '1,800',
-      days: '8 يوم',
-    ),
-  ];
-
-  static final List<FinancialSettlement> _mockSettlements = [
-    FinancialSettlement(
-      label: 'تسوية إيجار فيلا النرجس',
-      date: DateTime(2025, 3, 1),
-      amount: '8,500',
-      status: 'مكتملة',
-    ),
-    FinancialSettlement(
-      label: 'تسوية صيانة شقة العليا',
-      date: DateTime(2025, 2, 15),
-      amount: '1,200',
-      status: 'قيد المراجعة',
-    ),
-    FinancialSettlement(
-      label: 'تسوية رسوم إدارية',
-      date: DateTime(2025, 1, 20),
-      amount: '650',
-      status: 'مكتملة',
-    ),
-  ];
-
-  static const List<StatisticCircleModel> _mockIncomeSections = [
-    StatisticCircleModel(
-      label: 'إيجارات',
-      value: 0.50,
-      color: Color(0xFF6C63FF),
-    ),
-    StatisticCircleModel(
-      label: 'خدمات إضافية',
-      value: 0.35,
-      color: Color(0xFFFF6B9D),
-    ),
-    StatisticCircleModel(
-      label: 'رسوم تأخير',
-      value: 0.15,
-      color: Color(0xFFB39DDB),
-    ),
-  ];
-
-  static const List<StatisticCircleModel> _mockExpensesSections = [
-    StatisticCircleModel(label: 'صيانة', value: 0.50, color: Color(0xFF6C63FF)),
-    StatisticCircleModel(label: 'تأمين', value: 0.35, color: Color(0xFFFF6B9D)),
-    StatisticCircleModel(
-      label: 'عمولات',
-      value: 0.15,
-      color: Color(0xFFB39DDB),
-    ),
-  ];
-
-  void _onLoad(
+  Future<void> _onLoad(
     FinancialReportsLoad event,
     Emitter<FinancialReportsState> emit,
-  ) {
+  ) async {
     emit(state.copyWith(status: RequestStatus.loading));
-    emit(
-      state.copyWith(
-        status: RequestStatus.success,
-        categoryItems: _mockCategoryItems,
-        transactions: _mockTransactions,
-        rentItems: _mockRentItems,
-        lateTenants: _mockLateTenants,
-        settlements: _mockSettlements,
-        incomeSections: _mockIncomeSections,
-        expensesSections: _mockExpensesSections,
-      ),
+
+    final response = await sl.get<ApiConsumer>().get(
+      EndPoints.financialReports,
+      queryParameters: {'period': state.selectedPeriod},
+    );
+
+    await response.fold(
+      (failure) async {
+        emit(
+          state.copyWith(status: RequestStatus.failed, errorMessage: failure),
+        );
+      },
+      (success) async {
+        final payload = Map<String, dynamic>.from(
+          success.response['data'] ?? {},
+        );
+        final report = FinancialReportsResponse.fromJson(payload);
+
+        emit(
+          state.copyWith(
+            status: RequestStatus.success,
+            errorMessage: null,
+            totalIncome: report.financialSummary.totalIncome,
+            totalExpenses: report.financialSummary.totalExpenses,
+            netProfit: report.financialSummary.netProfit,
+            lateRent: 0,
+            categoryItems: report.expenseDistribution
+                .map(
+                  (item) => FinancialPropertyItem(
+                    name: item.type,
+                    amount: formatPrice(item.amount),
+                    paid: true,
+                    status: '${item.percentage.toStringAsFixed(2)}%',
+                  ),
+                )
+                .toList(),
+            transactions: report.transactionHistory
+                .map(
+                  (item) => FinancialTransaction(
+                    name: item.type,
+                    date: item.date,
+                    desc: item.amount >= 0 ? 'دخل' : 'مصروف',
+                    amount:
+                        '${item.amount >= 0 ? '+' : '-'}${formatPrice(item.amount.abs())}',
+                  ),
+                )
+                .toList(),
+            rentItems: report.topProperties
+                .map(
+                  (item) => FinancialRentItem(
+                    name: item.property,
+                    amount: formatPrice(item.income),
+                    paid: true,
+                  ),
+                )
+                .toList(),
+            incomeDistribution: report.incomeDistribution,
+            incomeVsExpense: report.incomeVsExpense,
+            lateTenants: const [],
+            settlements: const [],
+            incomeSections: _buildIncomeSections(report.incomeDistribution),
+            expensesSections: _buildExpenseSections(report.expenseDistribution),
+          ),
+        );
+      },
     );
   }
 
@@ -211,6 +126,7 @@ class FinancialReportsBloc
     Emitter<FinancialReportsState> emit,
   ) {
     emit(state.copyWith(selectedPeriod: event.period));
+    add(const FinancialReportsLoad());
   }
 
   void _onScopeChanged(
@@ -218,5 +134,39 @@ class FinancialReportsBloc
     Emitter<FinancialReportsState> emit,
   ) {
     emit(state.copyWith(selectedScope: event.scope));
+  }
+
+  List<StatisticCircleModel> _buildIncomeSections(
+    List<IncomeDistributionItem> items,
+  ) {
+    return items.asMap().entries.map((entry) {
+      final value =
+          (entry.value.percentage > 1
+                  ? entry.value.percentage / 100
+                  : entry.value.percentage)
+              .clamp(0.0, 1.0);
+      return StatisticCircleModel(
+        label: entry.value.source,
+        value: value.toDouble(),
+        color: _incomePalette[entry.key % _incomePalette.length],
+      );
+    }).toList();
+  }
+
+  List<StatisticCircleModel> _buildExpenseSections(
+    List<ExpenseDistributionItem> items,
+  ) {
+    return items.asMap().entries.map((entry) {
+      final value =
+          (entry.value.percentage > 1
+                  ? entry.value.percentage / 100
+                  : entry.value.percentage)
+              .clamp(0.0, 1.0);
+      return StatisticCircleModel(
+        label: entry.value.type,
+        value: value.toDouble(),
+        color: _expensePalette[entry.key % _expensePalette.length],
+      );
+    }).toList();
   }
 }

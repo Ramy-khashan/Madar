@@ -15,18 +15,16 @@ class NetProfitLossComparisonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     return OutlinedSection(
-      title: 
-            AppStrings.comparisonWithPrevPeriod,
-      
-       child: Column(
+    return OutlinedSection(
+      title: AppStrings.comparisonWithPrevPeriod,
+
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          
           _ComparisonRow(
             label: AppStrings.income,
-            amount: '+٢٠،٠٠٠ ${AppStrings.currency}',
-            percent: '+٢٠٪',
+            amount: '0 ${AppStrings.currency}',
+            percent: '0٪',
             bgColor: AppColors.successColor.withValues(alpha: 0.08),
             borderColor: AppColors.successColor.withValues(alpha: 0.3),
             valueColor: AppColors.successColor,
@@ -35,8 +33,8 @@ class NetProfitLossComparisonWidget extends StatelessWidget {
           SizedBox(height: 8.height),
           _ComparisonRow(
             label: AppStrings.expenses,
-            amount: '+٥،٠٠٠ ${AppStrings.currency}',
-            percent: '+٧٪',
+            amount: '0${AppStrings.currency}',
+            percent: '0٪',
             bgColor: AppColors.errorColor.withValues(alpha: 0.08),
             borderColor: AppColors.errorColor.withValues(alpha: 0.3),
             valueColor: AppColors.errorColor,
@@ -45,8 +43,8 @@ class NetProfitLossComparisonWidget extends StatelessWidget {
           SizedBox(height: 8.height),
           _ComparisonRow(
             label: AppStrings.netProfit,
-            amount: '+١٥،٠٠٠ ${AppStrings.currency}',
-            percent: '+٣٠٪',
+            amount: '0 ${AppStrings.currency}',
+            percent: '0٪',
             bgColor: AppColors.secondBrand.withValues(alpha: 0.08),
             borderColor: AppColors.secondBrand.withValues(alpha: 0.3),
             valueColor: AppColors.secondBrand,
@@ -90,12 +88,9 @@ class _ComparisonRow extends StatelessWidget {
         children: [
           Row(
             children: [
-              ImageItem(
-               AppImages.occupancyIcon,
-                color: valueColor,
-               ),
+              ImageItem(AppImages.occupancyIcon, color: valueColor),
               SizedBox(width: 12.width),
-             
+
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -107,16 +102,16 @@ class _ComparisonRow extends StatelessWidget {
                       color: valueColor,
                     ),
                   ),
-              SizedBox(height: 4.height),
+                  SizedBox(height: 4.height),
 
-                   Text(
-                percent,
-                style: TextStyle(
-                  fontSize: context.responsiveFontScale(13),
-                  color: valueColor,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+                  Text(
+                    percent,
+                    style: TextStyle(
+                      fontSize: context.responsiveFontScale(13),
+                      color: valueColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -126,7 +121,7 @@ class _ComparisonRow extends StatelessWidget {
             label,
             style: TextStyle(
               fontSize: context.responsiveFontScale(14),
-              color:AppThemeColors.of(context).textFieldTitle,
+              color: AppThemeColors.of(context).textFieldTitle,
               fontWeight: FontWeight.w500,
             ),
           ),

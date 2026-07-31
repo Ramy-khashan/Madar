@@ -35,6 +35,11 @@ class FinancialReportsScreen extends StatelessWidget {
           if (state.status == RequestStatus.loading) {
             return const Center(child: CircularProgressIndicator());
           }
+          if (state.status == RequestStatus.failed) {
+            return Center(
+              child: Text(state.errorMessage ?? AppStrings.somethingWentWrong),
+            );
+          }
           return SafeArea(
             child: Column(
               children: [
@@ -96,7 +101,7 @@ class _TabBar extends StatelessWidget {
         borderRadius: BorderRadius.circular(24.radius),
       ),
       child: Row(
-         children: List.generate(labels.length, (i) {
+        children: List.generate(labels.length, (i) {
           final isSelected = i == selectedIndex;
           return Expanded(
             child: GestureDetector(
