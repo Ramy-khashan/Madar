@@ -33,12 +33,12 @@ class _AddTimelineDialogState extends State<AddTimelineDialog> {
       return;
     }
 
-    context.read<BusinessProjectDetailsBloc>().add(
-          BusinessProjectDetailsAddTimeline(
-            date: _dateController.text.trim(),
-            description: _descController.text.trim(),
-          ),
-        );
+    // context.read<BusinessProjectDetailsBloc>().add(
+    //       BusinessProjectDetailsAddTimeline(
+    //         date: _dateController.text.trim(),
+    //         description: _descController.text.trim(),
+    //       ),
+    //     );
     Navigator.of(context).pop();
   }
 

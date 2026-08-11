@@ -75,3 +75,44 @@ final class AddResidentialSubmit extends AddResidentialProjectEvent {
 final class AddResidentialReset extends AddResidentialProjectEvent {
   const AddResidentialReset();
 }
+
+final class AddResidentialFetchStages extends AddResidentialProjectEvent {
+  const AddResidentialFetchStages();
+}
+
+final class AddResidentialStageToggled extends AddResidentialProjectEvent {
+  const AddResidentialStageToggled(this.stageId);
+
+  final String stageId;
+
+  @override
+  List<Object?> get props => [stageId];
+}
+
+final class AddResidentialSubStageToggled extends AddResidentialProjectEvent {
+  const AddResidentialSubStageToggled(this.stageId, this.subStageId);
+
+  final String stageId;
+  final String subStageId;
+
+  @override
+  List<Object?> get props => [stageId, subStageId];
+}
+
+final class AddResidentialImagesSelected extends AddResidentialProjectEvent {
+  const AddResidentialImagesSelected(this.paths);
+
+  final List<String> paths;
+
+  @override
+  List<Object?> get props => [paths];
+}
+
+final class AddResidentialImageRemoved extends AddResidentialProjectEvent {
+  const AddResidentialImageRemoved(this.index);
+
+  final int index;
+
+  @override
+  List<Object?> get props => [index];
+}

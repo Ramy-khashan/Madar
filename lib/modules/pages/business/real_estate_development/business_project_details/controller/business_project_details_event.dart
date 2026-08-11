@@ -8,24 +8,24 @@ sealed class BusinessProjectDetailsEvent extends Equatable {
 }
 
 final class BusinessProjectDetailsLoad extends BusinessProjectDetailsEvent {
-  const BusinessProjectDetailsLoad({required this.project,  });
+  const BusinessProjectDetailsLoad({required this.projectId});
 
-  final RealEstateProjectModel project;
+  final String projectId;
  
  
   @override
-  List<Object?> get props => [project, ];
+  List<Object?> get props => [projectId];
 }
 
-final class BusinessProjectDetailsAddTimeline extends BusinessProjectDetailsEvent {
-  const BusinessProjectDetailsAddTimeline({
-    required this.date,
-    required this.description,
-  });
+// final class BusinessProjectDetailsAddTimeline extends BusinessProjectDetailsEvent {
+//   const BusinessProjectDetailsAddTimeline({
+//     required this.date,
+//     required this.description,
+//   });
 
-  final String date;
-  final String description;
+//   final String date;
+//   final String description;
 
-  @override
-  List<Object?> get props => [date, description];
-}
+//   @override
+//   List<Object?> get props => [date, description];
+// }

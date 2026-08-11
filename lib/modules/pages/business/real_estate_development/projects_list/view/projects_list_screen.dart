@@ -7,6 +7,7 @@ import '../../../../../../core/components/app_appbar.dart';
 import '../../../../../../core/components/app_button.dart';
 import '../../../../../../core/components/loading_process.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
+import '../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
@@ -68,6 +69,7 @@ class ProjectsListScreen extends StatelessWidget {
                     },
                     emptyMsg: AppStrings.noProjectsExist,
                     isEmptyList: state.projects.isEmpty,
+                    childIsLoader: true,
                     child: GridView.builder(
                       padding: EdgeInsets.symmetric(
                         horizontal: 16.width,
@@ -90,9 +92,9 @@ class ProjectsListScreen extends StatelessWidget {
                           tabletLandscape: 320,
                         ).toDouble(),
                       ),
-                      itemCount: state.projects.length,
+                      itemCount: state.status == RequestStatus.loading ? 10:state.projects.length ,
                       itemBuilder: (_, i) => ProjectListItemWidget(
-                        project: state.projects[i],
+                        project: state.status == RequestStatus.loading ? null : state.projects[i],
                        ),
                     ),
                   ),
@@ -112,12 +114,12 @@ class ProjectsListScreen extends StatelessWidget {
                         ).then((val) {
                           if (val != null) {
                             if (context.mounted) {
-                              if (val == 'residential') {
+                              if (val == AppConstant.residentialProjectType) {
                                 RouterHandler.navigate(
                                   context,
                                   AppRouterKeys.realEstateDevelopmentAddProject,
                                 );
-                              } else if (val == 'commercial') {
+                              } else if (val == AppConstant.commercialProjectType) {
                                 RouterHandler.navigate(
                                   context,
                                   AppRouterKeys
@@ -138,3 +140,4 @@ class ProjectsListScreen extends StatelessWidget {
     );
   }
 }
+    

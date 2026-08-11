@@ -22,14 +22,14 @@ class RentInstallmentBloc
   static RentInstallmentBloc get(BuildContext context) =>
       context.read<RentInstallmentBloc>();
 
-  static const List<RentInstallmentRequestModel> _mockRequests = [
+  static List<RentInstallmentRequestModel> get _mockRequests => [
     RentInstallmentRequestModel(
       id: '1',
       propertyName: 'شقة في حي النرجس',
       requestNumber: 'REQ-002',
       rentValue: 45000,
       planMonths: 12,
-      providerName: 'تمارا',
+      providerName: AppStrings.providerTamara,
       status: 'accepted',
     ),
     RentInstallmentRequestModel(
@@ -38,7 +38,7 @@ class RentInstallmentBloc
       requestNumber: 'REQ-002',
       rentValue: 45000,
       planMonths: 12,
-      providerName: 'تمارا',
+      providerName: AppStrings.providerTamara,
       status: 'under_review',
     ),
     RentInstallmentRequestModel(
@@ -47,19 +47,19 @@ class RentInstallmentBloc
       requestNumber: 'REQ-002',
       rentValue: 45000,
       planMonths: 12,
-      providerName: 'تمارا',
+      providerName: AppStrings.providerTamara,
       status: 'rejected',
       rejectionReason: 'بيانات العميل غير مستوفية لمتطلبات التقسيط.',
     ),
   ];
 
-  static const List<InstallmentProviderInfoModel> _mockProviders = [
+  static List<InstallmentProviderInfoModel> get _mockProviders => [
     InstallmentProviderInfoModel(
-      name: 'تمارا',
+      name: AppStrings.providerTamara,
       subtitle: 'خطط مرنة - موافقة سريعة',
     ),
     InstallmentProviderInfoModel(
-      name: 'تابي',
+      name: AppStrings.providerTabby,
       subtitle: 'خطط مرنة - موافقة سريعة',
     ),
     InstallmentProviderInfoModel(

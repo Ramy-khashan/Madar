@@ -6,6 +6,7 @@ import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../property_details/model/property_details_model.dart';
 import '../../model/property_details_model.dart';
 
 class PropertyInfoCardWidget extends StatelessWidget {
@@ -38,39 +39,39 @@ class PropertyInfoCardWidget extends StatelessWidget {
               ),
             ),
           ),
-          PropertyInfoRowWidget(
-            label: AppStrings.bedrooms,
-            value: property?.beds.toString() ?? '0',
-            icon: AppImages.bedroomIcon,
-          ),
-          PropertyInfoRowWidget(
-            label: AppStrings.balcony,
-            value: property?.balconies.toString() ?? '0',
-            icon: AppImages.balconyIcon,
-          ),
-          PropertyInfoRowWidget(
-            label: AppStrings.bathrooms,
-            value: property?.baths.toString() ?? '0',
-            icon: AppImages.bathroomIcon,
-          ),
+          // PropertyInfoRowWidget(
+          //   label: AppStrings.bedrooms,
+          //   value: property?.details?.beds.toString() ?? '0',
+          //   icon: AppImages.bedroomIcon,
+          // ),
+          // PropertyInfoRowWidget(
+          //   label: AppStrings.balcony,
+          //   value: property?.details.balconies.toString() ?? '0',
+          //   icon: AppImages.balconyIcon,
+          // ),
+          // PropertyInfoRowWidget(
+          //   label: AppStrings.bathrooms,
+          //   value: property?.details.baths.toString() ?? '0',
+          //   icon: AppImages.bathroomIcon,
+          // ),
           PropertyInfoRowWidget(
             label: AppStrings.area,
-            value: property?.area ?? '0',
+            value:( property?.totalArea ?? '0').toString(),
             icon: AppImages.totalSpaceIcon,
           ),
           PropertyInfoRowWidget(
             label: AppStrings.floor,
-            value: property?.floor.toString() ?? '0',
+            value: property?.details?.floor.toString() ?? '0',
             icon: AppImages.floorIcon,
           ),
-          PropertyInfoRowWidget(
-            label: AppStrings.propertyNumber,
-            value: property?.propertyNumber ?? '12',
-            icon: AppImages.propertyNumberIcon,
-          ),
+          // PropertyInfoRowWidget(
+          //   label: AppStrings.propertyNumber,
+          //   value: property?.details.propertyNumber ?? '12',
+          //   icon: AppImages.propertyNumberIcon,
+          // ),
           PropertyInfoRowWidget(
             label: AppStrings.paymentMethod,
-            value: property?.paymentMethod ?? 'N/A',
+            value: property?.paymentType ?? 'N/A',
             icon: AppImages.rentIcon,
           ),
         ],

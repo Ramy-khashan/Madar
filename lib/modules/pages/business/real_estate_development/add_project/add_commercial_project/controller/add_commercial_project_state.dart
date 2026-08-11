@@ -12,6 +12,12 @@ class AddCommercialProjectState extends Equatable {
     this.submitStatus = RequestStatus.init,
     this.pendingDateField = CommercialDateField.none,
     this.dialogAction = CommercialDialogAction.none,
+    this.stages = const [],
+    this.stagesFetchStatus = RequestStatus.init,
+    this.selectedStageIds = const [],
+    this.selectedSubStageIds = const {},
+    this.selectedImages = const [],
+    this.submitErrorMessage,
   });
 
   final String selectedPropertyType;
@@ -20,6 +26,12 @@ class AddCommercialProjectState extends Equatable {
   final RequestStatus submitStatus;
   final CommercialDateField pendingDateField;
   final CommercialDialogAction dialogAction;
+  final List<ProjectStageModel> stages;
+  final RequestStatus stagesFetchStatus;
+  final List<String> selectedStageIds;
+  final Map<String, List<String>> selectedSubStageIds;
+  final List<String> selectedImages;
+  final String? submitErrorMessage;
 
   AddCommercialProjectState copyWith({
     String? selectedPropertyType,
@@ -28,6 +40,12 @@ class AddCommercialProjectState extends Equatable {
     RequestStatus? submitStatus,
     CommercialDateField? pendingDateField,
     CommercialDialogAction? dialogAction,
+    List<ProjectStageModel>? stages,
+    RequestStatus? stagesFetchStatus,
+    List<String>? selectedStageIds,
+    Map<String, List<String>>? selectedSubStageIds,
+    List<String>? selectedImages,
+    String? submitErrorMessage,
   }) =>
       AddCommercialProjectState(
         selectedPropertyType:
@@ -37,6 +55,12 @@ class AddCommercialProjectState extends Equatable {
         submitStatus: submitStatus ?? this.submitStatus,
         pendingDateField: pendingDateField ?? this.pendingDateField,
         dialogAction: dialogAction ?? this.dialogAction,
+        stages: stages ?? this.stages,
+        stagesFetchStatus: stagesFetchStatus ?? this.stagesFetchStatus,
+        selectedStageIds: selectedStageIds ?? this.selectedStageIds,
+        selectedSubStageIds: selectedSubStageIds ?? this.selectedSubStageIds,
+        selectedImages: selectedImages ?? this.selectedImages,
+        submitErrorMessage: submitErrorMessage ?? this.submitErrorMessage,
       );
 
   @override
@@ -47,5 +71,11 @@ class AddCommercialProjectState extends Equatable {
         submitStatus,
         pendingDateField,
         dialogAction,
+        stages,
+        stagesFetchStatus,
+        selectedStageIds,
+        selectedSubStageIds,
+        selectedImages,
+        submitErrorMessage,
       ];
 }

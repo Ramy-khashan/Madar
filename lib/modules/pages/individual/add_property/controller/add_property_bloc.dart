@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/utils/constants/app_images.dart';
+import '../../../../../core/utils/constants/app_strings.dart';
 import '../model/add_property_model.dart';
 
 part 'add_property_event.dart';
@@ -64,62 +65,73 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
   static AddPropertyBloc get(BuildContext context) =>
       context.read<AddPropertyBloc>();
 
-  static const List<Map<String, dynamic>> propertyTypeItems = [
-    {'id': 'apartment', 'label': 'شقة', 'icon': AppImages.apartment},
-    {'id': 'villa', 'label': 'فيلا', 'icon': AppImages.villa},
-    {'id': 'floor', 'label': 'دور', 'icon': AppImages.floor},
-    {'id': 'townhouse', 'label': 'تاون هاوس', 'icon': AppImages.townhouse},
-    {'id': 'building', 'label': 'عمارة', 'icon': AppImages.building},
-    {'id': 'land', 'label': 'ارض', 'icon': AppImages.land},
-    {'id': 'rest_house', 'label': 'استراحة', 'icon': AppImages.restHouse},
-    {'id': 'tower', 'label': 'برج', 'icon': AppImages.tower},
-    {'id': 'shop', 'label': 'محل', 'icon': AppImages.shop},
-    {'id': 'office', 'label': 'مكتب', 'icon': AppImages.office},
-    {'id': 'farm', 'label': 'مزرعة', 'icon': AppImages.farm},
-    {'id': 'warehouse', 'label': 'مستودع', 'icon': AppImages.warehouse},
+  static List<Map<String, dynamic>> get propertyTypeItems => [
+    {'id': 'apartment', 'label': AppStrings.propertyTypeApartment, 'icon': AppImages.apartment},
+    {'id': 'villa', 'label': AppStrings.propertyTypeVilla, 'icon': AppImages.villa},
+    {'id': 'floor', 'label': AppStrings.propertyTypeFloor, 'icon': AppImages.floor},
+    {'id': 'townhouse', 'label': AppStrings.propertyTypeTownhouse, 'icon': AppImages.townhouse},
+    {'id': 'building', 'label': AppStrings.propertyTypeBuilding, 'icon': AppImages.building},
+    {'id': 'land', 'label': AppStrings.propertyTypeLand, 'icon': AppImages.land},
+    {'id': 'rest_house', 'label': AppStrings.propertyTypeRestHouse, 'icon': AppImages.restHouse},
+    {'id': 'tower', 'label': AppStrings.propertyTypeTower, 'icon': AppImages.tower},
+    {'id': 'shop', 'label': AppStrings.propertyTypeShop, 'icon': AppImages.shop},
+    {'id': 'office', 'label': AppStrings.propertyTypeOffice, 'icon': AppImages.office},
+    {'id': 'farm', 'label': AppStrings.propertyTypeFarm, 'icon': AppImages.farm},
+    {'id': 'warehouse', 'label': AppStrings.propertyTypeWarehouse, 'icon': AppImages.warehouse},
   ];
 
-  static const List<Map<String, String>> deedTypes = [
+  static List<Map<String, String>> get deedTypes => [
     {
       'id': 'electronic',
-      'label': 'صك الكتروني',
+      'label': AppStrings.deedElectronic,
       'hint':
           'هي وثيقة تملك عقار إلكترونية تصدرها وزارة العدل ولا تشمل الصكوك الورقية.',
       'icon': AppImages.electronic,
     },
     {
       'id': 'regular',
-      'label': 'صك السجل العقاري',
+      'label': AppStrings.deedRegular,
       'hint':
           "وثيقة تملك عقار صادرة من السجل العقاري لإثبات بيانات العقار تتضمن نوعه وحالته وبيانات مالكه.",
       'icon': AppImages.commerical,
     },
     {
       'id': 'old',
-      'label': 'عقد بيع',
+      'label': AppStrings.deedOld,
       'hint':
           "في حال شراء العقار من البنك، يتم إبرام عقد البيع ويتم تسليمه للمستفيد.",
       'icon': AppImages.sell,
     },
     {
       'id': 'other',
-      'label': 'أخرى',
+      'label': AppStrings.deedOther,
       'hint':
           "خيار يتيح لك إضافة أي وثيقة ملكية أخرى مثل صك ورقي، عقد إيجار (تاجر من الباطن).",
       'icon': AppImages.other,
     },
   ];
-  static const List<String> facadeOptions = [
-    'شمالي',
-    'جنوبي',
-    'شرقي',
-    'غربي',
-    'شمالي شرقي',
-    'شمالي غربي',
-    'جنوبي شرقي',
-    'جنوبي غربي',
+  static List<String> get facadeOptions => [
+    AppStrings.facadeNorth,
+    AppStrings.facadeSouth,
+    AppStrings.facadeEast,
+    AppStrings.facadeWest,
+    AppStrings.facadeNortheast,
+    AppStrings.facadeNorthwest,
+    AppStrings.facadeSoutheast,
+    AppStrings.facadeSouthwest,
   ];
-
+  static List<String> get landClassificationOptions => [
+    AppStrings.landClassificationResidential,
+    AppStrings.landClassificationCommercial,
+    AppStrings.landClassificationIndustrial,
+    AppStrings.landClassificationAgricultural,
+  ];
+  static List<String> get viewOptions => [
+    AppStrings.viewPanoramic,
+    AppStrings.viewRegular,
+    AppStrings.viewDouble,
+    AppStrings.viewDoublePanoramic,
+  ];
   static const List<String> streetWidthOptions = [
     '10 م',
     '12 م',
@@ -128,78 +140,114 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     '25 م',
   ];
 
-  static const List<String> propertyAgeOptions = [
-    'جديد',
-    '<5 سنوات',
-    '5-10',
-    '+10',
+  static List<String> get propertyAgeOptions => [
+    AppStrings.propertyAgeNew,
+    AppStrings.propertyAgeLess5,
+    AppStrings.propertyAge5To10,
+    AppStrings.propertyAgeMore10,
+  ];
+  static List<String> get amenityOptions => [
+    AppStrings.amenitySharedPool,
+    AppStrings.amenityClub,
+    AppStrings.amenityGarden,
+    AppStrings.amenitySecurity,
+  ];
+  static List<String> get communityAmenityOptions => [
+    AppStrings.communityAmenityEventHall,
+    AppStrings.communityAmenitySauna,
+    AppStrings.communityAmenityGym,
+    AppStrings.communityAmenityPool,
+    AppStrings.communityAmenityHeliport,
+    AppStrings.communityAmenityGuard,
+    AppStrings.communityAmenityLobby,
+  ];
+  static List<String> get interiorAmenityOptions => [
+    AppStrings.interiorAmenityMeetingRoom,
+    AppStrings.interiorAmenityReception,
+    AppStrings.interiorAmenityKitchen,
+    AppStrings.interiorAmenityAc,
+    AppStrings.interiorAmenityElevator,
+    AppStrings.interiorAmenityParking,
+  ];
+  static List<String> get floorOptions => [
+    AppStrings.floorGround,
+    AppStrings.floorFirst,
+    AppStrings.floorSecond,
+    AppStrings.floorThird,
+    AppStrings.floorFourth,
+    AppStrings.floorFifth,
+    AppStrings.floorSixth,
+    AppStrings.floorSeventh,
+    AppStrings.floorEighth,
+    AppStrings.floorNinth,
+    AppStrings.floorTenth,
   ];
 
-  static const List<String> floorOptions = [
-    'الأرضي',
-    'الأول',
-    'الثاني',
-    'الثالث',
-    'الرابع',
-    'الخامس',
-    'السادس',
-    'السابع',
-    'الثامن',
-    'التاسع',
-    'العاشر',
+  static List<String> get furnishingOptions => [AppStrings.furnishingFurnished, AppStrings.furnishingUnfurnished];
+  static List<String> get locationOptions => [
+    AppStrings.locationMainStreet,
+    AppStrings.locationSecondaryStreet,
+    AppStrings.locationResidentialComplex,
+    AppStrings.locationCommercialComplex
   ];
-
-  static const List<String> furnishingOptions = [
-    'مفروش',
-    'نصف مفروش',
-    'غير مفروش',
+  static List<String> get coolingOptions => [AppStrings.coolingTypeCooling, AppStrings.coolingTypeFreezing, AppStrings.coolingTypeBoth];
+  static List<String> get floorTypeOptions => [AppStrings.flooringConcrete, AppStrings.flooringWooden, AppStrings.flooringMarble, AppStrings.flooringCeramic, AppStrings.flooringCement];
+  static List<String> get doorTypeOptions => [AppStrings.doorTypeRegular, AppStrings.doorTypeSecondary, AppStrings.doorTypeDouble];
+  static List<String> get conditionOptions => [
+    AppStrings.conditionExcellent,
+    AppStrings.conditionVeryGood,
+    AppStrings.conditionGood,
+    AppStrings.conditionFair,
+    AppStrings.conditionNeedsRenovation,
   ];
-
-  static const List<String> conditionOptions = [
-    'ممتاز',
-    'جيد جداً',
-    'جيد',
-    'متوسط',
-    'يحتاج تجديد',
+  static List<String> get soilTypeOptions => [AppStrings.soilTypeClay, AppStrings.soilTypeSandy, AppStrings.soilTypeRocky, AppStrings.soilTypeGravelly, AppStrings.soilTypeClaysSandy, AppStrings.soilTypeClayRocky];
+  static const List<String> availabilityOptions = ['يوجد', 'لا يوجد'];
+  static const List<String> apartmentFloorOptions = [
+    '10-1',
+    '20-11',
+    '30-21',
+    '40-31',
+    '50-41',
+    '60-51',
+    '70-61',
   ];
+  static const List<String> parkingFloorOptions = ["0-5", "6-10", "11-15"];
 
-  static const List<Map<String, dynamic>> amenityCategories = [
+  static List<Map<String, dynamic>> get amenityCategories => [
     {
-      'title': 'الخدمات الاساسية',
+      'title': AppStrings.featureCategoryBasicServices,
       'items': [
-     
-        {'id': 'internet', 'label': 'انترنت'},
-        {'id': 'sewage', 'label': 'صرف صحي'},
-        {'id': 'water', 'label': 'ماء'},
-        {'id': 'electricity', 'label': 'كهرباء'},
+        {'id': 'internet', 'label': AppStrings.featureInternet},
+        {'id': 'sewage', 'label': AppStrings.featureSewage},
+        {'id': 'water', 'label': AppStrings.featureWater},
+        {'id': 'electricity', 'label': AppStrings.featureElectricity},
       ],
     },
     {
-      'title': 'المميزات الداخلية',
+      'title': AppStrings.featureCategoryInterior,
       'items': [
-        {'id': 'driver_room', 'label': 'غرفة سائق'},
-        {'id': 'maid_room', 'label': 'غرفة خادمة'},
-        {'id': 'elevator', 'label': 'مصعد'},
-        {'id': 'central_ac', 'label': 'تكييف مركزي'},
-        {'id': 'basement', 'label': 'قبو'},
-        {'id': 'roof', 'label': 'روف'},
-        {'id': 'storage', 'label': 'غرفة مخزن'},
+        {'id': 'driver_room', 'label': AppStrings.featureDriverRoom},
+        {'id': 'maid_room', 'label': AppStrings.featureMaidRoom},
+        {'id': 'elevator', 'label': AppStrings.featureElevator},
+        {'id': 'central_ac', 'label': AppStrings.featureCentralAc},
+        {'id': 'basement', 'label': AppStrings.featureBasement},
+        {'id': 'roof', 'label': AppStrings.featureRoof},
+        {'id': 'storage', 'label': AppStrings.featureWarehouse},
       ],
     },
-    
+
     {
-      'title': 'المميزات الخارجية',
+      'title': AppStrings.featureCategoryExteriorSecurity,
       'items': [
-        {'id': 'car_shelter', 'label': 'مظلة سيارات'},
-        {'id': 'garden', 'label': 'حديقة'},
-        {'id': 'swimming_pool', 'label': 'مسبح'},
-        {'id': 'security_guard', 'label': 'حراسة'},
-        {'id': 'security_and_complexes', 'label': 'الامن والمجمعات'},
-        {'id': 'water_well', 'label': 'بئر ماء'},
-        {'id': 'roof', 'label': 'سطح'},
-        {'id': 'health_club', 'label': 'نادي صحي'},
-        {'id': 'electronic_gate', 'label': 'بوابه الكترونية'},
-        {'id': 'surveillance_cameras', 'label': 'كاميرات مراقبة'},
+        {'id': 'car_shelter', 'label': AppStrings.exteriorFeatureCarShelter},
+        {'id': 'garden', 'label': AppStrings.featureGarden},
+        {'id': 'swimming_pool', 'label': AppStrings.featurePool},
+        {'id': 'security_guard', 'label': AppStrings.featureGuard},
+        {'id': 'security_and_complexes', 'label': AppStrings.exteriorFeatureSecurityComplexes},
+        {'id': 'water_well', 'label': AppStrings.featureWaterWell},
+        {'id': 'health_club', 'label': AppStrings.featureHealthClub},
+        {'id': 'electronic_gate', 'label': AppStrings.featureElectronicGate},
+        {'id': 'surveillance_cameras', 'label': AppStrings.featureCctv},
       ],
     },
   ];

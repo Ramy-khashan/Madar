@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../property_details/model/property_details_model.dart';
 import '../../controller/my_property_details_bloc.dart';
 import '../../model/property_details_model.dart';
 
@@ -15,7 +16,7 @@ class PropertyImageSectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
-    final images = property?.imageUrls ?? [];
+    final images = property?.media?.where((m) => m.url != null).map((m) => m.url!).toList() ?? [];
     final bloc = context.read<MyPropertyDetailsBloc>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -46,9 +47,9 @@ class PropertyImageSectionWidget extends StatelessWidget {
           Positioned(
             top: 12.height,
             left: 12.width,
-            child: BlocBuilder<MyPropertyDetailsBloc, MyPropertyDetailsState>(
-              buildWhen: (prev, curr) =>
-                  prev.property?.isBookmarked != curr.property?.isBookmarked,
+           child: BlocBuilder<MyPropertyDetailsBloc, MyPropertyDetailsState>(
+              // buildWhen: (prev, curr) =>
+                  // prev.property?.isBookmarked != curr.property?.isBookmarked,
               builder: (ctx, state) {
                 return GestureDetector(
                   onTap: () => ctx.read<MyPropertyDetailsBloc>().add(
@@ -61,9 +62,10 @@ class PropertyImageSectionWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Icon(
-                      state.property?.isBookmarked == true
-                          ? Icons.bookmark
-                          : Icons.bookmark_border,
+                      // state.property?.isBookmarked == true
+                      //     ? Icons.bookmark
+                      //     :
+                           Icons.bookmark_border,
                       size: 24.width,
                       color: colors.primaryBrand,
                     ),

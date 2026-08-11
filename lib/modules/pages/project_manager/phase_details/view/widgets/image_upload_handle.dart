@@ -1,67 +1,79 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
-import '../../../../../../core/utils/constants/app_colors.dart';
+ import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../core/utils/functions/image_picker_helper.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
-import '../../../model/project_model.dart';
+import '../../../../business/real_estate_development/add_project/shared/widgets/file_upload_widget.dart';
+import '../../../../business/real_estate_development/business_project_details/model/real_state_project_model.dart';
 import '../../controller/phase_details_bloc.dart';
 
 class ImagesSection extends StatelessWidget {
-  const ImagesSection({super.key, 
-    required this.phase,
+  const ImagesSection({
+    super.key,
+    required this.timeline,
     required this.tc,
     required this.bloc,
   });
-  final PhaseModel phase;
+  final List<Timeline> timeline;
   final AppThemeColors tc;
   final PhaseDetailsBloc bloc;
 
   @override
   Widget build(BuildContext context) {
     final isRequired = true;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
+    return BlocBuilder<PhaseDetailsBloc, PhaseDetailsState>(
+      builder: (context, state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              AppStrings.images,
-              style: TextStyle(
-                fontSize: context.responsiveFontScale(16),
-                fontWeight: FontWeight.w700,
-                color: tc.textPrimary,
-              ),
-            ),
-            if (isRequired) ...[
-              SizedBox(width: 6.width),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 8.width,
-                  vertical: 2.height,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.errorColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
+ 
+          
+               FileUploadWidget(
+                          isRequired: true,
+                          title: AppStrings.images,
+                          onTap: () async {
+                            final paths = await pickImages();
+                            if (paths != null && paths.isNotEmpty) {
+                              bloc.add(PickImagesEvent(paths));
+                            }
+                          },
+                        ),
+            SizedBox(height: 8.height),
+            if (state.uploadedImagePaths.isNotEmpty)
+              _ImageGrid(
+                bloc: bloc,
+                tc: tc,
+                imagePaths: state.uploadedImagePaths,
+                isReadOnly: false,
+              )
+            else
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 12.height),
                 child: Text(
-                  AppStrings.required,
+                  'No images picked yet',
                   style: TextStyle(
-                    fontSize: context.responsiveFontScale(10),
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.errorColor,
+                    fontSize: context.responsiveFontScale(12),
+                    color: tc.textSecondary,
                   ),
                 ),
               ),
-            ],
-          ],
-        ),
-        SizedBox(height: 12.height),
-        if (phase.imagePaths.isEmpty)
-          _UploadArea(tc: tc, bloc: bloc)
-        else
-          _ImageGrid(imagePaths: phase.imagePaths, tc: tc, bloc: bloc),
-      ],
+            // SizedBox(height: 12.height),
+            // _UploadArea(tc: tc, bloc: bloc),
+              if (timeline.every((e) => (e.attachments ?? []).isEmpty))
+            ...timeline.map((e) => _ImageGrid(
+                  bloc: bloc,
+                  tc: tc,
+                  imagePaths: e.attachments ?? <String>[],
+                  isReadOnly: true,
+                )),
+           ],
+        );
+      },
     );
   }
 }
@@ -74,8 +86,8 @@ class _UploadArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        bloc.add(const AddPhaseImageEvent('assets/images/property.png'));
+      onTap: () async {
+        // Handled by FileUploadWidget in screen
       },
       child: Container(
         width: double.infinity,
@@ -123,10 +135,12 @@ class _ImageGrid extends StatelessWidget {
     required this.imagePaths,
     required this.tc,
     required this.bloc,
+    this.isReadOnly = true,
   });
   final List<String> imagePaths;
   final AppThemeColors tc;
   final PhaseDetailsBloc bloc;
+  final bool isReadOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +155,13 @@ class _ImageGrid extends StatelessWidget {
       ),
       itemCount: imagePaths.length,
       itemBuilder: (context, i) {
-        return _ImageTile(path: imagePaths[i], index: i, tc: tc, bloc: bloc);
+        return _ImageTile(
+          path: imagePaths[i],
+          index: i,
+          tc: tc,
+          bloc: bloc,
+          isReadOnly: isReadOnly,
+        );
       },
     );
   }
@@ -153,11 +173,13 @@ class _ImageTile extends StatelessWidget {
     required this.index,
     required this.tc,
     required this.bloc,
+    this.isReadOnly = true,
   });
   final String path;
   final int index;
   final AppThemeColors tc;
   final PhaseDetailsBloc bloc;
+  final bool isReadOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -165,37 +187,49 @@ class _ImageTile extends StatelessWidget {
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(10),
-          child: Image.asset(
-            path,
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-            errorBuilder: (_, _, _) => Container(
-              color: tc.borderColor.withValues(alpha: 0.3),
-              child: Icon(Icons.image_rounded, color: tc.textSecondary),
+          child: isReadOnly || path.startsWith('http')
+              ? Image.network(
+                  path,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity,
+                  errorBuilder: (_, _, _) => Container(
+                    color: tc.borderColor.withValues(alpha: 0.3),
+                    child: Icon(Icons.image_rounded, color: tc.textSecondary),
+                  ),
+                )
+              : Image.file(
+                  File(path),
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity,
+                  errorBuilder: (_, _, _) => Container(
+                    color: tc.borderColor.withValues(alpha: 0.3),
+                    child: Icon(Icons.image_rounded, color: tc.textSecondary),
+                  ),
+                ),
+        ),
+        if (!isReadOnly)
+          Positioned(
+            top: 4,
+            left: 4,
+            child: GestureDetector(
+              onTap: () => bloc.add(RemovePhaseImageEvent(index)),
+              child: Container(
+                width: 22,
+                height: 22,
+                decoration: const BoxDecoration(
+                  color: Colors.black54,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.close_rounded,
+                  color: Colors.white,
+                  size: 13,
+                ),
+              ),
             ),
           ),
-        ),
-        Positioned(
-          top: 4,
-          left: 4,
-          child: GestureDetector(
-            onTap: () => bloc.add(RemovePhaseImageEvent(index)),
-            child: Container(
-              width: 22,
-              height: 22,
-              decoration: const BoxDecoration(
-                color: Colors.black54,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.close_rounded,
-                color: Colors.white,
-                size: 13,
-              ),
-            ),
-          ),
-        ),
       ],
     );
   }

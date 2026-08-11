@@ -8,12 +8,12 @@ import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../../../../../core/utils/functions/translation.dart';
-import '../../model/property_details_model.dart';
-
+import '../../../property_details/model/property_details_model.dart';
+  
 class ContractsSectionWidget extends StatelessWidget {
   const ContractsSectionWidget({super.key, required this.contracts});
 
-  final List<ContractModel> contracts;
+  final List<PropertyContract> contracts;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class ContractsSectionWidget extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                key: Key('view_all_contracts_button'),
+                key: const Key('view_all_contracts_button'),
                 onTap: () {},
                 child: Text(
                   AppStrings.viewAllContracts,
@@ -67,7 +67,7 @@ class ContractsSectionWidget extends StatelessWidget {
 class ContractCardWidget extends StatelessWidget {
   const ContractCardWidget({super.key, required this.contract});
 
-  final ContractModel contract;
+  final PropertyContract contract;
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +80,7 @@ class ContractCardWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              contract.tenantName,
+              contract.name ??"",
               style: TextStyle(
                 fontSize: context.responsiveFontScale(16),
                 fontWeight: FontWeight.w700,
@@ -100,7 +100,7 @@ class ContractCardWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20.radius),
               ),
               child: Text(
-                contract.status.trans,
+                (contract.status??'unknown').trans,
                 style: TextStyle(
                   fontSize: context.responsiveFontScale(14),
                   color: isActive ? colors.primaryBrand : colors.textSecondary,
@@ -123,7 +123,7 @@ class ContractCardWidget extends StatelessWidget {
         // ),
         // SizedBox(height: 4.height),
          Text(
-          AppStrings.contractDateRange(contract.startDate, contract.endDate),
+          AppStrings.contractDateRange(contract.startDate??'', contract.endDate??''),
           style: TextStyle(
             fontSize: context.responsiveFontScale(16),
             color: colors.textSecondary,

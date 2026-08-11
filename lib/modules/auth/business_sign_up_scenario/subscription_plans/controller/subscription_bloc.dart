@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/utils/constants/app_enums.dart';
+import '../../../../../core/utils/constants/app_strings.dart';
 import '../model/subscription_plan_model.dart';
 
 part 'subscription_event.dart';
@@ -20,38 +21,38 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
   static SubscriptionBloc get(BuildContext context) =>
       BlocProvider.of<SubscriptionBloc>(context);
 
-  static final List<SubscriptionPlanModel> _mockPlans = [
-    const SubscriptionPlanModel(
+  static List<SubscriptionPlanModel> get _mockPlans => [
+    SubscriptionPlanModel(
       id: 'basic',
       badge: 'basic',
       monthlyPrice: 99,
       yearlyPrice: 990,
       features: [
-        'نشر حتى 10 عقارات',
-        'مدة الإعلان 30 يوم',
-        'لوحة تحكم بسيطة',
+        AppStrings.subscriptionFeaturePublish10Properties,
+        AppStrings.subscriptionFeatureAdDuration30Days,
+        AppStrings.subscriptionFeatureSimpleDashboard,
       ],
     ),
-    const SubscriptionPlanModel(
+    SubscriptionPlanModel(
       id: 'pro',
       badge: 'pro',
       monthlyPrice: 99,
       yearlyPrice: 990,
       features: [
-        'نشر غير محدود',
-        'تقارير متقدمة',
-        'إدارة فريق العمل',
+        AppStrings.subscriptionFeatureUnlimitedPublish,
+        AppStrings.subscriptionFeatureAdvancedReports,
+        AppStrings.subscriptionFeatureTeamManagement,
       ],
     ),
-    const SubscriptionPlanModel(
+    SubscriptionPlanModel(
       id: 'featured',
       badge: 'featured',
       monthlyPrice: 99,
       yearlyPrice: 990,
       features: [
-        'نشر حتى 50 عقار',
-        'إحصائيات المشاهدات',
-        'دعم فني',
+        AppStrings.subscriptionFeaturePublish50Properties,
+        AppStrings.subscriptionFeatureViewStatistics,
+        AppStrings.subscriptionFeatureTechnicalSupport,
       ],
     ),
   ];

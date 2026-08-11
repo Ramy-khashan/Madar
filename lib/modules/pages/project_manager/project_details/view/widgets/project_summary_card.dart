@@ -5,16 +5,16 @@ import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
-import '../../../model/project_model.dart';
+import '../../../../business/real_estate_development/business_project_details/model/real_state_project_model.dart';
 import 'project_status_badge.dart';
 
 class ProjectSummaryCard extends StatelessWidget {
   const ProjectSummaryCard({
     super.key,
-    required this.project,
+      this.project,
     required this.tc,
   });
-  final ProjectModel project;
+  final RealStateProjectModel? project;
   final AppThemeColors tc;
 
   @override
@@ -30,9 +30,10 @@ class ProjectSummaryCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ImageItem(
-            project.imageUrl,
+            project?.project?.attachments?.first ?? '',
             width: 115.width,
             height: 120.width,
+            fit: BoxFit.fill,
             borderRadius: BorderRadius.circular(8),
           ),
           SizedBox(width: 12.width),
@@ -43,7 +44,7 @@ class ProjectSummaryCard extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(bottom: 11.height, top: 12.height),
                   child: Text(
-                    project.name,
+                    project?.project?.name ?? 'Project Name',
                     style: TextStyle(
                       fontSize: context.responsiveFontScale(16),
                       fontWeight: FontWeight.w700,
@@ -63,7 +64,7 @@ class ProjectSummaryCard extends StatelessWidget {
                           ),
                           SizedBox(width: 4.width),
                           Text(
-                            project.location,
+                            project?.project?.location ?? 'Project Location',
                             style: TextStyle(
                               fontSize: context.responsiveFontScale(12),
                               color: tc.textSecondary,
@@ -72,7 +73,11 @@ class ProjectSummaryCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    ProjectStatusBadge(status: project.status),
+                    ProjectStatusBadge(
+                      status: project?.project?.overallProgress == 100
+                          ? 'COMPLETED'
+                          : 'IN_PROGRESS',
+                    ),
                   ],
                 ),
                 SizedBox(height: 14.height),
@@ -87,7 +92,7 @@ class ProjectSummaryCard extends StatelessWidget {
                     ),
                     const Spacer(),
                     Text(
-                      '%${(project.progress * 100).toInt()}',
+                      '%${(project?.project?.overallProgress ?? 0)}',
                       style: TextStyle(
                         fontSize: context.responsiveFontScale(12),
                         fontWeight: FontWeight.w700,
@@ -100,9 +105,13 @@ class ProjectSummaryCard extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(4),
                   child: LinearProgressIndicator(
-                    value: project.progress,
+                    value:
+                        (double.parse(
+                          (project?.project?.overallProgress ?? 0).toString(),
+                        ) /
+                        100),
                     backgroundColor: tc.borderColor.withValues(alpha: 0.5),
-                    valueColor: AlwaysStoppedAnimation<Color>(
+                    valueColor: const AlwaysStoppedAnimation<Color>(
                       AppColors.successColor,
                     ),
                     minHeight: 6,

@@ -6,6 +6,7 @@ import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../model/property_details_buyer_model.dart';
+import '../../model/property_details_model.dart';
 
 class PropertyLocationSectionWidget extends StatelessWidget {
   const PropertyLocationSectionWidget({super.key, required this.property});

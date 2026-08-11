@@ -1,14 +1,12 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:madar_app/core/utils/functions/print_state.dart';
-
+ 
 import '../../../../../core/connection/concept/end_points.dart';
 import '../../../../../core/connection/interfaces/api_consumer.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
-import '../../../../../core/utils/constants/app_strings.dart';
-import '../../../../../core/utils/functions/service_locator.dart';
-import '../model/property_details_buyer_model.dart';
+ import '../../../../../core/utils/functions/service_locator.dart'; 
+import '../model/property_details_model.dart';
 
 part 'property_details_event.dart';
 part 'property_details_state.dart';
@@ -28,7 +26,7 @@ class PropertyDetailsBloc
     PropertyDetailsLoad event,
     Emitter<PropertyDetailsState> emit,
   ) async {
-    try {
+    // try {
       emit(state.copyWith(getDetailsStatus: RequestStatus.loading));
       final response = await sl.get<ApiConsumer>().get(
         '${EndPoints.properties}/${event.propertyId}',
@@ -54,15 +52,15 @@ class PropertyDetailsBloc
           );
         },
       );
-    } catch (e) {
-      printState(e);
-      emit(
-        state.copyWith(
-          getDetailsStatus: RequestStatus.failed,
-          errorMsg: AppStrings.somethingWentWrong,
-        ),
-      );
-    }
+    // } catch (e) {
+    //   printState(e);
+    //   emit(
+    //     state.copyWith(
+    //       getDetailsStatus: RequestStatus.failed,
+    //       errorMsg: AppStrings.somethingWentWrong,
+    //     ),
+    //   );
+    // }
   }
 
   void _onToggleBookmark(

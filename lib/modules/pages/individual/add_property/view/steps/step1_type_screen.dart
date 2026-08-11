@@ -159,7 +159,7 @@ class _PropertyTypeGrid extends StatelessWidget {
       buildWhen: (prev, curr) =>
           prev.model.propertyType != curr.model.propertyType,
       builder: (context, state) {
-        const items = AddPropertyBloc.propertyTypeItems;
+        final items = AddPropertyBloc.propertyTypeItems;
         return GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,47 +11,13 @@ import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../../core/utils/functions/image_picker_helper.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../auth/common/password_item.dart';
 import '../../shared/widgets/file_upload_widget.dart';
 import '../../shared/widgets/link_sent_success_dialog.dart';
-import '../../shared/widgets/project_manager_login_dialog.dart';
 import '../../shared/widgets/project_phases_checklist_widget.dart';
 import '../controller/add_commercial_project_bloc.dart';
-
-List<ProjectPhaseEntry> _commercialPhases() => [
-  ProjectPhaseEntry(
-    title: AppStrings.comPhase1Title,
-    subtitle: AppStrings.comPhase1Subtitle,
-    tasks: [
-      AppStrings.comPhase1Item1,
-      AppStrings.comPhase1Item2,
-      AppStrings.comPhase1Item3,
-      AppStrings.comPhase1Item4,
-      AppStrings.comPhase1Item5,
-    ],
-  ),
-  ProjectPhaseEntry(
-    title: AppStrings.comPhase2Title,
-    subtitle: AppStrings.comPhase2Subtitle,
-  ),
-  ProjectPhaseEntry(
-    title: AppStrings.comPhase3Title,
-    subtitle: AppStrings.comPhase3Subtitle,
-  ),
-  ProjectPhaseEntry(
-    title: AppStrings.comPhase4Title,
-    subtitle: AppStrings.comPhase4Subtitle,
-  ),
-  ProjectPhaseEntry(
-    title: AppStrings.comPhase5Title,
-    subtitle: AppStrings.comPhase5Subtitle,
-  ),
-  ProjectPhaseEntry(
-    title: AppStrings.comPhase6Title,
-    subtitle: AppStrings.comPhase6Subtitle,
-  ),
-];
 
 class AddCommercialProjectScreen extends StatelessWidget {
   const AddCommercialProjectScreen({super.key});
@@ -69,7 +37,7 @@ class AddCommercialProjectScreen extends StatelessWidget {
       bloc.add(
         AddCommercialDatePicked(
           field,
-          '${picked.day}/${picked.month}/${picked.year}',
+          '${picked.year}-${picked.month}-${picked.day}',
         ),
       );
     } else {
@@ -113,6 +81,14 @@ class AddCommercialProjectScreen extends StatelessWidget {
         }
         if (state.submitStatus == RequestStatus.success) {
           Navigator.of(context).pop();
+        }
+        if (state.submitErrorMessage != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.submitErrorMessage!),
+              backgroundColor: Colors.red,
+            ),
+          );
         }
       },
       builder: (context, state) {
@@ -196,17 +172,86 @@ class AddCommercialProjectScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      prefixIconConstraints: BoxConstraints(
-                        minWidth: 40.width,
-                        minHeight: 44.width,
-                      ),
                     ),
                     ProjectPhasesChecklistWidget(
                       label: AppStrings.mainPhasesLabel,
                       subtitle: AppStrings.startFromAnyPhase,
-                      phases: _commercialPhases(),
+                      stages: state.stages,
+                      isLoading:
+                          state.stagesFetchStatus == RequestStatus.loading,
+                      selectedStageIds: state.selectedStageIds,
+                      selectedSubStageIds: state.selectedSubStageIds,
+                      onStageToggled: (stageId) =>
+                          bloc.add(AddCommercialStageToggled(stageId)),
+                      onSubStageToggled: (stageId, subStageId) => bloc.add(
+                        AddCommercialSubStageToggled(stageId, subStageId),
+                      ),
                     ),
-                    FileUploadWidget(title: AppStrings.images, onTap: () {}),
+                    FileUploadWidget(
+                      title: AppStrings.images,
+                      onTap: () async {
+                        final paths = await pickImages();
+                        if (paths != null && paths.isNotEmpty) {
+                          bloc.add(AddCommercialImagesSelected(paths));
+                        }
+                      },
+                    ),
+                    if (state.selectedImages.isNotEmpty) ...[
+                      SizedBox(height: 12.height),
+                      SizedBox(
+                        height: 100.height,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: state.selectedImages.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              margin: EdgeInsets.only(right: 8.width),
+                              width: 100.width,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.radius),
+                                border: Border.all(color: colors.borderColor),
+                              ),
+                              child: Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(
+                                      8.radius,
+                                    ),
+                                    child: Image.file(
+                                      File(state.selectedImages[index]),
+                                      width: 100.width,
+                                      height: 100.height,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 4,
+                                    right: 4,
+                                    child: GestureDetector(
+                                      onTap: () => bloc.add(
+                                        AddCommercialImageRemoved(index),
+                                      ),
+                                      child: Container(
+                                        padding: EdgeInsets.all(4.width),
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          Icons.close,
+                                          size: 16.width,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                     SizedBox(height: 20.height),
                     if (!state.showManagerForm)
                       AppButton(

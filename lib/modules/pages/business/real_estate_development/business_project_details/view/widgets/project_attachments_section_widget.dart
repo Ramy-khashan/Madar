@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../../../../core/components/outline_section.dart';
 import '../../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../../core/utils/constants/app_strings.dart';
@@ -14,11 +15,11 @@ class ProjectAttachmentsSectionWidget extends StatelessWidget {
   const ProjectAttachmentsSectionWidget({
     super.key,
     required this.smartNotes,
-     this.attachmentUrl,
+    this.attachmentUrl,
   });
 
   final List<String> smartNotes;
-   final String? attachmentUrl;
+  final List<String>? attachmentUrl;
 
   static const List<bool> _noteHasPdf = [false, false, false, true];
 
@@ -27,45 +28,71 @@ class ProjectAttachmentsSectionWidget extends StatelessWidget {
     final colors = AppThemeColors.of(context);
 
     return OutlinedSection(
-    title:  AppStrings.attachmentsSection,
+      title: AppStrings.attachmentsSection,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-         
-          
-          
-           Text(
-            AppStrings.smartNotesLabel,
-            style: TextStyle(
-              fontSize: context.responsiveFontScale(16),
-              fontWeight: FontWeight.w600,
-              fontFamily: AppConstant.appHeaderFont,
-              color: colors.textFieldTitle,
+          Wrap(
+            children: [
+              ...List.generate(attachmentUrl?.length ?? 0, (i) {
+                return ListTile(
+                  tileColor: colors.borderColor.withValues(alpha: 0.2),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24.radius),
+                    side: BorderSide(color: colors.borderColor),
+                  ),
+                  title: Text(
+                    AppStrings.chooseAttachmentLabel,
+                    style: TextStyle(
+                      fontSize: context.responsiveFontScale(16),
+                      color: colors.textFieldTitle,
+                      fontFamily: AppConstant.appFont,
+                    ),
+                  ),
+                  trailing: InkWell(
+                    onTap: () {
+                      launchUrl(Uri.parse(attachmentUrl?[i] ?? ''));
+                    },
+                    child: const ImageItem(AppImages.chooseDocumentIcon),
+                  ),
+                );
+              }),
+            ],
+          ),
+          if (smartNotes.isNotEmpty) ...[
+            SizedBox(height: 16.height),
+            Text(
+              AppStrings.smartNotesLabel,
+              style: TextStyle(
+                fontSize: context.responsiveFontScale(16),
+                fontWeight: FontWeight.w600,
+                fontFamily: AppConstant.appHeaderFont,
+                color: colors.textFieldTitle,
+              ),
             ),
-          ),
-          SizedBox(height: 16.height),
-          ...List.generate(smartNotes.length, (i) {
-            final isPdf = i < _noteHasPdf.length && _noteHasPdf[i];
-            return _SmartNoteItem(
-              note: smartNotes[i],
-              isPdfNote: isPdf,
-              colors: colors,
-            );
-          }),
-          SizedBox(height: 16.height),
-          AppButton(
-            text: AppStrings.downloadPdfReport,
-            height: 46,
-            textSize: 15,
-            onTap: () {},
-          ),
+            SizedBox(height: 16.height),
+            ...List.generate(smartNotes.length, (i) {
+              final isPdf = i < _noteHasPdf.length && _noteHasPdf[i];
+              return _SmartNoteItem(
+                note: smartNotes[i],
+                isPdfNote: isPdf,
+                colors: colors,
+              );
+            }),
+            SizedBox(height: 16.height),
+            AppButton(
+              text: AppStrings.downloadPdfReport,
+              height: 46,
+              textSize: 15,
+              onTap: () {},
+            ),
+          ],
         ],
       ),
     );
   }
 }
 
- 
 class _SmartNoteItem extends StatelessWidget {
   const _SmartNoteItem({
     required this.note,
@@ -85,19 +112,15 @@ class _SmartNoteItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           CircleAvatar(
-            radius: isPdfNote?null: 15.width,
+            radius: isPdfNote ? null : 15.width,
             backgroundColor: isPdfNote
                 ? AppColors.transparent
                 : colors.primaryBrand.withValues(alpha: 0.1),
             child: Padding(
-              padding: isPdfNote
-                  ? EdgeInsets.zero
-                  : EdgeInsets.all( 5.height),
+              padding: isPdfNote ? EdgeInsets.zero : EdgeInsets.all(5.height),
               child: ImageItem(
-                isPdfNote
-                    ? AppImages.attachmentIcon
-                    : AppImages.doneIcon,
-                 color:  isPdfNote ? colors.textFieldTitle : colors.primaryBrand,
+                isPdfNote ? AppImages.attachmentIcon : AppImages.doneIcon,
+                color: isPdfNote ? colors.textFieldTitle : colors.primaryBrand,
               ),
             ),
           ),

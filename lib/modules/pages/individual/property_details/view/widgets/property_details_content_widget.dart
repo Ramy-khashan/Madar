@@ -14,8 +14,10 @@ import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../../../../common/chats/conversation_detail/model/conversation_info.dart';
 import '../../controller/property_details_bloc.dart';
 import '../../model/property_details_buyer_model.dart';
+import '../../model/property_details_model.dart';
 import 'advertiser_section_widget.dart';
- import 'property_description_section_widget.dart';
+ import 'features_part.dart';
+import 'property_description_section_widget.dart';
 import 'property_details_header_section_widget.dart';
 import 'property_details_image_section_widget.dart';
 import 'property_details_info_card_widget.dart';
@@ -61,6 +63,10 @@ class PropertyDetailsContentWidget extends StatelessWidget {
                         SizedBox(height: 16.height),
                         PropertyDetailsInfoCardWidget(property: property),
 
+                        SizedBox(height: 16.height),
+                        PropertyFeaturesWidget(
+                          features: property?.features?.features,
+                        ),
                         SizedBox(height: 16.height),
                         PropertyLocationSectionWidget(property: property),
                         SizedBox(height: 16.height),

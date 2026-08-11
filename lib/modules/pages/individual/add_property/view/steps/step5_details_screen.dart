@@ -10,6 +10,8 @@ import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../controller/add_property_bloc.dart';
 import '../widgets/counter_button_item.dart';
+import '../widgets/property_details_type_widget.dart';
+import '../widgets/row_chip_item.dart';
 
 class AddPropertyStep5Screen extends StatelessWidget {
   const AddPropertyStep5Screen({super.key});
@@ -38,7 +40,7 @@ class AddPropertyStep5Screen extends StatelessWidget {
                   ),
                 ),
                 12.height.toSizedBox,
-                
+
                 AppTextField(
                   controller: bloc.areaController,
                   title: AppStrings.areaSqmRequired,
@@ -62,7 +64,6 @@ class AddPropertyStep5Screen extends StatelessWidget {
                 ),
                 12.height.toSizedBox,
 
-                // ── Facade dropdown ───────────────────────────────────────
                 _DropdownField(
                   label: AppStrings.facadeLabel,
                   field: 'facade',
@@ -72,7 +73,6 @@ class AddPropertyStep5Screen extends StatelessWidget {
                 ),
                 12.height.toSizedBox,
 
-                // ── Street count ──────────────────────────────────────────
                 _CounterRow(
                   image: AppImages.street,
                   label: "",
@@ -83,10 +83,9 @@ class AddPropertyStep5Screen extends StatelessWidget {
                 ),
                 12.height.toSizedBox,
 
-                // ── Street width chips ────────────────────────────────────
                 _SectionLabel(label: AppStrings.streetWidth, tc: tc),
                 8.height.toSizedBox,
-                _ChipRow<String>(
+                ChipRowItem<String>(
                   options: AddPropertyBloc.streetWidthOptions,
                   getLabel: (v) => v,
                   isSelected: (v, state) => state.model.streetWidth == v,
@@ -96,10 +95,9 @@ class AddPropertyStep5Screen extends StatelessWidget {
                 ),
                 16.height.toSizedBox,
 
-                // ── Property age chips ────────────────────────────────────
                 _SectionLabel(label: AppStrings.propertyAgeLabel, tc: tc),
                 8.height.toSizedBox,
-                _ChipRow<String>(
+                ChipRowItem<String>(
                   options: AddPropertyBloc.propertyAgeOptions,
                   getLabel: (v) => v,
                   isSelected: (v, state) => state.model.propertyAge == v,
@@ -108,123 +106,18 @@ class AddPropertyStep5Screen extends StatelessWidget {
                   ).add(SelectPropertyAgeEvent(v)),
                 ),
                 16.height.toSizedBox,
+                const PropertyDetailsTypeWidget(),
 
-                // ── Room counters ─────────────────────────────────────────
-                Row(
-                  children: [
-                    Expanded(
-                      child: _PropertyDetailsRow(
-                        label: AppStrings.bedroomsCount,
-                        field: 'beds',
-                        getValue: (s) => s.model.beds,
-                        onIncrement: const IncrementCounterEvent('beds'),
-                        onDecrement: const DecrementCounterEvent('beds'),
-                      ),
-                    ),
-                    23.width.toSizedBox,
-                    Expanded(
-                      child: _PropertyDetailsRow(
-                        label: AppStrings.bathroomsCount,
-                        field: 'baths',
-                        getValue: (s) => s.model.baths,
-                        onIncrement: const IncrementCounterEvent('baths'),
-                        onDecrement: const DecrementCounterEvent('baths'),
-                      ),
-                    ),
-                  ],
+                 AppTextField(
+                  controller: bloc.descriptionController,
+                  title: "اسم المطور العقاري (اختياري)",
                 ),
-                8.height.toSizedBox,
-                Row(
-                  children: [
-                    Expanded(
-                      child: _PropertyDetailsRow(
-                        label: AppStrings.majlisCountOptional,
-                        field: 'lounges',
-                        getValue: (s) => s.model.lounges,
-                        onIncrement: const IncrementCounterEvent('lounges'),
-                        onDecrement: const DecrementCounterEvent('lounges'),
-                      ),
-                    ),
-                    23.width.toSizedBox,
-                    Expanded(
-                      child: _PropertyDetailsRow(
-                        label: AppStrings.hallsCountOptional,
-                        field: 'majlis',
-                        getValue: (s) => s.model.majlis,
-                        onIncrement: const IncrementCounterEvent('majlis'),
-                        onDecrement: const DecrementCounterEvent('majlis'),
-                      ),
-                    ),
-                  ],
-                ),
-                16.height.toSizedBox,
 
-                // // ── Optional fields ───────────────────────────────────────
-                // AppTextField(
-                //   controller: bloc.apartmentNumberController,
-                //   title: AppStrings.apartmentNumberOptional,
-                //   hint: AppStrings.enterApartmentNumber,
-                //   textInputType: TextInputType.number,
-                // ),
-                // 12.height.toSizedBox,
-
-                // _DropdownField(
-                //   label: AppStrings.totalFloorsInBuilding,
-                //   field: 'totalFloors',
-                //   options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10+'],
-                //   getValue: (m) => m.totalFloors,
-                //   buildEvent: (v) => SelectDropdownEvent('totalFloors', v),
-                // ),
-                // 12.height.toSizedBox,
-
-                // _DropdownField(
-                //   label: AppStrings.apartmentsPerFloorOptional,
-                //   field: 'apartmentsPerFloor',
-                //   options: ['1', '2', '3', '4', '5', '6', '7', '8'],
-                //   getValue: (m) => m.apartmentsPerFloor,
-                //   buildEvent: (v) =>
-                //       SelectDropdownEvent('apartmentsPerFloor', v),
-                // ),
-                // 12.height.toSizedBox,
-
-                // _DropdownField(
-                //   label: AppStrings.floorLabelShort,
-                //   field: 'floorLevel',
-                //   options: AddPropertyBloc.floorOptions,
-                //   getValue: (m) => m.floorLevel,
-                //   buildEvent: (v) => SelectDropdownEvent('floorLevel', v),
-                // ),
-                // 12.height.toSizedBox,
-
-                // _DropdownField(
-                //   label: AppStrings.furnishingStatus,
-                //   field: 'furnishing',
-                //   options: AddPropertyBloc.furnishingOptions,
-                //   getValue: (m) => m.furnishing,
-                //   buildEvent: (v) => SelectDropdownEvent('furnishing', v),
-                // ),
-                // 12.height.toSizedBox,
-
-                // _DropdownField(
-                //   label: AppStrings.propertyCondition,
-                //   field: 'condition',
-                //   options: AddPropertyBloc.conditionOptions,
-                //   getValue: (m) => m.condition,
-                //   buildEvent: (v) => SelectDropdownEvent('condition', v),
-                // ),
-                // 12.height.toSizedBox,
-
-                // AppTextField(
-                //   controller: bloc.developerNameController,
-                //   title: AppStrings.developerNameOptional,
-                //   hint: AppStrings.enterDeveloperName,
-                // ),
-                // 24.height.toSizedBox,
-
-                // ── Amenities ─────────────────────────────────────────────
                 _SectionLabel(label: AppStrings.amenitiesLabel, tc: tc),
                 16.height.toSizedBox,
                 const _AmenitiesSection(),
+                20.height.toSizedBox,
+
                 20.height.toSizedBox,
               ],
             ),
@@ -518,71 +411,6 @@ class _PropertyDetailsRow extends StatelessWidget {
   }
 }
 
-class _ChipRow<T> extends StatelessWidget {
-  const _ChipRow({
-    required this.options,
-    required this.getLabel,
-    required this.isSelected,
-    required this.onTap,
-  });
-  final List<T> options;
-  final String Function(T) getLabel;
-  final bool Function(T, AddPropertyState) isSelected;
-  final void Function(T, BuildContext) onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final tc = AppThemeColors.of(context);
-    return BlocBuilder<AddPropertyBloc, AddPropertyState>(
-      builder: (context, state) {
-        return Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: options.map((option) {
-            final selected = isSelected(option, state);
-            return GestureDetector(
-              onTap: () => onTap(option, context),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                padding: EdgeInsets.symmetric(
-                  horizontal: 14.width,
-                  vertical: 8.height,
-                ),
-                decoration: BoxDecoration(
-                  color: selected ? tc.primaryBrand : tc.cardBackground,
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(
-                    color: selected ? tc.primaryBrand : tc.borderColor,
-                    width: selected ? 1.5 : 1,
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (selected) ...[
-                      Icon(Icons.check_rounded, size: 14, color: tc.onPrimary),
-                      2.width.toSizedBox,
-                    ],
-                    Text(
-                      getLabel(option),
-                      style: TextStyle(
-                        fontSize: context.responsiveFontScale(12),
-                        fontWeight: selected
-                            ? FontWeight.w700
-                            : FontWeight.w500,
-                        color: selected ? tc.onPrimary : tc.primaryBrand,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }).toList(),
-        );
-      },
-    );
-  }
-}
 
 class _AmenitiesSection extends StatelessWidget {
   const _AmenitiesSection();

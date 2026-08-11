@@ -6,6 +6,7 @@ import '../../../../../core/connection/concept/end_points.dart';
 import '../../../../../core/connection/interfaces/api_consumer.dart';
 import '../../../../../core/model/statistic_circle_model.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
+import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../core/utils/functions/service_locator.dart';
 import '../model/financial_report_models.dart';
@@ -87,7 +88,7 @@ class FinancialReportsBloc
                   (item) => FinancialTransaction(
                     name: item.type,
                     date: item.date,
-                    desc: item.amount >= 0 ? 'دخل' : 'مصروف',
+                    desc: item.amount >= 0 ? AppStrings.transactionTypeIncome : AppStrings.transactionTypeExpense,
                     amount:
                         '${item.amount >= 0 ? '+' : '-'}${formatPrice(item.amount.abs())}',
                   ),

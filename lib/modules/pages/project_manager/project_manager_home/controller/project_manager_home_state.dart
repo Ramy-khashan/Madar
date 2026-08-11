@@ -3,22 +3,26 @@ part of 'project_manager_home_bloc.dart';
 class ProjectManagerHomeState extends Equatable {
   const ProjectManagerHomeState({
     this.projects = const [],
-    this.isLoading = false,
+    this.loadingStatus = RequestStatus.init,
+    this.errorMsg = '',
   });
 
-  final List<ProjectModel> projects;
-  final bool isLoading;
+  final List<RealStateProjectsModel> projects;
+  final RequestStatus loadingStatus;
+  final String errorMsg;
 
   ProjectManagerHomeState copyWith({
-    List<ProjectModel>? projects,
-    bool? isLoading,
+    List<RealStateProjectsModel>? projects,
+    RequestStatus? loadingStatus,
+    String? errorMsg,
   }) {
     return ProjectManagerHomeState(
       projects: projects ?? this.projects,
-      isLoading: isLoading ?? this.isLoading,
+      loadingStatus: loadingStatus ?? this.loadingStatus,
+      errorMsg: errorMsg ?? this.errorMsg,
     );
   }
 
   @override
-  List<Object?> get props => [projects, isLoading];
+  List<Object?> get props => [projects, loadingStatus,errorMsg];
 }

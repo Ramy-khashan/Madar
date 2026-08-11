@@ -12,6 +12,7 @@ import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../property_details/model/property_details_buyer_model.dart';
+import '../../../property_details/model/property_details_model.dart';
 
 class MarkerInfoCard extends StatelessWidget {
   const MarkerInfoCard({

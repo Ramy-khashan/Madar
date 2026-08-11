@@ -2,15 +2,22 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../../core/components/image_item.dart';
+import '../../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
 
 class FileUploadWidget extends StatelessWidget {
-  const FileUploadWidget({super.key, this.title, this.onTap});
+  const FileUploadWidget({
+    super.key,
+    this.title,
+    this.onTap,
+    this.isRequired = false,
+  });
 
   final String? title;
+  final bool isRequired;
   final VoidCallback? onTap;
 
   @override
@@ -21,17 +28,42 @@ class FileUploadWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (title != null) ...[
-          Padding(
-            padding: EdgeInsets.only(top: 14.height, bottom: 8.height),
-            child: Text(
-              title!,
-              style: TextStyle(
-                fontSize: context.responsiveFontScale(16),
-                fontWeight: FontWeight.w500,
-                fontFamily: AppConstant.appHeaderFont,
-                color: colors.textFieldTitle,
+          Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 14.height, bottom: 8.height),
+                child: Text(
+                  title!,
+                  style: TextStyle(
+                    fontSize: context.responsiveFontScale(16),
+                    fontWeight: FontWeight.w500,
+                    fontFamily: AppConstant.appHeaderFont,
+                    color: colors.textFieldTitle,
+                  ),
+                ),
               ),
-            ),
+              if (isRequired) ...[
+                SizedBox(width: 6.width),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 8.width,
+                    vertical: 2.height,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.errorColor.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    AppStrings.required,
+                    style: TextStyle(
+                      fontSize: context.responsiveFontScale(10),
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.errorColor,
+                    ),
+                  ),
+                ),
+              ],
+            ],
           ),
         ],
         GestureDetector(

@@ -1,8 +1,15 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
+import '../../../../../../../core/repository/apis/real_estate_projects_apis.dart';
+import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/constants/app_enums.dart';
+import '../../shared/models/manager_request_model.dart';
+import '../../shared/models/project_request_base.dart';
+import '../../shared/models/project_stage_model.dart';
+import '../../shared/models/stage_request_model.dart';
 
 part 'add_commercial_project_event.dart';
 part 'add_commercial_project_state.dart';
@@ -21,6 +28,14 @@ class AddCommercialProjectBloc
     on<AddCommercialSuccessDialogDismissed>(_onSuccessDialogDismissed);
     on<AddCommercialSubmit>(_onSubmit);
     on<AddCommercialReset>(_onReset);
+    on<AddCommercialFetchStages>(_onFetchStages);
+    on<AddCommercialStageToggled>(_onStageToggled);
+    on<AddCommercialSubStageToggled>(_onSubStageToggled);
+    on<AddCommercialImagesSelected>(_onImagesSelected);
+    on<AddCommercialImageRemoved>(_onImageRemoved);
+
+    // Auto-fetch stages on initialization
+    add(const AddCommercialFetchStages());
   }
 
   final formKey = GlobalKey<FormState>();
@@ -97,9 +112,7 @@ class AddCommercialProjectBloc
     AddCommercialSendToManagerRequested event,
     Emitter<AddCommercialProjectState> emit,
   ) {
-    emit(
-      state.copyWith(dialogAction: CommercialDialogAction.showManagerLogin),
-    );
+    emit(state.copyWith(dialogAction: CommercialDialogAction.showManagerLogin));
   }
 
   void _onManagerLoginResult(
@@ -127,9 +140,53 @@ class AddCommercialProjectBloc
     Emitter<AddCommercialProjectState> emit,
   ) async {
     if (!(formKey.currentState?.validate() ?? false)) return;
-    emit(state.copyWith(submitStatus: RequestStatus.loading));
-    await Future<void>.delayed(const Duration(seconds: 1));
-    emit(state.copyWith(submitStatus: RequestStatus.success));
+
+    // Build stages request from selected stages/substages
+    final stagesRequest = state.selectedStageIds.map((stageId) {
+      final subStageIds = state.selectedSubStageIds[stageId] ?? [];
+      return StageRequestModel(stageId: stageId, subStageIds: subStageIds);
+    }).toList();
+
+    // Build manager request
+    final managerRequest = ManagerRequestModel(
+      fullName: usernameController.text,
+      phone: phoneController.text,
+      password: passwordController.text,
+    );
+
+    // Build project request
+    final projectRequest = ProjectRequestBase(
+      projectName: nameController.text,
+      location: locationController.text,
+      startDate: startDateController.text,
+      endDate: endDateController.text,
+      price: budgetController.text,
+      type: AppConstant.commercialProjectType,
+      stages: stagesRequest,
+      manager: managerRequest,
+    );
+
+    emit(
+      state.copyWith(
+        submitStatus: RequestStatus.loading,
+        submitErrorMessage: null,
+      ),
+    );
+
+    final result = await RealEstateProjectsApis.createProject(
+      projectRequest,
+      state.selectedImages,
+    );
+
+    result.fold(
+      (error) => emit(
+        state.copyWith(
+          submitStatus: RequestStatus.failed,
+          submitErrorMessage: error,
+        ),
+      ),
+      (success) => emit(state.copyWith(submitStatus: RequestStatus.success)),
+    );
   }
 
   void _onReset(
@@ -137,5 +194,98 @@ class AddCommercialProjectBloc
     Emitter<AddCommercialProjectState> emit,
   ) {
     emit(const AddCommercialProjectState());
+  }
+
+  Future<void> _onFetchStages(
+    AddCommercialFetchStages event,
+    Emitter<AddCommercialProjectState> emit,
+  ) async {
+    emit(state.copyWith(stagesFetchStatus: RequestStatus.loading));
+
+    final result = await RealEstateProjectsApis.fetchProjectStages(
+      AppConstant.commercialProjectType,
+    );
+
+    result.fold(
+      (error) => emit(state.copyWith(stagesFetchStatus: RequestStatus.failed)),
+      (stages) => emit(
+        state.copyWith(
+          stagesFetchStatus: RequestStatus.success,
+          stages: stages,
+        ),
+      ),
+    );
+  }
+
+  void _onStageToggled(
+    AddCommercialStageToggled event,
+    Emitter<AddCommercialProjectState> emit,
+  ) {
+    final selectedStageIds = List<String>.from(state.selectedStageIds);
+    final selectedSubStageIds = Map<String, List<String>>.from(
+      state.selectedSubStageIds,
+    );
+
+    if (selectedStageIds.contains(event.stageId)) {
+      // Remove stage and its substages
+      selectedStageIds.remove(event.stageId);
+      selectedSubStageIds.remove(event.stageId);
+    } else {
+      // Add stage
+      selectedStageIds.add(event.stageId);
+      if (!selectedSubStageIds.containsKey(event.stageId)) {
+        selectedSubStageIds[event.stageId] = [];
+      }
+    }
+
+    emit(
+      state.copyWith(
+        selectedStageIds: selectedStageIds,
+        selectedSubStageIds: selectedSubStageIds,
+      ),
+    );
+  }
+
+  void _onSubStageToggled(
+    AddCommercialSubStageToggled event,
+    Emitter<AddCommercialProjectState> emit,
+  ) {
+    final selectedSubStageIds = Map<String, List<String>>.from(
+      state.selectedSubStageIds,
+    );
+
+    if (!selectedSubStageIds.containsKey(event.stageId)) {
+      selectedSubStageIds[event.stageId] = [];
+    }
+
+    final subStageList = List<String>.from(selectedSubStageIds[event.stageId]!);
+
+    if (subStageList.contains(event.subStageId)) {
+      subStageList.remove(event.subStageId);
+    } else {
+      subStageList.add(event.subStageId);
+    }
+
+    selectedSubStageIds[event.stageId] = subStageList;
+
+    emit(state.copyWith(selectedSubStageIds: selectedSubStageIds));
+  }
+
+  void _onImagesSelected(
+    AddCommercialImagesSelected event,
+    Emitter<AddCommercialProjectState> emit,
+  ) {
+    final updatedImages = List<String>.from(state.selectedImages)
+      ..addAll(event.paths);
+    emit(state.copyWith(selectedImages: updatedImages));
+  }
+
+  void _onImageRemoved(
+    AddCommercialImageRemoved event,
+    Emitter<AddCommercialProjectState> emit,
+  ) {
+    final updatedImages = List<String>.from(state.selectedImages)
+      ..removeAt(event.index);
+    emit(state.copyWith(selectedImages: updatedImages));
   }
 }

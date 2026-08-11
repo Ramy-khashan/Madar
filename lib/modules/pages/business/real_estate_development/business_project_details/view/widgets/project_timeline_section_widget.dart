@@ -4,18 +4,16 @@ import '../../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../../core/utils/constants/app_strings.dart';
 
 import '../../../../../../../config/theme/app_theme_colors.dart';
- import '../../../../../../../core/utils/constants/app_constant.dart';
+import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
-import '../../../shared/models/project_timeline_model.dart';
- 
-class ProjectTimelineSectionWidget extends StatelessWidget {
-  const ProjectTimelineSectionWidget({
-    super.key,
-    required this.timeline,
-   });
+import '../../../../../../../core/utils/functions/time_ago.dart';
+import '../../model/real_state_project_model.dart';
 
-  final List<ProjectTimelineModel> timeline;
- 
+class ProjectTimelineSectionWidget extends StatelessWidget {
+  const ProjectTimelineSectionWidget({super.key, required this.timeline});
+
+  final List<Timeline> timeline;
+
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
@@ -43,8 +41,6 @@ class ProjectTimelineSectionWidget extends StatelessWidget {
               final item = timeline[i];
               return _TimelineItem(index: i + 1, item: item, colors: colors);
             }),
-          
- 
         ],
       ),
     );
@@ -59,7 +55,7 @@ class _TimelineItem extends StatelessWidget {
   });
 
   final int index;
-  final ProjectTimelineModel item;
+  final Timeline item;
   final AppThemeColors colors;
 
   @override
@@ -76,15 +72,15 @@ class _TimelineItem extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 12.width,
-            backgroundColor: AppColors.secondBrand,
+            backgroundColor: AppColors.primary300,
 
             child: Padding(
-              padding:   EdgeInsets.only(top:2.height),
+              padding: EdgeInsets.only(top: 2.height),
               child: Text(
                 '$index',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: context.responsiveFontScale(16),
+                  fontSize: context.responsiveFontScale(12),
                   fontWeight: FontWeight.w700,
                   color: colors.onPrimary,
                   fontFamily: AppConstant.appHeaderFont,
@@ -98,7 +94,11 @@ class _TimelineItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  item.date,
+                  DateTimeHandler.convertDate(
+                    item.date == null
+                        ? DateTime.now()
+                        : DateTime.parse(item.date!),
+                  ),
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(16),
                     fontWeight: FontWeight.w600,
@@ -108,7 +108,7 @@ class _TimelineItem extends StatelessWidget {
                 ),
                 SizedBox(height: 2.height),
                 Text(
-                  item.description,
+                  item.content ?? "stage content",
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(16),
                     color: colors.textSecondary,

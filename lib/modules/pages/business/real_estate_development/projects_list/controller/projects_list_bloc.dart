@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../core/connection/concept/end_points.dart';
 import '../../../../../../core/connection/interfaces/api_consumer.dart';
 import '../../../../../../core/utils/functions/service_locator.dart';
-import '../../shared/models/real_estate_project_model.dart';
-import '../../../../../../../../../core/utils/constants/app_enums.dart';
+ import '../../../../../../../../../core/utils/constants/app_enums.dart';
+import '../model/realstate_projects_model.dart';
 
 part 'projects_list_event.dart';
 part 'projects_list_state.dart';
@@ -33,7 +33,7 @@ class ProjectsListBloc extends Bloc<ProjectsListEvent, ProjectsListState> {
         },
         (data) async {
           final projects = (data.response['data'] as List)
-              .map((e) => RealEstateProjectModel.fromJson(e))
+              .map((e) => RealStateProjectsModel.fromJson(e))
               .toList();
           emit(
             state.copyWith(status: RequestStatus.success, projects: projects),

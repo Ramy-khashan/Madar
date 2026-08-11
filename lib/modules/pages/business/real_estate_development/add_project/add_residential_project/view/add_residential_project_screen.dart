@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,45 +11,13 @@ import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../../core/utils/functions/image_picker_helper.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../auth/common/password_item.dart';
 import '../../shared/widgets/file_upload_widget.dart';
 import '../../shared/widgets/link_sent_success_dialog.dart';
-import '../../shared/widgets/project_manager_login_dialog.dart';
 import '../../shared/widgets/project_phases_checklist_widget.dart';
 import '../controller/add_residential_project_bloc.dart';
-
-List<ProjectPhaseEntry> _residentialPhases() => [
-  ProjectPhaseEntry(
-    title: AppStrings.resPhase1Title,
-    subtitle: AppStrings.resPhase1Subtitle,
-    tasks: [
-      AppStrings.resPhase1Item1,
-      AppStrings.resPhase1Item2,
-      AppStrings.resPhase1Item3,
-      AppStrings.resPhase1Item4,
-      AppStrings.resPhase1Item5,
-      AppStrings.resPhase1Item6,
-      AppStrings.resPhase1Item7,
-    ],
-  ),
-  ProjectPhaseEntry(
-    title: AppStrings.resPhase2Title,
-    subtitle: AppStrings.resPhase2Subtitle,
-  ),
-  ProjectPhaseEntry(
-    title: AppStrings.resPhase3Title,
-    subtitle: AppStrings.resPhase3Subtitle,
-  ),
-  ProjectPhaseEntry(
-    title: AppStrings.resPhase4Title,
-    subtitle: AppStrings.resPhase4Subtitle,
-  ),
-  ProjectPhaseEntry(
-    title: AppStrings.resPhase5Title,
-    subtitle: AppStrings.resPhase5Subtitle,
-  ),
-];
 
 class AddResidentialProjectScreen extends StatelessWidget {
   const AddResidentialProjectScreen({super.key});
@@ -79,7 +49,7 @@ class _AddResidentialProjectView extends StatelessWidget {
       bloc.add(
         AddResidentialDatePicked(
           field,
-          '${picked.day}/${picked.month}/${picked.year}',
+          '${picked.year}-${picked.month}-${picked.day}',
         ),
       );
     } else {
@@ -111,7 +81,8 @@ class _AddResidentialProjectView extends StatelessWidget {
       listenWhen: (prev, curr) =>
           prev.pendingDateField != curr.pendingDateField ||
           prev.dialogAction != curr.dialogAction ||
-          prev.submitStatus != curr.submitStatus,
+          prev.submitStatus != curr.submitStatus ||
+          prev.submitErrorMessage != curr.submitErrorMessage,
       listener: (context, state) {
         if (state.pendingDateField != ResidentialDateField.none) {
           _handleDatePick(context, state.pendingDateField);
@@ -124,6 +95,14 @@ class _AddResidentialProjectView extends StatelessWidget {
         }
         if (state.submitStatus == RequestStatus.success) {
           Navigator.of(context).pop();
+        }
+        if (state.submitErrorMessage != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.submitErrorMessage!),
+              backgroundColor: Colors.red,
+            ),
+          );
         }
       },
       builder: (context, state) {
@@ -205,12 +184,80 @@ class _AddResidentialProjectView extends StatelessWidget {
                     ProjectPhasesChecklistWidget(
                       label: AppStrings.mainPhasesLabel,
                       subtitle: AppStrings.startFromAnyPhase,
-                      phases: _residentialPhases(),
+                      stages: state.stages,
+                      isLoading: state.stagesFetchStatus == RequestStatus.loading,
+                      selectedStageIds: state.selectedStageIds,
+                      selectedSubStageIds: state.selectedSubStageIds,
+                      onStageToggled: (stageId) =>
+                          bloc.add(AddResidentialStageToggled(stageId)),
+                      onSubStageToggled: (stageId, subStageId) => bloc.add(
+                        AddResidentialSubStageToggled(stageId, subStageId),
+                      ),
                     ),
                     FileUploadWidget(
                       title: AppStrings.images,
-                      onTap: () {},
+                      onTap: () async {
+                        final paths = await pickImages();
+                        if (paths != null && paths.isNotEmpty) {
+                          bloc.add(AddResidentialImagesSelected(paths));
+                        }
+                      },
                     ),
+                    if (state.selectedImages.isNotEmpty) ...[
+                      SizedBox(height: 12.height),
+                      SizedBox(
+                        height: 100.height,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: state.selectedImages.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              margin: EdgeInsets.only(right: 8.width),
+                              width: 100.width,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.radius),
+                                border: Border.all(color: colors.borderColor),
+                              ),
+                              child: Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius:
+                                        BorderRadius.circular(8.radius),
+                                    child: Image.file(
+                                      File(state.selectedImages[index]),
+                                      width: 100.width,
+                                      height: 100.height,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 4,
+                                    right: 4,
+                                    child: GestureDetector(
+                                      onTap: () => bloc.add(
+                                        AddResidentialImageRemoved(index),
+                                      ),
+                                      child: Container(
+                                        padding: EdgeInsets.all(4.width),
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          Icons.close,
+                                          size: 16.width,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                     SizedBox(height: 20.height),
                     if (!state.showManagerForm)
                       AppButton(

@@ -7,5 +7,9 @@ abstract class ProjectDetailsEvent extends Equatable {
 }
 
 class ProjectDetailsLoad extends ProjectDetailsEvent {
-  const ProjectDetailsLoad();
+  final String projectId;
+  const ProjectDetailsLoad({required this.projectId});
+
+  @override
+  List<Object?> get props => [projectId];
 }

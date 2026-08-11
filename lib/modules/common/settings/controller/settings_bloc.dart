@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../config/app_controller/app_controller_bloc.dart';
+import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/service_locator.dart';
 import '../../../../../core/utils/functions/translation.dart';
 import '../../../../../madar_app.dart';
@@ -26,9 +27,9 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     final isDark = sl<AppControllerBloc>().state.isDark;
     emit(
       state.copyWith(
-        profile: const UserProfileModel(
+        profile: UserProfileModel(
           name: 'أحمد السعيد',
-          accountType: 'فرد',
+          accountType: AppStrings.accountTypeIndividual,
           location: 'الرياض، السعودية',
         ),
         notificationsEnabled: true,

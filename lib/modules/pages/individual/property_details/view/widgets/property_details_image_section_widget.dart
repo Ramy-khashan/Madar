@@ -6,11 +6,15 @@ import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../core/utils/functions/translation.dart';
+import '../../../my_property_details/model/property_details_model.dart';
 import '../../controller/property_details_bloc.dart';
 import '../../model/property_details_buyer_model.dart';
+import '../../model/property_details_model.dart';
 
 class PropertyDetailsImageSectionWidget extends StatefulWidget {
   const PropertyDetailsImageSectionWidget({super.key, required this.property});
+
 
   final PropertyDetailsModel? property;
 
@@ -103,7 +107,7 @@ class _PropertyDetailsImageSectionWidgetState
                 borderRadius: BorderRadius.circular(20.radius),
               ),
               child: Text(
-                widget.property?.type ?? '',
+               ( widget.property?.type ?? '') .trans,
                 style: TextStyle(
                   color: colors.primaryBrand,
                   fontSize: context.responsiveFontScale(13),

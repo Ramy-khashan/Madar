@@ -5,7 +5,14 @@ import '../utils/constants/app_constant.dart';
 import '../utils/functions/responsive.dart';
 
 class AppAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const AppAppbar({super.key, this.actions, this.title,this.centerTitle=true,this.isWithBack=true, this.onTapBack});
+  const AppAppbar({
+    super.key,
+    this.actions,
+    this.title,
+    this.centerTitle = true,
+    this.isWithBack = true,
+    this.onTapBack,
+  });
   final List<Widget>? actions;
   final String? title;
   final bool centerTitle;
@@ -14,16 +21,18 @@ class AppAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-       scrolledUnderElevation: 0,
+      scrolledUnderElevation: 0,
       elevation: 0,
-      leading:isWithBack ? IconButton(
-        icon: const Icon(Icons.arrow_back_ios),
-        onPressed:
-            onTapBack ??
-            () {
-              Navigator.of(context).pop();
-            },
-      ) : SizedBox.shrink(),
+      leading: isWithBack
+          ? IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              onPressed:
+                  onTapBack ??
+                  () {
+                    Navigator.of(context).pop();
+                  },
+            )
+          : const SizedBox.shrink(),
       centerTitle: centerTitle,
       title: Text(
         title ?? '',

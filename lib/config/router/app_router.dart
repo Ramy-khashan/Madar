@@ -22,14 +22,14 @@ import '../../modules/pages/business/real_estate_development/add_project/add_com
 import '../../modules/pages/business/real_estate_development/add_project/add_commercial_project/view/add_commercial_project_screen.dart';
 import '../../modules/pages/business/real_estate_development/add_project/add_residential_project/view/add_residential_project_screen.dart';
 import '../../modules/pages/business/real_estate_development/business_project_details/controller/business_project_details_bloc.dart';
+import '../../modules/pages/business/real_estate_development/business_project_details/model/real_state_project_model.dart';
 import '../../modules/pages/business/real_estate_development/business_project_details/view/business_project_details_screen.dart';
 import '../../modules/pages/business/real_estate_development/projects_list/controller/projects_list_bloc.dart';
+
 import '../../modules/pages/business/real_estate_development/projects_list/view/projects_list_screen.dart';
 
-import '../../modules/pages/business/real_estate_development/shared/models/real_estate_project_model.dart';
 import '../../modules/pages/individual/add_property/controller/add_property_bloc.dart';
 import '../../modules/pages/individual/add_property/view/add_property_screen.dart';
-import '../../modules/pages/project_manager/model/project_model.dart';
 import '../../modules/pages/project_manager/project_manager_home/controller/project_manager_home_bloc.dart';
 import '../../modules/pages/project_manager/project_manager_home/view/project_manager_home_screen.dart';
 import '../../modules/pages/project_manager/project_details/controller/project_details_bloc.dart';
@@ -487,16 +487,25 @@ final GoRouter appRouter = GoRouter(
     getRouteInstance(
       AppRouterKeys.projectManagerDetails,
       (state) => BlocProvider(
-        create: (_) => ProjectDetailsBloc(project: state.extra as ProjectModel),
-        child: ProjectDetailsScreen(project: state.extra as ProjectModel),
+        create: (_) => ProjectDetailsBloc()
+          ..add(ProjectDetailsLoad(projectId: state.extra as String? ?? '1')),
+        child: const ProjectDetailsScreen(),
       ),
     ),
     getRouteInstance(
       AppRouterKeys.phaseDetails,
-      (state) => BlocProvider(
-        create: (_) => PhaseDetailsBloc(phase: state.extra as PhaseModel),
-        child: PhaseDetailsScreen(phase: state.extra as PhaseModel),
-      ),
+      (state) {
+        final param = state.extra as Map<String, dynamic>;
+        return BlocProvider(
+        create: (_) =>
+            PhaseDetailsBloc(phase: param['phase'] as ProjectStages, timeline: param['timeline'] as List<Timeline>),
+        child: PhaseDetailsScreen(
+          projectId: param['projectId'] as String? ?? '',
+          phase: param['phase'] as ProjectStages,
+          timeline: param['timeline'] as List<Timeline>,
+        ),
+      );
+      },
     ),
     getRouteInstance(
       AppRouterKeys.contractDetails,
@@ -534,7 +543,7 @@ final GoRouter appRouter = GoRouter(
     getRouteInstance(
       AppRouterKeys.realEstateDevelopmentList,
       (state) => BlocProvider(
-        create: (_) => ProjectsListBloc()..add(ProjectsListLoad()),
+        create: (_) => ProjectsListBloc()..add(const ProjectsListLoad()),
         child: const ProjectsListScreen(),
       ),
     ),
@@ -544,11 +553,9 @@ final GoRouter appRouter = GoRouter(
       return BlocProvider(
         create: (_) => BusinessProjectDetailsBloc()
           ..add(
-            BusinessProjectDetailsLoad(
-              project: map['project'] as RealEstateProjectModel,
-            ),
+            BusinessProjectDetailsLoad(projectId: map['projectId'] as String),
           ),
-        child: BusinessProjectDetailsScreen(),
+        child: const BusinessProjectDetailsScreen(),
       );
     }),
     getRouteInstance(

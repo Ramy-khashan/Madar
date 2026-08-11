@@ -45,6 +45,7 @@ class NotificationScreen extends StatelessWidget {
               isEmptyList: state.notifications.isEmpty,
               loader: const NotificationLoadingItem(),
               child: PaginationView(
+                isListView:context.isMobilePortrait,
                 pageSize: NotificationBloc.get(context).pageSize,
                 items: state.notifications,
                 itemBuilder: (context, index) {

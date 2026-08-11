@@ -11,7 +11,7 @@ class ProjectStatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isCompleted = status == 'completed';
+    final isCompleted = status.toUpperCase() == 'COMPLETED';
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.width, vertical: 4.height),
       decoration: BoxDecoration(

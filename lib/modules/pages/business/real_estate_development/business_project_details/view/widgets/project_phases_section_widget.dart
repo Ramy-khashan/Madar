@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
 import '../../../../../../../core/components/outline_section.dart';
-import '../../../../../../../core/utils/functions/translation.dart';
 
 import '../../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
-import '../../../shared/models/project_phase_model.dart';
+import '../../../../../../../core/utils/functions/translation.dart';
+import '../../model/real_state_project_model.dart';
 
 class ProjectPhasesSectionWidget extends StatelessWidget {
-  const ProjectPhasesSectionWidget({
-    super.key,
-    required this.phases,
-   });
+  const ProjectPhasesSectionWidget({super.key, required this.phases});
 
-  final List<ProjectPhaseModel> phases;
- 
+  final List<ProjectStages> phases;
+
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
@@ -26,7 +23,10 @@ class ProjectPhasesSectionWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Table(
-            columnWidths:  {0: const FlexColumnWidth(1), 1: const FlexColumnWidth(1)},
+            columnWidths: {
+              0: const FlexColumnWidth(1),
+              1: const FlexColumnWidth(1),
+            },
             children: [
               TableRow(
                 decoration: BoxDecoration(
@@ -64,8 +64,6 @@ class ProjectPhasesSectionWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-
-                  
                 ],
               ),
               ...phases.map(
@@ -79,7 +77,7 @@ class ProjectPhasesSectionWidget extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 10.height),
                       child: Text(
-                        phase.name,
+                        phase.stageName ?? 'Phase Name',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: context.responsiveFontScale(14),
@@ -91,17 +89,19 @@ class ProjectPhasesSectionWidget extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 10.height),
                       child: Text(
-                        phase.status.trans,
+                        (phase.status ?? 'IN_PROGRESS').toLowerCase().trans,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: context.responsiveFontScale(13),
                           fontWeight: FontWeight.w700,
                           fontFamily: AppConstant.appHeaderFont,
-                          color: AppConstant.getStatusColor(phase.status),
+                          color: AppConstant.getStatusColor(
+                            phase.status ?? 'IN_PROGRESS',
+                          ),
                         ),
                       ),
                     ),
-                   ],
+                  ],
                 ),
               ),
             ],

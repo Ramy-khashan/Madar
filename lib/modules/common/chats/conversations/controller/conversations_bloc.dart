@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/utils/constants/app_enums.dart';
+import '../../../../../core/utils/constants/app_strings.dart';
 import '../model/conversation_model.dart';
 
 part 'conversations_event.dart';
@@ -17,7 +18,7 @@ class ConversationsBloc extends Bloc<ConversationsEvent, ConversationsState> {
   static ConversationsBloc get(BuildContext context) =>
       BlocProvider.of<ConversationsBloc>(context);
 
-  static const List<ConversationModel> _mockConversations = [
+  static List<ConversationModel> get _mockConversations => [
     ConversationModel(
       id: '1',
       title: 'مكتب الرياض العقاري',
@@ -32,7 +33,7 @@ class ConversationsBloc extends Bloc<ConversationsEvent, ConversationsState> {
       id: '2',
       title: 'شركة الأندلس العقارية',
       subtitle: 'شكراً لك، سنتواصل معك قريباً بخصوص العقار',
-      time: 'أمس',
+      time: AppStrings.timeYesterday,
       initial: 'ش',
       imageUrl: 'https://example.com/avatar2.png',
       isOnline: false,
@@ -41,7 +42,7 @@ class ConversationsBloc extends Bloc<ConversationsEvent, ConversationsState> {
       id: '3',
       title: 'مكتب النخبة للعقارات',
       subtitle: 'سيتم التواصل معك خلال 24 ساعة',
-      time: 'الاثنين',
+      time: AppStrings.timeMonday,
       initial: 'ن',
       imageUrl: 'https://example.com/avatar3.png',
       isOnline: true,

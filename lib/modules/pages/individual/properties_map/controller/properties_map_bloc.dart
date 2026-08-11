@@ -11,6 +11,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../../../core/model/google_map_model.dart';
 import '../../../../../core/utils/constants/app_images.dart';
 import '../../property_details/model/property_details_buyer_model.dart';
+import '../../property_details/model/property_details_model.dart';
 
 part 'properties_map_event.dart';
 part 'properties_map_state.dart';
@@ -170,16 +171,15 @@ class PropertiesMapBloc extends Bloc<PropertiesMapEvent, PropertiesMapState> {
     final data = await image.toByteData(format: ui.ImageByteFormat.png);
     return BitmapDescriptor.fromBytes(data!.buffer.asUint8List());
   }
-static Future<ui.Image> _loadAssetImage(String asset) async {
-  final ByteData data = await rootBundle.load(asset);
 
-  final codec = await ui.instantiateImageCodec(
-    data.buffer.asUint8List(),
-  );
+  static Future<ui.Image> _loadAssetImage(String asset) async {
+    final ByteData data = await rootBundle.load(asset);
 
-  final frame = await codec.getNextFrame();
-  return frame.image;
-}
+    final codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+
+    final frame = await codec.getNextFrame();
+    return frame.image;
+  }
   // ---------------------------------------------------------------------------
   // Event handlers
   // ---------------------------------------------------------------------------
@@ -214,27 +214,27 @@ static Future<ui.Image> _loadAssetImage(String asset) async {
   // Static sample data
   // ---------------------------------------------------------------------------
 
-  static  final _defaultAdvertiser = Broker(
-    fullName: 'أحمد محمد',
-    role: 'وسيط عقاري',
-    isVerified: true,
-    falLicenseNumber: '2023456789',
-    adLicenseNumber: '1234567890',
-    totalProperties: 12,
-  );
+  // static  final _defaultAdvertiser = PropertyOwner(
+  //   fullName: 'أحمد محمد',
+  //   role: 'وسيط عقاري',
+  //   isVerified: true,
+  //   falLicenseNumber: '2023456789',
+  //   adLicenseNumber: '1234567890',
+  //   totalProperties: 12,
+  // );
 
-// static  final_defaultRentInfo = RentInstallmentInfoModel(
-//     isEligible: true,
-//     annualRentValue: 120000,
-//     minMonthlyInstallment: 2500,
-//     providersCount: 3,
-//   );
+  // static  final_defaultRentInfo = RentInstallmentInfoModel(
+  //     isEligible: true,
+  //     annualRentValue: 120000,
+  //     minMonthlyInstallment: 2500,
+  //     providersCount: 3,
+  //   );
 
-//   static const _defaultInsuranceInfo = InsuranceInfoModel(
-//     isInsured: true,
-//     availableTypes: ['شامل', 'جزئي'],
-//     companiesCount: 5,
-//   );
+  //   static const _defaultInsuranceInfo = InsuranceInfoModel(
+  //     isInsured: true,
+  //     availableTypes: ['شامل', 'جزئي'],
+  //     companiesCount: 5,
+  //   );
 
   static final List<PositionModel> propertyMarkers = [
     PositionModel(latitude: 24.7136, longitude: 46.6753),
@@ -244,6 +244,5 @@ static Future<ui.Image> _loadAssetImage(String asset) async {
     PositionModel(latitude: 24.7210, longitude: 46.6780),
   ];
 
-  static final List<PropertyDetailsModel> sampleProperties = [
-  ];
+  static final List<PropertyDetailsModel> sampleProperties = [];
 }

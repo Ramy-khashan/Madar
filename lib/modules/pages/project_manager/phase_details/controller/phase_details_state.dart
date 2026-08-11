@@ -3,22 +3,39 @@ part of 'phase_details_bloc.dart';
 class PhaseDetailsState extends Equatable {
   const PhaseDetailsState({
     required this.phase,
-    this.isApproving = false,
+    required this.timeline,
+     this.uploadedImagePaths = const [],
+    this.selectedSubPhases = const [],
+    this.approveErrorMessage = '',
+    this.loadingStatus=RequestStatus.init,
   });
 
-  final PhaseModel phase;
-  final bool isApproving;
+  final ProjectStages phase;
+   final List<Timeline> timeline;
+  final List<String> uploadedImagePaths;
+  final String approveErrorMessage;
+  final List<String>selectedSubPhases;
+  final RequestStatus loadingStatus;
 
   PhaseDetailsState copyWith({
-    PhaseModel? phase,
+    ProjectStages? phase,
     bool? isApproving,
+    List<Timeline>? timeline,
+    List<String>? uploadedImagePaths,
+    String? approveErrorMessage,
+    List<String>? selectedSubPhases,
+    RequestStatus? loadingStatus,
   }) {
     return PhaseDetailsState(
+      timeline: timeline ?? this.timeline,
       phase: phase ?? this.phase,
-      isApproving: isApproving ?? this.isApproving,
+      loadingStatus: loadingStatus ?? this.loadingStatus,
+       uploadedImagePaths: uploadedImagePaths ?? this.uploadedImagePaths,
+      approveErrorMessage: approveErrorMessage ?? this.approveErrorMessage,
+      selectedSubPhases: selectedSubPhases ?? this.selectedSubPhases,
     );
   }
 
   @override
-  List<Object?> get props => [phase, isApproving];
+  List<Object?> get props => [selectedSubPhases, phase,  timeline, uploadedImagePaths, approveErrorMessage, loadingStatus];
 }

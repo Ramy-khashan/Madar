@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madar_app/core/components/loading_process.dart';
 
 import '../../../../../config/theme/app_theme_colors.dart';
+import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../core/utils/constants/storage_keys.dart';
+import '../../../../../core/utils/functions/preference_utils.dart';
 import '../../../../../core/utils/functions/responsive.dart';
+import '../../../../../core/utils/functions/service_locator.dart';
+import '../../../../common/settings/view/widgets/logout_button_widget.dart';
+import '../../../../common/settings/view/widgets/logout_dialog.dart';
 import '../controller/project_manager_home_bloc.dart';
 import 'widget/projects_cards_item.dart';
 
 class ProjectManagerHomeScreen extends StatelessWidget {
   const ProjectManagerHomeScreen({super.key});
 
- 
   @override
   Widget build(BuildContext context) {
     final tc = AppThemeColors.of(context);
@@ -30,13 +36,25 @@ class ProjectManagerHomeScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '${AppStrings.hello} أحمد',
-                    style: TextStyle(
-                      fontSize: context.responsiveFontScale(24),
-                      fontWeight: FontWeight.w800,
-                      color: tc.textPrimary,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        '${AppStrings.hello} ${sl.get<PreferenceUtils>().getString(StorageKeys.name)}',
+                        style: TextStyle(
+                          fontSize: context.responsiveFontScale(24),
+                          fontWeight: FontWeight.w800,
+                          color: tc.textPrimary,
+                        ),
+                      ),
+                       LogoutButtonWidget(
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return const LogoutDialog();
+                                    },
+                                  ),
+                                ),
+                    ],
                   ),
                   SizedBox(height: 6.height),
                   Text(
@@ -53,23 +71,44 @@ class ProjectManagerHomeScreen extends StatelessWidget {
               child:
                   BlocBuilder<ProjectManagerHomeBloc, ProjectManagerHomeState>(
                     builder: (context, state) {
-                      if (state.isLoading) {
-                        return Center(
-                          child: CircularProgressIndicator(
-                            color: tc.primaryBrand,
-                          ),
-                        );
-                      }
-                      return ListView.separated(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.width,
-                          vertical: 12.height,
-                        ),
-                        itemCount: state.projects.length,
-                        separatorBuilder: (_, _) => SizedBox(height: 12.height),
-                        itemBuilder: (context, i) {
-                          return ProjectCardItem(project: state.projects[i]);
+                      return RefreshIndicator(
+                        onRefresh: () async {
+                          ProjectManagerHomeBloc.get(
+                            context,
+                          ).add(const ProjectManagerHomeLoad());
                         },
+                        child: LoadingProcess(
+                          status: state.loadingStatus,
+                          errorMsg: state.errorMsg,
+                          onTapRefresh: () {
+                            ProjectManagerHomeBloc.get(
+                              context,
+                            ).add(const ProjectManagerHomeLoad());
+                          },
+                          childIsLoader: true,
+                          emptyMsg: AppStrings.noProjectsExist,
+                          isEmptyList: state.projects.isEmpty,
+                          child: ListView.separated(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16.width,
+                              vertical: 12.height,
+                            ),
+                            itemCount:
+                                state.loadingStatus == RequestStatus.loading
+                                ? 10
+                                : state.projects.length,
+                            separatorBuilder: (_, _) =>
+                                SizedBox(height: 12.height),
+                            itemBuilder: (context, i) {
+                              return ProjectCardItem(
+                                project:
+                                    state.loadingStatus == RequestStatus.loading
+                                    ? null
+                                    : state.projects[i],
+                              );
+                            },
+                          ),
+                        ),
                       );
                     },
                   ),

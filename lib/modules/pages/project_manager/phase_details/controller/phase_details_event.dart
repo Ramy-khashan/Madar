@@ -42,5 +42,13 @@ class UpdateCustomTaskEvent extends PhaseDetailsEvent {
 }
 
 class ApprovePhaseEvent extends PhaseDetailsEvent {
-  const ApprovePhaseEvent();
+  const ApprovePhaseEvent({required this.projectId});
+  final String projectId;
+}
+
+class PickImagesEvent extends PhaseDetailsEvent {
+  const PickImagesEvent(this.imagePaths);
+  final List<String> imagePaths;
+  @override
+  List<Object?> get props => [imagePaths];
 }

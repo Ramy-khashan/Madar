@@ -40,7 +40,13 @@ class BusinessProjectDetailsScreen extends StatelessWidget {
                   state.project == null) {
                 return FailedShape(
                   msg: AppStrings.failedLoadProjectDetails,
-                  onTapRefresh: () {},
+                  onTapRefresh: () {
+                    context.read<BusinessProjectDetailsBloc>().add(
+                          BusinessProjectDetailsLoad(
+                            projectId: state.projectId,
+                          ),
+                        );
+                  },
                 );
               }
 
@@ -56,7 +62,7 @@ class BusinessProjectDetailsScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        p.name,
+                        p.project?.name ?? 'Project Name',
                         style: TextStyle(
                           fontSize: context.responsiveFontScale(18),
                           fontWeight: FontWeight.w700,
@@ -73,7 +79,7 @@ class BusinessProjectDetailsScreen extends StatelessWidget {
                           ),
                           SizedBox(width: 4.width),
                           Text(
-                            p.location,
+                            p.project?.location ?? 'Location',
                             style: TextStyle(
                               fontSize: context.responsiveFontScale(14),
                               color: colors.textSecondary,
@@ -84,21 +90,23 @@ class BusinessProjectDetailsScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 20.height),
                       ProjectCompletionChartWidget(
-                        percentage: p.completionPercentage,
+                        percentage: double.parse(
+                          p.project?.overallProgress.toString() ?? '0',
+                        ),
                       ),
                       SizedBox(height: 14.height),
                       ProjectStatsRowWidget(
-                        inProgressCount: p.inProgressPhasesCount,
-                        delayedCount: p.delayedPhasesCount,
+                        inProgressCount: p.stats?.inProgress ?? 0,
+                        delayedCount: p.stats?.delayed ?? 0,
                       ),
                       SizedBox(height: 14.height),
-                      ProjectTimelineSectionWidget(timeline: p.timeline),
+                      ProjectTimelineSectionWidget(timeline: p.timeline ?? []),
                       SizedBox(height: 14.height),
-                      ProjectPhasesSectionWidget(phases: p.phases),
+                      ProjectPhasesSectionWidget(phases: p.stages ?? []),
                       SizedBox(height: 14.height),
                       ProjectAttachmentsSectionWidget(
-                        smartNotes: p.smartNotes,
-                        attachmentUrl: p.attachmentUrl,
+                        smartNotes: [],
+                        attachmentUrl: p.project?.attachments ?? [],
                       ),
                       SizedBox(height: 24.height),
                     ],

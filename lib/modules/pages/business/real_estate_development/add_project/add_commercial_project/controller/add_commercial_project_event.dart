@@ -81,3 +81,44 @@ final class AddCommercialSubmit extends AddCommercialProjectEvent {
 final class AddCommercialReset extends AddCommercialProjectEvent {
   const AddCommercialReset();
 }
+
+final class AddCommercialFetchStages extends AddCommercialProjectEvent {
+  const AddCommercialFetchStages();
+}
+
+final class AddCommercialStageToggled extends AddCommercialProjectEvent {
+  const AddCommercialStageToggled(this.stageId);
+
+  final String stageId;
+
+  @override
+  List<Object?> get props => [stageId];
+}
+
+final class AddCommercialSubStageToggled extends AddCommercialProjectEvent {
+  const AddCommercialSubStageToggled(this.stageId, this.subStageId);
+
+  final String stageId;
+  final String subStageId;
+
+  @override
+  List<Object?> get props => [stageId, subStageId];
+}
+
+final class AddCommercialImagesSelected extends AddCommercialProjectEvent {
+  const AddCommercialImagesSelected(this.paths);
+
+  final List<String> paths;
+
+  @override
+  List<Object?> get props => [paths];
+}
+
+final class AddCommercialImageRemoved extends AddCommercialProjectEvent {
+  const AddCommercialImageRemoved(this.index);
+
+  final int index;
+
+  @override
+  List<Object?> get props => [index];
+}

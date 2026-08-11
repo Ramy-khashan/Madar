@@ -16,7 +16,7 @@ class ProjectTypeSelectionDialog extends StatefulWidget {
 
 class _ProjectTypeSelectionDialogState
     extends State<ProjectTypeSelectionDialog> {
-  String _selected = 'residential';
+  String _selected = AppConstant.residentialProjectType;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,7 @@ class _ProjectTypeSelectionDialogState
             ),
             SizedBox(height: 20.height),
             _TypeRadioTile(
-              value: 'residential',
+              value: AppConstant.residentialProjectType,
               groupValue: _selected,
               title: AppStrings.residentialProject,
               subtitle: AppStrings.residentialProjectSubtitle,
@@ -56,7 +56,7 @@ class _ProjectTypeSelectionDialogState
             ),
             SizedBox(height: 12.height),
             _TypeRadioTile(
-              value: 'commercial',
+              value: AppConstant.commercialProjectType,
               groupValue: _selected,
               title: AppStrings.commercialProject,
               subtitle: AppStrings.commercialProjectSubtitle,

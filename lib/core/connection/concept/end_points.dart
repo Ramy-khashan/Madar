@@ -12,6 +12,7 @@ class EndPoints {
   static const String notifications = 'notifications';
   static const String netProfitLoss = 'dashboard/profit-loss';
   static const String realEstateProjects = 'projects';
+  static String projectUpdates(String projectId) => 'projects/updates/$projectId';
   static const String propertyEvaluations = 'evaluations/property';
 
   ///Wishlist Endpoints
@@ -27,4 +28,6 @@ class EndPoints {
   static const String myAuctions = '/auctions/my-auctions';
   static const String brokers = 'brokers';
   static const String realStateProjectCreation = 'projects';
+  static String projectStages(String projectType) =>
+      'projects/stages?projectType=$projectType';
 }

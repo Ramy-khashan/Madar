@@ -20,6 +20,8 @@ abstract class ApisCalls {
       {Map<String, dynamic>? queryParameters});
   Future<Either<String, ApiModel>> patch(String path,
       {Map<String, dynamic>? body, Map<String, dynamic>? queryParameters});
-  Future<Either<String, ApiModel>> patchFormData(String path,
+  Future<Either<String, ApiModel>> postFormData(String path,
+      {FormData body, Map<String, dynamic>? queryParameters});
+  Future<Either<String, ApiModel>> putFormData(String path,
       {FormData body, Map<String, dynamic>? queryParameters});
 }

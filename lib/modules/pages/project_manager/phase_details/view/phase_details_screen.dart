@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madar_app/core/utils/functions/translation.dart';
 
 import '../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../core/components/app_appbar.dart';
 import '../../../../../core/components/app_textfield.dart';
+import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../core/utils/functions/common_fun.dart';
+import '../../../../../core/utils/functions/image_picker_helper.dart';
+import '../../../../../core/utils/functions/print_state.dart';
 import '../../../../../core/utils/functions/responsive.dart';
-import '../../model/project_model.dart';
+import '../../../../../core/utils/functions/router_handler.dart';
+import '../../../business/real_estate_development/add_project/shared/widgets/file_upload_widget.dart';
+import '../../../business/real_estate_development/business_project_details/model/real_state_project_model.dart';
 import '../../project_details/view/widgets/project_status_badge.dart';
 import '../controller/phase_details_bloc.dart';
 import 'widgets/approve_button_item.dart';
@@ -14,19 +21,39 @@ import 'widgets/image_upload_handle.dart';
 import 'widgets/task_row_item.dart';
 
 class PhaseDetailsScreen extends StatelessWidget {
-  const PhaseDetailsScreen({super.key, required this.phase});
-  final PhaseModel phase;
+  const PhaseDetailsScreen({
+    super.key,
+    required this.phase,
+    required this.timeline,
+    required this.projectId,
+  });
+  final ProjectStages phase;
+  final List<Timeline> timeline;
+  final String projectId;
 
   @override
   Widget build(BuildContext context) {
+    printState('PhaseDetailsScreen build called $projectId');
     final tc = AppThemeColors.of(context);
     return Scaffold(
       backgroundColor: tc.backgroundPrimary,
       appBar: AppAppbar(title: AppStrings.projectPhasesSection),
       body: SafeArea(
-        child: BlocBuilder<PhaseDetailsBloc, PhaseDetailsState>(
+        child: BlocConsumer<PhaseDetailsBloc, PhaseDetailsState>(
+          listener: (context, state) {
+            if (state.loadingStatus == RequestStatus.success) {
+              AppToast(AppStrings.phaseApproved);
+
+              Future.delayed(const Duration(milliseconds: 500), () {
+                if (context.mounted) RouterHandler.pop(context,  true);
+              });
+            }
+          },
           builder: (context, state) {
             final phase = state.phase;
+            printState('Phase ID: ${phase.id ??= this.phase.id}');
+            printState('Phase state id : ${phase.id}');
+            printState('Phase class id : ${this.phase.id}');
             final bloc = PhaseDetailsBloc.get(context);
             return Column(
               children: [
@@ -43,7 +70,7 @@ class PhaseDetailsScreen extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Text(
-                                phase.title,
+                                phase.stageName ?? 'Phase Name',
                                 style: TextStyle(
                                   fontSize: context.responsiveFontScale(20),
                                   fontWeight: FontWeight.w800,
@@ -51,12 +78,20 @@ class PhaseDetailsScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            ProjectStatusBadge(status: phase.status),
+                            ProjectStatusBadge(
+                              status: phase.progress == 100
+                                  ? AppStrings.completed
+                                  : 'in_progress'.trans,
+                            ),
                           ],
                         ),
                         SizedBox(height: 6.height),
                         Text(
-                          phase.description,
+                          phase.progress != null
+                              ? (phase.progress == 100
+                                    ? '${phase.progress}% ${AppStrings.completed}'
+                                    : '${phase.progress}% ${'in_progress'.trans}')
+                              : 'in_progress'.trans,
                           style: TextStyle(
                             fontSize: context.responsiveFontScale(13),
                             color: tc.textSecondary,
@@ -82,39 +117,41 @@ class PhaseDetailsScreen extends StatelessWidget {
                           ),
                           child: Column(
                             children: [
-                              ...phase.tasks.asMap().entries.map((e) {
+                              ...(phase.subStages ?? []).asMap().entries.map((
+                                e,
+                              ) {
                                 final isLast =
-                                    e.key == phase.tasks.length - 1 &&
-                                    phase.customTask.isEmpty;
+                                    e.key == (phase.subStages?.length ?? 0) - 1;
                                 return TaskRowItem(
                                   task: e.value,
                                   isLast: isLast,
                                   tc: tc,
                                 );
                               }),
-                              Divider(color: tc.borderColor, height: 10),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(
-                                  12.width,
-                                  0,
-                                  12.width,
-                                  12.height,
-                                ),
-                                child: AppTextField(
-                                  title: AppStrings.other,
-                                  isWithTitle: true,
-                                  controller: bloc.customTaskController,
-                                  hint: AppStrings.otherHint,
-                                  onChanged: (v) =>
-                                      bloc.add(UpdateCustomTaskEvent(v)),
-                                ),
-                              ),
+
+                              // Divider(color: tc.borderColor, height: 10),
+                              // Padding(
+                              //   padding: EdgeInsets.fromLTRB(
+                              //     12.width,
+                              //     0,
+                              //     12.width,
+                              //     12.height,
+                              //   ),
+                              //   child: AppTextField(
+                              //     title: AppStrings.other,
+                              //     isWithTitle: true,
+                              //     controller: bloc.customTaskController,
+                              //     hint: AppStrings.otherHint,
+                              //     onChanged: (v) =>
+                              //         bloc.add(UpdateCustomTaskEvent(v)),
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),
                         SizedBox(height: 20.height),
-
-                        ImagesSection(phase: phase, tc: tc, bloc: bloc),
+                      
+                        ImagesSection(timeline: timeline, tc: tc, bloc: bloc),
                         SizedBox(height: 20.height),
 
                         AppTextField(
@@ -130,7 +167,7 @@ class PhaseDetailsScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                ApproveButtonItem(state: state, tc: tc),
+                ApproveButtonItem(state: state, tc: tc, projectId: projectId),
               ],
             );
           },

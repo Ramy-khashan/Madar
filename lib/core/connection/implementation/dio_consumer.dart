@@ -45,7 +45,7 @@ class DioConsumer implements ApiConsumer {
       ..responseType = ResponseType.plain
       ..followRedirects = false
       ..validateStatus = (status) {
-        return status != null && status < 500 ;
+        return status != null  ;
       };
   }
 
@@ -137,10 +137,7 @@ class DioConsumer implements ApiConsumer {
     Map<String, dynamic>? queryParameters,
   }) async {
     try {
-      final response = await client.get(
-        path,
-        queryParameters: queryParameters,
-      );
+      final response = await client.get(path, queryParameters: queryParameters);
       return handleResponseStatus(response);
     } on DioException catch (e, stackTrace) {
       await CrashlyticsCollector().logCaughtError(
@@ -250,6 +247,7 @@ class DioConsumer implements ApiConsumer {
       return left('Unexpected error occurred');
     }
   }
+ 
 
   @override
   Future<Either<String, ApiModel>> patch(
@@ -291,13 +289,13 @@ class DioConsumer implements ApiConsumer {
   }
 
   @override
-  Future<Either<String, ApiModel>> patchFormData(
+  Future<Either<String, ApiModel>> postFormData(
     String path, {
     FormData? body,
     Map<String, dynamic>? queryParameters,
   }) async {
     try {
-      final response = await client.patch(
+      final response = await client.post(
         path,
         queryParameters: queryParameters,
         data: body,
@@ -308,8 +306,8 @@ class DioConsumer implements ApiConsumer {
       await CrashlyticsCollector().logCaughtError(
         error: e,
         stackTrace: stackTrace,
-        location: 'DioConsumer.patchFormData',
-        operation: 'API PATCH FormData Request',
+        location: 'DioConsumer.postFormData',
+        operation: 'API POST FormData Request',
         contextData: {
           'path': path,
           'has_body': body != null,
@@ -322,8 +320,49 @@ class DioConsumer implements ApiConsumer {
       await CrashlyticsCollector().logCaughtError(
         error: e,
         stackTrace: stackTrace,
-        location: 'DioConsumer.patchFormData',
-        operation: 'Unexpected Error in API PATCH FormData',
+        location: 'DioConsumer.postFormData',
+        operation: 'Unexpected Error in API POST FormData',
+        contextData: {'path': path, 'query_parameters': queryParameters},
+        isExpected: false,
+      );
+      return left('Unexpected error occurred');
+    }
+  }
+
+  @override
+  Future<Either<String, ApiModel>> putFormData(
+    String path, {
+    FormData? body,
+    Map<String, dynamic>? queryParameters,
+  }) async {
+    try {
+      final response = await client.put(
+        path,
+        queryParameters: queryParameters,
+        data: body,
+        options: Options(headers: {'Accept': 'application/json'}),
+      );
+      return handleResponseStatus(response);
+    } on DioException catch (e, stackTrace) {
+      await CrashlyticsCollector().logCaughtError(
+        error: e,
+        stackTrace: stackTrace,
+        location: 'DioConsumer.putFormData',
+        operation: 'API PUT FormData Request',
+        contextData: {
+          'path': path,
+          'has_body': body != null,
+          'form_fields': body?.fields.length ?? 0,
+          'query_parameters': queryParameters,
+        },
+      );
+      return left(handleDioError(e).toString());
+    } catch (e, stackTrace) {
+      await CrashlyticsCollector().logCaughtError(
+        error: e,
+        stackTrace: stackTrace,
+        location: 'DioConsumer.putFormData',
+        operation: 'Unexpected Error in API PUT FormData',
         contextData: {'path': path, 'query_parameters': queryParameters},
         isExpected: false,
       );
@@ -544,8 +583,10 @@ class DioConsumer implements ApiConsumer {
   InterceptorsWrapper _authInterceptor() {
     return InterceptorsWrapper(
       onRequest: (options, handler) async {
-        options.headers['Accept-Language'] =
-            PreferenceUtils().getString(StorageKeys.lang, 'en');
+        options.headers['Accept-Language'] = PreferenceUtils().getString(
+          StorageKeys.lang,
+          'en',
+        );
 
         if (options.extra['requiresToken'] != false) {
           final token = await sl<HandleMultiCallLocal>().getLocalData(

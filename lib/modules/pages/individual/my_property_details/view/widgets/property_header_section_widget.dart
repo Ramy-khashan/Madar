@@ -8,12 +8,13 @@ import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
+import '../../../property_details/model/property_details_model.dart';
 import '../../model/property_details_model.dart';
 
 class PropertyHeaderSectionWidget extends StatelessWidget {
   const PropertyHeaderSectionWidget({super.key, required this.property});
 
-  final PropertyDetailsModel ?property;
+  final PropertyDetailsModel? property;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,10 @@ class PropertyHeaderSectionWidget extends StatelessWidget {
             GestureDetector(
               key: Key('location_on_map_button'),
               onTap: () {
-                RouterHandler.navigate(context, AppRouterKeys.propertyLocationMap);
+                RouterHandler.navigate(
+                  context,
+                  AppRouterKeys.propertyLocationMap,
+                );
               },
               child: Text(
                 AppStrings.locationOnMap,
@@ -66,7 +70,7 @@ class PropertyHeaderSectionWidget extends StatelessWidget {
                 ),
                 SizedBox(width: 4.width),
                 Text(
-                  property?.location ?? 'Location',
+                  '${property?.location?.city ?? ''}${property?.location?.district != null ? ', ${property?.location?.district}' : ''}${property?.location?.street != null ? ', ${property?.location?.street}' : ''}',
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(13),
                     color: colors.textSecondary,
@@ -77,16 +81,17 @@ class PropertyHeaderSectionWidget extends StatelessWidget {
             ),
             Row(
               children: [
-               const ImageItem(AppImages.occupancyIcon),
+                const ImageItem(AppImages.occupancyIcon),
                 SizedBox(width: 4.width),
-                Text(
-                  '${AppStrings.occupancyRate}: ${property?.occupancyRate.toInt() ?? 0}%',
-                  style: TextStyle(
-                    fontSize: context.responsiveFontScale(13),
-                    color: colors.textSecondary,
-                    fontFamily: AppConstant.appFont,
-                  ),
-                ),
+                //TODO: Recheck occupancy rate value
+                // Text(
+                //   '${AppStrings.occupancyRate}: ${property?.occupancyRate.toInt() ?? 0}%',
+                //   style: TextStyle(
+                //     fontSize: context.responsiveFontScale(13),
+                //     color: colors.textSecondary,
+                //     fontFamily: AppConstant.appFont,
+                //   ),
+                // ),
               ],
             ),
           ],

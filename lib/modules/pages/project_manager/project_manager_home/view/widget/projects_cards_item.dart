@@ -1,6 +1,5 @@
-
-
 import 'package:flutter/material.dart';
+import 'package:madar_app/core/utils/functions/translation.dart';
 
 import '../../../../../../config/router/app_router_keys.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
@@ -10,12 +9,12 @@ import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
-import '../../../model/project_model.dart';
+import '../../../../business/real_estate_development/projects_list/model/realstate_projects_model.dart';
 import '../../../project_details/view/widgets/project_status_badge.dart';
 
 class ProjectCardItem extends StatelessWidget {
   const ProjectCardItem({super.key, required this.project});
-  final ProjectModel project;
+  final RealStateProjectsModel? project;
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +40,10 @@ class ProjectCardItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ImageItem(
-                project.imageUrl,
+                project?.attachments?.first ?? '',
                 width: 115.width,
                 height: 120.width,
+                fit: BoxFit.fill,
                 borderRadius: BorderRadius.circular(8),
               ),
               SizedBox(width: 10.width),
@@ -58,7 +58,7 @@ class ProjectCardItem extends StatelessWidget {
                         top: 12.height,
                       ),
                       child: Text(
-                        project.name,
+                        project?.name ?? 'Project Name',
                         style: TextStyle(
                           fontSize: context.responsiveFontScale(16),
                           fontWeight: FontWeight.w700,
@@ -79,7 +79,7 @@ class ProjectCardItem extends StatelessWidget {
                               ),
                               SizedBox(width: 4.width),
                               Text(
-                                project.location,
+                                project?.location ?? 'Project Location',
                                 style: TextStyle(
                                   fontSize: context.responsiveFontScale(12),
                                   color: tc.textSecondary,
@@ -88,7 +88,7 @@ class ProjectCardItem extends StatelessWidget {
                             ],
                           ),
                         ),
-                        ProjectStatusBadge(status: project.status),
+                        ProjectStatusBadge(status: (project?.status ?? '').toLowerCase().trans),
                       ],
                     ),
                     SizedBox(height: 14.height),
@@ -103,7 +103,7 @@ class ProjectCardItem extends StatelessWidget {
                         ),
                         const Spacer(),
                         Text(
-                          '%${(project.progress * 100).toInt()}',
+                          '%${((project?.progress ?? 0) * 100).toInt()}',
                           style: TextStyle(
                             fontSize: context.responsiveFontScale(12),
                             fontWeight: FontWeight.w700,
@@ -116,7 +116,9 @@ class ProjectCardItem extends StatelessWidget {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(4),
                       child: LinearProgressIndicator(
-                        value: project.progress,
+                        value: double.parse(
+                          (project?.progress ?? 0).toString(),
+                        ),
                         backgroundColor: tc.borderColor.withValues(alpha: 0.5),
                         valueColor: AlwaysStoppedAnimation<Color>(
                           AppColors.successColor,
@@ -135,7 +137,7 @@ class ProjectCardItem extends StatelessWidget {
             onTap: () => RouterHandler.navigate(
               context,
               AppRouterKeys.projectManagerDetails,
-              extra: project,
+              extra: project?.id??"",
             ),
           ),
         ],
@@ -143,4 +145,3 @@ class ProjectCardItem extends StatelessWidget {
     );
   }
 }
- 

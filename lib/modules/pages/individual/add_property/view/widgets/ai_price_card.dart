@@ -8,7 +8,7 @@ import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 
 class AiPriceCard extends StatelessWidget {
-  AiPriceCard({super.key});
+  const AiPriceCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,18 +18,16 @@ class AiPriceCard extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         color: tc.primaryBrand,
-      gradient: LinearGradient(
-        colors: [
-          tc.primaryBrand,
-          AppColors.darkSurface,
-        ],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
+        gradient: LinearGradient(
+          colors: [tc.primaryBrand, AppColors.darkSurface],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
       ),
-      borderRadius: BorderRadius.circular(16),),
       child: Stack(
         children: [
-          PositionedDirectional(
+          const PositionedDirectional(
             end: 0,
 
             bottom: 0,

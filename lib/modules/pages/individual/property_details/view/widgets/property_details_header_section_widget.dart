@@ -5,7 +5,7 @@ import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
-import '../../model/property_details_buyer_model.dart';
+ import '../../model/property_details_model.dart';
 
 class PropertyDetailsHeaderSectionWidget extends StatelessWidget {
   const PropertyDetailsHeaderSectionWidget({super.key, required this.property});
@@ -71,9 +71,10 @@ class PropertyDetailsHeaderSectionWidget extends StatelessWidget {
                             ),
                           ),
                         ),
-
+//TODO: Recheck occupancy rate value
                         Text(
-                          '${property?.details?.occupancyRate ?? 0}%',
+                          // '${property?.occupancyRate ?? 0}%',
+                          "",
                           style: TextStyle(
                             fontSize: context.responsiveFontScale(13),
                             color: colors.primaryBrand,

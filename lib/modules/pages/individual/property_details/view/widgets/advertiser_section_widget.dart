@@ -9,11 +9,12 @@ import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../model/property_details_buyer_model.dart';
+import '../../model/property_details_model.dart';
 
 class AdvertiserSectionWidget extends StatelessWidget {
   const AdvertiserSectionWidget({super.key, required this.advertiser});
 
-  final Broker? advertiser;
+  final PropertyOwner? advertiser;
 
   @override
   Widget build(BuildContext context) {

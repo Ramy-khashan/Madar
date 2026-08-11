@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
- import '../functions/translation.dart';
+import '../functions/translation.dart';
 import 'app_colors.dart';
- 
+
 class AppConstant {
   static const String appName = 'مدار';
   static const String splashName = 'مـــــــــدار';
@@ -12,10 +12,12 @@ class AppConstant {
   static const String appHeaderFont = 'app-header-font';
   static const String individual = 'individual';
   static const String business = 'broker';
-  static const String developer = 'developer';
+  static const String developer = 'project_manager';
   static const String realtor = 'realtor';
   static const String owner = 'owner';
   static const String cairoFont = 'cairo-font';
+  static const String residentialProjectType = 'RESIDENTIAL';
+  static const String commercialProjectType = 'COMMERCIAL';
 
   static List<Map<String, String>> get propertyTypes => [
     {'id': 'villa', 'label': 'property_type_villa'.trans},
@@ -23,15 +25,14 @@ class AppConstant {
     {'id': 'apartment', 'label': 'property_type_apartment'.trans},
     {'id': 'studio', 'label': 'property_type_studio'.trans},
     {'id': 'land', 'label': 'property_type_land'.trans},
-  ]; 
-    
-   static List<Map<String, String>> get areaTypes => [
+  ];
+
+  static List<Map<String, String>> get areaTypes => [
     {'id': 'office', 'label': 'office'.trans},
     {'id': 'shop', 'label': 'shop'.trans},
     {'id': 'warehouse', 'label': 'warehouse'.trans},
     {'id': 'commercial_building', 'label': 'commercial_building'.trans},
   ];
-
 
   static List<String> get finishingLevels => [
     'finishing_level_regular'.trans,
@@ -67,14 +68,14 @@ class AppConstant {
     'duration_1_year'.trans,
     'duration_2_years'.trans,
   ];
- 
-    static Color getStatusColor(String status) {
-       final    color = switch (status) {
-      'in_progress' =>   AppColors.orangeColor,
-      'delayed' =>   AppColors.errorColor,
-      'completed' =>   AppColors.successColor,
-      _ =>   AppColors.orangeColor,
+
+  static Color getStatusColor(String status) {
+    final color = switch (status) {
+      'IN_PROGRESS' => AppColors.orangeColor,
+      'DELAYED' => AppColors.errorColor,
+      'COMPLETED' => AppColors.successColor,
+      _ => AppColors.orangeColor,
     };
-    return color;}
- 
+    return color;
+  }
 }

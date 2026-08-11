@@ -8,13 +8,13 @@ class ProjectsListState extends Equatable {
    });
 
   final RequestStatus status;
-  final List<RealEstateProjectModel> projects;
+  final List<RealStateProjectsModel> projects;
   final String errorMessage;
 
   
   ProjectsListState copyWith({
     RequestStatus? status,
-    List<RealEstateProjectModel>? projects,
+    List<RealStateProjectsModel>? projects,
     String? errorMessage,
     String? role,
   }) => ProjectsListState(

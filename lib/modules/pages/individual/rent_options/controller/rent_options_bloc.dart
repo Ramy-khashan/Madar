@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/utils/constants/app_enums.dart';
+import '../../../../../core/utils/constants/app_strings.dart';
 import '../model/rent_options_model.dart';
 
 part 'rent_options_event.dart';
@@ -36,9 +37,9 @@ class RentOptionsBloc extends Bloc<RentOptionsEvent, RentOptionsState> {
           InstallmentPlanModel(id: 'p6', monthsCount: 6, monthlyAmount: 850000, fees: 500),
           InstallmentPlanModel(id: 'p12', monthsCount: 12, monthlyAmount: 850000, fees: 500),
         ],
-        providers: const [
-          InstallmentProviderModel(id: 'tamara', name: 'تمارا', rating: 4.8, processingHours: 24),
-          InstallmentProviderModel(id: 'tabby', name: 'تابي', rating: 4.8, processingHours: 24),
+        providers: [
+          InstallmentProviderModel(id: 'tamara', name: AppStrings.providerTamara, rating: 4.8, processingHours: 24),
+          InstallmentProviderModel(id: 'tabby', name: AppStrings.providerTabby, rating: 4.8, processingHours: 24),
           InstallmentProviderModel(id: 'postpay', name: 'بوست باي', rating: 4.8, processingHours: 24),
         ],
       ),

@@ -11,14 +11,14 @@ import '../../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../../core/utils/functions/router_handler.dart';
 import '../../../../../../../core/utils/functions/translation.dart';
 import '../../../../business_home/view/widget/business_portflio_property_item.dart';
-import '../../../shared/models/real_estate_project_model.dart';
+ import '../../model/realstate_projects_model.dart';
 
 part 'property_development_status.dart';
 
 class ProjectListItemWidget extends StatelessWidget {
-  const ProjectListItemWidget({super.key, required this.project});
+  const ProjectListItemWidget({super.key, this.project});
 
-  final RealEstateProjectModel project;
+  final RealStateProjectsModel? project;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class ProjectListItemWidget extends StatelessWidget {
           Row(
             children: [
               ImageItem(
-                project.imageUrl,
+                project?.attachments?.first ?? '',
                 width: 66.width,
                 height: 58.height,
                 borderRadius: BorderRadius.circular(24.radius),
@@ -49,7 +49,7 @@ class ProjectListItemWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      project.name,
+                      project?.name ?? 'Project Name',
                       style: TextStyle(
                         fontSize: context.responsiveFontScale(16),
                         fontWeight: FontWeight.w700,
@@ -67,7 +67,7 @@ class ProjectListItemWidget extends StatelessWidget {
                         SizedBox(width: 4.width),
                         Expanded(
                           child: Text(
-                            project.location,
+                            project?.location ?? 'Location',
                             style: TextStyle(
                               fontSize: context.responsiveFontScale(14),
                               color: colors.textSecondary,
@@ -82,18 +82,18 @@ class ProjectListItemWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              PropertyDevelopmentStatus(status: project.status),
+              PropertyDevelopmentStatus(status: (project?.status?? 'IN_PROGRESS').toLowerCase()),
             ],
           ),
           SizedBox(height: 12.height),
           PropertyInfo(
             info:
-                '${AppStrings.occupancyRate}: ${project.completionPercentage.toInt()}%',
+                '${AppStrings.occupancyRate}: ${project?.progress ?? 0}%',
             icon: AppImages.occupancyRateIcon,
             colors: colors,
           ),
           PropertyInfo(
-            info: '${AppStrings.lastUpdate}: ${project.lastUpdate}',
+            info: '${AppStrings.lastUpdate}: ${project?.lastUpdate ?? ''}',
             icon: AppImages.updateIcon,
             colors: colors,
           ),
@@ -105,7 +105,7 @@ class ProjectListItemWidget extends StatelessWidget {
             onTap: () => RouterHandler.navigate(
               context,
               AppRouterKeys.realEstateDevelopmentDetails,
-              extra: {'project': project},
+              extra: {'projectId': project?.id ?? ''},
             ),
           ),
         ],
