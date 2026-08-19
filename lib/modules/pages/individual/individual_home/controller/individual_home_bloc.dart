@@ -11,8 +11,8 @@ import '../../../../../core/utils/constants/app_images.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/print_state.dart';
 import '../../../../../core/utils/functions/service_locator.dart';
+import '../../../business/business_home/model/business_portfolio_property_model.dart';
 import '../model/ads_item_model.dart';
-import '../model/portfolio_property_model.dart';
 import '../model/properties_item_model.dart';
 import '../model/smart_service_model.dart';
 
@@ -136,12 +136,9 @@ class IndividualHomeBloc
           );
         },
         (successResponse) async {
-     
-          final List<PortfolioPropertyModel> items = [];
-          for (var item in List.from(
-            successResponse.response['data'] ,
-          )) {
-            items.add(PortfolioPropertyModel.fromJson(item));
+          final List<MyPropertiesModel> items = [];
+          for (var item in List.from(successResponse.response['data'])) {
+            items.add(MyPropertiesModel.fromJson(item));
           }
           emit(
             state.copyWith(
@@ -192,7 +189,6 @@ class IndividualHomeBloc
           accuracy: LocationAccuracy.high,
         ),
       );
-      await _updateUserLocation(position);
       final List<Placemark> placemarks = await placemarkFromCoordinates(
         position.latitude,
         position.longitude,
@@ -212,16 +208,21 @@ class IndividualHomeBloc
       }
 
       emit(state.copyWith(userLocation: locationLabel));
+      await _updateUserLocation(position, locationLabel);
     } catch (e) {
       printState(e.toString());
       emit(state.copyWith(userLocation: ''));
     }
   }
 
-  Future<void> _updateUserLocation(Position position) async {
+  Future<void> _updateUserLocation(Position position, String location) async {
     await sl.get<ApiConsumer>().put(
       EndPoints.profile,
-      body: {'latitude': position.latitude, 'longitude': position.longitude},
+      body: {
+        'latitude': position.latitude,
+        'longitude': position.longitude,
+        'location': location,
+      },
     );
   }
 

@@ -105,7 +105,7 @@ class BusinessProjectDetailsScreen extends StatelessWidget {
                       ProjectPhasesSectionWidget(phases: p.stages ?? []),
                       SizedBox(height: 14.height),
                       ProjectAttachmentsSectionWidget(
-                        smartNotes: [],
+                        smartNotes:( p.timeline??[]).map((e)=> e.content ?? '').toList(),
                         attachmentUrl: p.project?.attachments ?? [],
                       ),
                       SizedBox(height: 24.height),

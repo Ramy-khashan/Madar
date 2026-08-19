@@ -32,7 +32,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       final res = await sl.get<ApiConsumer>().auth(
         EndPoints.login,
         body: {
-          'phone': phoneController.text.replaceAll('+', ''),
+          'phone': phoneController.text.replaceAll("+", ""),
           'password': passwordController.text,
         },
       );
@@ -42,7 +42,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
             state.copyWith(
               signInStatus: RequestStatus.failed,
               errorMsg: failedResponse,
-             ),
+            ),
           );
         },
         (successResponse) async {
@@ -58,12 +58,30 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
             sl.get<PreferenceUtils>().setString(
               StorageKeys.name,
               successResponse.response['user']['fullName'],
-            ), sl.get<PreferenceUtils>().setString(
+            ),
+            sl.get<PreferenceUtils>().setString(
               StorageKeys.accountType,
               successResponse.response['user']['role'],
             ),
+            sl.get<PreferenceUtils>().setString(
+              StorageKeys.image,
+              successResponse.response['user']['image']??'',
+            ),
+            sl.get<PreferenceUtils>().setString(
+              StorageKeys.userID,
+              (successResponse.response['user']['user_id'] ??
+                      successResponse.response['user']['userId'] ??
+                      successResponse.response['user']['id'] ??
+                      '')
+                  .toString(),
+            ),
           ]);
-          emit(state.copyWith(signInStatus: RequestStatus.success,role:successResponse.response['user']['role']));
+          emit(
+            state.copyWith(
+              signInStatus: RequestStatus.success,
+              role: successResponse.response['user']['role'],
+            ),
+          );
         },
       );
     } catch (e) {

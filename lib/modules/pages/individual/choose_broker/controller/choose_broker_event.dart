@@ -23,6 +23,12 @@ class ChooseBrokerSearch extends ChooseBrokerEvent {
 
   @override
   List<Object?> get props => [query];
+}class GetPropertyIdEvent extends ChooseBrokerEvent {
+  final String propertyId;
+  const GetPropertyIdEvent(this.propertyId);
+
+  @override
+  List<Object?> get props => [propertyId];
 }
 
 class ChooseBrokerSelect extends ChooseBrokerEvent {
@@ -35,6 +41,20 @@ class ChooseBrokerSelect extends ChooseBrokerEvent {
 
 class ChooseBrokerConfirm extends ChooseBrokerEvent {
   const ChooseBrokerConfirm();
+}
+
+class ChooseBrokerCommissionChanged extends ChooseBrokerEvent {
+  const ChooseBrokerCommissionChanged(this.rate);
+  final double rate;
+  @override
+  List<Object?> get props => [rate];
+}
+
+class ChooseBrokerPayerChanged extends ChooseBrokerEvent {
+  const ChooseBrokerPayerChanged(this.payer);
+  final String payer;
+  @override
+  List<Object?> get props => [payer];
 }
 
 class ChooseBrokerBack extends ChooseBrokerEvent {

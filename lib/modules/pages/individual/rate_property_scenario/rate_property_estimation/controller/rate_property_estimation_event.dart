@@ -15,6 +15,13 @@ class RatePropertyEstimationTypeSelected extends RatePropertyEstimationEvent {
   List<Object?> get props => [typeId];
 }
 
+class SearchFromApiEvent extends RatePropertyEstimationEvent {
+  final String propertyName;
+  const SearchFromApiEvent(this.propertyName);
+
+  @override
+  List<Object?> get props => [propertyName];
+}
 class RatePropertyEstimationFieldChanged extends RatePropertyEstimationEvent {
   final String? location;
   final String? area;
@@ -41,4 +48,13 @@ class RatePropertyEstimationCalculate extends RatePropertyEstimationEvent {
 
 class RatePropertyEstimationSave extends RatePropertyEstimationEvent {
   const RatePropertyEstimationSave();
+} 
+
+class PropertySelectedEvent extends RatePropertyEstimationEvent {
+  final String propertyId;
+  final String propertyName;
+  const PropertySelectedEvent(this.propertyId, this.propertyName);
+
+  @override
+  List<Object?> get props => [propertyId, propertyName];
 }

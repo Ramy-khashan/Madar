@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:madar_app/core/utils/functions/translation.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/utils/constants/app_colors.dart';
@@ -19,20 +20,16 @@ class FilterTypeChips extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
-    final types = [
-      {'id': null, 'label': AppStrings.filterAllTypes},
-      ...AppConstant.propertyTypes,
-    ];
+    
     return SizedBox(
       height: 30.height,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        itemCount: types.length,
+        itemCount: AppConstant.propertyTypes.length,
         separatorBuilder: (_, _) => SizedBox(width: 16.width),
         itemBuilder: (context, index) {
-          final t = types[index];
-          final id = t['id'];
-          final label = t['label'] as String;
+          final id = AppConstant.propertyTypes[index];
+          final label = id;
           final isSelected = id == selected;
           return GestureDetector(
             onTap: () => onChanged(id),
@@ -47,7 +44,7 @@ class FilterTypeChips extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  label,
+                  label.trans,
                   style: TextStyle(
                     color: isSelected ? Colors.white : colors.textSecondary,
                     fontSize: context.responsiveFontScale(14),

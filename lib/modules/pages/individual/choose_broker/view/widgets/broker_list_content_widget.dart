@@ -28,6 +28,7 @@ class BrokerListContentWidget extends StatelessWidget {
                 left: context.responsiveHorizontalPadding,
                 right: context.responsiveHorizontalPadding,
                 top: 10.height,
+                bottom: 10.height,
               ),
               child: Text(
                 AppStrings.brokerWillManage,
@@ -38,7 +39,7 @@ class BrokerListContentWidget extends StatelessWidget {
                 ),
               ),
             ),
-            const SearchItem(),
+            // const SearchItem(),
             Expanded(
               child: LoadingProcess(
                 status: state.isLoadMore
@@ -48,6 +49,15 @@ class BrokerListContentWidget extends StatelessWidget {
                 onTapRefresh: () => context.read<ChooseBrokerBloc>().add(
                   const ChooseBrokerLoad(),
                 ),
+                loader: ListView.separated(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.responsiveHorizontalPadding,
+                    vertical: 10.height,
+                  ),
+                  itemBuilder: (_, _) =>   BrokerCardWidget(),
+                  separatorBuilder: (_, __) => SizedBox(height: 10.height),
+                  itemCount: 15,
+                ),
                 emptyMsg: AppStrings.chooseBrokerTitle,
                 isEmptyList: state.brokers.isEmpty,
                 child: PaginationView(
@@ -55,8 +65,8 @@ class BrokerListContentWidget extends StatelessWidget {
                   items: state.filteredBrokers,
                   mainAxisExtent: ResponsiveUtils.types(
                     context,
-                    mobilePortrait: 305.height,
-                    mobileLandscape: 335.height,
+                    mobilePortrait: 285.height,
+                    mobileLandscape: 315.height,
                     tabletPortrait: 225.height,
                     tabletLandscape: 355.height,
                   ),

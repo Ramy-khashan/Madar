@@ -11,8 +11,11 @@ class ChooseBrokerState extends Equatable {
     this.loadStatus = RequestStatus.init,
     this.confirmStatus = RequestStatus.init,
     this.errorMsg = '',
+    this.propertyId = '',
     this.isLoadMore = false,
     this.totalCount = 0,
+    this.commissionRate = 2,
+    this.commissionPayer = 'OWNER',
   });
 
   final List<BrokerModel> brokers;
@@ -22,30 +25,45 @@ class ChooseBrokerState extends Equatable {
   final RequestStatus loadStatus;
   final RequestStatus confirmStatus;
   final String errorMsg;
+  final String propertyId;
   final bool isLoadMore;
   final int totalCount;
+  final double commissionRate;
+  final String commissionPayer;
 
   List<BrokerModel> get filteredBrokers {
     if (searchQuery.isEmpty) return brokers;
     return brokers
-        .where((b) =>
-            b.name.contains(searchQuery) || b.location.contains(searchQuery))
+        .where(
+          (b) =>
+              b.name.contains(searchQuery) || b.location.contains(searchQuery),
+        )
         .toList();
   }
 
-  BrokerModel? get selectedBroker =>
-      selectedBrokerId == null
-          ? null
-          : brokers.where((b) => b.id == selectedBrokerId).firstOrNull;
+  BrokerModel? get selectedBroker => selectedBrokerId == null
+      ? null
+      : brokers.where((b) => b.userId == selectedBrokerId).firstOrNull;
 
   @override
   List<Object?> get props => [
-        brokers, searchQuery, selectedBrokerId, step,
-        loadStatus, confirmStatus, errorMsg, isLoadMore, totalCount,
-      ];
+    brokers,
+    searchQuery,
+    selectedBrokerId,
+    step,
+    loadStatus,
+    confirmStatus,
+    errorMsg,
+    isLoadMore,
+    totalCount,
+    propertyId,
+    commissionRate,
+    commissionPayer,
+  ];
 
   ChooseBrokerState copyWith({
     List<BrokerModel>? brokers,
+    String? propertyId,
     String? searchQuery,
     String? selectedBrokerId,
     bool clearSelectedBrokerId = false,
@@ -55,6 +73,8 @@ class ChooseBrokerState extends Equatable {
     String? errorMsg,
     bool? isLoadMore,
     int? totalCount,
+    double? commissionRate,
+    String? commissionPayer,
   }) {
     return ChooseBrokerState(
       brokers: brokers ?? this.brokers,
@@ -68,6 +88,9 @@ class ChooseBrokerState extends Equatable {
       errorMsg: errorMsg ?? this.errorMsg,
       isLoadMore: isLoadMore ?? this.isLoadMore,
       totalCount: totalCount ?? this.totalCount,
+      propertyId: propertyId ?? this.propertyId,
+      commissionRate: commissionRate ?? this.commissionRate,
+      commissionPayer: commissionPayer ?? this.commissionPayer,
     );
   }
 }

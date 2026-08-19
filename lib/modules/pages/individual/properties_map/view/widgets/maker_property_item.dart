@@ -11,7 +11,6 @@ import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
-import '../../../property_details/model/property_details_buyer_model.dart';
 import '../../../property_details/model/property_details_model.dart';
 
 class MarkerInfoCard extends StatelessWidget {
@@ -27,6 +26,16 @@ class MarkerInfoCard extends StatelessWidget {
   final PositionModel? marker;
   final PropertyDetailsModel? property;
   final VoidCallback onClose;
+
+  String get _imageUrl {
+    final media = property?.media;
+    if (media == null || media.isEmpty) return AppImages.propertyImage;
+    final main = media.firstWhere(
+      (m) => m.isMain == true,
+      orElse: () => media.first,
+    );
+    return main.url?.isNotEmpty == true ? main.url! : AppImages.propertyImage;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +71,7 @@ class MarkerInfoCard extends StatelessWidget {
                 children: [
                   // Left: details
                   ImageItem(
-                    AppImages.propertyImage,
+                    _imageUrl,
                     width: 120.width,
                     height: 140.height,
                     fit: BoxFit.cover,

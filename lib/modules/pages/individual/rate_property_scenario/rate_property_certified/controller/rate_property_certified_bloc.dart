@@ -24,9 +24,10 @@ class RatePropertyCertifiedBloc
 
   static RatePropertyCertifiedBloc get(BuildContext context) =>
       BlocProvider.of<RatePropertyCertifiedBloc>(context);
+  final TextEditingController propertyController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final TextEditingController areaController = TextEditingController();
-  void _onTypeSelected(
+   void _onTypeSelected(
     RatePropertyCertifiedTypeSelected event,
     Emitter<RatePropertyCertifiedState> emit,
   ) {

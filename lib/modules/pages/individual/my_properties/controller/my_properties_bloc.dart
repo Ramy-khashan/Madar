@@ -9,6 +9,7 @@ import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/print_state.dart';
 import '../../../../../core/utils/functions/service_locator.dart';
+import '../../../business/business_home/model/business_portfolio_property_model.dart';
 import '../../individual_home/model/portfolio_property_model.dart';
 
 part 'my_properties_event.dart';
@@ -34,12 +35,7 @@ class MyPropertiesBloc extends Bloc<MyPropertiesEvent, MyPropertiesState> {
       );
       final response = await sl.get<ApiConsumer>().get(
         EndPoints.portfolio,
-        queryParameters: {'page': event.page, 'page_size': pageSize},
-        // queryParameters: {
-        // 'isForSale': state.filter?.isForSale,
-        // 'propertyTypeId': state.filter?.propertyTypeId,
-        // 'maxPrice': state.filter?.maxPrice,
-        // },
+        queryParameters: {'page': event.page, 'limit': pageSize},
       );
 
       response.fold(
@@ -52,18 +48,19 @@ class MyPropertiesBloc extends Bloc<MyPropertiesEvent, MyPropertiesState> {
           );
         },
         (successResponse) {
-          final List<PortfolioPropertyModel> properties = [...state.properties];
-          for (var element in List.from(
-            successResponse.response['data']['properties'],
-          )) {
-            properties.add(PortfolioPropertyModel.fromJson(element));
+          final List<MyPropertiesModel> properties = [...state.properties];
+          final dataArray = successResponse.response['data'] as List;
+          
+          for (var element in dataArray) {
+            properties.add(MyPropertiesModel.fromJson(element));
           }
 
+          final pagination = successResponse.response['pagination'] as Map;
           emit(
             state.copyWith(
               propertiesStatus: RequestStatus.success,
               properties: properties,
-              totalCount: successResponse.response['data']['total'] ?? 0,
+              totalCount: pagination['total'] as int? ?? 0,
             ),
           );
         },

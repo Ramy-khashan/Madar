@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../../../../../config/router/app_router_keys.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
+import '../../../../../../core/model/google_map_model.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
-import '../../model/property_details_buyer_model.dart';
+import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../model/property_details_model.dart';
 
 class PropertyLocationSectionWidget extends StatelessWidget {
@@ -53,7 +55,14 @@ class PropertyLocationSectionWidget extends StatelessWidget {
               height: 160.height,
               child: GoogleMap(
                 onTap: (_) {
-                  //TODO: Implement navigation to full screen map with the property location
+                  RouterHandler.navigate(
+                    context,
+                    AppRouterKeys.propertyLocationMap,
+                    extra: PositionModel(
+                      latitude: latLng.latitude,
+                      longitude: latLng.longitude,
+                    ),
+                  );
                 },
                 initialCameraPosition: CameraPosition(target: latLng, zoom: 15),
                 markers: {

@@ -27,13 +27,13 @@ class CheckboxItemWidget extends StatelessWidget {
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: 4.width),
             height: 50,
-             decoration: BoxDecoration(
-                    color: tc.borderColor.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(
-                      color: tc.textFieldTitle.withValues(alpha: 0.3),
-                    ),
-                  ),
+            decoration: BoxDecoration(
+              color: tc.borderColor.withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(
+                color: tc.textFieldTitle.withValues(alpha: 0.3),
+              ),
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -50,7 +50,7 @@ class CheckboxItemWidget extends StatelessWidget {
                   label,
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
-          
+
                     fontSize: 14.fontSize,
                   ),
                 ),

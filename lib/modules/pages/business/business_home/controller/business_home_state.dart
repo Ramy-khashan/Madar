@@ -15,7 +15,7 @@ class BusinessHomeState extends Equatable {
     this.location = '',
   });
   final List<PropertiesItemModel> properties;
-  final List<PortfolioPropertyModel> portfolio;
+  final List<MyPropertiesModel> portfolio;
   final List<BusinessPropertyRequestModel> requests;
   final RequestStatus businessPropertiesLoadStatus;
   final RequestStatus portfolioLoadStatus;
@@ -44,7 +44,7 @@ class BusinessHomeState extends Equatable {
   ];
   BusinessHomeState copyWith({
     List<PropertiesItemModel>? properties,
-    List<PortfolioPropertyModel>? portfolio,
+    List<MyPropertiesModel>? portfolio,
     List<BusinessPropertyRequestModel>? requests,
     List<SmartServiceModel>? performanceSummary,
     RequestStatus? businessPropertiesLoadStatus,

@@ -25,32 +25,33 @@ class RatePropertyBloc extends Bloc<RatePropertyEvent, RatePropertyState> {
     RatePropertyLoad event,
     Emitter<RatePropertyState> emit,
   ) async {
-    try {
-      emit(state.copyWith(loadStatus: RequestStatus.loading));
-      final res = await sl.get<ApiConsumer>().get(
-        EndPoints.propertyEvaluations,
-      );
-      await res.fold(
-        (failureResponse) {
-          emit(
-            state.copyWith(
-              loadStatus: RequestStatus.failed,
-              errorMsg: failureResponse,
-            ),
-          );
-        },
-        (successResponse) {
-          emit(state.copyWith(loadStatus: RequestStatus.success, requests: []));
-        },
-      );
-    } catch (e) {
-      emit(
-        state.copyWith(
-          loadStatus: RequestStatus.failed,
-          errorMsg: AppStrings.somethingWentWrong,
-        ),
-      );
-    }
+    emit(state.copyWith(loadStatus: RequestStatus.success, requests: []));
+    // try {
+    //   emit(state.copyWith(loadStatus: RequestStatus.loading));
+    //   final res = await sl.get<ApiConsumer>().get(
+    //     EndPoints.propertyEvaluations,
+    //   );
+    //   await res.fold(
+    //     (failureResponse) {
+    //       emit(
+    //         state.copyWith(
+    //           loadStatus: RequestStatus.failed,
+    //           errorMsg: failureResponse,
+    //         ),
+    //       );
+    //     },
+    //     (successResponse) {
+    //       emit(state.copyWith(loadStatus: RequestStatus.success, requests: []));
+    //     },
+    //   );
+    // } catch (e) {
+    //   emit(
+    //     state.copyWith(
+    //       loadStatus: RequestStatus.failed,
+    //       errorMsg: AppStrings.somethingWentWrong,
+    //     ),
+    //   );
+    // }
   }
 
   void _onTabChanged(

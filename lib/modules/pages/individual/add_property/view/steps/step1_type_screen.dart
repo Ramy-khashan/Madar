@@ -7,6 +7,8 @@ import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../controller/add_property_bloc.dart';
+import '../../model/add_property_validator.dart';
+import '../widgets/field_error_text.dart';
 
 class AddPropertyStep1Screen extends StatelessWidget {
   const AddPropertyStep1Screen({super.key});
@@ -57,6 +59,7 @@ class AddPropertyStep1Screen extends StatelessWidget {
                 const _OperationToggle(),
 
                 const _PropertyTypeGrid(),
+                const FieldErrorText(AddPropertyField.propertyType),
               ],
             ),
           ),
@@ -258,23 +261,14 @@ class _Step1NextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AddPropertyBloc, AddPropertyState>(
-      buildWhen: (prev, curr) =>
-          prev.model.propertyType != curr.model.propertyType,
-      builder: (context, state) {
-        final enabled = state.model.propertyType != null;
-        return Padding(
-          padding: EdgeInsets.fromLTRB(16.width, 8.height, 16.width, 24.height),
-          child: AppButton(
-            text: AppStrings.next,
-            onTap: enabled
-                ? () => AddPropertyBloc.get(context).add(const NextStepEvent())
-                : null,
-            colorBG: enabled ? tc.primaryBrand : tc.borderColor,
-            textColor: enabled ? tc.onPrimary : tc.textSecondary,
-          ),
-        );
-      },
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16.width, 8.height, 16.width, 24.height),
+      child: AppButton(
+        text: AppStrings.next,
+        onTap: () => AddPropertyBloc.get(context).add(const NextStepEvent()),
+        colorBG: tc.primaryBrand,
+        textColor: tc.onPrimary,
+      ),
     );
   }
 }

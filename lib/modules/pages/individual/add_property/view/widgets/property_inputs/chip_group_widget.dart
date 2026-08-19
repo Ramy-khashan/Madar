@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../../../config/theme/app_theme_colors.dart';
- 
+
 class ChipGroupWidget extends StatelessWidget {
   const ChipGroupWidget({
     super.key,
@@ -51,7 +51,9 @@ class ChipGroupWidget extends StatelessWidget {
                   color: isSelected ? tc.primaryBrand : const Color(0xFFF1F5F9),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: isSelected ? tc.primaryBrand : const Color(0xFFE2E8F0),
+                    color: isSelected
+                        ? tc.primaryBrand
+                        : const Color(0xFFE2E8F0),
                   ),
                 ),
                 child: Row(

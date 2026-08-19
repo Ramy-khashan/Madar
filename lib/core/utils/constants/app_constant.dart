@@ -19,14 +19,6 @@ class AppConstant {
   static const String residentialProjectType = 'RESIDENTIAL';
   static const String commercialProjectType = 'COMMERCIAL';
 
-  static List<Map<String, String>> get propertyTypes => [
-    {'id': 'villa', 'label': 'property_type_villa'.trans},
-    {'id': 'floor', 'label': 'property_type_floor'.trans},
-    {'id': 'apartment', 'label': 'property_type_apartment'.trans},
-    {'id': 'studio', 'label': 'property_type_studio'.trans},
-    {'id': 'land', 'label': 'property_type_land'.trans},
-  ];
-
   static List<Map<String, String>> get areaTypes => [
     {'id': 'office', 'label': 'office'.trans},
     {'id': 'shop', 'label': 'shop'.trans},
@@ -35,26 +27,18 @@ class AppConstant {
   ];
 
   static List<String> get finishingLevels => [
-    'finishing_level_regular'.trans,
-    'finishing_level_medium'.trans,
-    'finishing_level_luxury'.trans,
-    'finishing_level_super_lux'.trans,
+    'STANDARD',
+    'LUXURY',
+    'SUPER_LUXE',
   ];
 
-  static List<String> get purposes => [
-    'purpose_sell'.trans,
-    'purpose_buy'.trans,
-    'purpose_finance'.trans,
-    'purpose_insurance'.trans,
-    'purpose_rent'.trans,
-  ];
+  static List<String> get purposes => ['SALE', 'RENT'];
 
   static List<String> get propertyAges => [
-    'property_age_less_1'.trans,
-    'property_age_1_5'.trans,
-    'property_age_5_10'.trans,
-    'property_age_10_20'.trans,
-    'property_age_more_20'.trans,
+    'NEW',
+    'ONE_TO_FIVE',
+    'FIVE_TO_TEN',
+    'TEN_PLUS',
   ];
 
   static List<String> get paymentSystems => [
@@ -78,4 +62,53 @@ class AppConstant {
     };
     return color;
   }
+
+  static List<String> get propertyTypes => [
+    'APARTMENT',
+    'VILLA',
+    'FLOOR',
+    'TOWNHOUSE',
+    'LAND',
+    'BUILDING',
+    'TOWER',
+    'RESTHOUSE',
+    'OFFICE',
+    'SHOP',
+    'WAREHOUSE',
+    'FARM',
+  ];
+  static List<String> get basicServices => [
+    'INTERNET',
+    'WATER',
+    'ELECTRICITY',
+    'SEWAGE',
+    'ELEVATOR',
+    'CENTRAL_AC',
+    'PARKING',
+    'SECURITY',
+    'CCTV',
+    'ELECTRONIC_GATE',
+  ];
+  static List<String> get propertyFeature => [
+    'DRIVER_ROOM',
+    'MAID_ROOM',
+    'BASEMENT',
+    'ROOF',
+    'STORAGE',
+    'TWO_ENTRANCES',
+    'CAR_SHADE',
+    'PARKING',
+    'GARDEN',
+    'POOL',
+    'WATER_WELL',
+    'ROOFTOP',
+    'HEALTH_CLUB',
+    'MOSQUE_IN_COMPOUND',
+  ];
+  static List<String> get furnishingOptions=>[
+    "FURNISHED", "UNFURNISHED"
+  ];  static List<String> get availabilityOptions=>[
+    "EXIST", "NOT_EXIST"
+  ];
+
 }

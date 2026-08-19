@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madar_app/core/utils/constants/app_enums.dart';
 
 import '../../../../../core/components/app_appbar.dart';
 import '../../../../../core/components/is_scrollable_widget.dart';
@@ -10,12 +11,14 @@ import '../../../../../core/utils/functions/responsive.dart';
 import '../../../../config/router/app_router_keys.dart';
 import '../../../../config/theme/app_theme_colors.dart';
 import '../../../../core/components/image_item.dart';
+import '../../../../core/components/loading_item.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../core/utils/constants/app_constant.dart';
 import '../../../../core/utils/constants/app_images.dart';
 import '../../../../core/utils/constants/storage_keys.dart';
 import '../../../../core/utils/functions/preference_utils.dart';
 import '../../../../core/utils/functions/router_handler.dart';
+import '../../../../core/utils/functions/service_locator.dart';
 import '../controller/settings_bloc.dart';
 import 'widgets/business_subscription_item.dart';
 import 'widgets/change_account_item.dart';
@@ -24,6 +27,7 @@ import 'widgets/language_bottom_sheet_widget.dart';
 import 'widgets/logout_button_widget.dart';
 import 'widgets/logout_dialog.dart';
 import 'widgets/personal_info_section_widget.dart';
+import 'widgets/update_fullname_phone_dialog.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -59,55 +63,128 @@ class SettingsScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   Center(
-                                    child: Stack(
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsetsDirectional.only(
-                                            bottom: 16.height,
-                                          ),
-                                          width: 120.width,
-                                          height: 120.width,
-                                          clipBehavior:
-                                              Clip.antiAliasWithSaveLayer,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: ImageItem(
-                                            AppImages.botIntroImage,
+                                    child:
+                                        state.loadingImageProfile ==
+                                            RequestStatus.loading
+                                        ? const LoadingItem()
+                                        : Stack(
+                                            children: [
+                                              Container(
+                                                margin:
+                                                    EdgeInsetsDirectional.only(
+                                                      bottom: 16.height,
+                                                    ),
+                                                width: 120.width,
+                                                height: 120.width,
+                                                clipBehavior:
+                                                    Clip.antiAliasWithSaveLayer,
+                                                decoration: const BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: ImageItem(
+                                                  sl
+                                                      .get<PreferenceUtils>()
+                                                      .getString(
+                                                        StorageKeys.image,
+                                                      ),
 
-                                            fit: BoxFit.contain,
+                                                  fit: BoxFit.fill,
+                                                ),
+                                              ),
+                                              PositionedDirectional(
+                                                bottom: 12.height,
+                                                start: 0,
+                                                child: IconButton(
+                                                  style: IconButton.styleFrom(
+                                                    backgroundColor:
+                                                        AppThemeColors.of(
+                                                          context,
+                                                        ).primaryBrand,
+                                                    shape: const CircleBorder(),
+                                                  ),
+                                                  icon: Icon(
+                                                    Icons.edit,
+                                                    color: AppThemeColors.of(
+                                                      context,
+                                                    ).onPrimary,
+                                                    size: 16.width,
+                                                  ),
+                                                  onPressed: () {
+                                                    context
+                                                        .read<SettingsBloc>()
+                                                        .add(
+                                                          const HandleProfileImageEvent(),
+                                                        );
+                                                  },
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                        PositionedDirectional(
-                                          bottom: 12.height,
-                                          start: 0,
-                                          child: IconButton(
-                                            style: IconButton.styleFrom(
-                                              backgroundColor:
-                                                  AppThemeColors.of(
-                                                    context,
-                                                  ).primaryBrand,
-                                              shape: const CircleBorder(),
-                                            ),
-                                            icon: Icon(
-                                              Icons.edit,
-                                              color: AppThemeColors.of(
-                                                context,
-                                              ).onPrimary,
-                                              size: 16.width,
-                                            ),
-                                            onPressed: () {
-                                              // Handle edit button press
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
                                   ),
                                   PersonalInfoSectionWidget(
+                                    isLoading:
+                                        state.loadingProfile ==
+                                        RequestStatus.loading,
                                     profile: state.profile,
-                                    onEditName: () {},
-                                    onEditPhone: () {},
+                                    onEditName: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (_) {
+                                          return BlocProvider.value(
+                                            value: context.read<SettingsBloc>(),
+                                            child: Dialog(
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(16.0),
+                                                child: UpdateFullNameDialog(
+                                                  controller:  context
+                                                          .read<SettingsBloc>()
+                                                          .fullNameController,
+                                                  isLoading:
+                                                      state.updateFullNameStatus ==
+                                                      RequestStatus.loading,
+                                                  onTap: () {
+                                                    context.read<SettingsBloc>().add(
+                                                      UpdateFullNameEvent(context:context),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    onEditPhone: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (_) {
+                                          return BlocProvider.value(
+                                            value: context.read<SettingsBloc>(),
+                                            child: Dialog(
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(16.0),
+                                                child: UpdatePhoneDialog(
+                                                  onChanged: (val) =>
+                                                      context
+                                                              .read<SettingsBloc>()
+                                                              .phoneController
+                                                              .text =
+                                                          val,
+                                                  isLoading:
+                                                      state.updatePhoneStatus ==
+                                                      RequestStatus.loading,
+                                                  onTap: () {
+                                                    context
+                                                        .read<SettingsBloc>()
+                                                        .add(UpdatePhoneEvent(context:context));
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
                                   ),
                                   if (PreferenceUtils().getString(
                                         StorageKeys.accountType,
@@ -134,7 +211,10 @@ class SettingsScreen extends StatelessWidget {
                                             end: 8.width,
                                           ),
                                           child: Text(
-                                            "12",
+                                            state.loadingSavedItems ==
+                                                    RequestStatus.loading
+                                                ? '...'
+                                                : state.savedItem.toString(),
                                             style: TextStyle(
                                               fontSize: context
                                                   .responsiveFontScale(14),
@@ -203,7 +283,7 @@ class SettingsScreen extends StatelessWidget {
                                     );
                                   },
                                 ),
-                                ChangeAccountItem(),
+                                const ChangeAccountItem(),
                                 LogoutButtonWidget(
                                   onTap: () => showDialog(
                                     context: context,
@@ -233,7 +313,9 @@ class SettingsScreen extends StatelessWidget {
                                   ),
                                 ),
                                 Padding(
-                                  padding:   EdgeInsets.symmetric(horizontal: 16.width),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 16.width,
+                                  ),
                                   child: Text(
                                     AppStrings.deleteAccountHint,
                                     style: TextStyle(

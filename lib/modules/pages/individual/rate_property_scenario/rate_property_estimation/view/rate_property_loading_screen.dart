@@ -33,6 +33,9 @@ class RatePropertyLoadingScreen extends StatelessWidget {
             extra: RatePropertyEstimationBloc.get(context),
           );
         }
+        else if (state.analyzeStatus == RequestStatus.failed) {
+         RouterHandler.pop(context);
+        }
       },
       child:
           BlocBuilder<RatePropertyEstimationBloc, RatePropertyEstimationState>(

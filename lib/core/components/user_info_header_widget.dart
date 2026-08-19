@@ -11,16 +11,13 @@ class UserInfoHeaderWidget extends StatelessWidget {
   const UserInfoHeaderWidget({
     super.key,
     required this.name,
-    required this.rating,
-    required this.reviewsCount,
-    required this.propertiesCount,
+      required this.propertiesCount,
     this.imageUrl,
     this.isBroker = false,
   });
 
   final String name;
-  final double rating;
-  final int reviewsCount;
+ 
   final int propertiesCount;
 
   final String? imageUrl;
@@ -58,32 +55,32 @@ class UserInfoHeaderWidget extends StatelessWidget {
                 SizedBox(height: 4.height),
                 Row(
                   children: [
-                    Icon(Icons.star, size: 14.width, color: AppColors.rate),
-                    SizedBox(width: 3.width),
-                    Text(
-                      '$rating',
-                      style: TextStyle(
-                        fontSize: context.responsiveFontScale(13),
-                        fontWeight: FontWeight.w700,
-                        fontFamily: AppConstant.appHeaderFont,
-                        color: colors.textFieldTitle,
-                      ),
-                    ),
-                    Text(
-                      ' ($reviewsCount)',
-                      style: TextStyle(
-                        fontSize: context.responsiveFontScale(13),
-                        fontFamily: AppConstant.appHeaderFont,
-                        color: colors.textSecondary,
-                      ),
-                    ),
-                    Text(
-                      '  •  ',
-                      style: TextStyle(
-                        fontSize: context.responsiveFontScale(13),
-                        color: colors.textSecondary,
-                      ),
-                    ),
+                    // Icon(Icons.star, size: 14.width, color: AppColors.rate),
+                    // SizedBox(width: 3.width),
+                    // Text(
+                    //   '$rating',
+                    //   style: TextStyle(
+                    //     fontSize: context.responsiveFontScale(13),
+                    //     fontWeight: FontWeight.w700,
+                    //     fontFamily: AppConstant.appHeaderFont,
+                    //     color: colors.textFieldTitle,
+                    //   ),
+                    // ),
+                    // Text(
+                    //   ' ($reviewsCount)',
+                    //   style: TextStyle(
+                    //     fontSize: context.responsiveFontScale(13),
+                    //     fontFamily: AppConstant.appHeaderFont,
+                    //     color: colors.textSecondary,
+                    //   ),
+                    // ),
+                    // Text(
+                    //   '  •  ',
+                    //   style: TextStyle(
+                    //     fontSize: context.responsiveFontScale(13),
+                    //     color: colors.textSecondary,
+                    //   ),
+                    // ),
                     Text(
                       '$propertiesCount ${AppStrings.propertiesCountLabel}',
                       style: TextStyle(

@@ -2,6 +2,8 @@ part of 'add_property_bloc.dart';
 
 enum AddPropertyStep { type, period, location, images, details, review }
 
+enum SubmitStatus { initial, loading, success, failure }
+
 class AddPropertyState extends Equatable {
   const AddPropertyState({
     this.step = AddPropertyStep.type,
@@ -9,6 +11,16 @@ class AddPropertyState extends Equatable {
     this.isLoading = false,
     this.showPortfolioSheet = false,
     this.isNewFolder = true,
+    this.submitStatus = SubmitStatus.initial,
+    this.errorMessage,
+    this.createdPropertyId,
+    this.fieldErrors = const {},
+    this.openChooseBrokerOnSuccess = false,
+    this.isPreviewLoading = false,
+    this.hasMarketData = false,
+    this.suggestedMin,
+    this.suggestedMax,
+    this.aiDescription,
   });
 
   final AddPropertyStep step;
@@ -16,6 +28,16 @@ class AddPropertyState extends Equatable {
   final bool isLoading;
   final bool showPortfolioSheet;
   final bool isNewFolder;
+  final SubmitStatus submitStatus;
+  final String? errorMessage;
+  final String? createdPropertyId;
+  final Map<String, String> fieldErrors;
+  final bool openChooseBrokerOnSuccess;
+  final bool isPreviewLoading;
+  final bool hasMarketData;
+  final num? suggestedMin;
+  final num? suggestedMax;
+  final String? aiDescription;
 
   /// Maps the current step to a 0-based indicator index (5 segments total).
   /// period shares index 0 with type (it's a sub-step of the type phase).
@@ -43,6 +65,16 @@ class AddPropertyState extends Equatable {
     bool? isLoading,
     bool? showPortfolioSheet,
     bool? isNewFolder,
+    SubmitStatus? submitStatus,
+    String? errorMessage,
+    String? createdPropertyId,
+    Map<String, String>? fieldErrors,
+    bool? openChooseBrokerOnSuccess,
+    bool? isPreviewLoading,
+    bool? hasMarketData,
+    num? suggestedMin,
+    num? suggestedMax,
+    String? aiDescription,
   }) {
     return AddPropertyState(
       step: step ?? this.step,
@@ -50,15 +82,36 @@ class AddPropertyState extends Equatable {
       isLoading: isLoading ?? this.isLoading,
       showPortfolioSheet: showPortfolioSheet ?? this.showPortfolioSheet,
       isNewFolder: isNewFolder ?? this.isNewFolder,
+      submitStatus: submitStatus ?? this.submitStatus,
+      errorMessage: errorMessage,
+      createdPropertyId: createdPropertyId ?? this.createdPropertyId,
+      fieldErrors: fieldErrors ?? this.fieldErrors,
+      openChooseBrokerOnSuccess:
+          openChooseBrokerOnSuccess ?? this.openChooseBrokerOnSuccess,
+      isPreviewLoading: isPreviewLoading ?? this.isPreviewLoading,
+      hasMarketData: hasMarketData ?? this.hasMarketData,
+      suggestedMin: suggestedMin ?? this.suggestedMin,
+      suggestedMax: suggestedMax ?? this.suggestedMax,
+      aiDescription: aiDescription ?? this.aiDescription,
     );
   }
 
   @override
   List<Object?> get props => [
-        step,
-        model,
-        isLoading,
-        showPortfolioSheet,
-        isNewFolder,
+    step,
+    model,
+    isLoading,
+    showPortfolioSheet,
+    isNewFolder,
+    submitStatus,
+    errorMessage,
+        createdPropertyId,
+        fieldErrors,
+        openChooseBrokerOnSuccess,
+        isPreviewLoading,
+        hasMarketData,
+        suggestedMin,
+        suggestedMax,
+        aiDescription,
       ];
 }

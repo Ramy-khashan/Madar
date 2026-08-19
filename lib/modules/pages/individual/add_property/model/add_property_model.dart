@@ -6,6 +6,10 @@ class AddPropertyModel extends Equatable {
     this.propertyType,
     this.rentalPeriod = 'annual',
     this.location,
+    this.city = '',
+    this.district = '',
+    this.latitude,
+    this.longitude,
     this.buildingNumber = '',
     this.street = '',
     this.deedType,
@@ -16,6 +20,9 @@ class AddPropertyModel extends Equatable {
     this.aiEnhancement = false,
     this.hasVideo = false,
     this.has360Tour = false,
+    this.videoPath,
+    this.virtualTourPath,
+    this.ownershipDocumentPath,
     this.area = '',
     this.facade,
     this.streetCount = 1,
@@ -33,6 +40,7 @@ class AddPropertyModel extends Equatable {
     this.condition,
     this.developerName = '',
     this.amenities = const {},
+    this.typeDetails = const {},
     this.price = '',
     this.title = '',
     this.description = '',
@@ -47,6 +55,10 @@ class AddPropertyModel extends Equatable {
 
   // Step 3 — Location & Deed
   final String? location;
+  final String city;
+  final String district;
+  final double? latitude;
+  final double? longitude;
   final String buildingNumber;
   final String street;
   final String? deedType;
@@ -59,6 +71,9 @@ class AddPropertyModel extends Equatable {
   final bool aiEnhancement;
   final bool hasVideo;
   final bool has360Tour;
+  final String? videoPath;
+  final String? virtualTourPath;
+  final String? ownershipDocumentPath;
 
   // Step 5 — Details
   final String area;
@@ -79,6 +94,22 @@ class AddPropertyModel extends Equatable {
   final String developerName;
   final Set<String> amenities;
 
+  /// Per-type `details` values keyed by their API field name, so a new backend
+  /// field only needs a widget and a mapper entry rather than a model field.
+  final Map<String, dynamic> typeDetails;
+
+  T? detail<T>(String key) {
+    final value = typeDetails[key];
+    return value is T ? value : null;
+  }
+
+  int detailCount(String key) => detail<int>(key) ?? 0;
+
+  bool detailFlag(String key) => detail<bool>(key) ?? false;
+
+  List<String> detailList(String key) =>
+      (typeDetails[key] as List<dynamic>?)?.cast<String>() ?? const [];
+
   // Step 6 — Price & Review
   final String price;
   final String title;
@@ -92,6 +123,10 @@ class AddPropertyModel extends Equatable {
     String? propertyType,
     String? rentalPeriod,
     String? location,
+    String? city,
+    String? district,
+    double? latitude,
+    double? longitude,
     String? buildingNumber,
     String? street,
     String? deedType,
@@ -102,6 +137,12 @@ class AddPropertyModel extends Equatable {
     bool? aiEnhancement,
     bool? hasVideo,
     bool? has360Tour,
+    String? videoPath,
+    String? virtualTourPath,
+    bool clearVideoPath = false,
+    bool clearVirtualTourPath = false,
+    bool clearOwnershipDocumentPath = false,
+    String? ownershipDocumentPath,
     String? area,
     String? facade,
     int? streetCount,
@@ -119,6 +160,7 @@ class AddPropertyModel extends Equatable {
     String? condition,
     String? developerName,
     Set<String>? amenities,
+    Map<String, dynamic>? typeDetails,
     String? price,
     String? title,
     String? description,
@@ -131,6 +173,10 @@ class AddPropertyModel extends Equatable {
       propertyType: propertyType ?? this.propertyType,
       rentalPeriod: rentalPeriod ?? this.rentalPeriod,
       location: location ?? this.location,
+      city: city ?? this.city,
+      district: district ?? this.district,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
       buildingNumber: buildingNumber ?? this.buildingNumber,
       street: street ?? this.street,
       deedType: deedType ?? this.deedType,
@@ -141,6 +187,13 @@ class AddPropertyModel extends Equatable {
       aiEnhancement: aiEnhancement ?? this.aiEnhancement,
       hasVideo: hasVideo ?? this.hasVideo,
       has360Tour: has360Tour ?? this.has360Tour,
+      videoPath: clearVideoPath ? null : (videoPath ?? this.videoPath),
+      virtualTourPath: clearVirtualTourPath
+          ? null
+          : (virtualTourPath ?? this.virtualTourPath),
+      ownershipDocumentPath: clearOwnershipDocumentPath
+          ? null
+          : (ownershipDocumentPath ?? this.ownershipDocumentPath),
       area: area ?? this.area,
       facade: facade ?? this.facade,
       streetCount: streetCount ?? this.streetCount,
@@ -158,6 +211,7 @@ class AddPropertyModel extends Equatable {
       condition: condition ?? this.condition,
       developerName: developerName ?? this.developerName,
       amenities: amenities ?? this.amenities,
+      typeDetails: typeDetails ?? this.typeDetails,
       price: price ?? this.price,
       title: title ?? this.title,
       description: description ?? this.description,
@@ -169,42 +223,50 @@ class AddPropertyModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        operationType,
-        propertyType,
-        rentalPeriod,
-        location,
-        buildingNumber,
-        street,
-        deedType,
-        deedNumber,
-        dateType,
-        date,
-        imagePaths,
-        aiEnhancement,
-        hasVideo,
-        has360Tour,
-        area,
-        facade,
-        streetCount,
-        streetWidth,
-        propertyAge,
-        beds,
-        baths,
-        lounges,
-        majlis,
-        apartmentNumber,
-        totalFloors,
-        apartmentsPerFloor,
-        floorLevel,
-        furnishing,
-        condition,
-        developerName,
-        amenities,
-        price,
-        title,
-        description,
-        hasRentInstallment,
-        hasInsurance,
-        portfolioFolderName,
-      ];
+    operationType,
+    propertyType,
+    rentalPeriod,
+    location,
+    city,
+    district,
+    latitude,
+    longitude,
+    buildingNumber,
+    street,
+    deedType,
+    deedNumber,
+    dateType,
+    date,
+    imagePaths,
+    aiEnhancement,
+    hasVideo,
+    has360Tour,
+    videoPath,
+    virtualTourPath,
+    ownershipDocumentPath,
+    area,
+    facade,
+    streetCount,
+    streetWidth,
+    propertyAge,
+    beds,
+    baths,
+    lounges,
+    majlis,
+    apartmentNumber,
+    totalFloors,
+    apartmentsPerFloor,
+    floorLevel,
+    furnishing,
+    condition,
+    developerName,
+    amenities,
+    typeDetails,
+    price,
+    title,
+    description,
+    hasRentInstallment,
+    hasInsurance,
+    portfolioFolderName,
+  ];
 }

@@ -2,7 +2,7 @@ part of 'individual_home_bloc.dart';
 
 class IndividualHomeState extends Equatable {
   final List<PropertiesItemModel> properties;
-  final List<PortfolioPropertyModel> portfolio;
+  final List<MyPropertiesModel> portfolio;
   final List<AdsItemModel> adsItem;
   final String propertiesErrorMsg;
   final String portfolioErrorMsg;
@@ -29,7 +29,7 @@ class IndividualHomeState extends Equatable {
   List<Object> get props => [properties, portfolio, adsItem, userLocation, propertiesErrorMsg, portfolioErrorMsg, adsErrorMsg, propertiesStatus, portfolioStatus, adsStatus];
   IndividualHomeState copyWith({
     List<PropertiesItemModel>? properties,
-    List<PortfolioPropertyModel>? portfolio,
+    List<MyPropertiesModel>? portfolio,
     List<AdsItemModel>? adsItem,
     String? userLocation,
     String? propertiesErrorMsg,

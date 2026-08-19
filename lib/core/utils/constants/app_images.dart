@@ -102,6 +102,7 @@ class AppImages {
   static const String locationDone = 'assets/icons/location_done.svg';
   static const String apartmentIcon = 'assets/icons/apartment_icon.svg';
   static const String deleteIcon = 'assets/icons/trash.svg';
+  static const String logout = 'assets/icons/logout.svg';
 
 
 

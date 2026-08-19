@@ -8,13 +8,12 @@ import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
-import '../../model/property_details_buyer_model.dart';
-import '../../model/property_details_model.dart';
+ import '../../model/property_details_model.dart';
 
 class AdvertiserSectionWidget extends StatelessWidget {
   const AdvertiserSectionWidget({super.key, required this.advertiser});
 
-  final PropertyOwner? advertiser;
+  final Publisher? advertiser;
 
   @override
   Widget build(BuildContext context) {
@@ -191,7 +190,7 @@ class AdvertiserSectionWidget extends StatelessWidget {
               SizedBox(height: 16.height),
               AppButton(
                 text:
-                    '${AppStrings.viewOwnerProperties} (${advertiser?.totalProperties ?? 0})',
+                    '${AppStrings.viewOwnerProperties} (${advertiser?.propertiesCount ?? 0})',
                 onTap: () {
                   RouterHandler.navigate(context, AppRouterKeys.ownerProperties);
                 },

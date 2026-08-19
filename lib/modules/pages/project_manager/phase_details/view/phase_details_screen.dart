@@ -5,6 +5,7 @@ import 'package:madar_app/core/utils/functions/translation.dart';
 import '../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../core/components/app_appbar.dart';
 import '../../../../../core/components/app_textfield.dart';
+import '../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/common_fun.dart';
@@ -45,7 +46,7 @@ class PhaseDetailsScreen extends StatelessWidget {
               AppToast(AppStrings.phaseApproved);
 
               Future.delayed(const Duration(milliseconds: 500), () {
-                if (context.mounted) RouterHandler.pop(context,  true);
+                if (context.mounted) RouterHandler.pop(context, true);
               });
             }
           },
@@ -85,17 +86,37 @@ class PhaseDetailsScreen extends StatelessWidget {
                             ),
                           ],
                         ),
+                        SizedBox(height: 12.height),
+
+                        LinearProgressIndicator(
+                          value: phase.progress != null
+                              ? double.parse(phase.progress.toString()) / 100
+                              : 0,
+
+                          backgroundColor: tc.borderColor,
+                          color: AppColors.lightSuccessColor,
+                        ),
                         SizedBox(height: 6.height),
-                        Text(
-                          phase.progress != null
-                              ? (phase.progress == 100
-                                    ? '${phase.progress}% ${AppStrings.completed}'
-                                    : '${phase.progress}% ${'in_progress'.trans}')
-                              : 'in_progress'.trans,
-                          style: TextStyle(
-                            fontSize: context.responsiveFontScale(13),
-                            color: tc.textSecondary,
-                          ),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              AppStrings.progress,
+                              style: TextStyle(
+                                fontSize: context.responsiveFontScale(12),
+                                fontWeight: FontWeight.w600,
+                                color: tc.textPrimary,
+                              ),
+                            ),
+                            Text(
+                              '${phase.progress ?? 0}%',
+                              style: TextStyle(
+                                fontSize: context.responsiveFontScale(10),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
                         ),
                         SizedBox(height: 24.height),
 
@@ -150,7 +171,7 @@ class PhaseDetailsScreen extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 20.height),
-                      
+
                         ImagesSection(timeline: timeline, tc: tc, bloc: bloc),
                         SizedBox(height: 20.height),
 

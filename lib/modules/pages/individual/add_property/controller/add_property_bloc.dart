@@ -2,9 +2,13 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../core/repository/apis/create_property_apis.dart';
 import '../../../../../core/utils/constants/app_images.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../model/add_property_model.dart';
+import '../model/add_property_request_mapper.dart';
+import '../model/add_property_validator.dart';
+import '../model/property_enums.dart';
 
 part 'add_property_event.dart';
 part 'add_property_state.dart';
@@ -17,13 +21,21 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     on<SelectPropertyTypeEvent>(_onSelectPropertyType);
     on<SelectRentalPeriodEvent>(_onSelectRentalPeriod);
     on<UpdateLocationEvent>(_onUpdateLocation);
+    on<UpdateCoordinatesEvent>(_onUpdateCoordinates);
     on<SelectDeedTypeEvent>(_onSelectDeedType);
     on<SelectDateTypeEvent>(_onSelectDateType);
     on<AddImageEvent>(_onAddImage);
+    on<AddImagesEvent>(_onAddImages);
     on<RemoveImageEvent>(_onRemoveImage);
     on<ToggleAiEnhancementEvent>(_onToggleAiEnhancement);
-    on<ToggleVideoEvent>(_onToggleVideo);
-    on<Toggle360TourEvent>(_onToggle360Tour);
+    on<SetVideoPathEvent>(_onSetVideoPath);
+    on<ClearVideoEvent>(_onClearVideo);
+    on<SetVirtualTourPathEvent>(_onSetVirtualTourPath);
+    on<ClearVirtualTourEvent>(_onClearVirtualTour);
+    on<SetDeedDocumentEvent>(_onSetDeedDocument);
+    on<ClearDeedDocumentEvent>(_onClearDeedDocument);
+    on<PreviewEvaluationEvent>(_onPreviewEvaluation);
+    on<ApplyAiDescriptionEvent>(_onApplyAiDescription);
     on<SelectFacadeEvent>(_onSelectFacade);
     on<IncrementStreetCountEvent>(_onIncrementStreetCount);
     on<DecrementStreetCountEvent>(_onDecrementStreetCount);
@@ -32,6 +44,11 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     on<IncrementCounterEvent>(_onIncrementCounter);
     on<DecrementCounterEvent>(_onDecrementCounter);
     on<SelectDropdownEvent>(_onSelectDropdown);
+    on<SetDetailFieldEvent>(_onSetDetailField);
+    on<ToggleDetailListItemEvent>(_onToggleDetailListItem);
+    on<IncrementDetailCounterEvent>(_onIncrementDetailCounter);
+    on<DecrementDetailCounterEvent>(_onDecrementDetailCounter);
+    on<ToggleDetailFlagEvent>(_onToggleDetailFlag);
     on<ToggleAmenityEvent>(_onToggleAmenity);
     on<ToggleRentInstallmentEvent>(_onToggleRentInstallment);
     on<ToggleInsuranceEvent>(_onToggleInsurance);
@@ -46,6 +63,7 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
 
   final TextEditingController buildingNumberController =
       TextEditingController();
+  final TextEditingController streetWidthController = TextEditingController();
   final TextEditingController streetController = TextEditingController();
   final TextEditingController deedNumberController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
@@ -64,20 +82,67 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
 
   static AddPropertyBloc get(BuildContext context) =>
       context.read<AddPropertyBloc>();
-
   static List<Map<String, dynamic>> get propertyTypeItems => [
-    {'id': 'apartment', 'label': AppStrings.propertyTypeApartment, 'icon': AppImages.apartment},
-    {'id': 'villa', 'label': AppStrings.propertyTypeVilla, 'icon': AppImages.villa},
-    {'id': 'floor', 'label': AppStrings.propertyTypeFloor, 'icon': AppImages.floor},
-    {'id': 'townhouse', 'label': AppStrings.propertyTypeTownhouse, 'icon': AppImages.townhouse},
-    {'id': 'building', 'label': AppStrings.propertyTypeBuilding, 'icon': AppImages.building},
-    {'id': 'land', 'label': AppStrings.propertyTypeLand, 'icon': AppImages.land},
-    {'id': 'rest_house', 'label': AppStrings.propertyTypeRestHouse, 'icon': AppImages.restHouse},
-    {'id': 'tower', 'label': AppStrings.propertyTypeTower, 'icon': AppImages.tower},
-    {'id': 'shop', 'label': AppStrings.propertyTypeShop, 'icon': AppImages.shop},
-    {'id': 'office', 'label': AppStrings.propertyTypeOffice, 'icon': AppImages.office},
-    {'id': 'farm', 'label': AppStrings.propertyTypeFarm, 'icon': AppImages.farm},
-    {'id': 'warehouse', 'label': AppStrings.propertyTypeWarehouse, 'icon': AppImages.warehouse},
+    {
+      'id': 'APARTMENT',
+      'label': AppStrings.propertyTypeApartment,
+      'icon': AppImages.apartment,
+    },
+    {
+      'id': 'VILLA',
+      'label': AppStrings.propertyTypeVilla,
+      'icon': AppImages.villa,
+    },
+    {
+      'id': 'FLOOR',
+      'label': AppStrings.propertyTypeFloor,
+      'icon': AppImages.floor,
+    },
+    {
+      'id': 'TOWNHOUSE',
+      'label': AppStrings.propertyTypeTownhouse,
+      'icon': AppImages.townhouse,
+    },
+    {
+      'id': 'BUILDING',
+      'label': AppStrings.propertyTypeBuilding,
+      'icon': AppImages.building,
+    },
+    {
+      'id': 'LAND',
+      'label': AppStrings.propertyTypeLand,
+      'icon': AppImages.land,
+    },
+    {
+      'id': 'RESTHOUSE',
+      'label': AppStrings.propertyTypeRestHouse,
+      'icon': AppImages.restHouse,
+    },
+    {
+      'id': 'TOWER',
+      'label': AppStrings.propertyTypeTower,
+      'icon': AppImages.tower,
+    },
+    {
+      'id': 'SHOP',
+      'label': AppStrings.propertyTypeShop,
+      'icon': AppImages.shop,
+    },
+    {
+      'id': 'OFFICE',
+      'label': AppStrings.propertyTypeOffice,
+      'icon': AppImages.office,
+    },
+    {
+      'id': 'FARM',
+      'label': AppStrings.propertyTypeFarm,
+      'icon': AppImages.farm,
+    },
+    {
+      'id': 'WAREHOUSE',
+      'label': AppStrings.propertyTypeWarehouse,
+      'icon': AppImages.warehouse,
+    },
   ];
 
   static List<Map<String, String>> get deedTypes => [
@@ -92,176 +157,247 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
       'id': 'regular',
       'label': AppStrings.deedRegular,
       'hint':
-          "وثيقة تملك عقار صادرة من السجل العقاري لإثبات بيانات العقار تتضمن نوعه وحالته وبيانات مالكه.",
+          'وثيقة تملك عقار صادرة من السجل العقاري لإثبات بيانات العقار تتضمن نوعه وحالته وبيانات مالكه.',
       'icon': AppImages.commerical,
     },
     {
       'id': 'old',
       'label': AppStrings.deedOld,
       'hint':
-          "في حال شراء العقار من البنك، يتم إبرام عقد البيع ويتم تسليمه للمستفيد.",
+          'في حال شراء العقار من البنك، يتم إبرام عقد البيع ويتم تسليمه للمستفيد.',
       'icon': AppImages.sell,
     },
     {
       'id': 'other',
       'label': AppStrings.deedOther,
       'hint':
-          "خيار يتيح لك إضافة أي وثيقة ملكية أخرى مثل صك ورقي، عقد إيجار (تاجر من الباطن).",
+          'خيار يتيح لك إضافة أي وثيقة ملكية أخرى مثل صك ورقي، عقد إيجار (تاجر من الباطن).',
       'icon': AppImages.other,
     },
   ];
-  static List<String> get facadeOptions => [
-    AppStrings.facadeNorth,
-    AppStrings.facadeSouth,
-    AppStrings.facadeEast,
-    AppStrings.facadeWest,
-    AppStrings.facadeNortheast,
-    AppStrings.facadeNorthwest,
-    AppStrings.facadeSoutheast,
-    AppStrings.facadeSouthwest,
-  ];
-  static List<String> get landClassificationOptions => [
-    AppStrings.landClassificationResidential,
-    AppStrings.landClassificationCommercial,
-    AppStrings.landClassificationIndustrial,
-    AppStrings.landClassificationAgricultural,
-  ];
-  static List<String> get viewOptions => [
-    AppStrings.viewPanoramic,
-    AppStrings.viewRegular,
-    AppStrings.viewDouble,
-    AppStrings.viewDoublePanoramic,
-  ];
-  static const List<String> streetWidthOptions = [
-    '10 م',
-    '12 م',
-    '15 م',
-    '20 م',
-    '25 م',
+  // Option lists hold API wire values; widgets render them through `.trans`
+  // so labels stay localized while the stored value stays submittable.
+
+  static const List<String> facadeOptions = PropertyApiEnums.facadeByIndex;
+
+  static const List<String> classificationOptions = [
+    PropertyApiEnums.classificationResidential,
+    PropertyApiEnums.classificationCommercial,
+    PropertyApiEnums.classificationMixed,
   ];
 
-  static List<String> get propertyAgeOptions => [
-    AppStrings.propertyAgeNew,
-    AppStrings.propertyAgeLess5,
-    AppStrings.propertyAge5To10,
-    AppStrings.propertyAgeMore10,
-  ];
-  static List<String> get amenityOptions => [
-    AppStrings.amenitySharedPool,
-    AppStrings.amenityClub,
-    AppStrings.amenityGarden,
-    AppStrings.amenitySecurity,
-  ];
-  static List<String> get communityAmenityOptions => [
-    AppStrings.communityAmenityEventHall,
-    AppStrings.communityAmenitySauna,
-    AppStrings.communityAmenityGym,
-    AppStrings.communityAmenityPool,
-    AppStrings.communityAmenityHeliport,
-    AppStrings.communityAmenityGuard,
-    AppStrings.communityAmenityLobby,
-  ];
-  static List<String> get interiorAmenityOptions => [
-    AppStrings.interiorAmenityMeetingRoom,
-    AppStrings.interiorAmenityReception,
-    AppStrings.interiorAmenityKitchen,
-    AppStrings.interiorAmenityAc,
-    AppStrings.interiorAmenityElevator,
-    AppStrings.interiorAmenityParking,
-  ];
-  static List<String> get floorOptions => [
-    AppStrings.floorGround,
-    AppStrings.floorFirst,
-    AppStrings.floorSecond,
-    AppStrings.floorThird,
-    AppStrings.floorFourth,
-    AppStrings.floorFifth,
-    AppStrings.floorSixth,
-    AppStrings.floorSeventh,
-    AppStrings.floorEighth,
-    AppStrings.floorNinth,
-    AppStrings.floorTenth,
+  static const List<String> towerClassificationOptions = [
+    PropertyApiEnums.classificationResidential,
+    PropertyApiEnums.classificationCommercial,
+    PropertyApiEnums.towerClassificationOffice,
+    PropertyApiEnums.towerClassificationMixedUse,
+    PropertyApiEnums.towerClassificationHotel,
   ];
 
-  static List<String> get furnishingOptions => [AppStrings.furnishingFurnished, AppStrings.furnishingUnfurnished];
-  static List<String> get locationOptions => [
-    AppStrings.locationMainStreet,
-    AppStrings.locationSecondaryStreet,
-    AppStrings.locationResidentialComplex,
-    AppStrings.locationCommercialComplex
+  static const List<String> viewOptions = [
+    PropertyApiEnums.viewPanoramic,
+    PropertyApiEnums.viewSea,
+    PropertyApiEnums.viewCity,
+    PropertyApiEnums.viewMountain,
+    PropertyApiEnums.viewGarden,
   ];
-  static List<String> get coolingOptions => [AppStrings.coolingTypeCooling, AppStrings.coolingTypeFreezing, AppStrings.coolingTypeBoth];
-  static List<String> get floorTypeOptions => [AppStrings.flooringConcrete, AppStrings.flooringWooden, AppStrings.flooringMarble, AppStrings.flooringCeramic, AppStrings.flooringCement];
-  static List<String> get doorTypeOptions => [AppStrings.doorTypeRegular, AppStrings.doorTypeSecondary, AppStrings.doorTypeDouble];
-  static List<String> get conditionOptions => [
-    AppStrings.conditionExcellent,
-    AppStrings.conditionVeryGood,
-    AppStrings.conditionGood,
-    AppStrings.conditionFair,
-    AppStrings.conditionNeedsRenovation,
-  ];
-  static List<String> get soilTypeOptions => [AppStrings.soilTypeClay, AppStrings.soilTypeSandy, AppStrings.soilTypeRocky, AppStrings.soilTypeGravelly, AppStrings.soilTypeClaysSandy, AppStrings.soilTypeClayRocky];
-  static const List<String> availabilityOptions = ['يوجد', 'لا يوجد'];
-  static const List<String> apartmentFloorOptions = [
-    '10-1',
-    '20-11',
-    '30-21',
-    '40-31',
-    '50-41',
-    '60-51',
-    '70-61',
-  ];
-  static const List<String> parkingFloorOptions = ["0-5", "6-10", "11-15"];
 
-  static List<Map<String, dynamic>> get amenityCategories => [
-    {
-      'title': AppStrings.featureCategoryBasicServices,
-      'items': [
-        {'id': 'internet', 'label': AppStrings.featureInternet},
-        {'id': 'sewage', 'label': AppStrings.featureSewage},
-        {'id': 'water', 'label': AppStrings.featureWater},
-        {'id': 'electricity', 'label': AppStrings.featureElectricity},
-      ],
-    },
-    {
-      'title': AppStrings.featureCategoryInterior,
-      'items': [
-        {'id': 'driver_room', 'label': AppStrings.featureDriverRoom},
-        {'id': 'maid_room', 'label': AppStrings.featureMaidRoom},
-        {'id': 'elevator', 'label': AppStrings.featureElevator},
-        {'id': 'central_ac', 'label': AppStrings.featureCentralAc},
-        {'id': 'basement', 'label': AppStrings.featureBasement},
-        {'id': 'roof', 'label': AppStrings.featureRoof},
-        {'id': 'storage', 'label': AppStrings.featureWarehouse},
-      ],
-    },
-
-    {
-      'title': AppStrings.featureCategoryExteriorSecurity,
-      'items': [
-        {'id': 'car_shelter', 'label': AppStrings.exteriorFeatureCarShelter},
-        {'id': 'garden', 'label': AppStrings.featureGarden},
-        {'id': 'swimming_pool', 'label': AppStrings.featurePool},
-        {'id': 'security_guard', 'label': AppStrings.featureGuard},
-        {'id': 'security_and_complexes', 'label': AppStrings.exteriorFeatureSecurityComplexes},
-        {'id': 'water_well', 'label': AppStrings.featureWaterWell},
-        {'id': 'health_club', 'label': AppStrings.featureHealthClub},
-        {'id': 'electronic_gate', 'label': AppStrings.featureElectronicGate},
-        {'id': 'surveillance_cameras', 'label': AppStrings.featureCctv},
-      ],
-    },
+  /// Townhouse community facilities.
+  static const List<String> communityFacilityOptions = [
+    PropertyApiEnums.communityPool,
+    PropertyApiEnums.communityGym,
+    PropertyApiEnums.communityGarden,
+    PropertyApiEnums.communitySecurity,
+    PropertyApiEnums.communityPlayground,
   ];
+
+  static const List<String> towerAmenityOptions = [
+    PropertyApiEnums.towerAmenityPool,
+    PropertyApiEnums.towerAmenityGym,
+    PropertyApiEnums.towerAmenitySauna,
+    PropertyApiEnums.towerAmenityEventHall,
+    PropertyApiEnums.towerAmenityLobby,
+    PropertyApiEnums.towerAmenitySecurity247,
+    PropertyApiEnums.towerAmenityHeliport,
+  ];
+
+  static const List<String> officeFacilityOptions = [
+    PropertyApiEnums.facilityAc,
+    PropertyApiEnums.facilityStorage,
+    PropertyApiEnums.facilityBathroom,
+    PropertyApiEnums.facilityPrivateParking,
+    PropertyApiEnums.facilityElevator,
+  ];
+
+  static const List<String> shopFacilityOptions = officeFacilityOptions;
+
+  static const List<String> shopActivityOptions = [
+    PropertyApiEnums.activityElectronics,
+    PropertyApiEnums.activityClothing,
+    PropertyApiEnums.activityCafe,
+    PropertyApiEnums.activityRestaurant,
+    PropertyApiEnums.activitySalon,
+    PropertyApiEnums.activitySupermarket,
+  ];
+
+  static const List<String> landServiceOptions = [
+    PropertyApiEnums.landServiceElectricity,
+    PropertyApiEnums.landServiceWater,
+    PropertyApiEnums.landServiceRoad,
+    PropertyApiEnums.landServiceLighting,
+    PropertyApiEnums.landServiceSewage,
+  ];
+
+  static const List<String> waterSourceOptions = [
+    PropertyApiEnums.waterSourceWell,
+    PropertyApiEnums.waterSourceNetwork,
+  ];
+
+  static const List<String> farmFacilityOptions = [
+    PropertyApiEnums.farmFacilityRestHouse,
+    PropertyApiEnums.farmFacilityFence,
+    PropertyApiEnums.farmFacilityLivestockSheds,
+    PropertyApiEnums.farmFacilityElectricity,
+  ];
+
+  /// Slot of the floor within its building, used by `type: FLOOR`.
+  static const List<String> floorTypeOptions = [
+    PropertyApiEnums.floorTypeGround,
+    PropertyApiEnums.floorTypeUpper,
+    PropertyApiEnums.floorTypeBasement,
+    PropertyApiEnums.floorTypeRoof,
+  ];
+
+  static const List<String> shopLocationOptions = [
+    PropertyApiEnums.shopLocationMainStreet,
+    PropertyApiEnums.shopLocationSideStreet,
+    PropertyApiEnums.shopLocationMall,
+    PropertyApiEnums.shopLocationCommercialComplex,
+  ];
+
+  static const List<String> coolingOptions = [
+    PropertyApiEnums.coolingNone,
+    PropertyApiEnums.coolingChilled,
+    PropertyApiEnums.coolingFrozen,
+    PropertyApiEnums.coolingAirConditioned,
+  ];
+
+  static const List<String> flooringOptions = [
+    PropertyApiEnums.flooringConcrete,
+    PropertyApiEnums.flooringEpoxy,
+    PropertyApiEnums.flooringIndustrialTiles,
+  ];
+
+  static const List<String> doorTypeOptions = [
+    PropertyApiEnums.doorTypeNormal,
+    PropertyApiEnums.doorTypeRoller,
+    PropertyApiEnums.doorTypeLoadingDock,
+  ];
+
+  static const List<String> conditionOptions = [
+    PropertyApiEnums.conditionNew,
+    PropertyApiEnums.conditionUsed,
+  ];
+
+  static const List<String> soilTypeOptions = [
+    PropertyApiEnums.soilClay,
+    PropertyApiEnums.soilSandy,
+    PropertyApiEnums.soilMixed,
+  ];
+
+  /// Numeric pickers submit plain integers, so their label is the value itself
+  /// and must not be translated.
+  static List<String> numberOptions(int max, {int min = 0}) =>
+      List.generate(max - min + 1, (i) => '${min + i}');
+
+  static List<String> get floorNumberOptions => numberOptions(50);
+  static List<String> get floorsCountOptions => numberOptions(100, min: 1);
+  static List<String> get unitCountOptions => numberOptions(200);
+  static List<String> get parkingFloorOptions => numberOptions(15);
 
   // ── Navigation handlers ──────────────────────────────────────────────────
 
   void _onNext(NextStepEvent event, Emitter<AddPropertyState> emit) {
-    final next = _nextStep(state.step, state.model.operationType);
-    if (next != null) emit(state.copyWith(step: next));
+    final model = _modelWithControllerValues();
+    final errors = _errorsForStep(state.step, model);
+    if (errors.isNotEmpty) {
+      emit(
+        state.copyWith(
+          model: model,
+          fieldErrors: errors,
+          errorMessage: errors.values.first,
+        ),
+      );
+      return;
+    }
+    final next = _nextStep(state.step, model.operationType);
+    if (next != null) {
+      emit(
+        state.copyWith(
+          model: model,
+          step: next,
+          fieldErrors: const {},
+          errorMessage: null,
+        ),
+      );
+      if (next == AddPropertyStep.review) {
+        add(const PreviewEvaluationEvent());
+      }
+    }
+  }
+
+  Map<String, String> _errorsForStep(
+    AddPropertyStep step,
+    AddPropertyModel model,
+  ) {
+    switch (step) {
+      case AddPropertyStep.type:
+        return AddPropertyValidator.validateType(model);
+      case AddPropertyStep.period:
+        return AddPropertyValidator.validatePeriod(model);
+      case AddPropertyStep.location:
+        return AddPropertyValidator.validateLocation(model);
+      case AddPropertyStep.images:
+        return AddPropertyValidator.validateImages(model);
+      case AddPropertyStep.details:
+        return AddPropertyValidator.validateDetails(model);
+      case AddPropertyStep.review:
+        return AddPropertyValidator.validateReview(model);
+    }
+  }
+
+  AddPropertyStep _stepForField(String key) {
+    switch (key) {
+      case AddPropertyField.propertyType:
+        return AddPropertyStep.type;
+      case AddPropertyField.rentalPeriod:
+        return AddPropertyStep.period;
+      case AddPropertyField.location:
+      case AddPropertyField.deedType:
+      case AddPropertyField.deedNumber:
+      case AddPropertyField.deedDate:
+        return AddPropertyStep.location;
+      case AddPropertyField.images:
+        return AddPropertyStep.images;
+      case AddPropertyField.price:
+      case AddPropertyField.title:
+        return AddPropertyStep.review;
+      default:
+        return AddPropertyStep.details;
+    }
   }
 
   void _onPrevious(PreviousStepEvent event, Emitter<AddPropertyState> emit) {
     final prev = _previousStep(state.step, state.model.operationType);
-    if (prev != null) emit(state.copyWith(step: prev));
+    if (prev != null) {
+      emit(
+        state.copyWith(
+          step: prev,
+          fieldErrors: const {},
+          errorMessage: null,
+        ),
+      );
+    }
   }
 
   AddPropertyStep? _nextStep(AddPropertyStep current, String operationType) {
@@ -345,6 +481,22 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     emit(state.copyWith(model: state.model.copyWith(location: event.location)));
   }
 
+  void _onUpdateCoordinates(
+    UpdateCoordinatesEvent event,
+    Emitter<AddPropertyState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        model: state.model.copyWith(
+          latitude: event.latitude,
+          longitude: event.longitude,
+          city: event.city,
+          district: event.district,
+        ),
+      ),
+    );
+  }
+
   void _onSelectDeedType(
     SelectDeedTypeEvent event,
     Emitter<AddPropertyState> emit,
@@ -366,6 +518,13 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     emit(state.copyWith(model: state.model.copyWith(imagePaths: updated)));
   }
 
+  void _onAddImages(AddImagesEvent event, Emitter<AddPropertyState> emit) {
+    if (event.paths.isEmpty) return;
+    final updated = List<String>.from(state.model.imagePaths)
+      ..addAll(event.paths);
+    emit(state.copyWith(model: state.model.copyWith(imagePaths: updated)));
+  }
+
   void _onRemoveImage(RemoveImageEvent event, Emitter<AddPropertyState> emit) {
     final updated = List<String>.from(state.model.imagePaths)
       ..removeAt(event.index);
@@ -383,21 +542,120 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     );
   }
 
-  void _onToggleVideo(ToggleVideoEvent event, Emitter<AddPropertyState> emit) {
-    emit(
-      state.copyWith(
-        model: state.model.copyWith(hasVideo: !state.model.hasVideo),
-      ),
-    );
-  }
-
-  void _onToggle360Tour(
-    Toggle360TourEvent event,
+  void _onSetVideoPath(
+    SetVideoPathEvent event,
     Emitter<AddPropertyState> emit,
   ) {
     emit(
       state.copyWith(
-        model: state.model.copyWith(has360Tour: !state.model.has360Tour),
+        model: state.model.copyWith(videoPath: event.path, hasVideo: true),
+      ),
+    );
+  }
+
+  void _onClearVideo(ClearVideoEvent event, Emitter<AddPropertyState> emit) {
+    emit(
+      state.copyWith(
+        model: state.model.copyWith(hasVideo: false, clearVideoPath: true),
+      ),
+    );
+  }
+
+  void _onSetVirtualTourPath(
+    SetVirtualTourPathEvent event,
+    Emitter<AddPropertyState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        model: state.model.copyWith(
+          virtualTourPath: event.path,
+          has360Tour: true,
+        ),
+      ),
+    );
+  }
+
+  void _onClearVirtualTour(
+    ClearVirtualTourEvent event,
+    Emitter<AddPropertyState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        model: state.model.copyWith(
+          has360Tour: false,
+          clearVirtualTourPath: true,
+        ),
+      ),
+    );
+  }
+
+  void _onSetDeedDocument(
+    SetDeedDocumentEvent event,
+    Emitter<AddPropertyState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        model: state.model.copyWith(ownershipDocumentPath: event.path),
+      ),
+    );
+  }
+
+  void _onClearDeedDocument(
+    ClearDeedDocumentEvent event,
+    Emitter<AddPropertyState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        model: state.model.copyWith(clearOwnershipDocumentPath: true),
+      ),
+    );
+  }
+
+  Future<void> _onPreviewEvaluation(
+    PreviewEvaluationEvent event,
+    Emitter<AddPropertyState> emit,
+  ) async {
+    final model = _modelWithControllerValues();
+    emit(
+      state.copyWith(
+        model: model,
+        isPreviewLoading: true,
+        hasMarketData: false,
+      ),
+    );
+
+    final result = await CreatePropertyApis.previewEvaluation(model);
+
+    result.fold(
+      (_) => emit(
+        state.copyWith(
+          isPreviewLoading: false,
+          hasMarketData: false,
+          aiDescription: '',
+        ),
+      ),
+      (preview) => emit(
+        state.copyWith(
+          isPreviewLoading: false,
+          hasMarketData: preview.hasMarketData,
+          suggestedMin: preview.suggestedMin,
+          suggestedMax: preview.suggestedMax,
+          aiDescription: preview.aiDescription,
+        ),
+      ),
+    );
+  }
+
+  void _onApplyAiDescription(
+    ApplyAiDescriptionEvent event,
+    Emitter<AddPropertyState> emit,
+  ) {
+    final text = state.aiDescription?.trim() ?? '';
+    if (text.isEmpty) return;
+    descriptionController.text = text;
+    emit(
+      state.copyWith(
+        model: state.model.copyWith(description: text),
       ),
     );
   }
@@ -503,6 +761,75 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     );
   }
 
+  /// Per-type detail fields all funnel through one map, so these handlers stay
+  /// type-agnostic.
+  void _emitDetail(Emitter<AddPropertyState> emit, String key, dynamic value) {
+    final updated = Map<String, dynamic>.from(state.model.typeDetails);
+    if (value == null) {
+      updated.remove(key);
+    } else {
+      updated[key] = value;
+    }
+    emit(state.copyWith(model: state.model.copyWith(typeDetails: updated)));
+  }
+
+  void _onSetDetailField(
+    SetDetailFieldEvent event,
+    Emitter<AddPropertyState> emit,
+  ) {
+    _emitDetail(emit, event.key, event.value);
+  }
+
+  void _onToggleDetailListItem(
+    ToggleDetailListItemEvent event,
+    Emitter<AddPropertyState> emit,
+  ) {
+    final current = List<String>.from(state.model.detailList(event.key));
+    if (current.contains(event.value)) {
+      current.remove(event.value);
+    } else {
+      current.add(event.value);
+    }
+    _emitDetail(emit, event.key, current);
+  }
+
+  void _onIncrementDetailCounter(
+    IncrementDetailCounterEvent event,
+    Emitter<AddPropertyState> emit,
+  ) {
+    _emitDetail(emit, event.key, state.model.detailCount(event.key) + 1);
+  }
+
+  void _onDecrementDetailCounter(
+    DecrementDetailCounterEvent event,
+    Emitter<AddPropertyState> emit,
+  ) {
+    final current = state.model.detailCount(event.key);
+    if (current <= 0) return;
+    _emitDetail(emit, event.key, current - 1);
+  }
+
+  void _onToggleDetailFlag(
+    ToggleDetailFlagEvent event,
+    Emitter<AddPropertyState> emit,
+  ) {
+    _emitDetail(emit, event.key, !state.model.detailFlag(event.key));
+  }
+
+  /// Lazily created controllers for free-text `details` fields, read back at
+  /// submit time so typing doesn't rebuild the whole step.
+  final Map<String, TextEditingController> _detailControllers = {};
+
+  TextEditingController detailController(String key) =>
+      _detailControllers.putIfAbsent(key, TextEditingController.new);
+
+  /// Snapshot of every non-empty detail text field, keyed by API field name.
+  Map<String, String> get detailControllerValues => {
+    for (final entry in _detailControllers.entries)
+      if (entry.value.text.trim().isNotEmpty)
+        entry.key: entry.value.text.trim(),
+  };
+
   void _onToggleAmenity(
     ToggleAmenityEvent event,
     Emitter<AddPropertyState> emit,
@@ -546,7 +873,29 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     ShowPortfolioSheetEvent event,
     Emitter<AddPropertyState> emit,
   ) {
-    emit(state.copyWith(showPortfolioSheet: true));
+    final model = _modelWithControllerValues();
+    final errors = _errorsForSubmit(model);
+    if (errors.isNotEmpty) {
+      final firstKey = errors.keys.first;
+      emit(
+        state.copyWith(
+          model: model,
+          fieldErrors: errors,
+          errorMessage: errors.values.first,
+          step: _stepForField(firstKey),
+          showPortfolioSheet: false,
+        ),
+      );
+      return;
+    }
+    emit(
+      state.copyWith(
+        model: model,
+        fieldErrors: const {},
+        errorMessage: null,
+        showPortfolioSheet: true,
+      ),
+    );
   }
 
   void _onHidePortfolioSheet(
@@ -563,16 +912,133 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     emit(state.copyWith(isNewFolder: event.isNew));
   }
 
-  void _onConfirmSave(ConfirmSaveEvent event, Emitter<AddPropertyState> emit) {
-    // TODO: integrate with API
-    emit(state.copyWith(showPortfolioSheet: false));
+  /// Snapshots the free-text controllers into the model before submitting,
+  /// since they are not mirrored into state on every keystroke.
+  AddPropertyModel _modelWithControllerValues() {
+    // Text values win over stale map entries from a previous edit of the field.
+    final details = Map<String, dynamic>.from(state.model.typeDetails)
+      ..addAll(detailControllerValues);
+
+    return state.model.copyWith(
+      typeDetails: details,
+      buildingNumber: buildingNumberController.text.trim(),
+      street: streetController.text.trim(),
+      deedNumber: deedNumberController.text.trim(),
+      date: dateController.text.trim(),
+      area: areaController.text.trim(),
+      streetWidth: streetWidthController.text.trim(),
+      apartmentNumber: apartmentNumberController.text.trim(),
+      developerName: developerNameController.text.trim(),
+      price: priceController.text.trim(),
+      title: titleController.text.trim(),
+      description: descriptionController.text.trim(),
+      portfolioFolderName: portfolioNameController.text.trim(),
+    );
+  }
+
+  Map<String, String> _errorsForSubmit(AddPropertyModel model) {
+    return {
+      ...AddPropertyValidator.validateType(model),
+      if (model.operationType == 'rent')
+        ...AddPropertyValidator.validatePeriod(model),
+      ...AddPropertyValidator.validateLocation(model),
+      ...AddPropertyValidator.validateImages(model),
+      ...AddPropertyValidator.validateDetails(model),
+      ...AddPropertyValidator.validateReview(model),
+    };
+  }
+
+  Future<void> _onConfirmSave(
+    ConfirmSaveEvent event,
+    Emitter<AddPropertyState> emit,
+  ) async {
+    final model = _modelWithControllerValues();
+    final errors = _errorsForSubmit(model);
+
+    if (errors.isNotEmpty) {
+      final firstKey = errors.keys.first;
+      emit(
+        state.copyWith(
+          model: model,
+          fieldErrors: errors,
+          errorMessage: errors.values.first,
+          step: _stepForField(firstKey),
+          showPortfolioSheet: false,
+          isLoading: false,
+          openChooseBrokerOnSuccess: false,
+        ),
+      );
+      return;
+    }
+
+    final request = model.toCreateRequest(brokerId: event.brokerId);
+
+    if (request == null) {
+      emit(
+        state.copyWith(
+          model: model,
+          showPortfolioSheet: false,
+          submitStatus: SubmitStatus.failure,
+          errorMessage: AppStrings.somethingWentWrong,
+          openChooseBrokerOnSuccess: false,
+        ),
+      );
+      return;
+    }
+
+    emit(
+      state.copyWith(
+        model: model,
+        showPortfolioSheet: false,
+        submitStatus: SubmitStatus.loading,
+        isLoading: true,
+        fieldErrors: const {},
+        errorMessage: null,
+        openChooseBrokerOnSuccess: event.openChooseBrokerOnSuccess,
+      ),
+    );
+
+    final result = await CreatePropertyApis.createProperty(request);
+
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          isLoading: false,
+          submitStatus: SubmitStatus.failure,
+          errorMessage: failure,
+          openChooseBrokerOnSuccess: false,
+        ),
+      ),
+      (data) => emit(
+        state.copyWith(
+          isLoading: false,
+          submitStatus: SubmitStatus.success,
+          createdPropertyId: _extractCreatedPropertyId(data),
+          openChooseBrokerOnSuccess: event.openChooseBrokerOnSuccess,
+        ),
+      ),
+    );
   }
 
   void _onSendToBroker(
     SendToBrokerEvent event,
     Emitter<AddPropertyState> emit,
   ) {
-    // TODO: integrate with API
+    add(ConfirmSaveEvent(brokerId: event.brokerId));
+  }
+
+  String? _extractCreatedPropertyId(dynamic data) {
+    if (data is! Map) return null;
+    final id =
+        data['property_id'] ?? data['propertyId'] ?? data['id'] ?? data['_id'];
+    if (id != null) return id.toString();
+    final nested = data['property'];
+    if (nested is Map) {
+      final nestedId =
+          nested['property_id'] ?? nested['propertyId'] ?? nested['id'];
+      if (nestedId != null) return nestedId.toString();
+    }
+    return null;
   }
 
   @override
@@ -588,6 +1054,9 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     titleController.dispose();
     portfolioNameController.dispose();
     locationSearchController.dispose();
+    for (final controller in _detailControllers.values) {
+      controller.dispose();
+    }
     return super.close();
   }
 }

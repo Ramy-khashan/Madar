@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../core/components/app_drop_down.dart';
 import '../../../../../core/components/app_textfield.dart';
+import '../../../../../core/components/search_property_item.dart';
 import '../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/responsive.dart';
+import '../../../../../core/utils/functions/translation.dart';
 
 class RatePropertyFormItem extends StatelessWidget {
   const RatePropertyFormItem({
@@ -16,14 +19,21 @@ class RatePropertyFormItem extends StatelessWidget {
     this.finishingLevel,
     this.purpose,
     this.selectedType,
+    required this.propertyController,
+    this.properties = const [],
     required this.onPropertyAgeChanged,
     required this.onFinishingLevelChanged,
     required this.onPurposeChanged,
     required this.onTapPropertyType,
+    this.onSearch,
+    this.onSelectProperty,
   });
+  
   final TextEditingController ratePropertyArea;
   final TextEditingController propertyLocation;
   final String? propertyAge;
+  final TextEditingController propertyController;
+  final List<String> properties;
   final String? finishingLevel;
   final String? purpose;
   final String? selectedType;
@@ -31,6 +41,8 @@ class RatePropertyFormItem extends StatelessWidget {
   final Function(String?) onFinishingLevelChanged;
   final Function(String?) onPurposeChanged;
   final Function(String) onTapPropertyType;
+  final Function(String)? onSearch;
+  final Function(String)? onSelectProperty;
 
   @override
   Widget build(BuildContext context) {
@@ -44,10 +56,10 @@ class RatePropertyFormItem extends StatelessWidget {
             itemCount: AppConstant.propertyTypes.length,
             separatorBuilder: (_, __) => SizedBox(width: 8.width),
             itemBuilder: (ctx, i) {
-              final t = AppConstant.propertyTypes[i];
-              final isSelected = selectedType == t['id'];
+              final propertyType = AppConstant.propertyTypes[i];
+              final isSelected = selectedType == propertyType;
               return GestureDetector(
-                onTap: () => onTapPropertyType(t['id']!),
+                onTap: () => onTapPropertyType(propertyType),
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 16.width),
                   decoration: BoxDecoration(
@@ -63,7 +75,7 @@ class RatePropertyFormItem extends StatelessWidget {
                   ),
                   alignment: Alignment.center,
                   child: Text(
-                    t['label']!,
+                    propertyType.trans,
                     style: TextStyle(
                       fontSize: context.responsiveFontScale(13),
                       color: isSelected
@@ -78,29 +90,37 @@ class RatePropertyFormItem extends StatelessWidget {
           ),
         ),
         SizedBox(height: 10.height),
+        // PropertySearchField(
+        //   controller: propertyController,
+        //   suggestions: properties,
+        //   onSearch: onSearch,
+        //   onSelectProperty: onSelectProperty,
+        //   colors: colors,
+        // ),
         AppTextField(
           title: AppStrings.propertyLocationLabel,
           hint: AppStrings.ratePropertyLocationHint,
           suffixIcon: Icons.location_on_outlined,
           controller: propertyLocation,
         ),
-
         AppTextField(
           title: AppStrings.ratePropertyAreaLabel,
           hint: AppStrings.ratePropertyAreaHint,
           suffixIcon: Icons.crop_free_outlined,
           textInputType: TextInputType.number,
           controller: ratePropertyArea,
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+          ],
         ),
-
         AppDropDownItem(
           title: AppStrings.propertyAgeLabel,
           hintText: AppStrings.choosePropertyAge,
-          value: propertyAge,
+           
+          value: propertyAge!.isEmpty ? null : propertyAge,
           items: AppConstant.propertyAges,
-          onChanged: onPropertyAgeChanged,
+          onChanged:onPropertyAgeChanged,
         ),
-
         AppDropDownItem(
           title: AppStrings.ratePropertyFinishingLabel,
           hintText: AppStrings.ratePropertyFinishingHint,
@@ -108,7 +128,6 @@ class RatePropertyFormItem extends StatelessWidget {
           items: AppConstant.finishingLevels,
           onChanged: onFinishingLevelChanged,
         ),
-
         AppDropDownItem(
           title: AppStrings.ratePropertyPurposeLabel,
           hintText: AppStrings.ratePropertyPurposeHint,
@@ -121,3 +140,4 @@ class RatePropertyFormItem extends StatelessWidget {
     );
   }
 }
+

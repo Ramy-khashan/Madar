@@ -9,28 +9,23 @@ import '../../model/user_profile_model.dart';
 class PersonalInfoSectionWidget extends StatelessWidget {
   const PersonalInfoSectionWidget({
     super.key,
-    required this.profile,
     required this.onEditName,
-    required this. onEditPhone,
+    required this.isLoading,
+    required this.onEditPhone,
+    this.profile,
   });
 
-  final UserProfileModel ?profile;
+  final UserProfileModel? profile;
   final VoidCallback onEditName;
   final VoidCallback onEditPhone;
- 
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
     return Container(
-      margin:  EdgeInsetsDirectional.only(
-                
-                bottom: 16.height,
-              ),
-      
+      margin: EdgeInsetsDirectional.only(bottom: 16.height),
 
-    
-     
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -46,17 +41,16 @@ class PersonalInfoSectionWidget extends StatelessWidget {
 
           SettingsInfoRow(
             label: AppStrings.settingsName,
-            value: profile?.name ?? 'User Name',
+            value: isLoading ? "......" : profile?.name ?? 'User Name',
             onEdit: onEditName,
             colors: colors,
           ),
           SettingsInfoRow(
             label: AppStrings.phoneNumber,
-            value: "0102234567",
+            value: isLoading ? "......" : profile?.phone ?? 'User Phone',
             onEdit: onEditPhone,
             colors: colors,
           ),
-       
         ],
       ),
     );

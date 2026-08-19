@@ -66,6 +66,28 @@ class RatePropertyEstimationFormScreen extends StatelessWidget {
                               SizedBox(height: 8.height),
 
                               RatePropertyFormItem(
+                                propertyController: context
+                                    .read<RatePropertyEstimationBloc>()
+                                    .propertyController,
+                                properties: state.suggestedProperties,
+                                onSearch: (value) {
+                                  context
+                                      .read<RatePropertyEstimationBloc>()
+                                      .add(SearchFromApiEvent(value));
+                                },
+                                onSelectProperty: (value) {
+                                  final bloc =
+                                      context.read<RatePropertyEstimationBloc>();
+                                  final propertyId =
+                                      bloc.propertyNameToIdMap[value];
+
+                                  if (propertyId != null &&
+                                      propertyId.isNotEmpty) {
+                                    bloc.add(
+                                      PropertySelectedEvent(propertyId, value),
+                                    );
+                                  }
+                                },
                                 ratePropertyArea:
                                     RatePropertyEstimationBloc.get(
                                       context,
@@ -74,7 +96,7 @@ class RatePropertyEstimationFormScreen extends StatelessWidget {
                                     RatePropertyEstimationBloc.get(
                                       context,
                                     ).locationController,
-                                propertyAge: state.propertyAge,
+                                propertyAge:state.propertyAge,
                                 finishingLevel: state.finishingLevel,
                                 purpose: state.purpose,
                                 onPropertyAgeChanged: (v) => context
@@ -99,7 +121,6 @@ class RatePropertyEstimationFormScreen extends StatelessWidget {
                                       ),
                                     ),
                                 selectedType: state.selectedType,
-
                                 onTapPropertyType: (String p1) {
                                   context
                                       .read<RatePropertyEstimationBloc>()

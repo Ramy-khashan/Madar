@@ -1,43 +1,42 @@
-import 'package:equatable/equatable.dart';
-
-class BusinessPortfolioPropertyModel extends Equatable {
+class MyPropertiesModel {
   final String id;
   final String title;
   final String location;
   final String imageUrl;
-  final String status;
-  final String typeId;
-  final int contractNumber;
-  final int occupancyRate;
-  final String lastUpdate;
-  final bool isForSale;
 
-  const BusinessPortfolioPropertyModel({
+  const MyPropertiesModel({
     required this.id,
     required this.title,
     required this.location,
     required this.imageUrl,
-
-    this.typeId = '',
-    required this.contractNumber,
-    required this.occupancyRate,
-    required this.lastUpdate,
-    this.isForSale = true,
-    required this.status,
   });
 
-  @override
-  List<Object?> get props => [
-    id,
-    title,
-    location,
-    imageUrl,
-    status,
-    contractNumber,
-    occupancyRate,
-    lastUpdate,
+  factory MyPropertiesModel.fromJson(Map<String, dynamic> json) {
+    return MyPropertiesModel(
+      id: json['property_id'] ?? '',
+      title: json['title'] ?? '',
+      location: (json['city'] ?? '' )+' , '+(json['district'] ?? ''),
+      imageUrl: json['image'] ?? '',
+    );
+  }
+}
 
-    typeId,
-    isForSale,
-  ];
+class BusinessSummaryModel {
+  final int totalProperties;
+  final int occupancyRate;
+  final int monthlyIncome;
+
+  const BusinessSummaryModel({
+    required this.totalProperties,
+    required this.occupancyRate,
+    required this.monthlyIncome,
+  });
+
+  factory BusinessSummaryModel.fromJson(Map<String, dynamic> json) {
+    return BusinessSummaryModel(
+      totalProperties: json['totalProperties'] ?? 0,
+      occupancyRate: json['occupancyRate'] ?? 0,
+      monthlyIncome: json['monthlyIncome'] ?? 0,
+    );
+  }
 }

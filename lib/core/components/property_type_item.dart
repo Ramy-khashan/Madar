@@ -4,6 +4,7 @@ import '../../config/theme/app_theme_colors.dart';
 import '../utils/constants/app_constant.dart';
 import '../utils/constants/app_strings.dart';
 import '../utils/functions/responsive.dart';
+import '../utils/functions/translation.dart';
  
 class PropertyTypeSection extends StatelessWidget {
   const PropertyTypeSection({super.key, required this.onTap, required this.selectedItem});
@@ -32,12 +33,12 @@ class PropertyTypeSection extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemCount: AppConstant.propertyTypes.length,
                 itemBuilder: (context, index) {
-                  final type = AppConstant.propertyTypes[index];
-                  final isSelected = selectedItem == type['id'];
+                  final propertyType = AppConstant.propertyTypes[index];
+                  final isSelected = selectedItem ==propertyType;
                   return Padding(
                     padding: EdgeInsetsDirectional.only(start: 8.width),
                     child: GestureDetector(
-                      onTap: () => onTap(type['id']!),
+                      onTap: () => onTap(propertyType),
                       child: Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: 20.width,
@@ -56,7 +57,7 @@ class PropertyTypeSection extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            type['label']!,
+                            propertyType.trans,
                             style: TextStyle(
                               fontSize: context.responsiveFontScale(14),
                               fontWeight: FontWeight.w500,

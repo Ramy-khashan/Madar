@@ -3,10 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../core/utils/functions/translation.dart';
 import '../../controller/add_property_bloc.dart';
 
 class ChipRowItem<T> extends StatelessWidget {
-  const ChipRowItem({super.key, 
+  const ChipRowItem({
+    super.key,
     required this.options,
     required this.getLabel,
     required this.isSelected,
@@ -38,17 +40,16 @@ class ChipRowItem<T> extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: selected ? tc.primaryBrand : const Color(0xFFF3F4F6),
                   borderRadius: BorderRadius.circular(24),
-                   
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     if (selected) ...[
                       Icon(Icons.check_rounded, size: 14, color: tc.onPrimary),
-                     SizedBox(width: 2.width),
+                      SizedBox(width: 2.width),
                     ],
                     Text(
-                      getLabel(option),
+                      getLabel(option).trans,
                       style: TextStyle(
                         fontSize: context.responsiveFontScale(12),
                         fontWeight: selected

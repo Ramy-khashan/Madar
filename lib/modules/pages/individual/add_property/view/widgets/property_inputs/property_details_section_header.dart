@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
- 
+
 class PropertyDetailsSectionHeaderWidget extends StatelessWidget {
-  const PropertyDetailsSectionHeaderWidget({
-    super.key,
-    required this.title,
-  });
+  const PropertyDetailsSectionHeaderWidget({super.key, required this.title});
 
   final String title;
 

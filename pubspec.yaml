@@ -67,6 +67,9 @@ dependencies:
   fl_chart: ^1.2.0
   url_launcher: ^6.3.2
   image_picker: ^1.0.7
+  autocomplete_textfield: ^2.0.1
+  search_autocomplete: ^1.0.3
+  socket_io_client: ^3.1.6
 
 dev_dependencies:
   flutter_test:

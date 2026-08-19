@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/utils/functions/print_state.dart';
 import '../../modules/common/broker_properties/controller/broker_properties_bloc.dart';
 import '../../modules/common/broker_properties/view/broker_properties_screen.dart';
 import '../../modules/common/chats/smart_assistant_chat/controller/smart_assistant_chat_bloc.dart';
@@ -282,10 +283,15 @@ final GoRouter appRouter = GoRouter(
     ),
     getRouteInstance(
       AppRouterKeys.chooseBroker,
-      (state) => BlocProvider(
-        create: (context) => ChooseBrokerBloc()..add(const ChooseBrokerLoad()),
+      (state) {
+        printState('chooseBroker: ${state.extra}');
+        return BlocProvider(
+        create: (context) => ChooseBrokerBloc()
+          ..add(const ChooseBrokerLoad())
+          ..add(GetPropertyIdEvent(state.extra as String? ?? '')),
         child: const ChooseBrokerScreen(),
-      ),
+      );
+      },
     ),
     getRouteInstance(
       AppRouterKeys.rentInstallment,
@@ -492,21 +498,20 @@ final GoRouter appRouter = GoRouter(
         child: const ProjectDetailsScreen(),
       ),
     ),
-    getRouteInstance(
-      AppRouterKeys.phaseDetails,
-      (state) {
-        final param = state.extra as Map<String, dynamic>;
-        return BlocProvider(
-        create: (_) =>
-            PhaseDetailsBloc(phase: param['phase'] as ProjectStages, timeline: param['timeline'] as List<Timeline>),
+    getRouteInstance(AppRouterKeys.phaseDetails, (state) {
+      final param = state.extra as Map<String, dynamic>;
+      return BlocProvider(
+        create: (_) => PhaseDetailsBloc(
+          phase: param['phase'] as ProjectStages,
+          timeline: param['timeline'] as List<Timeline>,
+        ),
         child: PhaseDetailsScreen(
           projectId: param['projectId'] as String? ?? '',
           phase: param['phase'] as ProjectStages,
           timeline: param['timeline'] as List<Timeline>,
         ),
       );
-      },
-    ),
+    }),
     getRouteInstance(
       AppRouterKeys.contractDetails,
       (state) => BlocProvider(
@@ -580,7 +585,7 @@ final GoRouter appRouter = GoRouter(
       AppRouterKeys.brokerProperties,
       (state) => BlocProvider(
         create: (_) =>
-            BrokerPropertiesBloc()..add(const BrokerPropertiesLoad()),
+            BrokerPropertiesBloc()..add(  BrokerPropertiesLoad(brokerId: state.extra as String? ?? '')),
         child: const BrokerPropertiesScreen(),
       ),
     ),

@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:madar_app/core/components/loading_process.dart';
 
 import '../../../../../config/theme/app_theme_colors.dart';
+import '../../../../../core/components/loading_process.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/constants/storage_keys.dart';
 import '../../../../../core/utils/functions/preference_utils.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 import '../../../../../core/utils/functions/service_locator.dart';
-import '../../../../common/settings/view/widgets/logout_button_widget.dart';
-import '../../../../common/settings/view/widgets/logout_dialog.dart';
 import '../controller/project_manager_home_bloc.dart';
+import 'widget/profile_sheet.dart';
 import 'widget/projects_cards_item.dart';
 
 class ProjectManagerHomeScreen extends StatelessWidget {
@@ -33,36 +32,50 @@ class ProjectManagerHomeScreen extends StatelessWidget {
                 20.width,
                 8.height,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        '${AppStrings.hello} ${sl.get<PreferenceUtils>().getString(StorageKeys.name)}',
-                        style: TextStyle(
-                          fontSize: context.responsiveFontScale(24),
-                          fontWeight: FontWeight.w800,
-                          color: tc.textPrimary,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${AppStrings.hello} ${sl.get<PreferenceUtils>().getString(StorageKeys.name)}',
+                          style: TextStyle(
+                            fontSize: context.responsiveFontScale(24),
+                            fontWeight: FontWeight.w800,
+                            color: tc.textPrimary,
+                          ),
                         ),
-                      ),
-                       LogoutButtonWidget(
-                                  onTap: () => showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return const LogoutDialog();
-                                    },
-                                  ),
-                                ),
-                    ],
-                  ),
-                  SizedBox(height: 6.height),
-                  Text(
-                    AppStrings.projectsAssigned,
-                    style: TextStyle(
-                      fontSize: context.responsiveFontScale(14),
-                      color: tc.textSecondary,
+                        SizedBox(height: 6.height),
+                        Text(
+                          AppStrings.projectsAssigned,
+                          style: TextStyle(
+                            fontSize: context.responsiveFontScale(14),
+                            color: tc.textSecondary,
+                          ),
+                        ),
+                      ],
                     ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (_) => ProfileBottomSheet(
+                          userName:
+                              '${AppStrings.hello} ${sl.get<PreferenceUtils>().getString(StorageKeys.name)}',
+                        ),
+                      );
+                    },
+                    icon: Icon(Icons.keyboard_arrow_down, size: 32.width),
+                  ),
+
+                  CircleAvatar(
+                    backgroundColor: const Color(0xFFE0E0E0),
+                    radius: 24.width,
+                    child: Icon(Icons.person, color: tc.primaryBrand),
                   ),
                 ],
               ),

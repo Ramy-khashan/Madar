@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../../config/router/app_router_keys.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_button.dart';
 import '../../../../../../core/components/app_textfield.dart';
@@ -9,8 +8,8 @@ import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
-import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../controller/add_property_bloc.dart';
+import '../../model/add_property_validator.dart';
 import '../widgets/ai_price_card.dart';
 
 class AddPropertyStep6Screen extends StatelessWidget {
@@ -66,23 +65,25 @@ class AddPropertyStep6Screen extends StatelessWidget {
                     ),
                   ),
                   16.height.toSizedBox,
-                  AiPriceCard(),
+                  const AiPriceCard(),
                   16.height.toSizedBox,
                   _PriceInputSection(controller: bloc.priceController, tc: tc),
                   20.height.toSizedBox,
                   _TitleSection(controller: bloc.titleController, tc: tc),
                   20.height.toSizedBox,
-                  _ServiceCardsRow(),
+                  const _ServiceCardsRow(),
                   16.height.toSizedBox,
-                  _AiGenerateButton(onTap: () {}, tc: tc),
-                  12.height.toSizedBox,
-                  _DescriptionField(
-                    controller: bloc.descriptionController,
+                  _AiGenerateButton(
+                    onTap: () => AddPropertyBloc.get(
+                      context,
+                    ).add(const ApplyAiDescriptionEvent()),
                     tc: tc,
                   ),
+                  12.height.toSizedBox,
+                  _DescriptionField(controller: bloc.descriptionController),
                   20.height.toSizedBox,
 
-                  _AdSummaryTable(),
+                  const _AdSummaryTable(),
                   32.height.toSizedBox,
                 ],
               ),
@@ -102,64 +103,55 @@ class _PriceInputSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: 16.width,
-            vertical: 12.height,
-          ),
-          decoration: BoxDecoration(
-            color: tc.primaryBrand.withValues(alpha: 0.2),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: tc.borderColor),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  "2,850,000",
-                  style: TextStyle(
-                    fontSize: context.responsiveFontScale(24),
-                    fontWeight: FontWeight.w800,
-                    color: tc.textPrimary,
-                  ),
-                  textAlign: TextAlign.start,
-                ),
-              ),
-              Text(
-                '${AppStrings.currency}',
-                style: TextStyle(
-                  fontSize: context.responsiveFontScale(16),
-                  color: tc.textFieldTitle,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: 6.height),
-        Row(
+    return BlocBuilder<AddPropertyBloc, AddPropertyState>(
+      buildWhen: (prev, curr) =>
+          prev.fieldErrors[AddPropertyField.price] !=
+          curr.fieldErrors[AddPropertyField.price],
+      builder: (context, state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ImageItem(
-              AppImages.doneIcon,
-              color: AppThemeColors.of(context).textFieldTitle,
-              width: 14.width,
-              height: 14.width,
-            ),
-            SizedBox(width: 4.width),
-            Text(
-              AppStrings.competitivePriceInRange,
-              style: TextStyle(
-                fontSize: context.responsiveFontScale(11),
-                fontWeight: FontWeight.w500,
-                color: AppThemeColors.of(context).textFieldTitle,
+            AppTextField(
+              controller: controller,
+              title: AppStrings.listingPrice,
+              hint: '0',
+              textInputType: TextInputType.number,
+              errorText: state.fieldErrors[AddPropertyField.price],
+              suffixIconWidget: Padding(
+                padding: EdgeInsetsDirectional.only(top: 12.height),
+                child: Text(
+                  AppStrings.currency,
+                  style: TextStyle(
+                    fontSize: context.responsiveFontScale(14),
+                    color: tc.primaryBrand,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
+            ),
+            SizedBox(height: 6.height),
+            Row(
+              children: [
+                ImageItem(
+                  AppImages.doneIcon,
+                  color: AppThemeColors.of(context).textFieldTitle,
+                  width: 14.width,
+                  height: 14.width,
+                ),
+                SizedBox(width: 4.width),
+                Text(
+                  AppStrings.competitivePriceInRange,
+                  style: TextStyle(
+                    fontSize: context.responsiveFontScale(11),
+                    fontWeight: FontWeight.w500,
+                    color: AppThemeColors.of(context).textFieldTitle,
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 }
@@ -171,48 +163,42 @@ class _TitleSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: 16.width,
-            vertical: 18.height,
-          ),
-          decoration: BoxDecoration(
-            color: tc.cardBackground,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: tc.borderColor),
-          ),
-          child: Text(
-            "فيلا حديثه بحي النرجس اطلاله مفتوحة",
-            style: TextStyle(
-              fontSize: context.responsiveFontScale(16),
-              fontWeight: FontWeight.w700,
-              color: tc.textPrimary,
-            ),
-          ),
-        ),
-        SizedBox(height: 6.height),
-        Row(
+    return BlocBuilder<AddPropertyBloc, AddPropertyState>(
+      buildWhen: (prev, curr) =>
+          prev.fieldErrors[AddPropertyField.title] !=
+          curr.fieldErrors[AddPropertyField.title],
+      builder: (context, state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Icon(
-              Icons.auto_awesome_rounded,
-              color: AppThemeColors.of(context).textFieldTitle,
-              size: 14.width,
+            AppTextField(
+              controller: controller,
+              title: AppStrings.listingTitle,
+              hint: AppStrings.listingTitle,
+              errorText: state.fieldErrors[AddPropertyField.title],
             ),
-            SizedBox(width: 4.width),
-            Text(
-              AppStrings.competitivePriceInRange,
-              style: TextStyle(
-                fontSize: context.responsiveFontScale(11),
-                fontWeight: FontWeight.w500,
-                color: AppThemeColors.of(context).textFieldTitle,
-              ),
+            SizedBox(height: 6.height),
+            Row(
+              children: [
+                Icon(
+                  Icons.auto_awesome_rounded,
+                  color: AppThemeColors.of(context).textFieldTitle,
+                  size: 14.width,
+                ),
+                SizedBox(width: 4.width),
+                Text(
+                  AppStrings.competitivePriceInRange,
+                  style: TextStyle(
+                    fontSize: context.responsiveFontScale(11),
+                    fontWeight: FontWeight.w500,
+                    color: AppThemeColors.of(context).textFieldTitle,
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 }
@@ -386,26 +372,19 @@ class _AiGenerateButton extends StatelessWidget {
 }
 
 class _DescriptionField extends StatelessWidget {
-  const _DescriptionField({required this.controller, required this.tc});
+  const _DescriptionField({required this.controller});
   final TextEditingController controller;
-  final AppThemeColors tc;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.width, vertical: 12.height),
-      decoration: BoxDecoration(
-        color: tc.cardBackground,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: tc.borderColor),
-      ),
-      child: Text(
-        "فيلا حديثه بتصميم معاصر اطلاله مفتوحة، مسبح، خاص قريبه من المدارس",
-        style: TextStyle(
-          fontSize: context.responsiveFontScale(13),
-          color: tc.textFieldTitle,
-        ),
-      ),
+    return AppTextField(
+      controller: controller,
+      title: AppStrings.descriptionLabel,
+      hint: AppStrings.descriptionHint,
+      maxLines: 5,
+      minLines: 4,
+      textInputAction: TextInputAction.newline,
+      textInputType: TextInputType.multiline,
     );
   }
 }
@@ -455,6 +434,16 @@ class _AdSummaryTable extends StatelessWidget {
             _SummaryRow(
               label: AppStrings.images,
               value: AppStrings.photosCount(m.imagePaths.length),
+            ),
+          if (m.virtualTourPath != null && m.virtualTourPath!.isNotEmpty)
+            _SummaryRow(
+              label: AppStrings.tour360,
+              value: m.virtualTourPath!.split(RegExp(r'[/\\]')).last,
+            ),
+          if (m.videoPath != null && m.videoPath!.isNotEmpty)
+            _SummaryRow(
+              label: AppStrings.videoLabel,
+              value: m.videoPath!.split(RegExp(r'[/\\]')).last,
             ),
           if (m.amenities.isNotEmpty)
             _SummaryRow(
@@ -567,9 +556,9 @@ class _Step6Buttons extends StatelessWidget {
           AppButton(
             text: AppStrings.sendToBrokerProperty,
             isOutline: true,
-            onTap: () =>
-                RouterHandler.navigate(context, AppRouterKeys.chooseBroker),
-            // AddPropertyBloc.get(context).add(const SendToBrokerEvent()),
+            onTap: () => AddPropertyBloc.get(context).add(
+              const ConfirmSaveEvent(openChooseBrokerOnSuccess: true),
+            ),
           ),
         ],
       ),

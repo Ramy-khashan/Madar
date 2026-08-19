@@ -73,7 +73,7 @@ class TextFieldWithUnitWidget extends StatelessWidget {
                     style: TextStyle(
                       color: const Color(0xFF64748B),
                       fontWeight: FontWeight.bold,
-                      fontSize:context.responsiveFontScale(12),
+                      fontSize: context.responsiveFontScale(12),
                     ),
                   ),
                 ),
@@ -84,4 +84,3 @@ class TextFieldWithUnitWidget extends StatelessWidget {
     );
   }
 }
- 

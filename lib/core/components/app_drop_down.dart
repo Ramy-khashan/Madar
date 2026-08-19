@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:madar_app/core/utils/functions/translation.dart';
 import '../../config/theme/app_theme_colors.dart';
 
 import '../utils/functions/responsive.dart';
@@ -75,7 +76,8 @@ class AppDropDownItem extends StatelessWidget {
               ),
               items: items
                   .map(
-                    (item) => DropdownMenuItem(value: item, child: Text(item)),
+                    (item) =>
+                        DropdownMenuItem(value: item, child: Text(item.trans)),
                   )
                   .toList(),
               onChanged: onChanged,

@@ -4,10 +4,19 @@ class AppStrings {
   static String get soilType => 'soil_type'.trans;
   static String get facilities => 'facilities'.trans;
   static String get view => 'view'.trans;
+  static String get searchProperty => 'search_property'.trans;
   static String get cooling => 'cooling'.trans;
   static String get flooring => 'flooring'.trans;
+  static String get pleaseSelectPropertyToSend =>
+      'please_select_property_to_end'.trans;
   static String get driverRoom => 'driver_room'.trans;
-  static String get numberOfApartmentsPerFloorOptional => 'number_of_apartments_per_floor_optional'.trans;
+  static String get updateFullName => 'update_full_name'.trans;
+  static String get updatePhoneNumber => 'update_phone_number'.trans;
+  static String get update => 'update'.trans;
+  static String get noMarketData => 'no_market_data'.trans;
+  static String get pleaseFillForm => 'please_fill_form'.trans;
+  static String get numberOfApartmentsPerFloorOptional =>
+      'number_of_apartments_per_floor_optional'.trans;
   static String get onBoardingTitle1 => 'on_boarding_title_1'.trans;
   static String get onBoardingTitle2 => 'on_boarding_title_2'.trans;
   static String get onBoardingTitle3 => 'on_boarding_title_3'.trans;
@@ -69,6 +78,7 @@ class AppStrings {
   static String get saveContract => 'save_contract'.trans;
   static String get myWishlistTitle => 'my_wishlist_title'.trans;
   static String get logoutConfirmation => 'logout_confirmation'.trans;
+  static String get managerLogoutHint => 'manager_logout_hint'.trans;
   static String get mesurement => 'mesurement'.trans;
   static String get language => 'language'.trans;
   static String get monthlyIncome => 'monthly_income'.trans;
@@ -108,6 +118,7 @@ class AppStrings {
   static String get smartAssistant => 'smart_assistant'.trans;
   static String get smartAssistantPrompt => 'smart_assistant_prompt'.trans;
   static String get smartAssistantGreeting => 'smart_assistant_greeting'.trans;
+  static String get smartAssistantWelcome => 'smart_assistant_welcome'.trans;
   static String get pressToTalk => 'press_to_talk'.trans;
   static String get typeYourMessage => 'type_your_message'.trans;
   static String get availableForInsurance => 'available_for_insurance'.trans;
@@ -343,6 +354,10 @@ class AppStrings {
   static String get mapTitle => 'map_title'.trans;
   static String get searchByRegion => 'search_by_region'.trans;
   static String get showNearestToMe => 'show_nearest_to_me'.trans;
+  static String get locationServiceDisabled =>
+      'location_service_disabled'.trans;
+  static String get locationPermissionDenied =>
+      'location_permission_denied'.trans;
   static String get bedrooms => 'bedrooms'.trans;
   static String get balcony => 'balcony'.trans;
   static String get bathrooms => 'bathrooms'.trans;
@@ -1251,11 +1266,14 @@ class AppStrings {
   static String get numberOfBathrooms => 'number_of_bathrooms'.trans;
   static String get numberOfLivingRooms => 'number_of_living_rooms'.trans;
   static String get numberOfLounges => 'number_of_lounges'.trans;
-  static String get numberOfLoungesOptional => 'number_of_lounges_optional'.trans;
-  static String get numberOfLivingRoomsOptional => 'number_of_living_rooms_optional'.trans;
+  static String get numberOfLoungesOptional =>
+      'number_of_lounges_optional'.trans;
+  static String get numberOfLivingRoomsOptional =>
+      'number_of_living_rooms_optional'.trans;
   static String get furnitureCondition => 'furniture_condition'.trans;
   static String get villaDetails => 'villa_details'.trans;
-  static String get numberOfKitchensOptional => 'number_of_kitchens_optional'.trans;
+  static String get numberOfKitchensOptional =>
+      'number_of_kitchens_optional'.trans;
   static String get servantRoom => 'servant_room'.trans;
   static String get floorDetails => 'floor_details'.trans;
   static String get townhouseDetails => 'townhouse_details'.trans;
@@ -1263,7 +1281,8 @@ class AppStrings {
   static String get communityFacilities => 'community_facilities'.trans;
   static String get numberOfParkingSpaces => 'number_of_parking_spaces'.trans;
   static String get communityServiceFees => 'community_service_fees'.trans;
-  static String get communityServiceFeesOptional => 'community_service_fees_optional'.trans;
+  static String get communityServiceFeesOptional =>
+      'community_service_fees_optional'.trans;
   static String get buildingDetails => 'building_details'.trans;
   static String get totalApartments => 'total_apartments'.trans;
   static String get numberOfShopsOptional => 'number_of_shops_optional'.trans;
@@ -1274,7 +1293,8 @@ class AppStrings {
   static String get planNumber => 'plan_number'.trans;
   static String get planNumberOptional => 'plan_number_optional'.trans;
   static String get facades => 'facades'.trans;
-  static String get allowedConstructionRatio => 'allowed_construction_ratio'.trans;
+  static String get allowedConstructionRatio =>
+      'allowed_construction_ratio'.trans;
   static String get allowedNumberOfFloors => 'allowed_number_of_floors'.trans;
   static String get restHouseDetails => 'rest_house_details'.trans;
   static String get towerDetails => 'tower_details'.trans;
@@ -1291,7 +1311,8 @@ class AppStrings {
   static String get officeDetails => 'office_details'.trans;
   static String get farmDetails => 'farm_details'.trans;
   static String get builtArea => 'built_area'.trans;
-  static String get waterSourceAvailability => 'water_source_availability'.trans;
+  static String get waterSourceAvailability =>
+      'water_source_availability'.trans;
   static String get numberOfWells => 'number_of_wells'.trans;
   static String get numberOfPalmTrees => 'number_of_palm_trees'.trans;
   static String get wellDepth => 'well_depth'.trans;
@@ -1309,11 +1330,49 @@ class AppStrings {
   static String get available => 'available'.trans;
   static String get notAvailable => 'not_available'.trans;
 
+  static String get propertyAddedSuccessfully =>
+      'property_added_successfully'.trans;
+  static String get tapToAddVideo => 'tap_to_add_video'.trans;
+  static String get tapToAdd360Tour => 'tap_to_add_360_tour'.trans;
+  static String get changeFile => 'change_file'.trans;
+  static String get removeFile => 'remove_file'.trans;
+  static String pleaseCompleteField(String field) =>
+      'please_complete_field'.transNamed({'field': field});
+  static String get pleaseSelectLocationOnMap =>
+      'please_select_location_on_map'.trans;
+  static String get pleaseAddAtLeastOnePhoto =>
+      'please_add_at_least_one_photo'.trans;
+  static String get listingTitle => 'listing_title'.trans;
+  static String get listingPrice => 'listing_price'.trans;
+  static String get titleMinLength => 'title_min_length'.trans;
+  static String get ownershipDocumentOptional =>
+      'ownership_document_optional'.trans;
+  static String get tapToAddDeedDocument => 'tap_to_add_deed_document'.trans;
+
+  // ── Per-type property detail labels ──────────────────────────────────────
+  static String get landDimensions => 'land_dimensions'.trans;
+  static String get dimensionNorth => 'dimension_north'.trans;
+  static String get dimensionSouth => 'dimension_south'.trans;
+  static String get dimensionEast => 'dimension_east'.trans;
+  static String get dimensionWest => 'dimension_west'.trans;
+  static String get availableServices => 'available_services'.trans;
+  static String get numberOfDoors => 'number_of_doors'.trans;
+  static String get numberOfRooms => 'number_of_rooms'.trans;
+  static String get hasGarden => 'has_garden'.trans;
+  static String get hasPool => 'has_pool'.trans;
+  static String get shopActivities => 'shop_activities'.trans;
+  static String get floorSlot => 'floor_slot'.trans;
+  static String get furnishedOffice => 'furnished_office'.trans;
+  static String get numberOfFloors => 'number_of_floors'.trans;
+  static String get clubhouse => 'clubhouse'.trans;
+  static String get yearBuilt => 'year_built'.trans;
+  static String get developerName => 'developer_name'.trans;
+
   // App Names
   static String get appName => 'app_name'.trans;
   static String get splashName => 'splash_name'.trans;
 
-  // Property Types  
+  // Property Types
   static String get propertyTypeApartment => 'property_type_apartment'.trans;
   static String get propertyTypeVilla => 'property_type_villa'.trans;
   static String get propertyTypeFloor => 'property_type_floor'.trans;
@@ -1344,10 +1403,14 @@ class AppStrings {
   static String get facadeSouthwest => 'facade_southwest'.trans;
 
   // Land Classification
-  static String get landClassificationResidential => 'land_classification_residential'.trans;
-  static String get landClassificationCommercial => 'land_classification_commercial'.trans;
-  static String get landClassificationIndustrial => 'land_classification_industrial'.trans;
-  static String get landClassificationAgricultural => 'land_classification_agricultural'.trans;
+  static String get landClassificationResidential =>
+      'land_classification_residential'.trans;
+  static String get landClassificationCommercial =>
+      'land_classification_commercial'.trans;
+  static String get landClassificationIndustrial =>
+      'land_classification_industrial'.trans;
+  static String get landClassificationAgricultural =>
+      'land_classification_agricultural'.trans;
 
   // View Options
   static String get viewPanoramic => 'view_panoramic'.trans;
@@ -1368,20 +1431,25 @@ class AppStrings {
   static String get amenitySecurity => 'amenity_security'.trans;
 
   // Community Amenities
-  static String get communityAmenityEventHall => 'community_amenity_event_hall'.trans;
+  static String get communityAmenityEventHall =>
+      'community_amenity_event_hall'.trans;
   static String get communityAmenitySauna => 'community_amenity_sauna'.trans;
   static String get communityAmenityGym => 'community_amenity_gym'.trans;
   static String get communityAmenityPool => 'community_amenity_pool'.trans;
-  static String get communityAmenityHeliport => 'community_amenity_heliport'.trans;
+  static String get communityAmenityHeliport =>
+      'community_amenity_heliport'.trans;
   static String get communityAmenityGuard => 'community_amenity_guard'.trans;
   static String get communityAmenityLobby => 'community_amenity_lobby'.trans;
 
   // Interior Amenities
-  static String get interiorAmenityMeetingRoom => 'interior_amenity_meeting_room'.trans;
-  static String get interiorAmenityReception => 'interior_amenity_reception'.trans;
+  static String get interiorAmenityMeetingRoom =>
+      'interior_amenity_meeting_room'.trans;
+  static String get interiorAmenityReception =>
+      'interior_amenity_reception'.trans;
   static String get interiorAmenityKitchen => 'interior_amenity_kitchen'.trans;
   static String get interiorAmenityAc => 'interior_amenity_ac'.trans;
-  static String get interiorAmenityElevator => 'interior_amenity_elevator'.trans;
+  static String get interiorAmenityElevator =>
+      'interior_amenity_elevator'.trans;
   static String get interiorAmenityParking => 'interior_amenity_parking'.trans;
 
   // Floor Options
@@ -1403,9 +1471,12 @@ class AppStrings {
 
   // Locations
   static String get locationMainStreet => 'location_main_street'.trans;
-  static String get locationSecondaryStreet => 'location_secondary_street'.trans;
-  static String get locationResidentialComplex => 'location_residential_complex'.trans;
-  static String get locationCommercialComplex => 'location_commercial_complex'.trans;
+  static String get locationSecondaryStreet =>
+      'location_secondary_street'.trans;
+  static String get locationResidentialComplex =>
+      'location_residential_complex'.trans;
+  static String get locationCommercialComplex =>
+      'location_commercial_complex'.trans;
 
   // Cooling
   static String get coolingTypeCooling => 'cooling_type_cooling'.trans;
@@ -1429,7 +1500,8 @@ class AppStrings {
   static String get conditionVeryGood => 'condition_very_good'.trans;
   static String get conditionGood => 'condition_good'.trans;
   static String get conditionFair => 'condition_fair'.trans;
-  static String get conditionNeedsRenovation => 'condition_needs_renovation'.trans;
+  static String get conditionNeedsRenovation =>
+      'condition_needs_renovation'.trans;
 
   // Soil Types
   static String get soilTypeClay => 'soil_type_clay'.trans;
@@ -1443,32 +1515,46 @@ class AppStrings {
   static String get basicServiceInternet => 'basic_service_internet'.trans;
   static String get basicServiceSewage => 'basic_service_sewage'.trans;
   static String get basicServiceWater => 'basic_service_water'.trans;
-  static String get basicServiceElectricity => 'basic_service_electricity'.trans;
+  static String get basicServiceElectricity =>
+      'basic_service_electricity'.trans;
 
   // Interior Features
-  static String get interiorFeatureDriverRoom => 'interior_feature_driver_room'.trans;
-  static String get interiorFeatureMaidRoom => 'interior_feature_maid_room'.trans;
-  static String get interiorFeatureElevator => 'interior_feature_elevator'.trans;
-  static String get interiorFeatureCentralAc => 'interior_feature_central_ac'.trans;
-  static String get interiorFeatureBasement => 'interior_feature_basement'.trans;
+  static String get interiorFeatureDriverRoom =>
+      'interior_feature_driver_room'.trans;
+  static String get interiorFeatureMaidRoom =>
+      'interior_feature_maid_room'.trans;
+  static String get interiorFeatureElevator =>
+      'interior_feature_elevator'.trans;
+  static String get interiorFeatureCentralAc =>
+      'interior_feature_central_ac'.trans;
+  static String get interiorFeatureBasement =>
+      'interior_feature_basement'.trans;
   static String get interiorFeatureRoof => 'interior_feature_roof'.trans;
   static String get interiorFeatureStorage => 'interior_feature_storage'.trans;
 
   // Exterior Features
-  static String get exteriorFeatureCarShelter => 'exterior_feature_car_shelter'.trans;
+  static String get exteriorFeatureCarShelter =>
+      'exterior_feature_car_shelter'.trans;
   static String get exteriorFeatureGarden => 'exterior_feature_garden'.trans;
   static String get exteriorFeaturePool => 'exterior_feature_pool'.trans;
   static String get exteriorFeatureGuard => 'exterior_feature_guard'.trans;
-  static String get exteriorFeatureSecurityComplexes => 'exterior_feature_security_complexes'.trans;
-  static String get exteriorFeatureWaterWell => 'exterior_feature_water_well'.trans;
-  static String get exteriorFeatureHealthClub => 'exterior_feature_health_club'.trans;
-  static String get exteriorFeatureElectronicGate => 'exterior_feature_electronic_gate'.trans;
+  static String get exteriorFeatureSecurityComplexes =>
+      'exterior_feature_security_complexes'.trans;
+  static String get exteriorFeatureWaterWell =>
+      'exterior_feature_water_well'.trans;
+  static String get exteriorFeatureHealthClub =>
+      'exterior_feature_health_club'.trans;
+  static String get exteriorFeatureElectronicGate =>
+      'exterior_feature_electronic_gate'.trans;
   static String get exteriorFeatureCctv => 'exterior_feature_cctv'.trans;
 
   // Feature Categories
-  static String get featureCategoryBasicServices => 'feature_category_basic_services'.trans;
-  static String get featureCategoryInterior => 'feature_category_interior'.trans;
-  static String get featureCategoryExteriorSecurity => 'feature_category_exterior_security'.trans;
+  static String get featureCategoryBasicServices =>
+      'feature_category_basic_services'.trans;
+  static String get featureCategoryInterior =>
+      'feature_category_interior'.trans;
+  static String get featureCategoryExteriorSecurity =>
+      'feature_category_exterior_security'.trans;
 
   // Individual Features
   static String get featureElectricity => 'feature_electricity'.trans;
@@ -1497,12 +1583,16 @@ class AppStrings {
   static String get accountTypeIndividual => 'account_type_individual'.trans;
 
   // Insurance
-  static String get insuranceTypeComprehensive => 'insurance_type_comprehensive'.trans;
+  static String get insuranceTypeComprehensive =>
+      'insurance_type_comprehensive'.trans;
   static String get insuranceCoverageTheft => 'insurance_coverage_theft'.trans;
-  static String get insuranceCoverageNaturalDisasters => 'insurance_coverage_natural_disasters'.trans;
+  static String get insuranceCoverageNaturalDisasters =>
+      'insurance_coverage_natural_disasters'.trans;
   static String get insuranceCoverageFiresm => 'insurance_coverage_fires'.trans;
-  static String get insuranceCoverageElectricalDamage => 'insurance_coverage_electrical_damage'.trans;
-  static String get insuranceCoverageLiability => 'insurance_coverage_liability'.trans;
+  static String get insuranceCoverageElectricalDamage =>
+      'insurance_coverage_electrical_damage'.trans;
+  static String get insuranceCoverageLiability =>
+      'insurance_coverage_liability'.trans;
 
   // Providers
   static String get providerTamara => 'provider_tamara'.trans;
@@ -1531,13 +1621,22 @@ class AppStrings {
   static String get timeAgo => 'time_ago'.trans;
 
   // Subscription Features
-  static String get subscriptionFeaturePublish10Properties => 'subscription_feature_publish_10_properties'.trans;
-  static String get subscriptionFeatureAdDuration30Days => 'subscription_feature_ad_duration_30_days'.trans;
-  static String get subscriptionFeatureSimpleDashboard => 'subscription_feature_simple_dashboard'.trans;
-  static String get subscriptionFeatureUnlimitedPublish => 'subscription_feature_unlimited_publish'.trans;
-  static String get subscriptionFeatureAdvancedReports => 'subscription_feature_advanced_reports'.trans;
-  static String get subscriptionFeatureTeamManagement => 'subscription_feature_team_management'.trans;
-  static String get subscriptionFeaturePublish50Properties => 'subscription_feature_publish_50_properties'.trans;
-  static String get subscriptionFeatureViewStatistics => 'subscription_feature_view_statistics'.trans;
-  static String get subscriptionFeatureTechnicalSupport => 'subscription_feature_technical_support'.trans;
+  static String get subscriptionFeaturePublish10Properties =>
+      'subscription_feature_publish_10_properties'.trans;
+  static String get subscriptionFeatureAdDuration30Days =>
+      'subscription_feature_ad_duration_30_days'.trans;
+  static String get subscriptionFeatureSimpleDashboard =>
+      'subscription_feature_simple_dashboard'.trans;
+  static String get subscriptionFeatureUnlimitedPublish =>
+      'subscription_feature_unlimited_publish'.trans;
+  static String get subscriptionFeatureAdvancedReports =>
+      'subscription_feature_advanced_reports'.trans;
+  static String get subscriptionFeatureTeamManagement =>
+      'subscription_feature_team_management'.trans;
+  static String get subscriptionFeaturePublish50Properties =>
+      'subscription_feature_publish_50_properties'.trans;
+  static String get subscriptionFeatureViewStatistics =>
+      'subscription_feature_view_statistics'.trans;
+  static String get subscriptionFeatureTechnicalSupport =>
+      'subscription_feature_technical_support'.trans;
 }

@@ -2,8 +2,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/utils/constants/app_images.dart';
-import '../../business_home/model/business_portfolio_property_model.dart';
-import '../model/business_property_request_model.dart';
+ import '../model/business_property_request_model.dart';
 
 part 'business_properties_event.dart';
 part 'business_properties_state.dart';
@@ -48,7 +47,7 @@ class BusinessPropertiesBloc
   ];
 
   static const _mockPublished = [
-    BusinessPortfolioPropertyModel(
+    BusinessRequestPublishedPropertyModel(
       id: '1',
       title: 'شقة فاخرة في الملقا',
       location: 'الرياض - حي الملقا',
@@ -58,7 +57,7 @@ class BusinessPropertiesBloc
       lastUpdate: 'منذ اسبوع',
       status: 'مؤجر',
     ),
-    BusinessPortfolioPropertyModel(
+    BusinessRequestPublishedPropertyModel(
       id: '2',
       title: 'فيلا حديثة في النرجس',
       location: 'الرياض - حي النرجس',
@@ -68,7 +67,7 @@ class BusinessPropertiesBloc
       lastUpdate: 'منذ اسبوع',
       status: 'مؤجر',
     ),
-    BusinessPortfolioPropertyModel(
+    BusinessRequestPublishedPropertyModel(
       id: '3',
       title: 'شقة في حي العليا',
       location: 'الرياض - حي العليا',

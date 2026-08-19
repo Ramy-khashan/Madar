@@ -35,4 +35,18 @@ class PortfolioPropertyModel {
     typeId = json['typeId'];
     isForSale = json['isForSale'];
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'location': location,
+      'imageUrl': imageUrl,
+      'status': status,
+      'bed': bed,
+      'bath': bath,
+      'area': area,
+      'typeId': typeId,
+      'isForSale': isForSale,
+    };
+  }
 }

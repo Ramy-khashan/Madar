@@ -459,10 +459,18 @@ class DioConsumer implements ApiConsumer {
 
   @override
   Map<String, dynamic> handleResponseAsJson(Response response) {
-    if (response.data == null || response.data.toString().trim().isEmpty) {
-      return {};
-    }
-    return jsonDecode(response.data.toString()) as Map<String, dynamic>;
+    final data = response.data;
+    if (data == null) return {};
+    if (data is Map<String, dynamic>) return data;
+    if (data is Map) return Map<String, dynamic>.from(data);
+    final raw = data.toString().trim();
+    if (raw.isEmpty) return {};
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is Map<String, dynamic>) return decoded;
+      if (decoded is Map) return Map<String, dynamic>.from(decoded);
+    } catch (_) {}
+    return {};
   }
 
   @override
@@ -475,16 +483,22 @@ class DioConsumer implements ApiConsumer {
       return left('Time Out');
     }
 
-    if (status == StatusCode.badRequest ||
-        status == StatusCode.unauthorized ||
-        status == StatusCode.forbidden ||
-        status == StatusCode.notFound) {
+    final body = handleResponseAsJson(response);
+
+    if (status < 200 || status >= 300 || body['success'] == false) {
+      if (response.data is Map<String, dynamic> || body.isNotEmpty) {
+        return left(
+          ErrorHandlerModel.fromJson(
+            response.data is Map<String, dynamic>
+                ? response.data as Map<String, dynamic>
+                : body,
+          ).firstErrorMessage.toCamelCase,
+        );
+      }
       return left(handleError(response));
     }
 
-    return right(
-      ApiModel(response: handleResponseAsJson(response), statusCode: status),
-    );
+    return right(ApiModel(response: body, statusCode: status));
   }
 
   @override

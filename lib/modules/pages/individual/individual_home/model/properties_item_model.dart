@@ -28,7 +28,7 @@ class PropertiesItemModel {
   });
 
   PropertiesItemModel.fromJson(Map<String, dynamic> json) {
-    propertyId = json['property_id'];
+    propertyId = json['property_id'] ?? json['propertyId'];
     type = json['type'];
     status = json['status'];
     title = json['title'];
@@ -37,9 +37,9 @@ class PropertiesItemModel {
     totalArea = json['totalArea'];
     bedrooms = json['bedrooms'];
     bathrooms = json['bathrooms'];
-    city = json['city'];
-    district = json['district'];
-    image = json['image'];
+    city = json['city'] ?? json['location']['city'] ?? '';
+    district = json['district'] ?? json['location']['district'] ?? '';
+    image = json['image'] ?? json['mainImage'];
   }
 
   Map<String, dynamic> toJson() {

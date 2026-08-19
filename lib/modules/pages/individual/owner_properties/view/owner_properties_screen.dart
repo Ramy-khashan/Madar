@@ -55,8 +55,7 @@ class OwnerPropertiesScreen extends StatelessWidget {
                 ),
                 UserInfoHeaderWidget(
                   name: state.owner.name,
-                  rating: state.owner.rating,
-                  reviewsCount: state.owner.reviewsCount,
+          
                   propertiesCount: state.owner.propertiesCount,
                   imageUrl: state.owner.imageUrl,
                   isBroker: false,

@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
-import '../../../business_home/model/business_portfolio_property_model.dart';
-import '../../../business_home/view/widget/business_portflio_property_item.dart';
-
+ import '../../model/business_property_request_model.dart';
+import 'business_portflio_property_item.dart';
+ 
 class BusinessPropertiesPublishedListWidget extends StatelessWidget {
   const BusinessPropertiesPublishedListWidget({super.key, required this.items});
 
-  final List<BusinessPortfolioPropertyModel> items;
+  final List<BusinessRequestPublishedPropertyModel> items;
 
   @override
   Widget build(BuildContext context) {

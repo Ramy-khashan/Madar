@@ -7,12 +7,26 @@ sealed class PropertiesMapEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-final class NavigateToPositionEvent extends PropertiesMapEvent {
-  final PositionModel position;
-  const NavigateToPositionEvent(this.position);
+/// Fetches properties from `properties/map` for [position] (or the map's
+/// default position when null), looping through pagination until all pages
+/// are collected.
+final class LoadPropertiesMapEvent extends PropertiesMapEvent {
+  final PositionModel? position;
+  const LoadPropertiesMapEvent({this.position});
 
   @override
   List<Object?> get props => [position];
+}
+
+/// Toggles "عرض الاقرب لمنطقتي" — when enabled, requests location
+/// permission, fetches the user's current position and reloads the
+/// properties around it.
+final class ToggleNearestToMeEvent extends PropertiesMapEvent {
+  final bool value;
+  const ToggleNearestToMeEvent(this.value);
+
+  @override
+  List<Object?> get props => [value];
 }
 
 final class SelectMarkerEvent extends PropertiesMapEvent {

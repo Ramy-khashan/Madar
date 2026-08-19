@@ -1,13 +1,20 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_button.dart';
 import '../../../../../../core/components/image_item.dart';
+import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../core/utils/functions/image_picker_helper.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../controller/add_property_bloc.dart';
+import '../../model/add_property_validator.dart';
+import '../widgets/field_error_text.dart';
+import '../../model/add_property_model.dart';
 
 class AddPropertyStep4Screen extends StatelessWidget {
   const AddPropertyStep4Screen({super.key});
@@ -35,34 +42,52 @@ class AddPropertyStep4Screen extends StatelessWidget {
                   ),
                 ),
                 12.height.toSizedBox,
-                _UploadArea(),
+                const _UploadArea(),
+                const FieldErrorText(AddPropertyField.images),
                 16.height.toSizedBox,
-                _AiEnhancementToggle(),
-                16.height.toSizedBox,
-                _ImageGrid(),
+                const _ImageGrid(),
                 24.height.toSizedBox,
-               
                 Row(
                   children: [
-                     Expanded(
-                      child: _MediaToggleRow(
-                        event: Toggle360TourEvent(),
-                        field: 'has360Tour',
+                    Expanded(
+                      child: _MediaPickerCard(
                         label: AppStrings.tour360,
                         hint: AppStrings.strongerEngagement,
-
+                        emptyHint: AppStrings.tapToAdd360Tour,
                         icon: Icons.map_outlined,
+                        pathSelector: (model) => model.virtualTourPath,
+                        onPick: () async {
+                          final path = await pickVideo();
+                          if (path == null || !context.mounted) return;
+                          AddPropertyBloc.get(
+                            context,
+                          ).add(SetVirtualTourPathEvent(path));
+                        },
+                        onClear: () => AddPropertyBloc.get(
+                          context,
+                        ).add(const ClearVirtualTourEvent()),
                       ),
                     ),
-                 
-                    12.height.toSizedBox,
-                      Expanded(
-                      child: _MediaToggleRow(
-                        event: ToggleVideoEvent(),
-                        field: 'hasVideo',
+                    12.width.toSizedBox,
+                    Expanded(
+                      child: _MediaPickerCard(
                         label: AppStrings.videoLabel,
                         hint: AppStrings.upTo60Seconds,
-                        icon: Icons.camera_alt_outlined,
+                        emptyHint: AppStrings.tapToAddVideo,
+                        icon: Icons.videocam_outlined,
+                        pathSelector: (model) => model.videoPath,
+                        onPick: () async {
+                          final path = await pickVideo(
+                            maxDuration: const Duration(seconds: 60),
+                          );
+                          if (path == null || !context.mounted) return;
+                          AddPropertyBloc.get(
+                            context,
+                          ).add(SetVideoPathEvent(path));
+                        },
+                        onClear: () => AddPropertyBloc.get(
+                          context,
+                        ).add(const ClearVideoEvent()),
                       ),
                     ),
                   ],
@@ -99,13 +124,17 @@ class _SectionLabel extends StatelessWidget {
 class _UploadArea extends StatelessWidget {
   const _UploadArea();
 
+  Future<void> _pick(BuildContext context) async {
+    final paths = await pickImages();
+    if (paths == null || paths.isEmpty || !context.mounted) return;
+    AddPropertyBloc.get(context).add(AddImagesEvent(paths));
+  }
+
   @override
   Widget build(BuildContext context) {
     final tc = AppThemeColors.of(context);
     return GestureDetector(
-      onTap: () {
-        // TODO: open image picker
-      },
+      onTap: () => _pick(context),
       child: Container(
         width: double.infinity,
         height: 140,
@@ -115,7 +144,6 @@ class _UploadArea extends StatelessWidget {
           border: Border.all(
             color: tc.primaryBrand.withValues(alpha: 0.4),
             width: 1.5,
-            style: BorderStyle.solid,
           ),
         ),
         child: Column(
@@ -147,60 +175,6 @@ class _UploadArea extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _AiEnhancementToggle extends StatelessWidget {
-  const _AiEnhancementToggle();
-
-  @override
-  Widget build(BuildContext context) {
-    final tc = AppThemeColors.of(context);
-    return BlocBuilder<AddPropertyBloc, AddPropertyState>(
-      buildWhen: (prev, curr) =>
-          prev.model.aiEnhancement != curr.model.aiEnhancement,
-      builder: (context, state) {
-        return Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: 16.width,
-            vertical: 2.height,
-          ),
-          decoration: BoxDecoration(
-            color: tc.primaryBrand.withValues(alpha: 0.2),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: tc.borderColor),
-          ),
-          child: Row(
-            children: [
-              ImageItem(
-                AppImages.chatbotIcon,
-                width: 24,
-                height: 24,
-                color: tc.primaryBrand,
-              ),
-              12.width.toSizedBox,
-              Expanded(
-                child: Text(
-                  AppStrings.aiAutoEnhance,
-                  style: TextStyle(
-                    fontSize: context.responsiveFontScale(13),
-                    fontWeight: FontWeight.w600,
-                    color: tc.textPrimary,
-                  ),
-                ),
-              ),
-              Switch(
-                value: state.model.aiEnhancement,
-                onChanged: (_) => AddPropertyBloc.get(
-                  context,
-                ).add(const ToggleAiEnhancementEvent()),
-                activeColor: tc.primaryBrand,
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }
@@ -247,12 +221,12 @@ class _ImageTile extends StatelessWidget {
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(10),
-          child: Image.asset(
-            path,
+          child: Image.file(
+            File(path),
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,
-            errorBuilder: (_, __, ___) => Container(
+            errorBuilder: (context, error, stackTrace) => Container(
               color: tc.borderColor.withValues(alpha: 0.3),
               child: Icon(Icons.broken_image_rounded, color: tc.textSecondary),
             ),
@@ -284,66 +258,109 @@ class _ImageTile extends StatelessWidget {
   }
 }
 
-class _MediaToggleRow extends StatelessWidget {
-  const _MediaToggleRow({
-    required this.event,
-    required this.field,
+class _MediaPickerCard extends StatelessWidget {
+  const _MediaPickerCard({
     required this.label,
     required this.hint,
+    required this.emptyHint,
     required this.icon,
+    required this.pathSelector,
+    required this.onPick,
+    required this.onClear,
   });
-  final AddPropertyEvent event;
-  final String field; // 'hasVideo' | 'has360Tour'
+
   final String label;
   final String hint;
+  final String emptyHint;
   final IconData icon;
+  final String? Function(AddPropertyModel) pathSelector;
+  final VoidCallback onPick;
+  final VoidCallback onClear;
+
+  String _fileName(String path) {
+    final parts = path.split(RegExp(r'[/\\]'));
+    return parts.isEmpty ? path : parts.last;
+  }
 
   @override
   Widget build(BuildContext context) {
     final tc = AppThemeColors.of(context);
-    return Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: 16.width,
-            vertical: 12.height,
-          ),
-          decoration: BoxDecoration(
-            color: tc.cardBackground,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color:   tc.borderColor,
+    return BlocBuilder<AddPropertyBloc, AddPropertyState>(
+      buildWhen: (prev, curr) =>
+          pathSelector(prev.model) != pathSelector(curr.model),
+      builder: (context, state) {
+        final path = pathSelector(state.model);
+        final hasFile = path != null && path.isNotEmpty;
+        return GestureDetector(
+          onTap: onPick,
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 16.width,
+              vertical: 12.height,
+            ),
+            decoration: BoxDecoration(
+              color: tc.cardBackground,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: hasFile ? tc.primaryBrand : tc.borderColor,
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  icon,
+                  color: hasFile ? tc.primaryBrand : tc.textSecondary,
+                  size: 28.width,
+                ),
+                6.height.toSizedBox,
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: context.responsiveFontScale(14),
+                    fontWeight: FontWeight.w600,
+                    color: tc.primaryBrand,
+                  ),
+                ),
+                8.height.toSizedBox,
+                Text(
+                  hasFile ? _fileName(path) : emptyHint,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: context.responsiveFontScale(12),
+                    fontWeight: FontWeight.w500,
+                    color: hasFile ? tc.textPrimary : tc.textFieldBorder,
+                  ),
+                ),
+                4.height.toSizedBox,
+                Text(
+                  hasFile ? AppStrings.changeFile : hint,
+                  style: TextStyle(
+                    fontSize: context.responsiveFontScale(11),
+                    color: tc.textSecondary,
+                  ),
+                ),
+                if (hasFile) ...[
+                  8.height.toSizedBox,
+                  GestureDetector(
+                    onTap: onClear,
+                    child: Text(
+                      AppStrings.removeFile,
+                      style: TextStyle(
+                        fontSize: context.responsiveFontScale(12),
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.errorColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
-          child: Column (
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(
-                icon,
-                color:  tc.textSecondary,
-                size: 28.width,
-              ),
-              6.height.toSizedBox,
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: context.responsiveFontScale(14),
-                  fontWeight: FontWeight.w600,
-                  color:  tc.primaryBrand  ,
-                ),
-              ), 
-              8.height.toSizedBox,
-              Text(
-                hint,
-                style: TextStyle(
-                  fontSize: context.responsiveFontScale(14),
-                  fontWeight: FontWeight.w600,
-                  color:   tc.textFieldBorder  ,
-                ),
-              ),
-             
-            ],
-          ),
         );
-       
+      },
+    );
   }
 }
 

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../config/router/app_router_keys.dart';
 import '../../config/theme/app_theme_colors.dart';
-import '../../modules/pages/individual/individual_home/model/portfolio_property_model.dart';
-import '../utils/constants/app_strings.dart';
+import '../../modules/pages/business/business_home/model/business_portfolio_property_model.dart';
+ import '../utils/constants/app_strings.dart';
+import '../utils/functions/print_state.dart';
 import '../utils/functions/responsive.dart';
 import '../utils/functions/router_handler.dart';
 import 'app_button.dart';
@@ -16,7 +17,7 @@ class PortfolioCardWidget extends StatelessWidget {
     this.isWithWidth = false,
   });
   final bool isWithWidth;
-  final PortfolioPropertyModel? portfolio;
+  final MyPropertiesModel? portfolio;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +47,6 @@ class PortfolioCardWidget extends StatelessWidget {
           PortfolioCardHeader(
             title: portfolio?.title ?? 'Property Title',
             location: portfolio?.location ?? 'Location',
-            status: portfolio?.status ?? 'Status',
             imageUrl: portfolio?.imageUrl ?? '',
             colors: colors,
           ),
@@ -58,6 +58,7 @@ class PortfolioCardWidget extends StatelessWidget {
                 child: AppButton(
                   key: Key('view_details_${portfolio?.id}'),
                   onTap: () {
+                   
                     RouterHandler.navigate(
                       context,
                       AppRouterKeys.propertyFileDetails,
@@ -98,12 +99,10 @@ class PortfolioCardHeader extends StatelessWidget {
     required this.colors,
     required this.title,
     required this.location,
-    required this.status,
     required this.imageUrl,
   });
   final String title;
   final String location;
-  final String status;
   final String imageUrl;
   final AppThemeColors colors;
 

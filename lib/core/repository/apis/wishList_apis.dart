@@ -12,7 +12,7 @@ class WishlistApis {
       final response = await sl.get<ApiConsumer>().get(EndPoints.wishlist);
       return response.fold(
         (failedResponse) => Left(failedResponse),
-        (successResponse) => Right(successResponse.response['data']),
+        (successResponse) => Right(successResponse.response['data']['data']),
       );
     } catch (e) {
       return Left(AppStrings.somethingWentWrong);

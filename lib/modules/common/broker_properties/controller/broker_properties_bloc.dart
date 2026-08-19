@@ -1,111 +1,84 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../core/model/property_filter_model.dart';
 import '../../../../../core/utils/constants/app_images.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
- import '../../../../../core/model/property_listing_user_model.dart';
-import '../../../pages/individual/individual_home/model/property_model.dart';
+import '../../../../core/connection/concept/end_points.dart';
+import '../../../../core/connection/interfaces/api_consumer.dart';
+import '../../../../core/utils/constants/app_enums.dart';
+import '../../../../core/utils/functions/service_locator.dart';
+import '../../../pages/individual/individual_home/model/properties_item_model.dart';
 
 part 'broker_properties_event.dart';
 part 'broker_properties_state.dart';
 
 class BrokerPropertiesBloc
     extends Bloc<BrokerPropertiesEvent, BrokerPropertiesState> {
-  BrokerPropertiesBloc() : super(BrokerPropertiesInitial()) {
+  BrokerPropertiesBloc() : super(const BrokerPropertiesState()) {
     on<BrokerPropertiesLoad>(_onLoad);
-    on<BrokerPropertiesFilterApplied>(_onFilterApplied);
   }
 
-  static const PropertyListingUserModel _mockBroker = PropertyListingUserModel(
-    name: 'مكتب العقارات المتميزة',
-    rating: 4.9,
-    reviewsCount: 127,
-    propertiesCount: 45,
-  );
+  static BrokerPropertiesBloc get(BuildContext context) =>
+      context.read<BrokerPropertiesBloc>();
 
-  static final List<PropertyModel> _mockProperties = [
-    PropertyModel(
-      id: '1',
-      title: 'شقة فاخرة في الملقا',
-      location: 'الرياض - حي الملقا',
-      imageUrl: AppImages.propertyImage,
-      beds: 3,
-      baths: 2,
-      area: '150 ${AppStrings.mesurement}',
-      price: 850000,
-      tag: AppStrings.propertyTypeApartment,
-      typeId: 'apartment',
-      isForSale: true,
-    ),
-      PropertyModel(
-      id: '2',
-      title: 'فيلا النرجس',
-      location: 'الرياض - حي النرجس',
-      imageUrl: AppImages.propertyImage,
-      beds: 5,
-      baths: 4,
-      area: '350 ${AppStrings.mesurement}',
-      price: 2200000,
-      tag: AppStrings.propertyTypeVilla,
-      typeId: 'villa',
-      isForSale: true,
-    ),
-      PropertyModel(
-      id: '3',
-      title: 'شقة في حي العليا',
-      location: 'الرياض - حي العليا',
-      imageUrl: AppImages.propertyImage,
-      beds: 2,
-      baths: 1,
-      area: '110 ${AppStrings.mesurement}',
-      price: 620000,
-      tag: AppStrings.propertyTypeApartment,
-      typeId: 'apartment',
-      isForSale: false,
-    ),
-      PropertyModel(
-      id: '4',
-      title: 'دور في حي الورود',
-      location: 'الرياض - حي الورود',
-      imageUrl: AppImages.propertyImage,
-      beds: 4,
-      baths: 3,
-      area: '200 ${AppStrings.mesurement}',
-      price: 1100000,
-      tag: AppStrings.propertyTypeFloor,
-      typeId: 'floor',
-      isForSale: true,
-    ),
-  ];
+  final int pageSize = 3;
 
-  void _onLoad(
+  Future<void> _onLoad(
     BrokerPropertiesLoad event,
     Emitter<BrokerPropertiesState> emit,
-  ) {
-    emit(
-      BrokerPropertiesLoaded(
-        broker: _mockBroker,
-        properties: _mockProperties,
-      ),
-    );
-  }
-
-  void _onFilterApplied(
-    BrokerPropertiesFilterApplied event,
-    Emitter<BrokerPropertiesState> emit,
-  ) {
-    final f = event.filter;
-    final filtered = _mockProperties.where((p) {
-      if (p.isForSale != f.isForSale) return false;
-      if (f.propertyTypeId != null && p.typeId != f.propertyTypeId) return false;
-      if (p.price > f.maxPrice) return false;
-      return true;
-    }).toList();
-    emit(BrokerPropertiesLoaded(
-      broker: _mockBroker,
-      properties: filtered,
-      filter: f,
-    ));
+  ) async {
+    try {
+      emit(
+        state.copyWith(
+          loadingStatus: RequestStatus.loading,
+          isLoadMore: event.isLoadMore,
+        ),
+      );
+      final res = await sl.get<ApiConsumer>().get(
+        EndPoints.brokerProperties(event.brokerId),
+        queryParameters: {'page': event.page, 'page_size': pageSize},
+      );
+      await res.fold(
+        (l) async {
+          emit(
+            state.copyWith(
+              loadingStatus: RequestStatus.failed,
+              errorMsg: l,
+              isLoadMore: false,
+            ),
+          );
+        },
+        (r) async {
+          final properties = (r.response['properties'] as List)
+              .map((e) => PropertiesItemModel.fromJson(e))
+              .toList();
+          final pagination = r.response['pagination'] as Map<String, dynamic>?;
+          final totalCount = pagination?['total'] as int? ?? 0;
+          emit(
+            state.copyWith(
+              loadingStatus: RequestStatus.success,
+              brokerId: event.brokerId,
+              brokerName: r.response['broker']['fullName'] ?? '',
+              brokerPropertiesCount: totalCount,
+              brokerImageUrl: AppImages.building,
+              properties: event.isLoadMore
+                  ? [...state.properties, ...properties]
+                  : properties,
+              totalCount: totalCount,
+              isLoadMore: false,
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          loadingStatus: RequestStatus.failed,
+          errorMsg: AppStrings.somethingWentWrong,
+          isLoadMore: false,
+        ),
+      );
+    }
   }
 }

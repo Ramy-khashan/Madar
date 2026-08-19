@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
- 
 
 class PerformanceSummaryShape extends StatelessWidget {
   const PerformanceSummaryShape({
@@ -36,12 +35,13 @@ class PerformanceSummaryShape extends StatelessWidget {
                 width: 32.width,
                 padding: EdgeInsets.all(8.width),
                 decoration: BoxDecoration(
-                  color: AppThemeColors.of(
-                    context,
-                  ).primaryBrand ,
+                  color: AppThemeColors.of(context).primaryBrand,
                   borderRadius: BorderRadius.circular(4.width),
                 ),
-                child: ImageItem(image,color: AppThemeColors.of(context).onPrimary),
+                child: ImageItem(
+                  image,
+                  color: AppThemeColors.of(context).onPrimary,
+                ),
               ),
               SizedBox(width: 8.width),
               Expanded(
@@ -56,14 +56,16 @@ class PerformanceSummaryShape extends StatelessWidget {
               ),
             ],
           ),
-           Padding(
+          Padding(
             padding: EdgeInsets.only(top: 8.height),
-            child: Text(value,
-                style: TextStyle(
-                  fontSize: context.responsiveFontScale(18),
-                  fontWeight: FontWeight.bold,
-                  color: AppThemeColors.of(context).primaryBrand,
-                )),
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: context.responsiveFontScale(18),
+                fontWeight: FontWeight.bold,
+                color: AppThemeColors.of(context).primaryBrand,
+              ),
+            ),
           ),
         ],
       ),

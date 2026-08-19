@@ -6,6 +6,7 @@ import '../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../core/components/app_appbar.dart';
 import '../../../../../core/components/search_item.dart';
 import '../../../../../core/model/google_map_model.dart';
+import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../controller/properties_map_bloc.dart';
 import 'widgets/maker_property_item.dart';
@@ -41,33 +42,29 @@ class _PropertiesMapView extends StatelessWidget {
           return BlocBuilder<PropertiesMapBloc, PropertiesMapState>(
             builder: (context, state) {
               final bloc = PropertiesMapBloc.get(context);
-              final selectedIndex = state is PropertiesMapMarkerSelected
+              final selectedIndex = state.selectedIndex >= 0
                   ? state.selectedIndex
                   : null;
 
-              final cameraTarget = state is PropertiesMapMarkerSelected
-                  ? PropertiesMapBloc.propertyMarkers[state.selectedIndex]
+              final propertyMarkers = bloc.propertyMarkers;
+
+              final cameraTarget = selectedIndex != null
+                  ? propertyMarkers[selectedIndex]
                   : bloc.targetPosition;
 
-              final markers = PropertiesMapBloc.propertyMarkers
-                  .asMap()
-                  .entries
-                  .map((e) {
-                    BitmapDescriptor? icon;
-                    if (icons != null) {
-                      icon = e.key == selectedIndex
-                          ? icons.selected
-                          : icons.normal;
-                    }
-                    return Marker(
-                      markerId: MarkerId('property_${e.key}'),
-                      position: e.value.position,
-                      icon: icon ?? BitmapDescriptor.defaultMarker,
-                      anchor: const Offset(0.5, 1.0),
-                      onTap: () => bloc.add(SelectMarkerEvent(e.key)),
-                    );
-                  })
-                  .toSet();
+              final markers = propertyMarkers.asMap().entries.map((e) {
+                BitmapDescriptor? icon;
+                if (icons != null) {
+                  icon = e.key == selectedIndex ? icons.selected : icons.normal;
+                }
+                return Marker(
+                  markerId: MarkerId('property_${e.key}'),
+                  position: e.value.position,
+                  icon: icon ?? BitmapDescriptor.defaultMarker,
+                  anchor: const Offset(0.5, 1.0),
+                  onTap: () => bloc.add(SelectMarkerEvent(e.key)),
+                );
+              }).toSet();
 
               return Stack(
                 children: [
@@ -84,17 +81,26 @@ class _PropertiesMapView extends StatelessWidget {
                               cameraTarget: cameraTarget,
                               markers: markers,
                               onTap: (_) {
-                                if (state is PropertiesMapMarkerSelected) {
+                                if (selectedIndex != null) {
                                   bloc.add(const CloseMarkerEvent());
                                 }
                               },
                             ),
+                            if (state.status == RequestStatus.loading)
+                              const Positioned.fill(
+                                child: IgnorePointer(
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                ),
+                              ),
                             PositionedDirectional(
                               top: 8,
                               start: 3,
                               child: NearestPropertyToggle(
-                                value: false,
-                                onChanged: (bool value) {},
+                                value: state.isNearestToMe,
+                                onChanged: (bool value) =>
+                                    bloc.add(ToggleNearestToMeEvent(value)),
                               ),
                             ),
                           ],
@@ -102,16 +108,15 @@ class _PropertiesMapView extends StatelessWidget {
                       ),
                     ],
                   ),
-                  if (state is PropertiesMapMarkerSelected)
+                  if (selectedIndex != null)
                     Positioned(
                       bottom: 16,
                       left: 16,
                       right: 16,
                       child: MarkerInfoCard(
                         colors: colors,
-                        marker: PropertiesMapBloc
-                            .propertyMarkers[state.selectedIndex],
-                        property: state.property,
+                        marker: propertyMarkers[selectedIndex],
+                        property: state.selectedProperty,
                         onClose: () => bloc.add(const CloseMarkerEvent()),
                       ),
                     ),

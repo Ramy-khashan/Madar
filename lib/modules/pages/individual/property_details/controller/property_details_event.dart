@@ -15,6 +15,22 @@ class PropertyDetailsLoad extends PropertyDetailsEvent {
   List<Object?> get props => [propertyId];
 }
 
+class PropertyDetailsCheckIfPropertyIsSaved extends PropertyDetailsEvent {
+  final String propertyId;
+  const PropertyDetailsCheckIfPropertyIsSaved(this.propertyId);
+
+  @override
+  List<Object?> get props => [propertyId];
+}
+
+class AddedPropertyToSavedEvent extends PropertyDetailsEvent {
+  final String propertyId;
+  const AddedPropertyToSavedEvent(this.propertyId);
+
+  @override
+  List<Object?> get props => [propertyId];
+}
+
 class PropertyDetailsToggleBookmark extends PropertyDetailsEvent {
   const PropertyDetailsToggleBookmark();
 }

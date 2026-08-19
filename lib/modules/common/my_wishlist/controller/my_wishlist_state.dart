@@ -3,7 +3,7 @@ part of 'my_wishlist_bloc.dart';
   class MyWishlistState extends Equatable {
     final String errorMsg;
     final RequestStatus propertiesStatus;
-    final List<dynamic> savedProperties;
+    final List<PropertiesItemModel> savedProperties;
     
   const MyWishlistState(
       {this.errorMsg = '',
@@ -15,7 +15,7 @@ part of 'my_wishlist_bloc.dart';
 MyWishlistState copyWith({
     String? errorMsg,
     RequestStatus? propertiesStatus,
-    List<dynamic>? savedProperties,
+    List<PropertiesItemModel>? savedProperties,
   }) {
     return MyWishlistState(
       errorMsg: errorMsg ?? this.errorMsg,

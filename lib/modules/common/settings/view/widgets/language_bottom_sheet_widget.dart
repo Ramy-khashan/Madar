@@ -9,6 +9,10 @@ import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../../../../../core/utils/functions/translation.dart';
+import '../../../../../core/utils/constants/app_constant.dart';
+import '../../../../../core/utils/constants/storage_keys.dart';
+import '../../../../../core/utils/functions/preference_utils.dart';
+import '../../../../../core/utils/functions/service_locator.dart';
 import '../../controller/settings_bloc.dart';
 
 Future<void> showLanguageBottomSheet(BuildContext context) {
@@ -107,20 +111,21 @@ class _LanguageOptionTile extends StatelessWidget {
             SettingsBloc.get(context).add(SettingsLanguageChanged(code));
 
             RouterHandler.pop(context);
-            await RouterHandler.navigate(
-              context,
-              AppRouterKeys.navbar,
-              routerType: RouterType.goName,
-            );
+            if (sl.get<PreferenceUtils>().getString(StorageKeys.accountType) ==
+                AppConstant.developer) {
+              await RouterHandler.navigate(
+                context,
+                AppRouterKeys.projectManagerHome,
+                routerType: RouterType.goName,
+              );
+            } else {
+              await RouterHandler.navigate(
+                context,
+                AppRouterKeys.navbar,
+                routerType: RouterType.goName,
+              );
+            }
           }
-        } else {
-          RouterHandler.pop(context);
-
-          await RouterHandler.navigate(
-            context,
-            AppRouterKeys.navbar,
-            routerType: RouterType.goName,
-          );
         }
       },
       child: AnimatedContainer(

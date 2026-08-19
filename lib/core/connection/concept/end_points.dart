@@ -4,16 +4,20 @@ class EndPoints {
   static const String login = 'auth/login';
   static const String fcmToken = 'auth/save-fcm-token';
   static const String realEstateNews = 'news';
+  static const String getProfile = 'users/profile';
   static const String properties = 'properties';
+  static const String propertiesMap = 'properties/map';
   static String realEstateNewsDetails(String id) => 'news/$id';
   static const String ads = 'advertisements';
+  static const String saveEvaluations = 'evaluations/smart-suggestion/save';
   static const String portfolio = 'properties/my-properties';
   static const String profile = 'users/profile';
   static const String notifications = 'notifications';
   static const String netProfitLoss = 'dashboard/profit-loss';
   static const String realEstateProjects = 'projects';
   static String projectUpdates(String projectId) => 'projects/updates/$projectId';
-  static const String propertyEvaluations = 'evaluations/property';
+   static const String evaluations = 'evaluations/smart-suggestion';
+   static String brokerProperties(String brokerId) => 'broker/$brokerId/properties';
 
   ///Wishlist Endpoints
   static const String wishlist = 'saved-properties';
@@ -26,8 +30,16 @@ class EndPoints {
   static const String requests = 'requests/me';
   static const String financialReports = 'dashboard/financial-reports';
   static const String myAuctions = '/auctions/my-auctions';
-  static const String brokers = 'brokers';
+  static const String brokers = 'auth/brokers';
+  static const String sendToBrokers = 'properties/send-to-broker/';
+  static const String evaluationPreview = 'evaluations/preview';
   static const String realStateProjectCreation = 'projects';
   static String projectStages(String projectType) =>
       'projects/stages?projectType=$projectType';
+
+  static const String chatAi = 'chat/ai';
+  static const String myChats = 'chat/my-chats';
+  static const String chatPrivate = 'chat/private';
+  static String chatMessage(String chatId) => 'chat/$chatId/message';
+  static const String socketUrl = 'https://api.madar.support';
 }

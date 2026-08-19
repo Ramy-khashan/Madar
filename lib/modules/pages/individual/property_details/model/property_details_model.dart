@@ -25,7 +25,7 @@ class PropertyDetailsModel {
   List<PropertyDeeds>? deeds;
   PropertyEvaluation? evaluation;
   PropertyOwner? owner;
-  PropertyOwner? broker;
+  Publisher? publisher;
   ParentProperty? parentProperty;
   List<ChildProperty>? childProperties;
   String? publicationStatus;
@@ -38,7 +38,7 @@ class PropertyDetailsModel {
     this.title,
     this.projectName,
     this.type,
-    this.listingType,
+     this.listingType,
     this.price,
     this.totalArea,
     this.facadeDirection,
@@ -58,7 +58,7 @@ class PropertyDetailsModel {
     this.deeds,
     this.evaluation,
     this.owner,
-    this.broker,
+    this.publisher,
     this.parentProperty,
     this.childProperties,
     this.publicationStatus,
@@ -116,8 +116,8 @@ class PropertyDetailsModel {
       owner: json['owner'] != null
           ? PropertyOwner.fromJson(json['owner'])
           : null,
-      broker: json['broker'] != null
-          ? PropertyOwner.fromJson(json['broker'])
+      publisher: json['publisher'] != null
+          ? Publisher.fromJson(json['publisher'])
           : null,
       parentProperty: json['parentProperty'] != null
           ? ParentProperty.fromJson(json['parentProperty'])
@@ -170,7 +170,7 @@ class PropertyDetailsModel {
     if (deeds != null) data['deeds'] = deeds!.map((v) => v.toJson()).toList();
     if (evaluation != null) data['evaluation'] = evaluation!.toJson();
     if (owner != null) data['owner'] = owner!.toJson();
-    if (broker != null) data['broker'] = broker!.toJson();
+    if (publisher != null) data['publisher'] = publisher!.toJson();
     if (parentProperty != null) {
       data['parentProperty'] = parentProperty!.toJson();
     }
@@ -848,8 +848,54 @@ class PropertyEvaluation {
     data['furnishing'] = furnishing;
     return data;
   }
-}
+} 
+class Publisher {
+  String? userId;
+  String? fullName;
+  String? role;
+  String? image;
+  String? falLicenseNumber;
+  String? adLicenseNumber;
+  String? publisherType;
+  int? propertiesCount;
 
+  Publisher({
+    this.userId,
+    this.fullName,
+    this.role,
+    this.image,
+    this.falLicenseNumber,
+    this.adLicenseNumber,
+    this.publisherType,
+    this.propertiesCount,
+  });
+
+  factory Publisher.fromJson(Map<String, dynamic> json) {
+    return Publisher(
+      userId: json['userId'] ?? json['user_id'],
+      fullName: json['fullName'],
+      role: json['role'],
+      image: json['image'],
+      falLicenseNumber: json['falLicenseNumber'],
+      adLicenseNumber: json['adLicenseNumber'],
+      publisherType: json['publisherType'],
+      propertiesCount: json['propertiesCount'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['userId'] = userId;
+    data['fullName'] = fullName;
+    data['role'] = role;
+    data['image'] = image;
+    data['falLicenseNumber'] = falLicenseNumber;
+    data['adLicenseNumber'] = adLicenseNumber;
+    data['publisherType'] = publisherType;
+    data['propertiesCount'] = propertiesCount;
+    return data;
+  }
+}
 class PropertyOwner {
   String? userId;
   String? fullName;

@@ -10,8 +10,8 @@ import '../../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../../core/utils/functions/router_handler.dart';
 import '../../../../../../../core/utils/functions/translation.dart';
-import '../../../../business_home/view/widget/business_portflio_property_item.dart';
- import '../../model/realstate_projects_model.dart';
+import '../../../../business_properties/view/widgets/business_portflio_property_item.dart';
+import '../../model/realstate_projects_model.dart';
 
 part 'property_development_status.dart';
 
@@ -38,7 +38,11 @@ class ProjectListItemWidget extends StatelessWidget {
           Row(
             children: [
               ImageItem(
-                project?.attachments?.first ?? '',
+                project?.attachments == null || project == null
+                    ? ''
+                    : project!.attachments!.isEmpty
+                    ? ''
+                    : project?.attachments?.first ?? '',
                 width: 66.width,
                 height: 58.height,
                 borderRadius: BorderRadius.circular(24.radius),
@@ -82,13 +86,14 @@ class ProjectListItemWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              PropertyDevelopmentStatus(status: (project?.status?? 'IN_PROGRESS').toLowerCase()),
+              PropertyDevelopmentStatus(
+                status: (project?.status ?? 'IN_PROGRESS').toLowerCase(),
+              ),
             ],
           ),
           SizedBox(height: 12.height),
           PropertyInfo(
-            info:
-                '${AppStrings.occupancyRate}: ${project?.progress ?? 0}%',
+            info: '${AppStrings.occupancyRate}: ${project?.progress ?? 0}%',
             icon: AppImages.occupancyRateIcon,
             colors: colors,
           ),

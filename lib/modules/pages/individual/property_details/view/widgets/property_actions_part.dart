@@ -45,15 +45,19 @@ class PropertyActionsPart extends StatelessWidget {
                   // childText: AppStrings.chat,
                   childImage: AppImages.chatIcon,
                   onTap: () {
-                    RouterHandler.navigate(
+                    final property = state.property;
+                    final receiverId =
+                        property?.publisher?.userId ??
+                        property?.owner?.userId ??
+                        '';
+                    ChatNavigator.openPrivateChat(
                       context,
-                      AppRouterKeys.conversationDetail,
-
-                      extra: ConversationInfo(
-                        conversationId: '123',
-                        participantName: 'Property Owner Name',
-                        participantAvatarUrl: '',
-                      ),
+                      receiverId: receiverId,
+                      participantName:
+                          property?.publisher?.fullName ??
+                          property?.owner?.fullName ??
+                          '',
+                      participantAvatarUrl: property?.publisher?.image,
                     );
                   },
                 );

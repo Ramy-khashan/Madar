@@ -5,7 +5,6 @@ import '../../../../../../config/router/app_router_keys.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_button.dart';
 import '../../../../../../core/components/image_item.dart';
-import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
@@ -16,9 +15,9 @@ import '../../model/broker_model.dart';
 import 'agent_details_row_item.dart';
 
 class BrokerCardWidget extends StatelessWidget {
-  const BrokerCardWidget({super.key, required this.broker});
+  const BrokerCardWidget({super.key, this.broker});
 
-  final BrokerModel broker;
+  final BrokerModel? broker;
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +38,17 @@ class BrokerCardWidget extends StatelessWidget {
               Container(
                 width: 52.width,
                 height: 52.width,
+                clipBehavior: Clip.antiAliasWithSaveLayer,
                 decoration: BoxDecoration(
                   color: colors.primaryBrand.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12.radius),
                 ),
-                child: const ImageItem(AppImages.agentImage),
+                child: ImageItem(
+                  broker?.imageUrl ?? AppImages.agentImage,
+                  width: 52.width,
+                  height: 52.width,
+                  fit: BoxFit.cover,
+                ),
               ),
               SizedBox(width: 10.width),
               Expanded(
@@ -54,7 +59,7 @@ class BrokerCardWidget extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            broker.name,
+                            broker?.name ?? 'Broker Name',
                             style: TextStyle(
                               fontSize: context.responsiveFontScale(16),
                               fontWeight: FontWeight.w700,
@@ -69,7 +74,7 @@ class BrokerCardWidget extends StatelessWidget {
                     ),
                     SizedBox(height: 2.height),
                     Text(
-                      '${AppStrings.licensePrefix}: ${broker.licenseNumber}',
+                      '${AppStrings.licensePrefix}: ${broker?.licenseNumber ?? 'License Number'}',
                       style: TextStyle(
                         fontSize: context.responsiveFontScale(14),
                         fontFamily: AppConstant.appHeaderFont,
@@ -80,39 +85,39 @@ class BrokerCardWidget extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          '${broker.propertiesCount} ${AppStrings.propertiesCountSuffix}',
+                          '${broker?.propertiesCount ?? 0} ${AppStrings.propertiesCountSuffix}',
                           style: TextStyle(
                             fontSize: context.responsiveFontScale(14),
                             fontFamily: AppConstant.appHeaderFont,
                             color: colors.textSecondary,
                           ),
                         ),
-                        Text(
-                          '  •  ',
-                          style: TextStyle(
-                            color: colors.textSecondary,
-                            fontSize: context.responsiveFontScale(14),
-                          ),
-                        ),
-                        Text(
-                          '(${broker.reviewsCount})',
-                          style: TextStyle(
-                            fontSize: context.responsiveFontScale(14),
-                            fontFamily: AppConstant.appHeaderFont,
-                            color: colors.textSecondary,
-                          ),
-                        ),
-                        Text(
-                          ' ${broker.rating} ',
-                          style: TextStyle(
-                            fontSize: context.responsiveFontScale(14),
-                            fontFamily: AppConstant.appHeaderFont,
-                            fontWeight: FontWeight.w700,
-                            color: colors.textFieldTitle,
-                          ),
-                        ),
-                        SizedBox(width: 2.width),
-                        Icon(Icons.star, size: 14.width, color: AppColors.rate),
+                        // Text(
+                        //   '  •  ',
+                        //   style: TextStyle(
+                        //     color: colors.textSecondary,
+                        //     fontSize: context.responsiveFontScale(14),
+                        //   ),
+                        // ),
+                        // Text(
+                        //   '(${broker?.reviewsCount ?? 0})',
+                        //   style: TextStyle(
+                        //     fontSize: context.responsiveFontScale(14),
+                        //     fontFamily: AppConstant.appHeaderFont,
+                        //     color: colors.textSecondary,
+                        //   ),
+                        // ),
+                        // Text(
+                        //   ' ${broker?.rating ?? 0} ',
+                        //   style: TextStyle(
+                        //     fontSize: context.responsiveFontScale(14),
+                        //     fontFamily: AppConstant.appHeaderFont,
+                        //     fontWeight: FontWeight.w700,
+                        //     color: colors.textFieldTitle,
+                        //   ),
+                        // ),
+                        // SizedBox(width: 2.width),
+                        // Icon(Icons.star, size: 14.width, color: AppColors.rate),
                       ],
                     ),
                   ],
@@ -123,26 +128,27 @@ class BrokerCardWidget extends StatelessWidget {
           SizedBox(height: 10.height),
           AgentDetailsRow(
             icon: AppImages.locationIcon,
-            text: broker.location,
+            text: broker?.location ?? 'Location not available',
             colors: colors,
           ),
-          SizedBox(height: 4.height),
-          AgentDetailsRow(
-            icon: AppImages.experienceIcon,
-            text:
-                '${AppStrings.experiencePrefix} ${broker.experienceYears} ${AppStrings.experienceSuffix}',
-            colors: colors,
-          ),
+          // SizedBox(height: 4.height),
+          // AgentDetailsRow(
+          //   icon: AppImages.experienceIcon,
+          //   text:
+          //       '${AppStrings.experiencePrefix} ${broker?.experienceYears ?? 0} ${AppStrings.experienceSuffix}',
+          //   colors: colors,
+          // ),
           SizedBox(height: 4.height),
           AgentDetailsRow(
             icon: AppImages.occupancyIcon,
-            text: '${AppStrings.commissionPrefix} ${broker.commissionPercent}%',
+            text:
+                '${AppStrings.commissionPrefix} ${broker?.commissionPercent ?? 0}%',
             colors: colors,
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 14.height),
             child: Text(
-              broker.description,
+              broker?.description ?? 'Description not available',
               style: TextStyle(
                 fontSize: context.responsiveFontScale(14),
                 fontFamily: AppConstant.appFont,
@@ -156,7 +162,7 @@ class BrokerCardWidget extends StatelessWidget {
                 child: AppButton(
                   text: AppStrings.selectBroker,
                   onTap: () => context.read<ChooseBrokerBloc>().add(
-                    ChooseBrokerSelect(broker.id),
+                    ChooseBrokerSelect(broker?.userId ?? ''),
                   ),
                 ),
               ),
@@ -169,6 +175,7 @@ class BrokerCardWidget extends StatelessWidget {
                     RouterHandler.navigate(
                       context,
                       AppRouterKeys.brokerProperties,
+                      extra: broker?.userId ?? '',
                     );
                   },
                 ),

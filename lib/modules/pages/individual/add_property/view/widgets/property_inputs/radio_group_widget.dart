@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:madar_app/core/utils/functions/translation.dart';
 
 import '../../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
@@ -66,7 +67,7 @@ class RadioGroupWidget extends StatelessWidget {
                       SizedBox(width: 8.width),
 
                       Text(
-                        option,
+                        option.trans,
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 14.fontSize,

@@ -50,6 +50,24 @@ class UpdateLocationEvent extends AddPropertyEvent {
   List<Object?> get props => [location];
 }
 
+/// Carries the map selection so the request can send a `location` object.
+class UpdateCoordinatesEvent extends AddPropertyEvent {
+  const UpdateCoordinatesEvent({
+    required this.latitude,
+    required this.longitude,
+    this.city,
+    this.district,
+  });
+
+  final double latitude;
+  final double longitude;
+  final String? city;
+  final String? district;
+
+  @override
+  List<Object?> get props => [latitude, longitude, city, district];
+}
+
 class SelectDeedTypeEvent extends AddPropertyEvent {
   const SelectDeedTypeEvent(this.deedType);
   final String deedType;
@@ -73,6 +91,13 @@ class AddImageEvent extends AddPropertyEvent {
   List<Object?> get props => [path];
 }
 
+class AddImagesEvent extends AddPropertyEvent {
+  const AddImagesEvent(this.paths);
+  final List<String> paths;
+  @override
+  List<Object?> get props => [paths];
+}
+
 class RemoveImageEvent extends AddPropertyEvent {
   const RemoveImageEvent(this.index);
   final int index;
@@ -84,12 +109,45 @@ class ToggleAiEnhancementEvent extends AddPropertyEvent {
   const ToggleAiEnhancementEvent();
 }
 
-class ToggleVideoEvent extends AddPropertyEvent {
-  const ToggleVideoEvent();
+class SetVideoPathEvent extends AddPropertyEvent {
+  const SetVideoPathEvent(this.path);
+  final String path;
+  @override
+  List<Object?> get props => [path];
 }
 
-class Toggle360TourEvent extends AddPropertyEvent {
-  const Toggle360TourEvent();
+class ClearVideoEvent extends AddPropertyEvent {
+  const ClearVideoEvent();
+}
+
+class SetVirtualTourPathEvent extends AddPropertyEvent {
+  const SetVirtualTourPathEvent(this.path);
+  final String path;
+  @override
+  List<Object?> get props => [path];
+}
+
+class ClearVirtualTourEvent extends AddPropertyEvent {
+  const ClearVirtualTourEvent();
+}
+
+class SetDeedDocumentEvent extends AddPropertyEvent {
+  const SetDeedDocumentEvent(this.path);
+  final String path;
+  @override
+  List<Object?> get props => [path];
+}
+
+class ClearDeedDocumentEvent extends AddPropertyEvent {
+  const ClearDeedDocumentEvent();
+}
+
+class PreviewEvaluationEvent extends AddPropertyEvent {
+  const PreviewEvaluationEvent();
+}
+
+class ApplyAiDescriptionEvent extends AddPropertyEvent {
+  const ApplyAiDescriptionEvent();
 }
 
 // ─── Step 5 — Details ──────────────────────────────────────────────────────
@@ -145,6 +203,47 @@ class SelectDropdownEvent extends AddPropertyEvent {
   List<Object?> get props => [field, value];
 }
 
+// ─── Step 5 — Per-type details ─────────────────────────────────────────────
+
+/// Sets a single `details` field, keyed by its API field name.
+class SetDetailFieldEvent extends AddPropertyEvent {
+  const SetDetailFieldEvent(this.key, this.value);
+  final String key;
+  final dynamic value;
+  @override
+  List<Object?> get props => [key, value];
+}
+
+/// Adds or removes [value] from a multi-select `details` list field.
+class ToggleDetailListItemEvent extends AddPropertyEvent {
+  const ToggleDetailListItemEvent(this.key, this.value);
+  final String key;
+  final String value;
+  @override
+  List<Object?> get props => [key, value];
+}
+
+class IncrementDetailCounterEvent extends AddPropertyEvent {
+  const IncrementDetailCounterEvent(this.key);
+  final String key;
+  @override
+  List<Object?> get props => [key];
+}
+
+class DecrementDetailCounterEvent extends AddPropertyEvent {
+  const DecrementDetailCounterEvent(this.key);
+  final String key;
+  @override
+  List<Object?> get props => [key];
+}
+
+class ToggleDetailFlagEvent extends AddPropertyEvent {
+  const ToggleDetailFlagEvent(this.key);
+  final String key;
+  @override
+  List<Object?> get props => [key];
+}
+
 class ToggleAmenityEvent extends AddPropertyEvent {
   const ToggleAmenityEvent(this.amenityId);
   final String amenityId;
@@ -178,9 +277,19 @@ class SelectPortfolioModeEvent extends AddPropertyEvent {
 }
 
 class ConfirmSaveEvent extends AddPropertyEvent {
-  const ConfirmSaveEvent();
+  const ConfirmSaveEvent({
+    this.brokerId,
+    this.openChooseBrokerOnSuccess = false,
+  });
+  final String? brokerId;
+  final bool openChooseBrokerOnSuccess;
+  @override
+  List<Object?> get props => [brokerId, openChooseBrokerOnSuccess];
 }
 
 class SendToBrokerEvent extends AddPropertyEvent {
-  const SendToBrokerEvent();
+  const SendToBrokerEvent({this.brokerId});
+  final String? brokerId;
+  @override
+  List<Object?> get props => [brokerId];
 }

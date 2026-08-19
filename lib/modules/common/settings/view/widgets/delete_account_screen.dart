@@ -105,7 +105,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
               padding: EdgeInsets.fromLTRB(20.width, 0, 20.width, 24.height),
               child: ElevatedButton(
                 onPressed: () {
-                  // TODO: dispatch delete account event with reasons[_selectedReason]
+                  
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary300,

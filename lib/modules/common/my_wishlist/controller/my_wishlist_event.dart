@@ -7,10 +7,11 @@ sealed class MyWishlistEvent extends Equatable {
   List<Object> get props => [];
 }
 class MyWishlistLoad extends MyWishlistEvent {
-  const MyWishlistLoad();
+  final bool isReset;
+  const MyWishlistLoad({this.isReset = false});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [isReset];
 }
 class PropertiesFilterApplied extends MyWishlistEvent {
   final PropertyFilterModel filter;

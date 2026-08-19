@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import '../../../../../../config/router/app_router_keys.dart';
+
 import '../../../../../../config/theme/app_theme_colors.dart';
-import '../../../../../../core/components/app_button.dart';
 import '../../../../../../core/components/image_item.dart';
-import '../../../../../../core/components/portfolio_card_widget.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
-import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../config/router/app_router_keys.dart';
+import '../../../../../../core/components/app_button.dart';
+import '../../../../../../core/components/portfolio_card_widget.dart';
+import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
-import '../../model/business_portfolio_property_model.dart';
+import '../../model/business_property_request_model.dart';
 
 class BusinessPortflioPropertyItem extends StatelessWidget {
   const BusinessPortflioPropertyItem({
@@ -18,7 +19,7 @@ class BusinessPortflioPropertyItem extends StatelessWidget {
     this.isWithWidth = false,
   });
   final bool isWithWidth;
-  final BusinessPortfolioPropertyModel portfolio;
+  final BusinessRequestPublishedPropertyModel portfolio;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,6 @@ class BusinessPortflioPropertyItem extends StatelessWidget {
           PortfolioCardHeader(
             title: portfolio.title,
             location: portfolio.location,
-            status: portfolio.status,
             imageUrl: portfolio.imageUrl,
             colors: colors,
           ),

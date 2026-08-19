@@ -186,13 +186,21 @@ class Step1PropertyData extends StatelessWidget {
           ),
           SizedBox(height: 8.height),
           RatePropertyFormItem(
+            propertyController: RatePropertyCertifiedBloc.get(context).propertyController,
+            properties: const [],
+            onSearch: (value) {
+              // Implement property search if needed in future
+            },
+            onSelectProperty: (value) {
+              // Implement property selection if needed in future
+            },
             ratePropertyArea: RatePropertyCertifiedBloc.get(
               context,
             ).areaController,
             propertyLocation: RatePropertyCertifiedBloc.get(
               context,
             ).locationController,
-            propertyAge: state.propertyAge,
+            propertyAge:state.propertyAge,
             finishingLevel: state.finishingLevel,
             purpose: state.purpose,
             onPropertyAgeChanged: (v) => context
@@ -205,7 +213,6 @@ class Step1PropertyData extends StatelessWidget {
                 .read<RatePropertyCertifiedBloc>()
                 .add(RatePropertyCertifiedFieldChanged(purpose: v)),
             selectedType: state.selectedType,
-
             onTapPropertyType: (String p1) {
               context.read<RatePropertyCertifiedBloc>().add(
                 RatePropertyCertifiedTypeSelected(p1),
@@ -645,7 +652,7 @@ class Step3Companies extends StatelessWidget {
                               ),
                             ),
                           ),
-                           Text(
+                          Text(
                             '${company.price.toInt()} ${AppStrings.currency}',
                             style: TextStyle(
                               fontSize: context.responsiveFontScale(16),

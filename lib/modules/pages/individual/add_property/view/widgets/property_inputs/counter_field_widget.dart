@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../../../config/theme/app_theme_colors.dart';
- import '../../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../../core/utils/functions/responsive.dart';
 
 class CounterFieldWidget extends StatelessWidget {
   const CounterFieldWidget({
@@ -39,17 +39,13 @@ class CounterFieldWidget extends StatelessWidget {
           height: 52,
           padding: EdgeInsets.symmetric(horizontal: 12.width),
           decoration: BoxDecoration(
-                    color: tc.borderColor.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(
-                      color: tc.textFieldTitle.withValues(alpha: 0.3),
-                    ),
-                  ),
+            color: tc.borderColor.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: tc.textFieldTitle.withValues(alpha: 0.3)),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-             
-             
               InkWell(
                 onTap: () {
                   if (maxValue == null || value < maxValue!) {
@@ -60,12 +56,12 @@ class CounterFieldWidget extends StatelessWidget {
                   padding: EdgeInsets.all(6.width),
                   decoration: BoxDecoration(
                     color: tc.primaryBrand,
-                  borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(Icons.add, size: 16, color: Colors.white),
                 ),
               ),
-               Text(
+              Text(
                 '$value',
                 style: TextStyle(
                   fontSize: context.responsiveFontScale(16),
@@ -73,7 +69,7 @@ class CounterFieldWidget extends StatelessWidget {
                   color: tc.textPrimary,
                 ),
               ),
-               InkWell(
+              InkWell(
                 onTap: () {
                   if (value > minValue) {
                     onChanged(value - 1);
@@ -82,10 +78,16 @@ class CounterFieldWidget extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(6.width),
                   decoration: BoxDecoration(
-                    color: value > minValue ? tc.primaryBrand : const Color(0xFFCBD5E1),
-                  borderRadius: BorderRadius.circular(8),
+                    color: value > minValue
+                        ? tc.primaryBrand
+                        : const Color(0xFFCBD5E1),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(Icons.remove, size: 16, color: Colors.white),
+                  child: const Icon(
+                    Icons.remove,
+                    size: 16,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],
@@ -95,4 +97,3 @@ class CounterFieldWidget extends StatelessWidget {
     );
   }
 }
- 

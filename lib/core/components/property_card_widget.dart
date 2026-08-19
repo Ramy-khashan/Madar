@@ -18,10 +18,12 @@ class PropertyCardWidget extends StatelessWidget {
     super.key,
     required this.property,
     this.footer,
+    this.onBack,
     this.isWithWidth = false,
     this.isViewAll = false,
   });
   final bool isWithWidth;
+  final void Function()? onBack;
   final bool isViewAll;
   final Widget? footer;
   final PropertiesItemModel? property;
@@ -36,7 +38,11 @@ class PropertyCardWidget extends StatelessWidget {
           context,
           AppRouterKeys.propertyDetails,
           extra: property?.propertyId,
-        );
+        ).then((value) {
+          if (onBack != null) {
+            onBack!();
+          }
+        });
       },
       child: Container(
         clipBehavior: Clip.antiAliasWithSaveLayer,

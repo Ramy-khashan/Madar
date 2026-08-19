@@ -6,26 +6,67 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../../../../core/connection/concept/end_points.dart';
+import '../../../../../core/connection/interfaces/api_consumer.dart';
 import '../../../../../core/model/google_map_model.dart';
+import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_images.dart';
-import '../../property_details/model/property_details_buyer_model.dart';
+import '../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../core/utils/functions/common_fun.dart';
+import '../../../../../core/utils/functions/service_locator.dart';
 import '../../property_details/model/property_details_model.dart';
+import '../model/poperties_map_model.dart';
 
 part 'properties_map_event.dart';
 part 'properties_map_state.dart';
 
 class PropertiesMapBloc extends Bloc<PropertiesMapEvent, PropertiesMapState> {
-  PropertiesMapBloc({this.initialPosition}) : super(PropertiesMapInitial()) {
-    on<NavigateToPositionEvent>(_onNavigateToPosition);
+  PropertiesMapBloc({this.initialPosition})
+    : super(const PropertiesMapState()) {
+    on<LoadPropertiesMapEvent>(_onLoadProperties);
+    on<ToggleNearestToMeEvent>(_onToggleNearestToMe);
     on<SelectMarkerEvent>(_onSelectMarker);
     on<CloseMarkerEvent>(_onCloseMarker);
+
+    add(LoadPropertiesMapEvent(position: initialPosition));
   }
 
   final PositionModel? initialPosition;
 
-  PositionModel get targetPosition => initialPosition ?? propertyMarkers.first;
+  /// Fallback position used when no initial/user position is available yet.
+  static final PositionModel _defaultPosition = PositionModel(
+    latitude: 24.7136,
+    longitude: 46.6753,
+  );
+
+  PositionModel get targetPosition =>
+      state.mapCenter ?? initialPosition ?? _firstPropertyPosition ?? _defaultPosition;
+
+  PositionModel? get _firstPropertyPosition {
+    for (final property in state.properties) {
+      final lat = property.location?.latitude;
+      final lng = property.location?.longitude;
+      if (lat != null && lng != null) {
+        return PositionModel(latitude: lat, longitude: lng);
+      }
+    }
+    return null;
+  }
+
+  /// All markers built from the fetched properties (skips items with no
+  /// location data).
+  List<PositionModel> get propertyMarkers => state.properties
+      .map((property) {
+        final lat = property.location?.latitude;
+        final lng = property.location?.longitude;
+        if (lat == null || lng == null) return null;
+        return PositionModel(latitude: lat, longitude: lng);
+      })
+      .whereType<PositionModel>()
+      .toList();
 
   static PropertiesMapBloc get(BuildContext context) =>
       context.read<PropertiesMapBloc>();
@@ -184,22 +225,134 @@ class PropertiesMapBloc extends Bloc<PropertiesMapEvent, PropertiesMapState> {
   // Event handlers
   // ---------------------------------------------------------------------------
 
-  void _onNavigateToPosition(
-    NavigateToPositionEvent event,
+  Future<void> _onLoadProperties(
+    LoadPropertiesMapEvent event,
     Emitter<PropertiesMapState> emit,
-  ) {}
+  ) async {
+    try {
+      emit(
+        state.copyWith(
+          status: RequestStatus.loading,
+          properties: const [],
+          selectedIndex: -1,
+        ),
+      );
+
+      final position = event.position ?? initialPosition;
+      final List<PropertyDetailsModel> allProperties = [];
+
+      int page = 1;
+      bool hasNext = true;
+      String? errorMsg;
+
+      while (hasNext && page <= 20) {
+        final response = await sl.get<ApiConsumer>().get(
+          EndPoints.propertiesMap,
+          queryParameters: {
+            if (position != null) 'latitude': position.position.latitude,
+            if (position != null) 'longitude': position.position.longitude,
+            'page': page,
+          },
+        );
+
+        hasNext = false;
+        response.fold(
+          (failedResponse) {
+            errorMsg = failedResponse;
+          },
+          (successResponse) {
+            final result = PropertiesMapResponseModel.fromJson(
+              successResponse.response,
+            );
+            allProperties.addAll(result.properties);
+            hasNext = result.pagination?.hasNext ?? false;
+            page = (result.pagination?.page ?? page) + 1;
+          },
+        );
+
+        if (errorMsg != null) break;
+      }
+
+      if (errorMsg != null) {
+        emit(
+          state.copyWith(status: RequestStatus.failed, errorMsg: errorMsg),
+        );
+        return;
+      }
+
+      emit(
+        state.copyWith(
+          status: RequestStatus.success,
+          properties: allProperties,
+          mapCenter: position,
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          status: RequestStatus.failed,
+          errorMsg: AppStrings.somethingWentWrong,
+        ),
+      );
+    }
+  }
+
+  Future<void> _onToggleNearestToMe(
+    ToggleNearestToMeEvent event,
+    Emitter<PropertiesMapState> emit,
+  ) async {
+    emit(state.copyWith(isNearestToMe: event.value));
+
+    if (!event.value) {
+      add(LoadPropertiesMapEvent(position: initialPosition));
+      return;
+    }
+
+    try {
+      final bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        emit(state.copyWith(isNearestToMe: false));
+        AppToast(AppStrings.locationServiceDisabled, isError: true);
+        return;
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        emit(state.copyWith(isNearestToMe: false));
+        AppToast(AppStrings.locationPermissionDenied, isError: true);
+        return;
+      }
+
+      final position = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+        ),
+      );
+
+      add(
+        LoadPropertiesMapEvent(
+          position: PositionModel(
+            latitude: position.latitude,
+            longitude: position.longitude,
+          ),
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(isNearestToMe: false));
+      AppToast(AppStrings.somethingWentWrong, isError: true);
+    }
+  }
 
   void _onSelectMarker(
     SelectMarkerEvent event,
     Emitter<PropertiesMapState> emit,
   ) {
-    if (event.index < sampleProperties.length) {
-      emit(
-        PropertiesMapMarkerSelected(
-          selectedIndex: event.index,
-          property: sampleProperties[event.index],
-        ),
-      );
+    if (event.index < state.properties.length) {
+      emit(state.copyWith(selectedIndex: event.index));
     }
   }
 
@@ -207,42 +360,7 @@ class PropertiesMapBloc extends Bloc<PropertiesMapEvent, PropertiesMapState> {
     CloseMarkerEvent event,
     Emitter<PropertiesMapState> emit,
   ) {
-    emit(PropertiesMapInitial());
+    emit(state.copyWith(selectedIndex: -1));
   }
-
-  // ---------------------------------------------------------------------------
-  // Static sample data
-  // ---------------------------------------------------------------------------
-
-  // static  final _defaultAdvertiser = PropertyOwner(
-  //   fullName: 'أحمد محمد',
-  //   role: 'وسيط عقاري',
-  //   isVerified: true,
-  //   falLicenseNumber: '2023456789',
-  //   adLicenseNumber: '1234567890',
-  //   totalProperties: 12,
-  // );
-
-  // static  final_defaultRentInfo = RentInstallmentInfoModel(
-  //     isEligible: true,
-  //     annualRentValue: 120000,
-  //     minMonthlyInstallment: 2500,
-  //     providersCount: 3,
-  //   );
-
-  //   static const _defaultInsuranceInfo = InsuranceInfoModel(
-  //     isInsured: true,
-  //     availableTypes: ['شامل', 'جزئي'],
-  //     companiesCount: 5,
-  //   );
-
-  static final List<PositionModel> propertyMarkers = [
-    PositionModel(latitude: 24.7136, longitude: 46.6753),
-    PositionModel(latitude: 24.7180, longitude: 46.6700),
-    PositionModel(latitude: 24.7095, longitude: 46.6810),
-    PositionModel(latitude: 24.7060, longitude: 46.6650),
-    PositionModel(latitude: 24.7210, longitude: 46.6780),
-  ];
-
-  static final List<PropertyDetailsModel> sampleProperties = [];
 }
+

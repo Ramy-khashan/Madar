@@ -3,16 +3,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_textfield.dart';
+import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../core/utils/functions/translation.dart';
+import '../../controller/add_property_bloc.dart';
+import '../../model/add_property_request_mapper.dart';
+import '../../model/property_enums.dart';
 import 'property_inputs/checkbox_item_widget.dart';
 import 'property_inputs/counter_field_widget.dart';
 import 'property_inputs/dropdown_field_widget.dart';
-import 'property_inputs/radio_group_widget.dart';
 import 'property_inputs/property_details_section_header.dart';
-import '../../../../../../core/utils/functions/responsive.dart';
-import '../../controller/add_property_bloc.dart';
-import 'row_chip_item.dart';
+import 'property_inputs/radio_group_widget.dart';
+import 'field_error_text.dart';
 
+/// Renders the `details` section for the selected property type.
+///
+/// Every field writes into `AddPropertyModel.typeDetails` under its API field
+/// name, so the request mapper can read it back without per-type plumbing.
 class PropertyDetailsTypeWidget extends StatelessWidget {
   const PropertyDetailsTypeWidget({super.key});
 
@@ -22,538 +30,658 @@ class PropertyDetailsTypeWidget extends StatelessWidget {
       buildWhen: (prev, curr) =>
           prev.model.propertyType != curr.model.propertyType,
       builder: (context, state) {
-        final propertyType = state.model.propertyType;
-
-        return SingleChildScrollView(
-          child: Column(
-            children: [
-              // Show property type specific details
-              _buildPropertyTypeDetails(context, propertyType),
-            ],
-          ),
-        );
+        return _buildPropertyTypeDetails(state.model.propertyType);
       },
     );
   }
 
-  Widget _buildPropertyTypeDetails(BuildContext context, String? propertyType) {
+  Widget _buildPropertyTypeDetails(String? propertyType) {
     switch (propertyType) {
-      case 'apartment':
-        return const _ApartmentDetailsWidget();
-      case 'villa':
-        return const _VillaDetailsWidget();
-      case 'floor':
-        return const _FloorDetailsWidget();
-      case 'townhouse':
-        return const _TownhouseDetailsWidget();
-      case 'building':
-        return const _BuildingDetailsWidget();
-      case 'land':
-        return const _LandDetailsWidget();
-      case 'rest_house':
-        return const _RestHouseDetailsWidget();
-      case 'tower':
-        return const _TowerDetailsWidget();
-      case 'shop':
-        return const _ShopDetailsWidget();
-      case 'office':
-        return const _OfficeDetailsWidget();
-      case 'farm':
-        return const _FarmDetailsWidget();
-      case 'warehouse':
-        return const _WarehouseDetailsWidget();
+      case PropertyApiEnums.typeApartment:
+        return const _ApartmentDetails();
+      case PropertyApiEnums.typeVilla:
+        return const _VillaDetails();
+      case PropertyApiEnums.typeFloor:
+        return const _FloorDetails();
+      case PropertyApiEnums.typeTownhouse:
+        return const _TownhouseDetails();
+      case PropertyApiEnums.typeBuilding:
+        return const _BuildingDetails();
+      case PropertyApiEnums.typeLand:
+        return const _LandDetails();
+      case PropertyApiEnums.typeRestHouse:
+        return const _RestHouseDetails();
+      case PropertyApiEnums.typeTower:
+        return const _TowerDetails();
+      case PropertyApiEnums.typeShop:
+        return const _ShopDetails();
+      case PropertyApiEnums.typeOffice:
+        return const _OfficeDetails();
+      case PropertyApiEnums.typeFarm:
+        return const _FarmDetails();
+      case PropertyApiEnums.typeWarehouse:
+        return const _WarehouseDetails();
       default:
-        return SizedBox.shrink();
+        return const SizedBox.shrink();
     }
   }
 }
 
 // ============================================================================
-// Apartment Details
+// Reusable wired inputs
 // ============================================================================
-class _ApartmentDetailsWidget extends StatefulWidget {
-  const _ApartmentDetailsWidget();
+
+/// Rebuilds only when the watched detail key changes.
+class _DetailBuilder extends StatelessWidget {
+  const _DetailBuilder({required this.detailKey, required this.builder});
+
+  final String detailKey;
+  final Widget Function(
+    BuildContext context,
+    AddPropertyBloc bloc,
+    dynamic value,
+  )
+  builder;
 
   @override
-  State<_ApartmentDetailsWidget> createState() =>
-      _ApartmentDetailsWidgetState();
+  Widget build(BuildContext context) {
+    return BlocBuilder<AddPropertyBloc, AddPropertyState>(
+      buildWhen: (prev, curr) =>
+          prev.model.typeDetails[detailKey] !=
+              curr.model.typeDetails[detailKey] ||
+          prev.fieldErrors[detailKey] != curr.fieldErrors[detailKey],
+      builder: (context, state) => builder(
+        context,
+        AddPropertyBloc.get(context),
+        state.model.typeDetails[detailKey],
+      ),
+    );
+  }
 }
 
-class _ApartmentDetailsWidgetState extends State<_ApartmentDetailsWidget> {
+class _DetailDropdown extends StatelessWidget {
+  const _DetailDropdown({
+    required this.label,
+    required this.detailKey,
+    required this.options,
+  });
+
+  final String label;
+  final String detailKey;
+  final List<String> options;
+
+  @override
+  Widget build(BuildContext context) {
+    return _DetailBuilder(
+      detailKey: detailKey,
+      builder: (context, bloc, value) => DropdownFieldWidget(
+        label: label,
+        items: options,
+        hint: AppStrings.chooseLabel(label),
+        selectedValue: value?.toString(),
+        errorText: AddPropertyBloc.get(context).state.fieldErrors[detailKey],
+        onChanged: (v) {
+          if (v != null) bloc.add(SetDetailFieldEvent(detailKey, v));
+        },
+      ),
+    );
+  }
+}
+
+/// Numeric dropdown that stores an `int` so the API receives a number.
+class _DetailNumberDropdown extends StatelessWidget {
+  const _DetailNumberDropdown({
+    required this.label,
+    required this.detailKey,
+    required this.options,
+  });
+
+  final String label;
+  final String detailKey;
+  final List<String> options;
+
+  @override
+  Widget build(BuildContext context) {
+    return _DetailBuilder(
+      detailKey: detailKey,
+      builder: (context, bloc, value) => DropdownFieldWidget(
+        label: label,
+        items: options,
+        translateItems: false,
+        hint: AppStrings.chooseLabel(label),
+        selectedValue: value?.toString(),
+        errorText: AddPropertyBloc.get(context).state.fieldErrors[detailKey],
+        onChanged: (v) {
+          if (v == null) return;
+          bloc.add(SetDetailFieldEvent(detailKey, int.tryParse(v) ?? 0));
+        },
+      ),
+    );
+  }
+}
+
+class _DetailCounter extends StatelessWidget {
+  const _DetailCounter({required this.label, required this.detailKey});
+
+  final String label;
+  final String detailKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return _DetailBuilder(
+      detailKey: detailKey,
+      builder: (context, bloc, value) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CounterFieldWidget(
+            label: label,
+            value: value is int ? value : 0,
+            onChanged: (next) => bloc.add(
+              next > (value is int ? value : 0)
+                  ? IncrementDetailCounterEvent(detailKey)
+                  : DecrementDetailCounterEvent(detailKey),
+            ),
+          ),
+          FieldErrorText(detailKey),
+        ],
+      ),
+    );
+  }
+}
+
+class _DetailTextField extends StatelessWidget {
+  const _DetailTextField({
+    required this.label,
+    required this.detailKey,
+    this.unit,
+    this.isNumeric = false,
+  });
+
+  final String label;
+  final String detailKey;
+  final String? unit;
+  final bool isNumeric;
+
   @override
   Widget build(BuildContext context) {
     final bloc = AddPropertyBloc.get(context);
     return BlocBuilder<AddPropertyBloc, AddPropertyState>(
+      buildWhen: (prev, curr) =>
+          prev.fieldErrors[detailKey] != curr.fieldErrors[detailKey],
       builder: (context, state) {
-        return Column(
-          children: [
-            PropertyDetailsSectionHeaderWidget(
-              title: AppStrings.apartmentDetails,
-            ),
-            SizedBox(height: 16.height),
-            Row(
-              children: [
-                Expanded(
-                  child: CounterFieldWidget(
-                    label: AppStrings.numberOfBedrooms,
-                    value: state.model.beds,
-                    onChanged: (v) {
-                      if (v > state.model.beds) {
-                        bloc.add(const IncrementCounterEvent('beds'));
-                      } else {
-                        bloc.add(const DecrementCounterEvent('beds'));
-                      }
-                    },
+        return AppTextField(
+          controller: bloc.detailController(detailKey),
+          title: label,
+          textInputType: isNumeric ? TextInputType.number : TextInputType.text,
+          errorText: state.fieldErrors[detailKey],
+          suffixIconWidget: unit == null
+              ? null
+              : Padding(
+                  padding: const EdgeInsets.only(top: 15),
+                  child: Text(
+                    unit!,
+                    style: TextStyle(fontSize: context.responsiveFontScale(14)),
                   ),
                 ),
-                SizedBox(width: 12.width),
-                Expanded(
-                  child: CounterFieldWidget(
-                    label: AppStrings.numberOfBathrooms,
-                    value: state.model.baths,
-                    onChanged: (v) {
-                      if (v > state.model.baths) {
-                        bloc.add(const IncrementCounterEvent('baths'));
-                      } else {
-                        bloc.add(const DecrementCounterEvent('baths'));
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 12.height),
-
-            Row(
-              children: [
-                Expanded(
-                  child: CounterFieldWidget(
-                    label: AppStrings.numberOfLivingRoomsOptional,
-                    value: state.model.beds,
-                    onChanged: (v) {
-                      if (v > state.model.beds) {
-                        bloc.add(const IncrementCounterEvent('beds'));
-                      } else {
-                        bloc.add(const DecrementCounterEvent('beds'));
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(width: 12.width),
-                Expanded(
-                  child: CounterFieldWidget(
-                    label: AppStrings.numberOfLoungesOptional,
-                    value: state.model.baths,
-                    onChanged: (v) {
-                      if (v > state.model.baths) {
-                        bloc.add(const IncrementCounterEvent('baths'));
-                      } else {
-                        bloc.add(const DecrementCounterEvent('baths'));
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 12.height),
-            RadioGroupWidget(
-              label: AppStrings.furnitureCondition,
-              options: AddPropertyBloc.furnishingOptions,
-              selectedOption: state.model.furnishing ?? '',
-              onChanged: (v) => bloc.add(SelectDropdownEvent('furnishing', v)),
-            ),
-
-            AppTextField(
-              controller: TextEditingController(),
-              title: AppStrings.apartmentNumberOptional,
-            ),
-            DropdownFieldWidget(
-              label: AppStrings.totalFloorsInBuilding,
-              items: AddPropertyBloc.apartmentFloorOptions,
-              selectedValue: "10-1",
-              onChanged: (v) =>
-                  bloc.add(SelectDropdownEvent('condition', v ?? '')),
-            ),
-            DropdownFieldWidget(
-              label: AppStrings.numberOfApartmentsPerFloorOptional,
-              items: AddPropertyBloc.apartmentFloorOptions,
-              selectedValue: "10-1",
-              onChanged: (v) =>
-                  bloc.add(SelectDropdownEvent('condition', v ?? '')),
-            ),
-            DropdownFieldWidget(
-              label: AppStrings.floorLabel,
-              items: AddPropertyBloc.floorOptions,
-              selectedValue: "الأرضي",
-              onChanged: (v) => bloc.add(SelectDropdownEvent('floor', v ?? '')),
-            ),
-            DropdownFieldWidget(
-              label: AppStrings.propertyCondition,
-              items: AddPropertyBloc.conditionOptions,
-              selectedValue: state.model.condition,
-              onChanged: (v) =>
-                  bloc.add(SelectDropdownEvent('condition', v ?? '')),
-            ),
-          ],
         );
       },
     );
   }
 }
 
-// ============================================================================
-// Villa Details
-// ============================================================================
-class _VillaDetailsWidget extends StatefulWidget {
-  const _VillaDetailsWidget();
+/// Single-select chip row storing one wire value.
+class _DetailRadioChips extends StatelessWidget {
+  const _DetailRadioChips({
+    required this.label,
+    required this.detailKey,
+    required this.options,
+  });
 
-  @override
-  State<_VillaDetailsWidget> createState() => _VillaDetailsWidgetState();
-}
+  final String label;
+  final String detailKey;
+  final List<String> options;
 
-class _VillaDetailsWidgetState extends State<_VillaDetailsWidget> {
   @override
   Widget build(BuildContext context) {
-    final bloc = AddPropertyBloc.get(context);
-    return BlocBuilder<AddPropertyBloc, AddPropertyState>(
-      builder: (context, state) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            PropertyDetailsSectionHeaderWidget(title: AppStrings.villaDetails),
-            SizedBox(height: 16.height),
-            Row(
-              children: [
-                Expanded(
-                  child: CounterFieldWidget(
-                    label: AppStrings.numberOfBedrooms,
-                    value: state.model.beds,
-                    onChanged: (v) {
-                      if (v > state.model.beds) {
-                        bloc.add(const IncrementCounterEvent('beds'));
-                      } else {
-                        bloc.add(const DecrementCounterEvent('beds'));
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(width: 12.width),
-                Expanded(
-                  child: CounterFieldWidget(
-                    label: AppStrings.numberOfBathrooms,
-                    value: state.model.baths,
-                    onChanged: (v) {
-                      if (v > state.model.baths) {
-                        bloc.add(const IncrementCounterEvent('baths'));
-                      } else {
-                        bloc.add(const DecrementCounterEvent('baths'));
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 12.height),
-
-            Row(
-              children: [
-                Expanded(
-                  child: CounterFieldWidget(
-                    label: AppStrings.numberOfLivingRoomsOptional,
-                    value: state.model.beds,
-                    onChanged: (v) {
-                      if (v > state.model.beds) {
-                        bloc.add(const IncrementCounterEvent('beds'));
-                      } else {
-                        bloc.add(const DecrementCounterEvent('beds'));
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(width: 12.width),
-                Expanded(
-                  child: CounterFieldWidget(
-                    label: AppStrings.numberOfLoungesOptional,
-                    value: state.model.baths,
-                    onChanged: (v) {
-                      if (v > state.model.baths) {
-                        bloc.add(const IncrementCounterEvent('baths'));
-                      } else {
-                        bloc.add(const DecrementCounterEvent('baths'));
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 12.height),
-            CounterFieldWidget(
-              label: AppStrings.numberOfKitchensOptional,
-              value: state.model.baths,
-              onChanged: (v) {
-                if (v > state.model.baths) {
-                  bloc.add(const IncrementCounterEvent('baths'));
-                } else {
-                  bloc.add(const DecrementCounterEvent('baths'));
-                }
-              },
-            ),
-            SizedBox(height: 16.height),
-            Row(
-              children: [
-                Expanded(
-                  child: CheckboxItemWidget(
-                    label: AppStrings.servantRoom,
-                    isSelected: false,
-                    onTap: () {},
-                  ),
-                ),
-                Expanded(
-                  child: CheckboxItemWidget(
-                    label: AppStrings.driverRoom,
-                    isSelected: true,
-                    onTap: () {},
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 16.height),
-
-            RadioGroupWidget(
-              label: AppStrings.furnitureCondition,
-              options: AddPropertyBloc.furnishingOptions,
-              selectedOption: state.model.furnishing ?? '',
-
-              onChanged: (v) => bloc.add(SelectDropdownEvent('furnishing', v)),
-            ),
-            SizedBox(height: 16.height),
-            DropdownFieldWidget(
-              label: AppStrings.propertyCondition,
-              items: AddPropertyBloc.conditionOptions,
-              selectedValue: state.model.condition,
-              onChanged: (v) =>
-                  bloc.add(SelectDropdownEvent('condition', v ?? '')),
-            ),
-          ],
-        );
-      },
+    return _DetailBuilder(
+      detailKey: detailKey,
+      builder: (context, bloc, value) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RadioGroupWidget(
+            label: label,
+            options: options,
+            selectedOption: value?.toString() ?? '',
+            onChanged: (v) => bloc.add(SetDetailFieldEvent(detailKey, v)),
+          ),
+          FieldErrorText(detailKey),
+        ],
+      ),
     );
   }
 }
 
-// ============================================================================
-// Floor Details
-// ============================================================================
-class _FloorDetailsWidget extends StatelessWidget {
-  const _FloorDetailsWidget();
+/// Multi-select chip row storing a `List<String>` of wire values.
+class _DetailMultiChips extends StatelessWidget {
+  const _DetailMultiChips({
+    required this.label,
+    required this.detailKey,
+    required this.options,
+  });
+
+  final String label;
+  final String detailKey;
+  final List<String> options;
 
   @override
   Widget build(BuildContext context) {
-    final bloc = AddPropertyBloc.get(context);
-    return BlocBuilder<AddPropertyBloc, AddPropertyState>(
-      builder: (context, state) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            PropertyDetailsSectionHeaderWidget(title: AppStrings.floorDetails),
-            SizedBox(height: 16.height),
-            Row(
-              children: [
-                Expanded(
-                  child: CounterFieldWidget(
-                    label: AppStrings.numberOfBedrooms,
-                    value: state.model.beds,
-                    onChanged: (v) {
-                      if (v > state.model.beds) {
-                        bloc.add(const IncrementCounterEvent('beds'));
-                      } else {
-                        bloc.add(const DecrementCounterEvent('beds'));
-                      }
-                    },
+    final tc = AppThemeColors.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 16.height),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: context.responsiveFontScale(15),
+            fontWeight: FontWeight.w700,
+            color: tc.textPrimary,
+          ),
+        ),
+        SizedBox(height: 12.height),
+        _DetailBuilder(
+          detailKey: detailKey,
+          builder: (context, bloc, value) {
+            final selectedValues =
+                (value as List<dynamic>?)?.cast<String>() ?? const <String>[];
+            return Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: options.map((option) {
+                final selected = selectedValues.contains(option);
+                return GestureDetector(
+                  onTap: () =>
+                      bloc.add(ToggleDetailListItemEvent(detailKey, option)),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 14.width,
+                      vertical: 8.height,
+                    ),
+                    decoration: BoxDecoration(
+                      color: selected
+                          ? tc.primaryBrand
+                          : const Color(0xFFF3F4F6),
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (selected) ...[
+                          Icon(
+                            Icons.check_rounded,
+                            size: 14,
+                            color: tc.onPrimary,
+                          ),
+                          SizedBox(width: 2.width),
+                        ],
+                        Text(
+                          option.trans,
+                          style: TextStyle(
+                            fontSize: context.responsiveFontScale(12),
+                            fontWeight: selected
+                                ? FontWeight.w700
+                                : FontWeight.w500,
+                            color: selected ? tc.onPrimary : tc.primaryBrand,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(width: 12.width),
-                Expanded(
-                  child: CounterFieldWidget(
-                    label: AppStrings.numberOfBathrooms,
-                    value: state.model.baths,
-                    onChanged: (v) {
-                      if (v > state.model.baths) {
-                        bloc.add(const IncrementCounterEvent('baths'));
-                      } else {
-                        bloc.add(const DecrementCounterEvent('baths'));
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 12.height),
-            CounterFieldWidget(
-              label: AppStrings.numberOfLivingRoomsOptional,
-              value: state.model.baths,
-              onChanged: (v) {
-                if (v > state.model.baths) {
-                  bloc.add(const IncrementCounterEvent('baths'));
-                } else {
-                  bloc.add(const DecrementCounterEvent('baths'));
-                }
-              },
-            ),
-            DropdownFieldWidget(
-              label: AppStrings.floorLabel,
-              items: AddPropertyBloc.floorOptions,
-              selectedValue: "الأرضي",
-              onChanged: (v) => bloc.add(SelectDropdownEvent('floor', v ?? '')),
-            ),
-            SizedBox(height: 16.height),
-            RadioGroupWidget(
-              label: AppStrings.furnitureCondition,
-              options: AddPropertyBloc.furnishingOptions,
-              selectedOption: state.model.furnishing ?? '',
-              onChanged: (v) => bloc.add(SelectDropdownEvent('furnishing', v)),
-            ),
-
-            DropdownFieldWidget(
-              label: AppStrings.propertyCondition,
-              items: AddPropertyBloc.conditionOptions,
-              selectedValue: state.model.condition,
-              onChanged: (v) =>
-                  bloc.add(SelectDropdownEvent('condition', v ?? '')),
-            ),
-          ],
-        );
-      },
+                );
+              }).toList(),
+            );
+          },
+        ),
+      ],
     );
   }
 }
 
-// ============================================================================
-// Townhouse Details
-// ============================================================================
-class _TownhouseDetailsWidget extends StatelessWidget {
-  const _TownhouseDetailsWidget();
+/// Yes/no radio group stored as the `bool` the API expects.
+class _DetailBoolRadio extends StatelessWidget {
+  const _DetailBoolRadio({required this.label, required this.detailKey});
+
+  final String label;
+  final String detailKey;
 
   @override
   Widget build(BuildContext context) {
-    final bloc = AddPropertyBloc.get(context);
-    return BlocBuilder<AddPropertyBloc, AddPropertyState>(
-      builder: (context, state) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-
-          children: [
-            PropertyDetailsSectionHeaderWidget(
-              title: AppStrings.townhouseDetails,
-            ),
-            SizedBox(height: 16.height),
-            Row(
-              children: [
-                Expanded(
-                  child: CounterFieldWidget(
-                    label: AppStrings.numberOfBedrooms,
-                    value: state.model.beds,
-                    onChanged: (v) {
-                      if (v > state.model.beds) {
-                        bloc.add(const IncrementCounterEvent('beds'));
-                      } else {
-                        bloc.add(const DecrementCounterEvent('beds'));
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(width: 12.width),
-                Expanded(
-                  child: CounterFieldWidget(
-                    label: AppStrings.numberOfBathrooms,
-                    value: state.model.baths,
-                    onChanged: (v) {
-                      if (v > state.model.baths) {
-                        bloc.add(const IncrementCounterEvent('baths'));
-                      } else {
-                        bloc.add(const DecrementCounterEvent('baths'));
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 16.height),
-            CounterFieldWidget(
-              label: AppStrings.numberOfLivingRoomsOptional,
-              value: state.model.baths,
-              onChanged: (v) {
-                if (v > state.model.baths) {
-                  bloc.add(const IncrementCounterEvent('baths'));
-                } else {
-                  bloc.add(const DecrementCounterEvent('baths'));
-                }
-              },
-            ),
-            AppTextField(
-              controller: TextEditingController(),
-              title: AppStrings.complexName,
-            ),
-            SizedBox(height: 16.height),
-            Text(
-              AppStrings.communityFacilities,
-              style: TextStyle(
-                fontSize: context.responsiveFontScale(15),
-                fontWeight: FontWeight.w700,
-                color: AppThemeColors.of(context).textPrimary,
+    return _DetailBuilder(
+      detailKey: detailKey,
+      builder: (context, bloc, value) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RadioGroupWidget(
+            label: label,
+            options: AppConstant.availabilityOptions,
+            selectedOption: value is bool
+                ? PropertyApiEnums.availabilityFromBool(value)
+                : '',
+            onChanged: (v) => bloc.add(
+              SetDetailFieldEvent(
+                detailKey,
+                v == PropertyApiEnums.availabilityExist,
               ),
             ),
+          ),
+          FieldErrorText(detailKey),
+        ],
+      ),
+    );
+  }
+}
 
-            SizedBox(height: 12.height),
+class _DetailCheckbox extends StatelessWidget {
+  const _DetailCheckbox({required this.label, required this.detailKey});
 
-            ChipRowItem<String>(
-              options: AddPropertyBloc.amenityOptions,
-              getLabel: (v) => v,
-              isSelected: (v, state) => false,
-              onTap: (val, context) {},
-            ),
-            DropdownFieldWidget(
-              label: AppStrings.numberOfParkingSpaces,
-              items: ['1', '2', '3', '4', '5'],
-              selectedValue: "1",
-              onChanged: (v) =>
-                  bloc.add(SelectDropdownEvent('condition', v ?? '')),
-            ),
-            DropdownFieldWidget(
-              label: AppStrings.communityServiceFeesOptional,
-              items: AddPropertyBloc.apartmentFloorOptions,
-              selectedValue: "10-1",
-              onChanged: (v) =>
-                  bloc.add(SelectDropdownEvent('condition', v ?? '')),
-            ),
-            SizedBox(height: 16.height),
+  final String label;
+  final String detailKey;
 
-            RadioGroupWidget(
-              label: AppStrings.furnitureCondition,
-              options: AddPropertyBloc.furnishingOptions,
-              selectedOption: state.model.furnishing ?? '',
-              onChanged: (v) => bloc.add(SelectDropdownEvent('furnishing', v)),
-            ),
+  @override
+  Widget build(BuildContext context) {
+    return _DetailBuilder(
+      detailKey: detailKey,
+      builder: (context, bloc, value) => CheckboxItemWidget(
+        label: label,
+        isSelected: value == true,
+        onTap: () => bloc.add(ToggleDetailFlagEvent(detailKey)),
+      ),
+    );
+  }
+}
 
-            DropdownFieldWidget(
-              label: AppStrings.propertyCondition,
-              items: AddPropertyBloc.conditionOptions,
-              selectedValue: state.model.condition,
-              onChanged: (v) =>
-                  bloc.add(SelectDropdownEvent('condition', v ?? '')),
-            ),
-          ],
-        );
-      },
+class _LabeledCounterPair extends StatelessWidget {
+  const _LabeledCounterPair({
+    required this.firstLabel,
+    required this.firstKey,
+    required this.secondLabel,
+    required this.secondKey,
+  });
+
+  final String firstLabel;
+  final String firstKey;
+  final String secondLabel;
+  final String secondKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: _DetailCounter(label: firstLabel, detailKey: firstKey),
+        ),
+        SizedBox(width: 12.width),
+        Expanded(
+          child: _DetailCounter(label: secondLabel, detailKey: secondKey),
+        ),
+      ],
+    );
+  }
+}
+
+/// Furnishing + condition tail shared by most types.
+class _FurnishingAndCondition extends StatelessWidget {
+  const _FurnishingAndCondition({this.includeFurnishing = true});
+
+  final bool includeFurnishing;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (includeFurnishing) ...[
+          SizedBox(height: 16.height),
+          _DetailRadioChips(
+            label: AppStrings.furnitureCondition,
+            detailKey: DetailKeys.furnishing,
+            options: AppConstant.furnishingOptions,
+          ),
+        ],
+        _DetailDropdown(
+          label: AppStrings.propertyCondition,
+          detailKey: DetailKeys.condition,
+          options: AddPropertyBloc.conditionOptions,
+        ),
+      ],
     );
   }
 }
 
 // ============================================================================
-// Building Details
+// Apartment
 // ============================================================================
-class _BuildingDetailsWidget extends StatelessWidget {
-  const _BuildingDetailsWidget();
+class _ApartmentDetails extends StatelessWidget {
+  const _ApartmentDetails();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        PropertyDetailsSectionHeaderWidget(title: AppStrings.apartmentDetails),
+        SizedBox(height: 16.height),
+        _LabeledCounterPair(
+          firstLabel: AppStrings.numberOfBedrooms,
+          firstKey: DetailKeys.bedrooms,
+          secondLabel: AppStrings.numberOfBathrooms,
+          secondKey: DetailKeys.bathrooms,
+        ),
+        SizedBox(height: 12.height),
+        _LabeledCounterPair(
+          firstLabel: AppStrings.numberOfLivingRoomsOptional,
+          firstKey: DetailKeys.livingRooms,
+          secondLabel: AppStrings.numberOfLoungesOptional,
+          secondKey: DetailKeys.councils,
+        ),
+        SizedBox(height: 12.height),
+        _DetailTextField(
+          label: AppStrings.apartmentNumberOptional,
+          detailKey: DetailKeys.apartmentNumber,
+        ),
+        _DetailNumberDropdown(
+          label: AppStrings.totalFloorsInBuilding,
+          detailKey: DetailKeys.totalFloors,
+          options: AddPropertyBloc.floorsCountOptions,
+        ),
+        _DetailNumberDropdown(
+          label: AppStrings.numberOfApartmentsPerFloorOptional,
+          detailKey: DetailKeys.apartmentsPerFloor,
+          options: AddPropertyBloc.numberOptions(20, min: 1),
+        ),
+        _DetailNumberDropdown(
+          label: AppStrings.floorLabel,
+          detailKey: DetailKeys.floor,
+          options: AddPropertyBloc.floorNumberOptions,
+        ),
+        const _FurnishingAndCondition(),
+      ],
+    );
+  }
+}
+
+// ============================================================================
+// Villa
+// ============================================================================
+class _VillaDetails extends StatelessWidget {
+  const _VillaDetails();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        PropertyDetailsSectionHeaderWidget(title: AppStrings.villaDetails),
+        SizedBox(height: 16.height),
+        _LabeledCounterPair(
+          firstLabel: AppStrings.numberOfBedrooms,
+          firstKey: DetailKeys.bedrooms,
+          secondLabel: AppStrings.numberOfBathrooms,
+          secondKey: DetailKeys.bathrooms,
+        ),
+        SizedBox(height: 12.height),
+        _LabeledCounterPair(
+          firstLabel: AppStrings.numberOfLivingRoomsOptional,
+          firstKey: DetailKeys.livingRooms,
+          secondLabel: AppStrings.numberOfLoungesOptional,
+          secondKey: DetailKeys.councils,
+        ),
+        SizedBox(height: 12.height),
+        _DetailCounter(
+          label: AppStrings.numberOfKitchensOptional,
+          detailKey: DetailKeys.kitchens,
+        ),
+        _DetailNumberDropdown(
+          label: AppStrings.numberOfFloors,
+          detailKey: DetailKeys.floorsCount,
+          options: AddPropertyBloc.numberOptions(10, min: 1),
+        ),
+        SizedBox(height: 16.height),
+        Row(
+          children: [
+            Expanded(
+              child: _DetailCheckbox(
+                label: AppStrings.servantRoom,
+                detailKey: DetailKeys.hasMaidRoom,
+              ),
+            ),
+            Expanded(
+              child: _DetailCheckbox(
+                label: AppStrings.driverRoom,
+                detailKey: DetailKeys.hasDriverRoom,
+              ),
+            ),
+          ],
+        ),
+        _DetailTextField(
+          label: AppStrings.developerNameOptional,
+          detailKey: DetailKeys.developerName,
+        ),
+        const _FurnishingAndCondition(),
+      ],
+    );
+  }
+}
+
+// ============================================================================
+// Floor
+// ============================================================================
+class _FloorDetails extends StatelessWidget {
+  const _FloorDetails();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        PropertyDetailsSectionHeaderWidget(title: AppStrings.floorDetails),
+        SizedBox(height: 16.height),
+        _LabeledCounterPair(
+          firstLabel: AppStrings.numberOfBedrooms,
+          firstKey: DetailKeys.bedrooms,
+          secondLabel: AppStrings.numberOfBathrooms,
+          secondKey: DetailKeys.bathrooms,
+        ),
+        SizedBox(height: 12.height),
+        _LabeledCounterPair(
+          firstLabel: AppStrings.numberOfLivingRoomsOptional,
+          firstKey: DetailKeys.livingRooms,
+          secondLabel: AppStrings.numberOfLoungesOptional,
+          secondKey: DetailKeys.councils,
+        ),
+        _DetailDropdown(
+          label: AppStrings.floorSlot,
+          detailKey: DetailKeys.floorType,
+          options: AddPropertyBloc.floorTypeOptions,
+        ),
+        const _FurnishingAndCondition(),
+      ],
+    );
+  }
+}
+
+// ============================================================================
+// Townhouse
+// ============================================================================
+class _TownhouseDetails extends StatelessWidget {
+  const _TownhouseDetails();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        PropertyDetailsSectionHeaderWidget(title: AppStrings.townhouseDetails),
+        SizedBox(height: 16.height),
+        _LabeledCounterPair(
+          firstLabel: AppStrings.numberOfBedrooms,
+          firstKey: DetailKeys.bedrooms,
+          secondLabel: AppStrings.numberOfBathrooms,
+          secondKey: DetailKeys.bathrooms,
+        ),
+        SizedBox(height: 12.height),
+        _LabeledCounterPair(
+          firstLabel: AppStrings.numberOfLivingRoomsOptional,
+          firstKey: DetailKeys.livingRooms,
+          secondLabel: AppStrings.numberOfLoungesOptional,
+          secondKey: DetailKeys.councils,
+        ),
+        _DetailNumberDropdown(
+          label: AppStrings.numberOfFloors,
+          detailKey: DetailKeys.floorsCount,
+          options: AddPropertyBloc.numberOptions(10, min: 1),
+        ),
+        _DetailTextField(
+          label: AppStrings.complexName,
+          detailKey: DetailKeys.compoundName,
+        ),
+        _DetailMultiChips(
+          label: AppStrings.communityFacilities,
+          detailKey: DetailKeys.communityFacilities,
+          options: AddPropertyBloc.communityFacilityOptions,
+        ),
+        SizedBox(height: 8.height),
+        _DetailBoolRadio(
+          label: AppStrings.clubhouse,
+          detailKey: DetailKeys.hasClubhouse,
+        ),
+        _DetailNumberDropdown(
+          label: AppStrings.numberOfParkingSpaces,
+          detailKey: DetailKeys.parkingSpots,
+          options: AddPropertyBloc.numberOptions(10),
+        ),
+        _DetailTextField(
+          label: AppStrings.communityServiceFeesOptional,
+          detailKey: DetailKeys.serviceFee,
+          isNumeric: true,
+        ),
+        _DetailTextField(
+          label: AppStrings.developerNameOptional,
+          detailKey: DetailKeys.developerName,
+        ),
+        const _FurnishingAndCondition(),
+      ],
+    );
+  }
+}
+
+// ============================================================================
+// Building
+// ============================================================================
+class _BuildingDetails extends StatelessWidget {
+  const _BuildingDetails();
 
   @override
   Widget build(BuildContext context) {
@@ -561,106 +689,122 @@ class _BuildingDetailsWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         PropertyDetailsSectionHeaderWidget(title: AppStrings.buildingDetails),
-        DropdownFieldWidget(
+        _DetailNumberDropdown(
           label: AppStrings.totalFloorsInBuilding,
-          items: AddPropertyBloc.apartmentFloorOptions,
-          selectedValue: "10-1",
-          onChanged: (v) {},
+          detailKey: DetailKeys.floorsCount,
+          options: AddPropertyBloc.floorsCountOptions,
         ),
-        DropdownFieldWidget(
+        _DetailNumberDropdown(
           label: AppStrings.totalApartments,
-          items: AddPropertyBloc.apartmentFloorOptions,
-          selectedValue: "10-1",
-          onChanged: (v) {},
+          detailKey: DetailKeys.totalApartments,
+          options: AddPropertyBloc.unitCountOptions,
         ),
         SizedBox(height: 16.height),
-        Row(
-          children: [
-            Expanded(
-              child: CounterFieldWidget(
-                label: AppStrings.numberOfShopsOptional,
-                value: 1,
-                onChanged: (v) {},
-              ),
-            ),
-            SizedBox(width: 12.width),
-            Expanded(
-              child: CounterFieldWidget(
-                label: AppStrings.numberOfParkingSpaces,
-                value: 1,
-                onChanged: (v) {},
-              ),
-            ),
-          ],
+        _LabeledCounterPair(
+          firstLabel: AppStrings.numberOfShopsOptional,
+          firstKey: DetailKeys.shopsCount,
+          secondLabel: AppStrings.numberOfParkingSpaces,
+          secondKey: DetailKeys.parkingSpots,
         ),
-        SizedBox(height: 12.height),
-
-        DropdownFieldWidget(
+        _DetailDropdown(
           label: AppStrings.buildingClassification,
-          items: AddPropertyBloc.landClassificationOptions,
-          selectedValue: "سكنية",
-          onChanged: (v) {},
+          detailKey: DetailKeys.classification,
+          options: AddPropertyBloc.classificationOptions,
         ),
-        DropdownFieldWidget(
-          label: AppStrings.propertyCondition,
-          items: AddPropertyBloc.conditionOptions,
-          selectedValue: "ممتاز",
-          onChanged: (v) {},
+        _DetailTextField(
+          label: AppStrings.developerNameOptional,
+          detailKey: DetailKeys.developerName,
         ),
+        const _FurnishingAndCondition(includeFurnishing: false),
       ],
     );
   }
 }
 
 // ============================================================================
-// Land Details
+// Land
 // ============================================================================
-class _LandDetailsWidget extends StatelessWidget {
-  const _LandDetailsWidget();
+class _LandDetails extends StatelessWidget {
+  const _LandDetails();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-
       children: [
         PropertyDetailsSectionHeaderWidget(title: AppStrings.landDetails),
-        SizedBox(height: 16.height),
-        DropdownFieldWidget(
+        _DetailDropdown(
           label: AppStrings.landClassification,
-          items: AddPropertyBloc.landClassificationOptions,
-          selectedValue: 'سكنية',
-          onChanged: (v) {},
+          detailKey: DetailKeys.classification,
+          options: AddPropertyBloc.classificationOptions,
+        ),
+        _DetailTextField(
+          label: AppStrings.plotNumberOptional,
+          detailKey: DetailKeys.plotNumber,
+        ),
+        _DetailTextField(
+          label: AppStrings.planNumberOptional,
+          detailKey: DetailKeys.planNumber,
         ),
         SizedBox(height: 16.height),
-        AppTextField(
-          controller: TextEditingController(),
-          title: AppStrings.plotNumberOptional,
+        _SectionTitle(title: AppStrings.landDimensions),
+        Row(
+          children: [
+            Expanded(
+              child: _DetailTextField(
+                label: AppStrings.dimensionNorth,
+                detailKey: DetailKeys.dimensionNorth,
+                isNumeric: true,
+                unit: AppStrings.mesurement,
+              ),
+            ),
+            SizedBox(width: 12.width),
+            Expanded(
+              child: _DetailTextField(
+                label: AppStrings.dimensionSouth,
+                detailKey: DetailKeys.dimensionSouth,
+                isNumeric: true,
+                unit: AppStrings.mesurement,
+              ),
+            ),
+          ],
         ),
-        SizedBox(height: 16.height),
-        AppTextField(
-          controller: TextEditingController(),
-          title: AppStrings.planNumberOptional,
+        Row(
+          children: [
+            Expanded(
+              child: _DetailTextField(
+                label: AppStrings.dimensionEast,
+                detailKey: DetailKeys.dimensionEast,
+                isNumeric: true,
+                unit: AppStrings.mesurement,
+              ),
+            ),
+            SizedBox(width: 12.width),
+            Expanded(
+              child: _DetailTextField(
+                label: AppStrings.dimensionWest,
+                detailKey: DetailKeys.dimensionWest,
+                isNumeric: true,
+                unit: AppStrings.mesurement,
+              ),
+            ),
+          ],
         ),
-        SizedBox(height: 16.height),
-        DropdownFieldWidget(
-          label: AppStrings.facades,
-          items: AddPropertyBloc.facadeOptions,
-          selectedValue: 'شمالي',
-          onChanged: (v) {},
+        _DetailTextField(
+          label: AppStrings.allowedConstructionRatio,
+          detailKey: DetailKeys.buildingRatio,
+          isNumeric: true,
+          unit: '%',
         ),
-        SizedBox(height: 16.height),
-
-        AppTextField(
-          controller: TextEditingController(),
-          title: AppStrings.allowedConstructionRatio,
-          suffixIcon: Icons.percent_rounded,
-        ),
-        DropdownFieldWidget(
+        _DetailNumberDropdown(
           label: AppStrings.allowedNumberOfFloors,
-          items: AddPropertyBloc.apartmentFloorOptions,
-          selectedValue: "10-1",
-          onChanged: (v) {},
+          detailKey: DetailKeys.allowedFloors,
+          options: AddPropertyBloc.numberOptions(50, min: 1),
+        ),
+        _DetailMultiChips(
+          label: AppStrings.availableServices,
+          detailKey: DetailKeys.services,
+          options: AddPropertyBloc.landServiceOptions,
         ),
       ],
     );
@@ -668,85 +812,52 @@ class _LandDetailsWidget extends StatelessWidget {
 }
 
 // ============================================================================
-// Rest House Details
+// Rest house
 // ============================================================================
-class _RestHouseDetailsWidget extends StatefulWidget {
-  const _RestHouseDetailsWidget();
+class _RestHouseDetails extends StatelessWidget {
+  const _RestHouseDetails();
 
-  @override
-  State<_RestHouseDetailsWidget> createState() =>
-      _RestHouseDetailsWidgetState();
-}
-
-class _RestHouseDetailsWidgetState extends State<_RestHouseDetailsWidget> {
   @override
   Widget build(BuildContext context) {
-    final bloc = AddPropertyBloc.get(context);
-    return BlocBuilder<AddPropertyBloc, AddPropertyState>(
-      builder: (context, state) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-
-          children: [
-            PropertyDetailsSectionHeaderWidget(
-              title: AppStrings.restHouseDetails,
-            ),
-            SizedBox(height: 16.height),
-            Row(
-              children: [
-                Expanded(
-                  child: CounterFieldWidget(
-                    label: AppStrings.numberOfBedrooms,
-                    value: state.model.beds,
-                    onChanged: (v) {
-                      if (v > state.model.beds) {
-                        bloc.add(const IncrementCounterEvent('beds'));
-                      } else {
-                        bloc.add(const DecrementCounterEvent('beds'));
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(width: 12.width),
-                Expanded(
-                  child: CounterFieldWidget(
-                    label: AppStrings.numberOfBathrooms,
-                    value: state.model.baths,
-                    onChanged: (v) {
-                      if (v > state.model.baths) {
-                        bloc.add(const IncrementCounterEvent('baths'));
-                      } else {
-                        bloc.add(const DecrementCounterEvent('baths'));
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 12.height),
-            CounterFieldWidget(
-              label: AppStrings.numberOfLivingRoomsOptional,
-              value: state.model.baths,
-              onChanged: (v) {
-                if (v > state.model.baths) {
-                  bloc.add(const IncrementCounterEvent('baths'));
-                } else {
-                  bloc.add(const DecrementCounterEvent('baths'));
-                }
-              },
-            ),
-          ],
-        );
-      },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        PropertyDetailsSectionHeaderWidget(title: AppStrings.restHouseDetails),
+        SizedBox(height: 16.height),
+        _LabeledCounterPair(
+          firstLabel: AppStrings.numberOfBedrooms,
+          firstKey: DetailKeys.bedrooms,
+          secondLabel: AppStrings.numberOfBathrooms,
+          secondKey: DetailKeys.bathrooms,
+        ),
+        SizedBox(height: 12.height),
+        _LabeledCounterPair(
+          firstLabel: AppStrings.numberOfLivingRoomsOptional,
+          firstKey: DetailKeys.livingRooms,
+          secondLabel: AppStrings.numberOfLoungesOptional,
+          secondKey: DetailKeys.councils,
+        ),
+        SizedBox(height: 16.height),
+        _DetailBoolRadio(
+          label: AppStrings.hasGarden,
+          detailKey: DetailKeys.hasGarden,
+        ),
+        SizedBox(height: 12.height),
+        _DetailBoolRadio(
+          label: AppStrings.hasPool,
+          detailKey: DetailKeys.hasPool,
+        ),
+        const _FurnishingAndCondition(includeFurnishing: false),
+      ],
     );
   }
 }
 
 // ============================================================================
-// Tower Details
+// Tower
 // ============================================================================
-class _TowerDetailsWidget extends StatelessWidget {
-  const _TowerDetailsWidget();
+class _TowerDetails extends StatelessWidget {
+  const _TowerDetails();
 
   @override
   Widget build(BuildContext context) {
@@ -754,87 +865,70 @@ class _TowerDetailsWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         PropertyDetailsSectionHeaderWidget(title: AppStrings.towerDetails),
-        AppTextField(
-          controller: TextEditingController(),
-          title: AppStrings.towerName,
+        _DetailTextField(
+          label: AppStrings.towerName,
+          detailKey: DetailKeys.name,
         ),
-        DropdownFieldWidget(
+        _DetailNumberDropdown(
           label: AppStrings.totalFloorsInBuilding,
-          items: AddPropertyBloc.apartmentFloorOptions,
-          selectedValue: '10-1',
-          onChanged: (v) {},
+          detailKey: DetailKeys.floorsCount,
+          options: AddPropertyBloc.floorsCountOptions,
         ),
-        DropdownFieldWidget(
+        _DetailDropdown(
           label: AppStrings.towerClassification,
-          items: AddPropertyBloc.landClassificationOptions,
-          selectedValue: "سكنية",
-          onChanged: (v) {},
+          detailKey: DetailKeys.classification,
+          options: AddPropertyBloc.towerClassificationOptions,
         ),
-        AppTextField(
-          controller: TextEditingController(),
-          title: AppStrings.totalUnits,
+        _DetailTextField(
+          label: AppStrings.totalUnits,
+          detailKey: DetailKeys.totalUnits,
+          isNumeric: true,
         ),
-        AppTextField(
-          controller: TextEditingController(),
-          title: AppStrings.numberOfElevators,
+        _DetailTextField(
+          label: AppStrings.numberOfElevators,
+          detailKey: DetailKeys.elevatorsCount,
+          isNumeric: true,
         ),
-        DropdownFieldWidget(
+        _DetailNumberDropdown(
           label: AppStrings.parkingFloors,
-          items: AddPropertyBloc.parkingFloorOptions,
-          selectedValue: "0-5",
-          onChanged: (v) {},
+          detailKey: DetailKeys.parkingFloors,
+          options: AddPropertyBloc.parkingFloorOptions,
         ),
-        AppTextField(
-          controller: TextEditingController(),
-          title: AppStrings.totalParkingSpaces,
+        _DetailTextField(
+          label: AppStrings.totalParkingSpaces,
+          detailKey: DetailKeys.totalParking,
+          isNumeric: true,
         ),
-
-        SizedBox(height: 16.height),
-        Text(
-          AppStrings.facilities,
-          style: TextStyle(
-            fontSize: context.responsiveFontScale(15),
-            fontWeight: FontWeight.w700,
-            color: AppThemeColors.of(context).textPrimary,
-          ),
+        _DetailMultiChips(
+          label: AppStrings.facilities,
+          detailKey: DetailKeys.amenities,
+          options: AddPropertyBloc.towerAmenityOptions,
         ),
-
-        SizedBox(height: 12.height),
-
-        ChipRowItem<String>(
-          options: AddPropertyBloc.communityAmenityOptions,
-          getLabel: (v) => v,
-          isSelected: (v, state) => false,
-          onTap: (val, context) {},
-        ),
-        SizedBox(height: 8.height),
-
-        DropdownFieldWidget(
+        _DetailMultiChips(
           label: AppStrings.view,
-          items: AddPropertyBloc.viewOptions,
-          selectedValue: "بانورامية",
-          onChanged: (v) {},
+          detailKey: DetailKeys.views,
+          options: AddPropertyBloc.viewOptions,
         ),
-        AppTextField(
-          controller: TextEditingController(),
-          title: AppStrings.yearOfOperation,
+        _DetailTextField(
+          label: AppStrings.yearBuilt,
+          detailKey: DetailKeys.yearBuilt,
+          isNumeric: true,
         ),
-        DropdownFieldWidget(
-          label: AppStrings.propertyCondition,
-          items: AddPropertyBloc.conditionOptions,
-          selectedValue: "ممتاز",
-          onChanged: (v) {},
+        _DetailTextField(
+          label: AppStrings.developerNameOptional,
+          detailKey: DetailKeys.developerName,
         ),
+        const _FurnishingAndCondition(includeFurnishing: false),
       ],
     );
   }
 }
 
 // ============================================================================
-// Shop Details
+// Shop
 // ============================================================================
-class _ShopDetailsWidget extends StatelessWidget {
-  const _ShopDetailsWidget();
+class _ShopDetails extends StatelessWidget {
+  const _ShopDetails();
 
   @override
   Widget build(BuildContext context) {
@@ -842,116 +936,82 @@ class _ShopDetailsWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         PropertyDetailsSectionHeaderWidget(title: AppStrings.shopDetails),
-        AppTextField(
-          controller: TextEditingController(),
-          title: AppStrings.frontagWidth,
+        _DetailTextField(
+          label: AppStrings.frontagWidth,
+          detailKey: DetailKeys.frontWidth,
+          isNumeric: true,
+          unit: AppStrings.mesurement,
         ),
-        DropdownFieldWidget(
+        _DetailDropdown(
           label: AppStrings.location,
-          items: AddPropertyBloc.locationOptions,
-          selectedValue: "على شارع رئيسي",
-          onChanged: (v) {},
+          detailKey: DetailKeys.locationType,
+          options: AddPropertyBloc.shopLocationOptions,
         ),
-        AppTextField(
-          controller: TextEditingController(),
-          title: AppStrings.mallName,
+        _DetailTextField(
+          label: AppStrings.mallName,
+          detailKey: DetailKeys.mallName,
         ),
+        _DetailMultiChips(
+          label: AppStrings.facilities,
+          detailKey: DetailKeys.facilities,
+          options: AddPropertyBloc.shopFacilityOptions,
+        ),
+        _DetailMultiChips(
+          label: AppStrings.shopActivities,
+          detailKey: DetailKeys.activities,
+          options: AddPropertyBloc.shopActivityOptions,
+        ),
+        const _FurnishingAndCondition(includeFurnishing: false),
       ],
     );
   }
 }
 
 // ============================================================================
-// Office Details
+// Office
 // ============================================================================
-class _OfficeDetailsWidget extends StatelessWidget {
-  const _OfficeDetailsWidget();
+class _OfficeDetails extends StatelessWidget {
+  const _OfficeDetails();
 
   @override
   Widget build(BuildContext context) {
-    final bloc = AddPropertyBloc.get(context);
-    return BlocBuilder<AddPropertyBloc, AddPropertyState>(
-      builder: (context, state) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            PropertyDetailsSectionHeaderWidget(title: AppStrings.officeDetails),
-            DropdownFieldWidget(
-              label: AppStrings.floorLabel,
-              items: AddPropertyBloc.floorOptions,
-              selectedValue: "الأرضي",
-              onChanged: (v) {},
-            ),
-            SizedBox(height: 16.height),
-            Row(
-              children: [
-                Expanded(
-                  child: CounterFieldWidget(
-                    label: AppStrings.numberOfBedrooms,
-                    value: state.model.beds,
-                    onChanged: (v) {
-                      if (v > state.model.beds) {
-                        bloc.add(const IncrementCounterEvent('beds'));
-                      } else {
-                        bloc.add(const DecrementCounterEvent('beds'));
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(width: 12.width),
-                Expanded(
-                  child: CounterFieldWidget(
-                    label: AppStrings.numberOfBathrooms,
-                    value: state.model.baths,
-                    onChanged: (v) {
-                      if (v > state.model.baths) {
-                        bloc.add(const IncrementCounterEvent('baths'));
-                      } else {
-                        bloc.add(const DecrementCounterEvent('baths'));
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 16.height),
-            Text(
-              AppStrings.facilities,
-              style: TextStyle(
-                fontSize: context.responsiveFontScale(15),
-                fontWeight: FontWeight.w700,
-                color: AppThemeColors.of(context).textPrimary,
-              ),
-            ),
-
-            SizedBox(height: 12.height),
-
-            ChipRowItem<String>(
-              options: AddPropertyBloc.interiorAmenityOptions,
-              getLabel: (v) => v,
-              isSelected: (v, state) => false,
-              onTap: (val, context) {},
-            ),
-            SizedBox(height: 12.height),
-            RadioGroupWidget(
-              label: AppStrings.furnitureCondition,
-              options: AddPropertyBloc.furnishingOptions,
-              selectedOption: state.model.furnishing ?? '',
-
-              onChanged: (v) => bloc.add(SelectDropdownEvent('furnishing', v)),
-            ),
-          ],
-        );
-      },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        PropertyDetailsSectionHeaderWidget(title: AppStrings.officeDetails),
+        _DetailNumberDropdown(
+          label: AppStrings.floorLabel,
+          detailKey: DetailKeys.floor,
+          options: AddPropertyBloc.floorNumberOptions,
+        ),
+        SizedBox(height: 16.height),
+        _LabeledCounterPair(
+          firstLabel: AppStrings.numberOfRooms,
+          firstKey: DetailKeys.roomsCount,
+          secondLabel: AppStrings.numberOfBathrooms,
+          secondKey: DetailKeys.bathrooms,
+        ),
+        _DetailMultiChips(
+          label: AppStrings.facilities,
+          detailKey: DetailKeys.facilities,
+          options: AddPropertyBloc.officeFacilityOptions,
+        ),
+        SizedBox(height: 12.height),
+        _DetailBoolRadio(
+          label: AppStrings.furnishedOffice,
+          detailKey: DetailKeys.furnishedOffice,
+        ),
+        const _FurnishingAndCondition(),
+      ],
     );
   }
 }
 
 // ============================================================================
-// Farm Details
+// Farm
 // ============================================================================
-class _FarmDetailsWidget extends StatelessWidget {
-  const _FarmDetailsWidget();
+class _FarmDetails extends StatelessWidget {
+  const _FarmDetails();
 
   @override
   Widget build(BuildContext context) {
@@ -959,107 +1019,57 @@ class _FarmDetailsWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         PropertyDetailsSectionHeaderWidget(title: AppStrings.farmDetails),
-        AppTextField(
-          controller: TextEditingController(),
-          title: AppStrings.builtArea,
-          suffixIconWidget: Padding(
-            padding: const EdgeInsets.only(top: 15),
-            child: Text("م", style: TextStyle(fontSize: 16)),
-          ),
+        _DetailTextField(
+          label: AppStrings.builtArea,
+          detailKey: DetailKeys.builtArea,
+          isNumeric: true,
+          unit: AppStrings.mesurement,
         ),
-        DropdownFieldWidget(
+        _DetailDropdown(
           label: AppStrings.soilType,
-          items: AddPropertyBloc.soilTypeOptions,
-          selectedValue: "طينية",
-          onChanged: (v) {},
+          detailKey: DetailKeys.soilType,
+          options: AddPropertyBloc.soilTypeOptions,
+        ),
+        _DetailMultiChips(
+          label: AppStrings.waterSourceAvailability,
+          detailKey: DetailKeys.waterSources,
+          options: AddPropertyBloc.waterSourceOptions,
         ),
         SizedBox(height: 16.height),
-        Text(
-          AppStrings.waterSourceAvailability,
-          style: TextStyle(
-            fontSize: context.responsiveFontScale(15),
-            fontWeight: FontWeight.w700,
-            color: AppThemeColors.of(context).textPrimary,
-          ),
+        _LabeledCounterPair(
+          firstLabel: AppStrings.numberOfWells,
+          firstKey: DetailKeys.wellsCount,
+          secondLabel: AppStrings.numberOfPalmTrees,
+          secondKey: DetailKeys.palmTreesCount,
         ),
-
-        SizedBox(height: 12.height),
-
-        ChipRowItem<String>(
-          options: ['بئر', 'مطق ماء'],
-          getLabel: (v) => v,
-          isSelected: (v, state) => false,
-          onTap: (val, context) {},
+        _DetailTextField(
+          label: AppStrings.wellDepth,
+          detailKey: DetailKeys.wellDepth,
+          isNumeric: true,
+          unit: AppStrings.mesurement,
         ),
-        SizedBox(height: 16.height),
-        Row(
-          children: [
-            Expanded(
-              child: CounterFieldWidget(
-                label: AppStrings.numberOfWells,
-                value: 1,
-                onChanged: (v) {},
-              ),
-            ),
-            SizedBox(width: 12.width),
-            Expanded(
-              child: CounterFieldWidget(
-                label: AppStrings.numberOfPalmTrees,
-                value: 1,
-                onChanged: (v) {},
-              ),
-            ),
-          ],
+        _DetailMultiChips(
+          label: AppStrings.features,
+          detailKey: DetailKeys.facilities,
+          options: AddPropertyBloc.farmFacilityOptions,
         ),
-        AppTextField(
-          controller: TextEditingController(),
-          title: AppStrings.wellDepth,
-          suffixIconWidget: Padding(
-            padding: const EdgeInsets.only(top: 15),
-            child: Text("م", style: TextStyle(fontSize: 16)),
-          ),
+        _DetailTextField(
+          label: AppStrings.distanceFromCity,
+          detailKey: DetailKeys.distanceToCity,
+          isNumeric: true,
+          unit: 'km',
         ),
-        SizedBox(height: 16.height),
-        Text(
-          AppStrings.features,
-          style: TextStyle(
-            fontSize: context.responsiveFontScale(15),
-            fontWeight: FontWeight.w700,
-            color: AppThemeColors.of(context).textPrimary,
-          ),
-        ),
-
-        SizedBox(height: 12.height),
-
-        ChipRowItem<String>(
-          options: [
-            AppStrings.livestockBarns,
-            AppStrings.restHouseInFarm,
-            AppStrings.electricity,
-            AppStrings.farmFence,
-          ],
-          getLabel: (v) => v,
-          isSelected: (v, state) => false,
-          onTap: (val, context) {},
-        ),
-        AppTextField(
-          controller: TextEditingController(),
-          title: AppStrings.distanceFromCity,
-          suffixIconWidget: Padding(
-            padding: const EdgeInsets.only(top: 15),
-            child: Text("km", style: TextStyle(fontSize: 16)),
-          ),
-        ),
+        const _FurnishingAndCondition(includeFurnishing: false),
       ],
     );
   }
 }
 
 // ============================================================================
-// Warehouse Details
+// Warehouse
 // ============================================================================
-class _WarehouseDetailsWidget extends StatelessWidget {
-  const _WarehouseDetailsWidget();
+class _WarehouseDetails extends StatelessWidget {
+  const _WarehouseDetails();
 
   @override
   Widget build(BuildContext context) {
@@ -1067,60 +1077,76 @@ class _WarehouseDetailsWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         PropertyDetailsSectionHeaderWidget(title: AppStrings.warehouseDetails),
-        AppTextField(
-          controller: TextEditingController(),
-          title: AppStrings.internalHeight,
+        _DetailTextField(
+          label: AppStrings.internalHeight,
+          detailKey: DetailKeys.height,
+          isNumeric: true,
+          unit: AppStrings.mesurement,
         ),
         SizedBox(height: 16.height),
-
-        RadioGroupWidget(
+        _DetailBoolRadio(
           label: AppStrings.administrativeOffices,
-          options: AddPropertyBloc.availabilityOptions,
-          selectedOption: "يوجد",
-          onChanged: (v) {},
+          detailKey: DetailKeys.hasOffice,
         ),
         SizedBox(height: 16.height),
-        RadioGroupWidget(
+        _DetailBoolRadio(
           label: AppStrings.externalYardForLoading,
-          options: AddPropertyBloc.availabilityOptions,
-          selectedOption: "يوجد",
-          onChanged: (v) {},
+          detailKey: DetailKeys.hasYard,
         ),
-        AppTextField(
-          controller: TextEditingController(),
-          title: AppStrings.yardSize,
-          suffixIconWidget: Padding(
-            padding: const EdgeInsets.only(top: 15),
-            child: Text("م2", style: TextStyle(fontSize: 16)),
-          ),
+        _DetailTextField(
+          label: AppStrings.yardSize,
+          detailKey: DetailKeys.yardArea,
+          isNumeric: true,
+          unit: AppStrings.mesurement,
         ),
-        AppTextField(
-          controller: TextEditingController(),
-          title: AppStrings.electricityCapacity,
-          suffixIconWidget: Padding(
-            padding: const EdgeInsets.only(top: 15),
-            child: Text("KW", style: TextStyle(fontSize: 16)),
-          ),
+        _DetailTextField(
+          label: AppStrings.electricityCapacity,
+          detailKey: DetailKeys.electricityKW,
+          isNumeric: true,
+          unit: 'KW',
         ),
-        DropdownFieldWidget(
+        _DetailCounter(
+          label: AppStrings.numberOfDoors,
+          detailKey: DetailKeys.doorsCount,
+        ),
+        _DetailDropdown(
           label: AppStrings.doorType,
-          items: AddPropertyBloc.doorTypeOptions,
-          selectedValue: "عادي",
-          onChanged: (v) {},
+          detailKey: DetailKeys.doorType,
+          options: AddPropertyBloc.doorTypeOptions,
         ),
-        DropdownFieldWidget(
+        _DetailDropdown(
           label: AppStrings.cooling,
-          items: AddPropertyBloc.coolingOptions,
-          selectedValue: "تبريد",
-          onChanged: (v) {},
+          detailKey: DetailKeys.coolingType,
+          options: AddPropertyBloc.coolingOptions,
         ),
-        DropdownFieldWidget(
+        _DetailDropdown(
           label: AppStrings.flooring,
-          items: AddPropertyBloc.floorTypeOptions,
-          selectedValue: "خرسانة",
-          onChanged: (v) {},
+          detailKey: DetailKeys.floorType,
+          options: AddPropertyBloc.flooringOptions,
         ),
+        const _FurnishingAndCondition(includeFurnishing: false),
       ],
+    );
+  }
+}
+
+class _SectionTitle extends StatelessWidget {
+  const _SectionTitle({required this.title});
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 8.height),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: context.responsiveFontScale(15),
+          fontWeight: FontWeight.w700,
+          color: AppThemeColors.of(context).textPrimary,
+        ),
+      ),
     );
   }
 }

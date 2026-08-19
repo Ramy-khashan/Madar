@@ -28,15 +28,17 @@ class BrokerSummaryCard extends StatelessWidget {
               Container(
                 width: 52.width,
                 height: 52.width,
+                clipBehavior: Clip.antiAliasWithSaveLayer,
                 decoration: BoxDecoration(
                   color: colors.primaryBrand.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12.radius),
                 ),
-                child: const ImageItem(AppImages.agentImage),
+                child:  ImageItem(broker.imageUrl, width: 48.width, height: 48.width, fit: BoxFit.cover),
               ),
               SizedBox(width: 10.width),
               Expanded(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Row(
                       children: [
@@ -56,47 +58,13 @@ class BrokerSummaryCard extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 4.height),
-                    Row(
-                      children: [
-                        Icon(Icons.star, size: 14.width, color: AppColors.rate),
-                         SizedBox(width: 2.width),
-
-                        Text(
-                          ' ${broker.rating} ',
-                          style: TextStyle(
-                            fontSize: context.responsiveFontScale(14),
-                            fontFamily: AppConstant.appHeaderFont,
-                            fontWeight: FontWeight.w700,
-                            color: colors.textFieldTitle,
-                          ),
-                        ),
-                       
-                        Text(
-                          '(${broker.reviewsCount})',
-                          style: TextStyle(
-                            fontSize: context.responsiveFontScale(14),
-                            fontFamily: AppConstant.appHeaderFont,
-                            color: colors.textSecondary,
-                          ),
-                        ),
-                       
-                          Text(
-                          '  •  ',
-                          style: TextStyle(
-                            color: colors.textSecondary,
-                            fontSize: context.responsiveFontScale(14),
-                          ),
-                        ),
-                         Text(
-                          '${broker.propertiesCount} ${AppStrings.propertiesCountSuffix}',
-                          style: TextStyle(
-                            fontSize: context.responsiveFontScale(14),
-                            fontFamily: AppConstant.appHeaderFont,
-                            color: colors.textSecondary,
-                          ),
-                        ),
-                      
-                      ],
+                    Text(
+                      '${broker.propertiesCount} ${AppStrings.propertiesCountSuffix}',
+                      style: TextStyle(
+                        fontSize: context.responsiveFontScale(14),
+                        fontFamily: AppConstant.appHeaderFont,
+                        color: colors.textSecondary,
+                      ),
                     ),
                   ],
                 ),

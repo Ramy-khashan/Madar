@@ -13,6 +13,7 @@ import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../add_property/view/widgets/ai_price_card.dart';
+import '../../widgets/rate_property_ai_price_card.dart';
 import '../controller/rate_property_estimation_bloc.dart';
 import 'widgets/rate_property_estimation_success_dialog.dart';
 
@@ -51,14 +52,19 @@ class RatePropertyResultScreen extends StatelessWidget {
                           ),
                           child: Column(
                             children: [
-                                AiPriceCard(),
+                                RatePropertyAiPriceCard(
+                                  minValue: state.minValue,
+                                  maxValue: state.maxValue,
+                                  periodDays: state.periodDays,
+                                  dealsCount: state.dealsCount,
+                                ),
                               SizedBox(height: 24.height),
                               OutlinedSection(
                                 title: AppStrings.ratePropertyWhyEvaluation,
                                 child: Column(
                                   children: [
                                     ...[
-                                      AppStrings.ratePropertyReason1,
+                                      'تحليل ${state.dealsCount} صفقة مشابهة',
                                       AppStrings.ratePropertyReason2,
                                       AppStrings.ratePropertyReason3,
                                       AppStrings.ratePropertyReason4,
@@ -73,7 +79,7 @@ class RatePropertyResultScreen extends StatelessWidget {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            ImageItem(AppImages.doneIcon,color: AppColors.lightSuccessColor,),
+                                            const ImageItem(AppImages.doneIcon,color: AppColors.lightSuccessColor,),
                                             SizedBox(width: 8.width),
                                             Expanded(
                                               child: Text(

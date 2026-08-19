@@ -9,12 +9,12 @@ final class BusinessPropertiesState extends Equatable {
 
   final int currentTab;
   final List<BusinessPropertyRequestModel> requests;
-  final List<BusinessPortfolioPropertyModel> published;
+  final List<BusinessRequestPublishedPropertyModel> published;
 
   BusinessPropertiesState copyWith({
     int? currentTab,
     List<BusinessPropertyRequestModel>? requests,
-    List<BusinessPortfolioPropertyModel>? published,
+    List<BusinessRequestPublishedPropertyModel>? published,
   }) {
     return BusinessPropertiesState(
       currentTab: currentTab ?? this.currentTab,

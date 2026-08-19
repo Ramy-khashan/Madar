@@ -1,4 +1,4 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
@@ -9,8 +9,10 @@ import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../core/utils/constants/storage_keys.dart';
+import '../../../../../../core/utils/functions/preference_utils.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
- import '../../controller/choose_broker_bloc.dart';
+import '../../controller/choose_broker_bloc.dart';
 import '../../model/broker_model.dart';
 import 'commission_fee_item.dart';
 
@@ -50,10 +52,15 @@ class BrokerDetailsContentWidget extends StatelessWidget {
                     Stack(
                       children: [
                         BrokerSummaryCard(broker: broker, colors: colors),
-                        const Positioned(bottom: 0, left: 0, right: 0, child: CommissionFeeItem()),
+                        const Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: _IndividualCommission(),
+                        ),
                       ],
                     ),
-                   Padding(
+                    Padding(
                       padding: EdgeInsets.symmetric(vertical: 16.height),
                       child: OutlinedSection(
                         title: AppStrings.brokerResponsibilities,
@@ -131,14 +138,26 @@ class BrokerDetailsContentWidget extends StatelessWidget {
                 width: 560.width,
                 text: AppStrings.sendToBrokerBtn,
                 isLoading: state.confirmStatus.name == 'loading',
-                onTap: () => context.read<ChooseBrokerBloc>().add(
-                  const ChooseBrokerConfirm(),
-                ),
+                onTap: () =>
+                    context.read<ChooseBrokerBloc>().add(ChooseBrokerConfirm()),
               ),
             ),
           ],
         );
       },
     );
+  }
+}
+
+class _IndividualCommission extends StatelessWidget {
+  const _IndividualCommission();
+
+  @override
+  Widget build(BuildContext context) {
+    final isIndividual =
+        PreferenceUtils().getString(StorageKeys.accountType) ==
+        AppConstant.individual;
+    if (!isIndividual) return const SizedBox.shrink();
+    return const CommissionFeeItem();
   }
 }

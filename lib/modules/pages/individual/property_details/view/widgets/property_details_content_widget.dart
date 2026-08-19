@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../../config/router/app_router_keys.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_button.dart';
 import '../../../../../../core/components/is_scrollable_widget.dart';
@@ -10,10 +9,8 @@ import '../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
-import '../../../../../../core/utils/functions/router_handler.dart';
-import '../../../../../common/chats/conversation_detail/model/conversation_info.dart';
+import '../../../../../common/chats/chat_navigator.dart';
 import '../../controller/property_details_bloc.dart';
-import '../../model/property_details_buyer_model.dart';
 import '../../model/property_details_model.dart';
 import 'advertiser_section_widget.dart';
  import 'features_part.dart';
@@ -82,7 +79,7 @@ class PropertyDetailsContentWidget extends StatelessWidget {
                       children: [
                         AdvertiserSectionWidget(
                           //TODO: Implement AdvertiserModel and pass it to the widget
-                          advertiser: property?.broker,
+                          advertiser: property?.publisher,
                         ),
                         SizedBox(height: 16.height),
                         // BuyerRelatedServicesSectionWidget(property: property),

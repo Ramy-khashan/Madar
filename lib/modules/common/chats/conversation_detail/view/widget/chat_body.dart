@@ -1,19 +1,40 @@
 
 part of '../conversation_detail_screen.dart';
 class ChatMessageList extends StatelessWidget {
-  const ChatMessageList({super.key, required this.messages, required this.imageUrl});
+  const ChatMessageList({
+    super.key,
+    required this.messages,
+    required this.imageUrl,
+    this.isPeerTyping = false,
+  });
 
   final List<MessageModel> messages;
   final String imageUrl;
+  final bool isPeerTyping;
 
   @override
   Widget build(BuildContext context) {
     final bloc = ConversationDetailBloc.get(context);
+    final extra = isPeerTyping ? 1 : 0;
     return ListView.builder(
       controller: bloc.scrollController,
       padding: EdgeInsets.symmetric(horizontal: 16.width, vertical: 16.height),
-      itemCount: messages.length,
+      itemCount: messages.length + extra,
       itemBuilder: (context, i) {
+        if (i >= messages.length) {
+          return Padding(
+            padding: EdgeInsets.only(bottom: 14.height),
+            child: IncomingBubble(
+              message: const MessageModel(
+                id: 'typing',
+                text: '...',
+                isOutgoing: false,
+                time: '',
+              ),
+              imageUrl: imageUrl,
+            ),
+          );
+        }
         final msg = messages[i];
         return Padding(
           padding: EdgeInsets.only(bottom: 14.height),
@@ -78,14 +99,16 @@ class IncomingBubble extends StatelessWidget {
                     height: 1.4,
                   ),
                 ),
-                SizedBox(height: 4.height),
-                Text(
-                  message.time,
-                  style: TextStyle(
-                    fontSize: context.responsiveFontScale(11),
-                    color: const Color(0xFF8A94A6),
+                if (message.time.isNotEmpty) ...[
+                  SizedBox(height: 4.height),
+                  Text(
+                    message.time,
+                    style: TextStyle(
+                      fontSize: context.responsiveFontScale(11),
+                      color: const Color(0xFF8A94A6),
+                    ),
                   ),
-                ),
+                ],
               ],
             ),
           ),
@@ -132,14 +155,16 @@ class OutgoingBubble extends StatelessWidget {
                     height: 1.4,
                   ),
                 ),
-                SizedBox(height: 4.height),
-                Text(
-                  message.time,
-                  style: TextStyle(
-                    fontSize: context.responsiveFontScale(11),
-                    color: Colors.white.withValues(alpha: 0.75),
+                if (message.time.isNotEmpty) ...[
+                  SizedBox(height: 4.height),
+                  Text(
+                    message.time,
+                    style: TextStyle(
+                      fontSize: context.responsiveFontScale(11),
+                      color: Colors.white.withValues(alpha: 0.75),
+                    ),
                   ),
-                ),
+                ],
               ],
             ),
           ),

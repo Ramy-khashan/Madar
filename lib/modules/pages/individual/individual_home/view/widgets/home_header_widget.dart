@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../config/router/app_router_keys.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
+import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../core/utils/constants/storage_keys.dart';
+import '../../../../../../core/utils/functions/preference_utils.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
+import '../../../../../../core/utils/functions/service_locator.dart';
 
 class HomeHeaderWidget extends StatelessWidget {
   const HomeHeaderWidget({super.key, required this.userLocation});
@@ -22,14 +26,22 @@ class HomeHeaderWidget extends StatelessWidget {
 
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 24.width,
-            backgroundColor: colors.primaryBrand,
-            child: Padding(
-              padding: EdgeInsets.all(7.width),
-              child: Icon(Icons.person_outline, color: colors.onPrimary),
-            ),
-          ),
+          sl.get<PreferenceUtils>().getString(StorageKeys.image).isEmpty
+              ? CircleAvatar(
+                  radius: 24.width,
+                  backgroundColor: colors.primaryBrand,
+                  child: Padding(
+                    padding: EdgeInsets.all(7.width),
+                    child: Icon(Icons.person_outline, color: colors.onPrimary),
+                  ),
+                )
+              : ImageItem(
+                  sl.get<PreferenceUtils>().getString(StorageKeys.image),
+                  fit: BoxFit.fill,
+                  borderRadius: BorderRadius.circular(24.width),
+                  width: 48.width,
+                  height: 48.width,
+                ),
           SizedBox(width: 8.width),
           Expanded(
             child: Column(

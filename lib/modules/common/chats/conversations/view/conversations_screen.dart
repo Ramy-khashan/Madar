@@ -49,20 +49,22 @@ class ConversationsScreen extends StatelessWidget {
                 builder: (context, state) {
                   return LoadingProcess(
                     status: state.loadingConversationsStatus,
-                    errorMsg: AppStrings.somethingWentWrong,
+                    errorMsg: state.errorMsg.isEmpty
+                        ? AppStrings.somethingWentWrong
+                        : state.errorMsg,
                     onTapRefresh: () => context.read<ConversationsBloc>().add(
                       const ConversationsLoad(),
                     ),
                     childIsLoader: true,
                     emptyMsg: AppStrings.noConversations,
-                    isEmptyList: state.conversations.isEmpty,
+                    isEmptyList: state.filteredConversations.isEmpty,
                     child: ListView.separated(
                       padding: EdgeInsets.symmetric(vertical: 8.height),
                       itemCount:
                           state.loadingConversationsStatus ==
                               RequestStatus.loading
                           ? 12
-                          : state.conversations.length,
+                          : state.filteredConversations.length,
               
                       separatorBuilder: (_, _) => Divider(
                         color: AppThemeColors.of(context).borderColor,
@@ -75,11 +77,11 @@ class ConversationsScreen extends StatelessWidget {
                             state.loadingConversationsStatus ==
                                 RequestStatus.loading
                             ? null
-                            : state.conversations[i],
+                            : state.filteredConversations[i],
                         onTap: () {RouterHandler.navigate(context,AppRouterKeys.conversationDetail,extra: ConversationInfo(
-                          conversationId: state.conversations[i].id,
-                          participantName: state.conversations[i].title,
-                          participantAvatarUrl: state.conversations[i].imageUrl,
+                          conversationId: state.filteredConversations[i].id,
+                          participantName: state.filteredConversations[i].title,
+                          participantAvatarUrl: state.filteredConversations[i].imageUrl,
                         ));},
                       ),
                     ),

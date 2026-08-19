@@ -10,9 +10,12 @@ import '../../../../../../core/model/google_map_model.dart';
 import '../../../../../../core/repository/maps/map_service.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../core/utils/functions/image_picker_helper.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/service_locator.dart';
 import '../../controller/add_property_bloc.dart';
+import '../../model/add_property_validator.dart';
+import '../widgets/field_error_text.dart';
 
 class AddPropertyStep3Screen extends StatelessWidget {
   const AddPropertyStep3Screen({super.key});
@@ -51,7 +54,8 @@ class AddPropertyStep3Screen extends StatelessWidget {
                   onChanged: (v) => bloc.add(UpdateLocationEvent(v)),
                 ),
                 16.height.toSizedBox,
-                _MapWidget(),
+                const _MapWidget(),
+                const FieldErrorText(AddPropertyField.location),
                 16.height.toSizedBox,
                 BlocBuilder<AddPropertyBloc, AddPropertyState>(
                   buildWhen: (prev, curr) =>
@@ -67,86 +71,120 @@ class AddPropertyStep3Screen extends StatelessWidget {
                     );
                   },
                 ),
-                 AppTextField(
+                AppTextField(
                   controller: bloc.buildingNumberController,
                   hint: AppStrings.buildingNumber,
                   title: AppStrings.buildingNumber,
                   textInputType: TextInputType.number,
-                  prefixImage:AppImages.floor ,
-
+                  prefixImage: AppImages.floor,
                 ),
                 12.height.toSizedBox,
                 AppTextField(
                   controller: bloc.streetController,
                   hint: AppStrings.streetName,
                   title: AppStrings.streetName,
-                  prefixImage:AppImages.locationDone ,
+                  prefixImage: AppImages.locationDone,
                 ),
                 24.height.toSizedBox,
-                Row(children: [
-                  Container(
-                    width: 40.width,
-                    height: 40.width,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color:AppThemeColors.of(context).activeColor
-                    ),
-                    child: ImageItem(
-                      AppImages.instrument,
-                      width: 40,
-                      height: 40,
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12.width),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                            Text(
-AppStrings.deed,
-  style: TextStyle(
-                              fontSize: context.responsiveFontScale(14),
-                              fontWeight: FontWeight.w600,
-                              color: tc.primaryBrand,
-                            ),
-
-                            ),
-
-                          Text(
-                            AppStrings.chooseDeedTypeHint,
-                            style: TextStyle(
-                              fontSize: context.responsiveFontScale(12),
-                              fontWeight: FontWeight.w400,
-                              color: tc.textSecondary,
-                            ),
-                          ),
-                        ],
+                Row(
+                  children: [
+                    Container(
+                      width: 40.width,
+                      height: 40.width,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: AppThemeColors.of(context).activeColor,
+                      ),
+                      child: ImageItem(
+                        AppImages.instrument,
+                        width: 40,
+                        height: 40,
                       ),
                     ),
-                  ),  
-                ],),
-                 12.height.toSizedBox,
-                const _DeedTypeSelector(),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12.width),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              AppStrings.deed,
+                              style: TextStyle(
+                                fontSize: context.responsiveFontScale(14),
+                                fontWeight: FontWeight.w600,
+                                color: tc.primaryBrand,
+                              ),
+                            ),
+
+                            Text(
+                              AppStrings.chooseDeedTypeHint,
+                              style: TextStyle(
+                                fontSize: context.responsiveFontScale(12),
+                                fontWeight: FontWeight.w400,
+                                color: tc.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 12.height.toSizedBox,
-                AppTextField(
-                  controller: bloc.deedNumberController,
-                  hint: AppStrings.enterDeedNumber,
-                  prefixImage: AppImages.instrument,
-                  title: AppStrings.deedNumber,
-                  textInputType: TextInputType.number,
+                const _DeedTypeSelector(),
+                const FieldErrorText(AddPropertyField.deedType),
+                12.height.toSizedBox,
+                BlocBuilder<AddPropertyBloc, AddPropertyState>(
+                  buildWhen: (prev, curr) =>
+                      prev.fieldErrors[AddPropertyField.deedNumber] !=
+                      curr.fieldErrors[AddPropertyField.deedNumber],
+                  builder: (context, state) {
+                    return AppTextField(
+                      controller: bloc.deedNumberController,
+                      hint: AppStrings.enterDeedNumber,
+                      prefixImage: AppImages.instrument,
+                      title: AppStrings.deedNumber,
+                      textInputType: TextInputType.number,
+                      errorText:
+                          state.fieldErrors[AddPropertyField.deedNumber],
+                    );
+                  },
                 ),
                 12.height.toSizedBox,
                 _SectionLabel(label: AppStrings.deedDate, tc: tc),
                 8.height.toSizedBox,
                 _DateTypeToggle(),
                 12.height.toSizedBox,
-                AppTextField(
-                  controller: bloc.dateController,
-                  hint: AppStrings.enterHijriDateHint,
-                  prefixIcon: Icons.calendar_today_rounded,
-                  textInputType: TextInputType.datetime,
+                BlocBuilder<AddPropertyBloc, AddPropertyState>(
+                  buildWhen: (prev, curr) =>
+                      prev.fieldErrors[AddPropertyField.deedDate] !=
+                      curr.fieldErrors[AddPropertyField.deedDate],
+                  builder: (context, state) {
+                    return AppTextField(
+                      controller: bloc.dateController,
+                      hint: AppStrings.enterHijriDateHint,
+                      prefixIcon: Icons.calendar_today_rounded,
+                      isReadOnly: true,
+                      errorText: state.fieldErrors[AddPropertyField.deedDate],
+                      onTapField: () async {
+                        final now = DateTime.now();
+                        final picked = await showDatePicker(
+                          context: context,
+                          initialDate: now,
+                          firstDate: DateTime(1950),
+                          lastDate: now,
+                        );
+                        if (picked == null) return;
+                        final y = picked.year.toString().padLeft(4, '0');
+                        final m = picked.month.toString().padLeft(2, '0');
+                        final d = picked.day.toString().padLeft(2, '0');
+                        bloc.dateController.text = '$y-$m-$d';
+                      },
+                    );
+                  },
                 ),
+                12.height.toSizedBox,
+                const _DeedDocumentPicker(),
                 20.height.toSizedBox,
               ],
             ),
@@ -186,7 +224,10 @@ class _MapWidget extends StatefulWidget {
 class _MapWidgetState extends State<_MapWidget> {
   PositionModel? _selected;
 
-  Future<String?> _reverseGeocode(double lat, double lon) async {
+  Future<({String label, String city, String district})?> _reverseGeocode(
+    double lat,
+    double lon,
+  ) async {
     try {
       final response = await sl.get<Dio>().get<Map<String, dynamic>>(
         'https://nominatim.openstreetmap.org/reverse',
@@ -201,20 +242,21 @@ class _MapWidgetState extends State<_MapWidget> {
       final addr = response.data?['address'] as Map<String, dynamic>?;
       if (addr == null) return null;
 
-      final neighbourhood =
-          (addr['neighbourhood'] ?? addr['suburb'] ?? '').toString();
-      final city =
-          (addr['city'] ?? addr['town'] ?? addr['village'] ?? '').toString();
+      final neighbourhood = (addr['neighbourhood'] ?? addr['suburb'] ?? '')
+          .toString();
+      final city = (addr['city'] ?? addr['town'] ?? addr['village'] ?? '')
+          .toString();
       final road = (addr['road'] ?? addr['street'] ?? '').toString();
       final house = (addr['house_number'] ?? '').toString();
 
-      final line1 = [neighbourhood, city]
-          .where((s) => s.isNotEmpty)
-          .join('، ');
-      final line2 =
-          [road, house].where((s) => s.isNotEmpty).join(' ');
+      final line1 = [neighbourhood, city].where((s) => s.isNotEmpty).join('، ');
+      final line2 = [road, house].where((s) => s.isNotEmpty).join(' ');
 
-      return [line1, line2].where((s) => s.isNotEmpty).join('\n');
+      return (
+        label: [line1, line2].where((s) => s.isNotEmpty).join('\n'),
+        city: city,
+        district: neighbourhood,
+      );
     } catch (_) {
       return null;
     }
@@ -224,16 +266,32 @@ class _MapWidgetState extends State<_MapWidget> {
     setState(() => _selected = pos);
     final bloc = AddPropertyBloc.get(context);
     // Show fallback coordinates immediately
-    bloc.add(UpdateLocationEvent(
-      '${pos.position.latitude.toStringAsFixed(5)}, ${pos.position.longitude.toStringAsFixed(5)}',
-    ));
+    bloc.add(
+      UpdateLocationEvent(
+        '${pos.position.latitude.toStringAsFixed(5)}, ${pos.position.longitude.toStringAsFixed(5)}',
+      ),
+    );
+    bloc.add(
+      UpdateCoordinatesEvent(
+        latitude: pos.position.latitude,
+        longitude: pos.position.longitude,
+      ),
+    );
     // Replace with human-readable address once resolved
     final address = await _reverseGeocode(
       pos.position.latitude,
       pos.position.longitude,
     );
     if (address != null && mounted) {
-      AddPropertyBloc.get(context).add(UpdateLocationEvent(address));
+      bloc.add(UpdateLocationEvent(address.label));
+      bloc.add(
+        UpdateCoordinatesEvent(
+          latitude: pos.position.latitude,
+          longitude: pos.position.longitude,
+          city: address.city,
+          district: address.district,
+        ),
+      );
     }
   }
 
@@ -287,7 +345,7 @@ class _LocationCard extends StatelessWidget {
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-         children: [
+        children: [
           Padding(
             padding: EdgeInsets.only(top: 10.height),
             child: Icon(
@@ -322,11 +380,7 @@ class _LocationCard extends StatelessWidget {
               ],
             ),
           ),
-           Icon(
-            Icons.edit,
-            color: tc.primaryBrand,
-            size: 20,
-                       ),
+          Icon(Icons.edit, color: tc.primaryBrand, size: 20),
         ],
       ),
     );
@@ -493,6 +547,95 @@ class _DateTypeOption extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _DeedDocumentPicker extends StatelessWidget {
+  const _DeedDocumentPicker();
+
+  @override
+  Widget build(BuildContext context) {
+    final tc = AppThemeColors.of(context);
+    return BlocBuilder<AddPropertyBloc, AddPropertyState>(
+      buildWhen: (prev, curr) =>
+          prev.model.ownershipDocumentPath != curr.model.ownershipDocumentPath,
+      builder: (context, state) {
+        final path = state.model.ownershipDocumentPath;
+        final hasFile = path != null && path.isNotEmpty;
+        final fileName = hasFile
+            ? path.split(RegExp(r'[/\\]')).last
+            : AppStrings.tapToAddDeedDocument;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              AppStrings.ownershipDocumentOptional,
+              style: TextStyle(
+                fontSize: context.responsiveFontScale(13),
+                fontWeight: FontWeight.w600,
+                color: tc.textFieldTitle,
+              ),
+            ),
+            8.height.toSizedBox,
+            InkWell(
+              onTap: () async {
+                final picked = await pickSingleImage();
+                if (picked == null || !context.mounted) return;
+                AddPropertyBloc.get(context).add(SetDeedDocumentEvent(picked));
+              },
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(
+                  horizontal: 14.width,
+                  vertical: 14.height,
+                ),
+                decoration: BoxDecoration(
+                  color: tc.cardBackground,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: tc.borderColor),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.attach_file_rounded,
+                      color: tc.primaryBrand,
+                      size: 20,
+                    ),
+                    SizedBox(width: 10.width),
+                    Expanded(
+                      child: Text(
+                        fileName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: context.responsiveFontScale(13),
+                          color: tc.textPrimary,
+                        ),
+                      ),
+                    ),
+                    if (hasFile)
+                      GestureDetector(
+                        onTap: () => AddPropertyBloc.get(
+                          context,
+                        ).add(const ClearDeedDocumentEvent()),
+                        child: Text(
+                          AppStrings.removeFile,
+                          style: TextStyle(
+                            fontSize: context.responsiveFontScale(12),
+                            color: tc.primaryBrand,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

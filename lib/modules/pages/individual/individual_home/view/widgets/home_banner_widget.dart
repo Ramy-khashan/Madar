@@ -20,7 +20,9 @@ class HomeBannerWidget extends StatelessWidget {
           status: state.adsStatus,
           emptyMsg: '',
           isEmptyList: state.adsItem.isEmpty,
-          onTapRefresh: () {},
+          onTapRefresh: () {
+            context.read<IndividualHomeBloc>().add(const IndividualHomeLoadAds());
+          },
           childIsLoader: true,
           errorMsg: state.adsErrorMsg,
           child: state.adsStatus == RequestStatus.failed

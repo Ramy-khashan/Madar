@@ -66,6 +66,9 @@ class MyWishlistScreen extends StatelessWidget {
                             ? null
                             : state.savedProperties[index];
                         return PropertyCardWidget(
+                          onBack: () {
+                            MyWishlistBloc.get(context).add(const MyWishlistLoad(isReset: true));
+                          },
                           property: property,
                           footer: PropertyCardDualFooter(
                             onSendRequest: () {},
@@ -73,11 +76,11 @@ class MyWishlistScreen extends StatelessWidget {
                               RouterHandler.navigate(
                                 context,
                                 AppRouterKeys.conversationDetail,
-                                extra: ConversationInfo(
-                                  conversationId: property.id,
-                                  participantName: property.title,
-                                  participantAvatarUrl: property.imageUrl,
-                                ),
+                                // extra: ConversationInfo(
+                                //   conversationId: property.id,
+                                //   participantName: property.title,
+                                //   participantAvatarUrl: property.imageUrl,
+                                // ),
                               );
                             },
                           ),

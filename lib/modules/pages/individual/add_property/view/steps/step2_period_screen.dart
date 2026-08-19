@@ -6,6 +6,8 @@ import '../../../../../../core/components/app_button.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../controller/add_property_bloc.dart';
+import '../../model/add_property_validator.dart';
+import '../widgets/field_error_text.dart';
 
 class AddPropertyStep2Screen extends StatelessWidget {
   const AddPropertyStep2Screen({super.key});
@@ -18,7 +20,9 @@ class AddPropertyStep2Screen extends StatelessWidget {
         Expanded(
           child: SingleChildScrollView(
             padding: EdgeInsets.symmetric(
-                horizontal: 16.width, vertical: 8.height),
+              horizontal: 16.width,
+              vertical: 8.height,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -59,6 +63,7 @@ class AddPropertyStep2Screen extends StatelessWidget {
                   subtitle: AppStrings.yearlyRentLabel,
                   icon: Icons.calendar_today_rounded,
                 ),
+                const FieldErrorText(AddPropertyField.rentalPeriod),
               ],
             ),
           ),
@@ -90,15 +95,15 @@ class _PeriodOption extends StatelessWidget {
       builder: (context, state) {
         final isSelected = state.model.rentalPeriod == period;
         return GestureDetector(
-          onTap: () => AddPropertyBloc.get(context)
-              .add(SelectRentalPeriodEvent(period)),
+          onTap: () =>
+              AddPropertyBloc.get(context).add(SelectRentalPeriodEvent(period)),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             padding: EdgeInsets.symmetric(
-                horizontal: 16.width, vertical: 8.height),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
+              horizontal: 16.width,
+              vertical: 8.height,
             ),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(14)),
             child: Row(
               children: [
                 Container(
@@ -110,8 +115,9 @@ class _PeriodOption extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: CircleAvatar(
-                    backgroundColor:
-                        isSelected ? tc.primaryBrand : tc.onPrimary,
+                    backgroundColor: isSelected
+                        ? tc.primaryBrand
+                        : tc.onPrimary,
                   ),
                 ),
                 12.width.toSizedBox,
@@ -141,8 +147,7 @@ class _Step2Buttons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          EdgeInsets.fromLTRB(16.width, 8.height, 16.width, 24.height),
+      padding: EdgeInsets.fromLTRB(16.width, 8.height, 16.width, 24.height),
       child: Row(
         children: [
           Expanded(

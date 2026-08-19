@@ -7,6 +7,7 @@ import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 import '../controller/smart_assistant_chat_bloc.dart';
 import 'widgets/ai_compose_item.dart';
+import 'widgets/ai_typing_bubble.dart';
 import 'widgets/feed_back_item.dart';
 import 'widgets/messages_bubble_item.dart';
 
@@ -78,6 +79,7 @@ class SmartAssistantChatScreen extends StatelessWidget {
                             child: CircularProgressIndicator(),
                           );
                         }
+                        final extra = (state.isSending ? 1 : 0) + 1;
                         return ListView.builder(
                           controller: SmartAssistantChatBloc.get(
                             context,
@@ -86,7 +88,7 @@ class SmartAssistantChatScreen extends StatelessWidget {
                             horizontal: 16.width,
                             vertical: 16.height,
                           ),
-                          itemCount: state.messages.length + 1,
+                          itemCount: state.messages.length + extra,
                           itemBuilder: (context, i) {
                             if (i < state.messages.length) {
                               final msg = state.messages[i];
@@ -95,6 +97,12 @@ class SmartAssistantChatScreen extends StatelessWidget {
                                 child: msg.isUser
                                     ? UserBubble(message: msg)
                                     : BotBubble(message: msg),
+                              );
+                            }
+                            if (state.isSending && i == state.messages.length) {
+                              return const Padding(
+                                padding: EdgeInsets.only(bottom: 14),
+                                child: AiTypingBubble(),
                               );
                             }
                             return FeedbackRow(

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../core/components/image_item.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
+import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 import '../controller/conversation_detail_bloc.dart';
 import '../model/conversation_info.dart';
@@ -32,10 +33,20 @@ class ConversationDetailScreen extends StatelessWidget {
                       if (state.loadingMessagesStatus == RequestStatus.loading) {
                         return const Center(child: CircularProgressIndicator());
                       }
+                      if (state.loadingMessagesStatus == RequestStatus.failed) {
+                        return Center(
+                          child: Text(
+                            state.errorMsg.isEmpty
+                                ? AppStrings.somethingWentWrong
+                                : state.errorMsg,
+                          ),
+                        );
+                      }
                       if (state.loadingMessagesStatus == RequestStatus.success) {
                         return ChatMessageList(
                           messages: state.messages,
                           imageUrl: conversation.participantAvatarUrl ?? '',
+                          isPeerTyping: state.isPeerTyping,
                         );
                       }
                       return const SizedBox.shrink();

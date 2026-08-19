@@ -11,6 +11,31 @@ final class SettingsLoad extends SettingsEvent {
   const SettingsLoad();
 }
 
+final class SettingsGetSavedCount extends SettingsEvent {
+  const SettingsGetSavedCount();
+}
+
+final class SettingsGetProfile extends SettingsEvent {
+  const SettingsGetProfile();
+}
+
+final class HandleProfileImageEvent extends SettingsEvent {
+  const HandleProfileImageEvent();
+}
+
+class UpdateFullNameEvent extends SettingsEvent {
+  const UpdateFullNameEvent(
+      {required this.context});
+
+  final BuildContext context;
+}
+
+class UpdatePhoneEvent extends SettingsEvent {
+  const UpdatePhoneEvent({required this.context});
+
+  final BuildContext context;
+}
+
 final class SettingsNotificationsToggled extends SettingsEvent {
   const SettingsNotificationsToggled();
 }
