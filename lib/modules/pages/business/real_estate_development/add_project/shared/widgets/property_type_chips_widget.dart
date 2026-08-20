@@ -45,8 +45,7 @@ class PropertyTypeChipsWidget extends StatelessWidget {
                 type,
                 style: TextStyle(
                   fontSize: context.responsiveFontScale(13),
-                  fontWeight:
-                      isSelected ? FontWeight.w700 : FontWeight.w400,
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
                   fontFamily: AppConstant.appFont,
                   color: isSelected ? colors.onPrimary : colors.textSecondary,
                 ),

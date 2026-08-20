@@ -27,7 +27,7 @@ class EndPoints {
   static const String wishlistCount = 'saved-properties/count';
   static const String getContracts = 'contracts';
   static String contractDetails(String id) => 'contracts/$id';
-  static const String requests = 'requests/me';
+  static const String requests = 'broker/requests';
   static const String financialReports = 'dashboard/financial-reports';
   static const String myAuctions = '/auctions/my-auctions';
   static const String brokers = 'auth/brokers';

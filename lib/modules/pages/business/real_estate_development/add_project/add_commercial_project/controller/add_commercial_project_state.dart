@@ -17,6 +17,7 @@ class AddCommercialProjectState extends Equatable {
     this.selectedStageIds = const [],
     this.selectedSubStageIds = const {},
     this.selectedImages = const [],
+    this.customSubStages = const {},
     this.submitErrorMessage,
   });
 
@@ -31,6 +32,7 @@ class AddCommercialProjectState extends Equatable {
   final List<String> selectedStageIds;
   final Map<String, List<String>> selectedSubStageIds;
   final List<String> selectedImages;
+  final Map<String, List<String>> customSubStages;
   final String? submitErrorMessage;
 
   AddCommercialProjectState copyWith({
@@ -45,37 +47,41 @@ class AddCommercialProjectState extends Equatable {
     List<String>? selectedStageIds,
     Map<String, List<String>>? selectedSubStageIds,
     List<String>? selectedImages,
+    Map<String, List<String>>? customSubStages,
     String? submitErrorMessage,
-  }) =>
-      AddCommercialProjectState(
-        selectedPropertyType:
-            selectedPropertyType ?? this.selectedPropertyType,
-        selectedAreaType: selectedAreaType ?? this.selectedAreaType,
-        showManagerForm: showManagerForm ?? this.showManagerForm,
-        submitStatus: submitStatus ?? this.submitStatus,
-        pendingDateField: pendingDateField ?? this.pendingDateField,
-        dialogAction: dialogAction ?? this.dialogAction,
-        stages: stages ?? this.stages,
-        stagesFetchStatus: stagesFetchStatus ?? this.stagesFetchStatus,
-        selectedStageIds: selectedStageIds ?? this.selectedStageIds,
-        selectedSubStageIds: selectedSubStageIds ?? this.selectedSubStageIds,
-        selectedImages: selectedImages ?? this.selectedImages,
-        submitErrorMessage: submitErrorMessage ?? this.submitErrorMessage,
-      );
+    bool clearSubmitError = false,
+  }) => AddCommercialProjectState(
+    selectedPropertyType: selectedPropertyType ?? this.selectedPropertyType,
+    selectedAreaType: selectedAreaType ?? this.selectedAreaType,
+    showManagerForm: showManagerForm ?? this.showManagerForm,
+    submitStatus: submitStatus ?? this.submitStatus,
+    pendingDateField: pendingDateField ?? this.pendingDateField,
+    dialogAction: dialogAction ?? this.dialogAction,
+    stages: stages ?? this.stages,
+    stagesFetchStatus: stagesFetchStatus ?? this.stagesFetchStatus,
+    selectedStageIds: selectedStageIds ?? this.selectedStageIds,
+    selectedSubStageIds: selectedSubStageIds ?? this.selectedSubStageIds,
+    selectedImages: selectedImages ?? this.selectedImages,
+    customSubStages: customSubStages ?? this.customSubStages,
+    submitErrorMessage: clearSubmitError
+        ? null
+        : submitErrorMessage ?? this.submitErrorMessage,
+  );
 
   @override
   List<Object?> get props => [
-        selectedPropertyType,
-        selectedAreaType,
-        showManagerForm,
-        submitStatus,
-        pendingDateField,
-        dialogAction,
-        stages,
-        stagesFetchStatus,
-        selectedStageIds,
-        selectedSubStageIds,
-        selectedImages,
-        submitErrorMessage,
-      ];
+    selectedPropertyType,
+    selectedAreaType,
+    showManagerForm,
+    submitStatus,
+    pendingDateField,
+    dialogAction,
+    stages,
+    stagesFetchStatus,
+    selectedStageIds,
+    selectedSubStageIds,
+    selectedImages,
+    customSubStages,
+    submitErrorMessage,
+  ];
 }

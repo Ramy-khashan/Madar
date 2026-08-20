@@ -1,19 +1,14 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 import '../../../../../../../core/repository/apis/real_estate_projects_apis.dart';
 import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/constants/app_enums.dart';
-import '../../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../../core/utils/functions/print_state.dart';
-import '../../../../../auction/add_auction_property/model/property_details.dart';
-import '../../shared/models/manager_request_model.dart';
-import '../../shared/models/project_request_base.dart';
 import '../../shared/models/project_stage_model.dart';
-import '../../shared/models/stage_request_model.dart';
+import '../../shared/project_form_helpers.dart';
 
 part 'add_residential_project_event.dart';
 part 'add_residential_project_state.dart';
@@ -36,6 +31,8 @@ class AddResidentialProjectBloc
     on<AddResidentialSubStageToggled>(_onSubStageToggled);
     on<AddResidentialImagesSelected>(_onImagesSelected);
     on<AddResidentialImageRemoved>(_onImageRemoved);
+    on<AddResidentialCustomSubStageAdded>(_onCustomSubStageAdded);
+    on<AddResidentialCustomSubStageRemoved>(_onCustomSubStageRemoved);
 
     // Auto-fetch stages on initialization
     add(const AddResidentialFetchStages());
@@ -47,46 +44,9 @@ class AddResidentialProjectBloc
   final budgetController = TextEditingController();
   final startDateController = TextEditingController();
   final endDateController = TextEditingController();
-  final phasesController = TextEditingController();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
-  final emailController = TextEditingController();
   final phoneController = TextEditingController();
-  List<CounterItemModel> get counterItems => [
-    CounterItemModel(
-      label: AppStrings.roomsLabel,
-      icon: AppImages.bedroomIcon,
-      controller: TextEditingController(),
-    ),
-    CounterItemModel(
-      label: AppStrings.bathroomsLabel,
-      icon: AppImages.bathroomIcon,
-
-      controller: TextEditingController(),
-    ),
-    CounterItemModel(
-      label: AppStrings.areaLabel,
-
-      icon: AppImages.totalSpaceIcon,
-      suffix: AppStrings.mesurement,
-      controller: TextEditingController(),
-    ),
-    CounterItemModel(
-      label: AppStrings.balconyLabel,
-      icon: AppImages.balconyIcon,
-      controller: TextEditingController(),
-    ),
-    CounterItemModel(
-      label: AppStrings.floorLabel,
-      icon: AppImages.floorIcon,
-      controller: TextEditingController(),
-    ),
-    CounterItemModel(
-      label: AppStrings.propertyNumberLabel,
-      icon: AppImages.propertyNumberIcon,
-      controller: TextEditingController(),
-    ),
-  ];
 
   @override
   Future<void> close() {
@@ -95,10 +55,8 @@ class AddResidentialProjectBloc
     budgetController.dispose();
     startDateController.dispose();
     endDateController.dispose();
-    phasesController.dispose();
     usernameController.dispose();
     passwordController.dispose();
-    emailController.dispose();
     phoneController.dispose();
     return super.close();
   }
@@ -176,58 +134,83 @@ class AddResidentialProjectBloc
     AddResidentialSubmit event,
     Emitter<AddResidentialProjectState> emit,
   ) async {
-    try{
-      if (!(formKey.currentState?.validate() ?? false)) return;
+    try {
+      final stagesRequest = ProjectFormHelpers.buildStages(
+        selectedStageIds: state.selectedStageIds,
+        selectedSubStageIds: state.selectedSubStageIds,
+        customSubStages: state.customSubStages,
+      );
+      final error = ProjectFormHelpers.validateCreate(
+        formValid: formKey.currentState?.validate() ?? false,
+        stages: stagesRequest,
+        attachments: state.selectedImages,
+        managerName: usernameController.text,
+        managerPhone: phoneController.text,
+        managerPassword: passwordController.text,
+      );
+      if (error != null) {
+        emit(
+          state.copyWith(
+            submitStatus: RequestStatus.init,
+            clearSubmitError: true,
+          ),
+        );
+        emit(
+          state.copyWith(
+            submitStatus: RequestStatus.failed,
+            submitErrorMessage: error,
+          ),
+        );
+        return;
+      }
 
-    // Build stages request from selected stages/substages
-    final stagesRequest = state.selectedStageIds.map((stageId) {
-      final subStageIds = state.selectedSubStageIds[stageId] ?? [];
-      return StageRequestModel(stageId: stageId, subStageIds: subStageIds);
-    }).toList();
+      final projectRequest = ProjectFormHelpers.buildRequest(
+        projectName: nameController.text,
+        location: locationController.text,
+        startDate: startDateController.text,
+        endDate: endDateController.text,
+        price: budgetController.text,
+        type: AppConstant.residentialProjectType,
+        stages: stagesRequest,
+        managerName: usernameController.text,
+        managerPhone: phoneController.text,
+        managerPassword: passwordController.text,
+      );
 
-    // Build manager request
-    final managerRequest = ManagerRequestModel(
-      fullName: usernameController.text,
-      phone: phoneController.text,
-      password: passwordController.text,
-    );
+      emit(
+        state.copyWith(
+          submitStatus: RequestStatus.loading,
+          clearSubmitError: true,
+        ),
+      );
 
-    // Build project request
-    final projectRequest = ProjectRequestBase(
-      projectName: nameController.text,
-      location: locationController.text,
-      startDate: startDateController.text,
-      endDate: endDateController.text,
-     
-      price: budgetController.text,
-      type: AppConstant.residentialProjectType,
-      stages: stagesRequest,
-      manager: managerRequest,
-    );
+      final result = await RealEstateProjectsApis.createProject(
+        projectRequest,
+        state.selectedImages,
+      );
 
-    emit(state.copyWith(
-      submitStatus: RequestStatus.loading,
-      submitErrorMessage: null,
-    ));
-
-    final result = await RealEstateProjectsApis.createProject(
-      projectRequest,
-      state.selectedImages,
-    );
-
-    result.fold(
-      (error) => emit(state.copyWith(
-        submitStatus: RequestStatus.failed,
-        submitErrorMessage: error,
-      )),
-      (success) => emit(state.copyWith(submitStatus: RequestStatus.success)),
-    );
-    }catch(e){
+      result.fold(
+        (err) => emit(
+          state.copyWith(
+            submitStatus: RequestStatus.failed,
+            submitErrorMessage: err,
+          ),
+        ),
+        (_) => emit(
+          state.copyWith(
+            submitStatus: RequestStatus.success,
+            clearSubmitError: true,
+          ),
+        ),
+      );
+    } catch (e) {
       printState('Error during project submission: $e');
-      emit(state.copyWith(
-        submitStatus: RequestStatus.failed,
-        submitErrorMessage: AppStrings.somethingWentWrong,
-      ));
+      emit(
+        state.copyWith(
+          submitStatus: RequestStatus.failed,
+          submitErrorMessage: AppStrings.somethingWentWrong,
+        ),
+      );
     }
   }
 
@@ -245,14 +228,18 @@ class AddResidentialProjectBloc
     printState('Fetching stages for residential project...');
     emit(state.copyWith(stagesFetchStatus: RequestStatus.loading));
 
-    final result = await RealEstateProjectsApis.fetchProjectStages(AppConstant.residentialProjectType);
+    final result = await RealEstateProjectsApis.fetchProjectStages(
+      AppConstant.residentialProjectType,
+    );
 
     result.fold(
       (error) => emit(state.copyWith(stagesFetchStatus: RequestStatus.failed)),
-      (stages) => emit(state.copyWith(
-        stagesFetchStatus: RequestStatus.success,
-        stages: stages,
-      )),
+      (stages) => emit(
+        state.copyWith(
+          stagesFetchStatus: RequestStatus.success,
+          stages: stages,
+        ),
+      ),
     );
   }
 
@@ -261,33 +248,40 @@ class AddResidentialProjectBloc
     Emitter<AddResidentialProjectState> emit,
   ) {
     final selectedStageIds = List<String>.from(state.selectedStageIds);
-    final selectedSubStageIds =
-        Map<String, List<String>>.from(state.selectedSubStageIds);
+    final selectedSubStageIds = Map<String, List<String>>.from(
+      state.selectedSubStageIds,
+    );
+    final customSubStages = Map<String, List<String>>.from(
+      state.customSubStages,
+    );
 
     if (selectedStageIds.contains(event.stageId)) {
-      // Remove stage and its substages
       selectedStageIds.remove(event.stageId);
       selectedSubStageIds.remove(event.stageId);
+      customSubStages.remove(event.stageId);
     } else {
-      // Add stage
       selectedStageIds.add(event.stageId);
       if (!selectedSubStageIds.containsKey(event.stageId)) {
         selectedSubStageIds[event.stageId] = [];
       }
     }
 
-    emit(state.copyWith(
-      selectedStageIds: selectedStageIds,
-      selectedSubStageIds: selectedSubStageIds,
-    ));
+    emit(
+      state.copyWith(
+        selectedStageIds: selectedStageIds,
+        selectedSubStageIds: selectedSubStageIds,
+        customSubStages: customSubStages,
+      ),
+    );
   }
 
   void _onSubStageToggled(
     AddResidentialSubStageToggled event,
     Emitter<AddResidentialProjectState> emit,
   ) {
-    final selectedSubStageIds =
-        Map<String, List<String>>.from(state.selectedSubStageIds);
+    final selectedSubStageIds = Map<String, List<String>>.from(
+      state.selectedSubStageIds,
+    );
 
     if (!selectedSubStageIds.containsKey(event.stageId)) {
       selectedSubStageIds[event.stageId] = [];
@@ -303,7 +297,17 @@ class AddResidentialProjectBloc
 
     selectedSubStageIds[event.stageId] = subStageList;
 
-    emit(state.copyWith(selectedSubStageIds: selectedSubStageIds));
+    final selectedStageIds = List<String>.from(state.selectedStageIds);
+    if (subStageList.isNotEmpty && !selectedStageIds.contains(event.stageId)) {
+      selectedStageIds.add(event.stageId);
+    }
+
+    emit(
+      state.copyWith(
+        selectedStageIds: selectedStageIds,
+        selectedSubStageIds: selectedSubStageIds,
+      ),
+    );
   }
 
   void _onImagesSelected(
@@ -322,5 +326,41 @@ class AddResidentialProjectBloc
     final updatedImages = List<String>.from(state.selectedImages)
       ..removeAt(event.index);
     emit(state.copyWith(selectedImages: updatedImages));
+  }
+
+  void _onCustomSubStageAdded(
+    AddResidentialCustomSubStageAdded event,
+    Emitter<AddResidentialProjectState> emit,
+  ) {
+    final name = event.name.trim();
+    if (name.isEmpty) return;
+    final custom = Map<String, List<String>>.from(state.customSubStages);
+    custom[event.stageId] = [...(custom[event.stageId] ?? const []), name];
+    final selectedStageIds = List<String>.from(state.selectedStageIds);
+    if (!selectedStageIds.contains(event.stageId)) {
+      selectedStageIds.add(event.stageId);
+    }
+    emit(
+      state.copyWith(
+        customSubStages: custom,
+        selectedStageIds: selectedStageIds,
+      ),
+    );
+  }
+
+  void _onCustomSubStageRemoved(
+    AddResidentialCustomSubStageRemoved event,
+    Emitter<AddResidentialProjectState> emit,
+  ) {
+    final custom = Map<String, List<String>>.from(state.customSubStages);
+    final list = List<String>.from(custom[event.stageId] ?? const []);
+    if (event.index < 0 || event.index >= list.length) return;
+    list.removeAt(event.index);
+    if (list.isEmpty) {
+      custom.remove(event.stageId);
+    } else {
+      custom[event.stageId] = list;
+    }
+    emit(state.copyWith(customSubStages: custom));
   }
 }

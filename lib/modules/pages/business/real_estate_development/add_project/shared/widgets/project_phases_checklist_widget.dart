@@ -5,6 +5,7 @@ import '../../../../../../../core/components/image_item.dart';
 import '../../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/constants/app_images.dart';
+import '../../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
 import '../models/project_stage_model.dart';
 
@@ -18,6 +19,9 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
     required this.onSubStageToggled,
     required this.selectedStageIds,
     required this.selectedSubStageIds,
+    this.customSubStages = const {},
+    this.onCustomSubStageAdded,
+    this.onCustomSubStageRemoved,
     this.isLoading = false,
   });
 
@@ -28,12 +32,15 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
   final void Function(String stageId, String subStageId) onSubStageToggled;
   final List<String> selectedStageIds;
   final Map<String, List<String>> selectedSubStageIds;
+  final Map<String, List<String>> customSubStages;
+  final void Function(String stageId, String name)? onCustomSubStageAdded;
+  final void Function(String stageId, int index)? onCustomSubStageRemoved;
   final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
-    
+
     if (isLoading) {
       return Padding(
         padding: EdgeInsets.symmetric(vertical: 24.height),
@@ -48,7 +55,7 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 24.height),
         child: Center(
           child: Text(
-            'لا توجد مراحل متاحة',
+            AppStrings.noProjectStagesAvailable,
             style: TextStyle(
               fontSize: context.responsiveFontScale(14),
               color: colors.textSecondary,
@@ -86,7 +93,8 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
         ...stages.map((stage) {
           final isExpanded = selectedStageIds.contains(stage.id);
           final selectedSubs = selectedSubStageIds[stage.id] ?? [];
-          
+          final customForStage = customSubStages[stage.id] ?? [];
+
           return Container(
             margin: EdgeInsets.only(bottom: 8.height),
             decoration: BoxDecoration(
@@ -126,7 +134,9 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
                                     Text(
                                       stage.description,
                                       style: TextStyle(
-                                        fontSize: context.responsiveFontScale(12),
+                                        fontSize: context.responsiveFontScale(
+                                          12,
+                                        ),
                                         color: colors.textSecondary,
                                         fontFamily: AppConstant.appFont,
                                       ),
@@ -165,7 +175,7 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (isExpanded && stage.subStages.isNotEmpty)
+                    if (isExpanded)
                       Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: 12.width,
@@ -182,25 +192,62 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: stage.subStages.map((subStage) {
-                            return CheckboxListTile(
-                              dense: true,
-                              contentPadding: EdgeInsets.zero,
-                              controlAffinity: ListTileControlAffinity.trailing,
-                              value: selectedSubs.contains(subStage.id),
-                              activeColor: colors.primaryBrand,
-                              onChanged: (v) =>
-                                  onSubStageToggled(stage.id, subStage.id),
-                              title: Text(
-                                subStage.name,
-                                style: TextStyle(
-                                  fontSize: context.responsiveFontScale(14),
-                                  color: colors.textFieldTitle,
-                                  fontFamily: AppConstant.appFont,
+                          children: [
+                            ...stage.subStages.map((subStage) {
+                              return CheckboxListTile(
+                                dense: true,
+                                contentPadding: EdgeInsets.zero,
+                                controlAffinity:
+                                    ListTileControlAffinity.trailing,
+                                value: selectedSubs.contains(subStage.id),
+                                activeColor: colors.primaryBrand,
+                                onChanged: (v) =>
+                                    onSubStageToggled(stage.id, subStage.id),
+                                title: Text(
+                                  subStage.name,
+                                  style: TextStyle(
+                                    fontSize: context.responsiveFontScale(14),
+                                    color: colors.textFieldTitle,
+                                    fontFamily: AppConstant.appFont,
+                                  ),
+                                ),
+                              );
+                            }),
+                            if (onCustomSubStageAdded != null) ...[
+                              ...customForStage.asMap().entries.map(
+                                (entry) => ListTile(
+                                  dense: true,
+                                  contentPadding: EdgeInsets.zero,
+                                  title: Text(
+                                    entry.value,
+                                    style: TextStyle(
+                                      fontSize: context.responsiveFontScale(14),
+                                      color: colors.textFieldTitle,
+                                      fontFamily: AppConstant.appFont,
+                                    ),
+                                  ),
+                                  trailing: onCustomSubStageRemoved == null
+                                      ? null
+                                      : IconButton(
+                                          icon: Icon(
+                                            Icons.close,
+                                            size: 18.width,
+                                            color: AppColors.errorColor,
+                                          ),
+                                          onPressed: () =>
+                                              onCustomSubStageRemoved!(
+                                                stage.id,
+                                                entry.key,
+                                              ),
+                                        ),
                                 ),
                               ),
-                            );
-                          }).toList(),
+                              _CustomSubStageInput(
+                                onAdd: (name) =>
+                                    onCustomSubStageAdded!(stage.id, name),
+                              ),
+                            ],
+                          ],
                         ),
                       ),
                   ],
@@ -210,6 +257,68 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
           );
         }),
       ],
+    );
+  }
+}
+
+class _CustomSubStageInput extends StatefulWidget {
+  const _CustomSubStageInput({required this.onAdd});
+
+  final ValueChanged<String> onAdd;
+
+  @override
+  State<_CustomSubStageInput> createState() => _CustomSubStageInputState();
+}
+
+class _CustomSubStageInputState extends State<_CustomSubStageInput> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    final name = _controller.text.trim();
+    if (name.isEmpty) return;
+    widget.onAdd(name);
+    _controller.clear();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppThemeColors.of(context);
+    return Padding(
+      padding: EdgeInsets.only(bottom: 8.height, top: 4.height),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _controller,
+              onSubmitted: (_) => _submit(),
+              decoration: InputDecoration(
+                isDense: true,
+                hintText: AppStrings.customSubStageHint,
+                hintStyle: TextStyle(
+                  fontSize: context.responsiveFontScale(13),
+                  color: colors.textSecondary,
+                ),
+                border: InputBorder.none,
+              ),
+              style: TextStyle(
+                fontSize: context.responsiveFontScale(14),
+                color: colors.textFieldTitle,
+                fontFamily: AppConstant.appFont,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: _submit,
+            child: Text(AppStrings.addCustomSubStage),
+          ),
+        ],
+      ),
     );
   }
 }

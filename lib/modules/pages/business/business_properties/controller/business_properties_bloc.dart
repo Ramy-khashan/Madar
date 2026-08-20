@@ -15,37 +15,7 @@ class BusinessPropertiesBloc
     on<BusinessPropertiesAccept>(_onAccept);
     on<BusinessPropertiesReject>(_onReject);
   }
-
-  static const _mockRequests = [
-    BusinessPropertyRequestModel(
-      id: '1',
-      title: 'شقة فاخرة في الملقا',
-      location: 'الرياض - حي الملقا',
-      individualName: 'محمد العتيبي',
-      requestDate: '01-02-2026',
-      imageUrl: 'assets/images/property.png',
-      status: 'بانتظار الرد',
-    ),
-    BusinessPropertyRequestModel(
-      id: '2',
-      title: 'شقة فاخرة في الملقا',
-      location: 'الرياض - حي الملقا',
-      individualName: 'محمد العتيبي',
-      requestDate: '01-02-2026',
-      imageUrl: 'assets/images/property.png',
-      status: 'بانتظار الرد',
-    ),
-    BusinessPropertyRequestModel(
-      id: '3',
-      title: 'شقة فاخرة في الملقا',
-      location: 'الرياض - حي الملقا',
-      individualName: 'محمد العتيبي',
-      requestDate: '01-02-2026',
-      imageUrl: 'assets/images/property.png',
-      status: 'بانتظار الرد',
-    ),
-  ];
-
+ 
   static const _mockPublished = [
     BusinessRequestPublishedPropertyModel(
       id: '1',
@@ -83,7 +53,7 @@ class BusinessPropertiesBloc
     BusinessPropertiesLoad event,
     Emitter<BusinessPropertiesState> emit,
   ) {
-    emit(state.copyWith(requests: _mockRequests, published: _mockPublished));
+    emit(state.copyWith(requests: [], published: _mockPublished));
   }
 
   void _onTabChanged(
@@ -97,15 +67,15 @@ class BusinessPropertiesBloc
     BusinessPropertiesAccept event,
     Emitter<BusinessPropertiesState> emit,
   ) {
-    final updated = state.requests.where((r) => r.id != event.id).toList();
-    emit(state.copyWith(requests: updated));
+    // final updated = state.requests.where((r) => r.id != event.id).toList();
+    // emit(state.copyWith(requests: updated));
   }
 
   void _onReject(
     BusinessPropertiesReject event,
     Emitter<BusinessPropertiesState> emit,
   ) {
-    final updated = state.requests.where((r) => r.id != event.id).toList();
-    emit(state.copyWith(requests: updated));
+    // final updated = state.requests.where((r) => r.id != event.id).toList();
+    // emit(state.copyWith(requests: updated));
   }
 }

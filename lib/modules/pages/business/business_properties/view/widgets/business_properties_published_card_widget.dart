@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/image_item.dart';
@@ -9,10 +10,7 @@ import '../../../../../../core/utils/functions/responsive.dart';
 import '../../model/business_property_request_model.dart';
 
 class BusinessPropertiesPublishedCardWidget extends StatelessWidget {
-  const BusinessPropertiesPublishedCardWidget({
-    super.key,
-    required this.item,
-  });
+  const BusinessPropertiesPublishedCardWidget({super.key, required this.item});
 
   final BusinessPropertyRequestModel item;
 
@@ -54,7 +52,7 @@ class BusinessPropertiesPublishedCardWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20.radius),
                       ),
                       child: Text(
-                        item.status,
+                        item.status ?? AppStrings.pendingStatus,
                         style: TextStyle(
                           fontSize: context.responsiveFontScale(11),
                           fontWeight: FontWeight.w600,
@@ -67,7 +65,7 @@ class BusinessPropertiesPublishedCardWidget extends StatelessWidget {
                   SizedBox(height: 6.height),
                   // Title
                   Text(
-                    item.title,
+                    item.title ?? 'Property Title',
                     textAlign: TextAlign.end,
                     style: TextStyle(
                       fontSize: context.responsiveFontScale(15),
@@ -82,7 +80,7 @@ class BusinessPropertiesPublishedCardWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        item.location,
+                        '${item.city ?? 'City Name'} - ${item.district ?? 'District Name'}',
                         style: TextStyle(
                           fontSize: context.responsiveFontScale(12),
                           color: colors.textSecondary,
@@ -100,7 +98,7 @@ class BusinessPropertiesPublishedCardWidget extends StatelessWidget {
                   SizedBox(height: 4.height),
                   // Publish date
                   Text(
-                    '${AppStrings.businessPropertiesPublishDateLabel}: ${item.requestDate}',
+                    '${AppStrings.businessPropertiesPublishDateLabel}: ${item.createdAt == null ? AppStrings.noDataFound : DateFormat('yyyy-MM-dd').format(DateTime.parse(item.createdAt!))}',
                     textAlign: TextAlign.end,
                     style: TextStyle(
                       fontSize: context.responsiveFontScale(12),
@@ -115,7 +113,7 @@ class BusinessPropertiesPublishedCardWidget extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(12.radius),
               child: ImageItem(
-                item.imageUrl,
+                item.image ?? '',
                 width: 90.width,
                 height: 90.height,
                 fit: BoxFit.cover,

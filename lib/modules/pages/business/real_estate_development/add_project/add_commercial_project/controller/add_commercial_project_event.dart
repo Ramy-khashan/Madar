@@ -122,3 +122,24 @@ final class AddCommercialImageRemoved extends AddCommercialProjectEvent {
   @override
   List<Object?> get props => [index];
 }
+
+final class AddCommercialCustomSubStageAdded extends AddCommercialProjectEvent {
+  const AddCommercialCustomSubStageAdded(this.stageId, this.name);
+
+  final String stageId;
+  final String name;
+
+  @override
+  List<Object?> get props => [stageId, name];
+}
+
+final class AddCommercialCustomSubStageRemoved
+    extends AddCommercialProjectEvent {
+  const AddCommercialCustomSubStageRemoved(this.stageId, this.index);
+
+  final String stageId;
+  final int index;
+
+  @override
+  List<Object?> get props => [stageId, index];
+}

@@ -27,12 +27,15 @@ class RealEstateProjectsApis {
         printState(
           'Fetched stages for project type $projectType: ${successResponse.response}',
         );
-        final data = successResponse.response['data'] as List<dynamic>?;
-        if (data == null) {
-          return const Right([]);
-        }
-        final stages = data
-            .map((e) => ProjectStageModel.fromJson(e as Map<String, dynamic>))
+        final raw =
+            successResponse.response['data'] ?? successResponse.response;
+        final list = _asList(raw);
+        final stages = list
+            .whereType<Map>()
+            .map(
+              (e) => ProjectStageModel.fromJson(Map<String, dynamic>.from(e)),
+            )
+            .where((e) => e.id.isNotEmpty)
             .toList();
         return Right(stages);
       });
@@ -78,12 +81,29 @@ class RealEstateProjectsApis {
         body: formData,
       );
 
-      return response.fold(
-        (failedResponse) => Left(failedResponse),
-        (successResponse) => Right(successResponse.response['data']),
-      );
+      return response.fold((failedResponse) => Left(failedResponse), (
+        successResponse,
+      ) {
+        final body = successResponse.response;
+        if (body is Map) {
+          return Right(body['data'] ?? body);
+        }
+        return Right(body);
+      });
     } catch (e) {
+      printState('createProject error: $e');
       return Left(AppStrings.somethingWentWrong);
     }
+  }
+
+  static List<dynamic> _asList(dynamic raw) {
+    if (raw is List) return raw;
+    if (raw is Map) {
+      for (final key in ['stages', 'items', 'data', 'result']) {
+        final value = raw[key];
+        if (value is List) return value;
+      }
+    }
+    return const [];
   }
 }

@@ -5,7 +5,7 @@ import '../../../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../../../core/components/app_textfield.dart';
 import '../../../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../auction/add_auction_property/model/property_details.dart';
- 
+
 class PropertyDetailsItem extends StatelessWidget {
   const PropertyDetailsItem({super.key, required this.counterItems});
   final List<CounterItemModel> counterItems;

@@ -12,11 +12,7 @@ class ManagerRequestModel extends Equatable {
   final String password;
 
   Map<String, dynamic> toJson() {
-    return {
-      'fullName': fullName,
-      'phone': phone,
-      'password': password,
-    };
+    return {'fullName': fullName, 'phone': phone, 'password': password};
   }
 
   @override

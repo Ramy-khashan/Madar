@@ -14,14 +14,26 @@ class ProjectStageModel extends Equatable {
   final List<SubStageModel> subStages;
 
   factory ProjectStageModel.fromJson(Map<String, dynamic> json) {
+    final rawSubs =
+        json['subStages'] ?? json['sub_stages'] ?? json['substages'];
     return ProjectStageModel(
-      id: json['id'] as String? ?? '',
-      name: json['name'] as String? ?? '',
-      description: json['description'] as String? ?? '',
-      subStages: (json['subStages'] as List<dynamic>?)
-              ?.map((e) => SubStageModel.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
+      id: (json['id'] ?? json['stageId'] ?? json['stage_id'] ?? '').toString(),
+      name:
+          (json['name'] ??
+                  json['title'] ??
+                  json['nameAr'] ??
+                  json['nameEn'] ??
+                  '')
+              .toString(),
+      description: (json['description'] ?? json['desc'] ?? '').toString(),
+      subStages: rawSubs is List
+          ? rawSubs
+                .whereType<Map>()
+                .map(
+                  (e) => SubStageModel.fromJson(Map<String, dynamic>.from(e)),
+                )
+                .toList()
+          : const [],
     );
   }
 
@@ -53,20 +65,22 @@ class SubStageModel extends Equatable {
 
   factory SubStageModel.fromJson(Map<String, dynamic> json) {
     return SubStageModel(
-      id: json['id'] as String? ?? '',
-      name: json['name'] as String? ?? '',
-      stageId: json['stageId'] as String? ?? '',
+      id: (json['id'] ?? json['subStageId'] ?? json['sub_stage_id'] ?? '')
+          .toString(),
+      name:
+          (json['name'] ??
+                  json['title'] ??
+                  json['nameAr'] ??
+                  json['nameEn'] ??
+                  '')
+              .toString(),
+      stageId: (json['stageId'] ?? json['stage_id'] ?? '').toString(),
       isCustom: json['isCustom'] as bool? ?? false,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'stageId': stageId,
-      'isCustom': isCustom,
-    };
+    return {'id': id, 'name': name, 'stageId': stageId, 'isCustom': isCustom};
   }
 
   @override

@@ -1,15 +1,12 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 import '../../../../../../../core/repository/apis/real_estate_projects_apis.dart';
 import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/constants/app_enums.dart';
-import '../../shared/models/manager_request_model.dart';
-import '../../shared/models/project_request_base.dart';
 import '../../shared/models/project_stage_model.dart';
-import '../../shared/models/stage_request_model.dart';
+import '../../shared/project_form_helpers.dart';
 
 part 'add_commercial_project_event.dart';
 part 'add_commercial_project_state.dart';
@@ -33,6 +30,8 @@ class AddCommercialProjectBloc
     on<AddCommercialSubStageToggled>(_onSubStageToggled);
     on<AddCommercialImagesSelected>(_onImagesSelected);
     on<AddCommercialImageRemoved>(_onImageRemoved);
+    on<AddCommercialCustomSubStageAdded>(_onCustomSubStageAdded);
+    on<AddCommercialCustomSubStageRemoved>(_onCustomSubStageRemoved);
 
     // Auto-fetch stages on initialization
     add(const AddCommercialFetchStages());
@@ -139,23 +138,36 @@ class AddCommercialProjectBloc
     AddCommercialSubmit event,
     Emitter<AddCommercialProjectState> emit,
   ) async {
-    if (!(formKey.currentState?.validate() ?? false)) return;
-
-    // Build stages request from selected stages/substages
-    final stagesRequest = state.selectedStageIds.map((stageId) {
-      final subStageIds = state.selectedSubStageIds[stageId] ?? [];
-      return StageRequestModel(stageId: stageId, subStageIds: subStageIds);
-    }).toList();
-
-    // Build manager request
-    final managerRequest = ManagerRequestModel(
-      fullName: usernameController.text,
-      phone: phoneController.text,
-      password: passwordController.text,
+    final stagesRequest = ProjectFormHelpers.buildStages(
+      selectedStageIds: state.selectedStageIds,
+      selectedSubStageIds: state.selectedSubStageIds,
+      customSubStages: state.customSubStages,
     );
+    final error = ProjectFormHelpers.validateCreate(
+      formValid: formKey.currentState?.validate() ?? false,
+      stages: stagesRequest,
+      attachments: state.selectedImages,
+      managerName: usernameController.text,
+      managerPhone: phoneController.text,
+      managerPassword: passwordController.text,
+    );
+    if (error != null) {
+      emit(
+        state.copyWith(
+          submitStatus: RequestStatus.init,
+          clearSubmitError: true,
+        ),
+      );
+      emit(
+        state.copyWith(
+          submitStatus: RequestStatus.failed,
+          submitErrorMessage: error,
+        ),
+      );
+      return;
+    }
 
-    // Build project request
-    final projectRequest = ProjectRequestBase(
+    final projectRequest = ProjectFormHelpers.buildRequest(
       projectName: nameController.text,
       location: locationController.text,
       startDate: startDateController.text,
@@ -163,13 +175,15 @@ class AddCommercialProjectBloc
       price: budgetController.text,
       type: AppConstant.commercialProjectType,
       stages: stagesRequest,
-      manager: managerRequest,
+      managerName: usernameController.text,
+      managerPhone: phoneController.text,
+      managerPassword: passwordController.text,
     );
 
     emit(
       state.copyWith(
         submitStatus: RequestStatus.loading,
-        submitErrorMessage: null,
+        clearSubmitError: true,
       ),
     );
 
@@ -179,13 +193,18 @@ class AddCommercialProjectBloc
     );
 
     result.fold(
-      (error) => emit(
+      (err) => emit(
         state.copyWith(
           submitStatus: RequestStatus.failed,
-          submitErrorMessage: error,
+          submitErrorMessage: err,
         ),
       ),
-      (success) => emit(state.copyWith(submitStatus: RequestStatus.success)),
+      (_) => emit(
+        state.copyWith(
+          submitStatus: RequestStatus.success,
+          clearSubmitError: true,
+        ),
+      ),
     );
   }
 
@@ -225,13 +244,15 @@ class AddCommercialProjectBloc
     final selectedSubStageIds = Map<String, List<String>>.from(
       state.selectedSubStageIds,
     );
+    final customSubStages = Map<String, List<String>>.from(
+      state.customSubStages,
+    );
 
     if (selectedStageIds.contains(event.stageId)) {
-      // Remove stage and its substages
       selectedStageIds.remove(event.stageId);
       selectedSubStageIds.remove(event.stageId);
+      customSubStages.remove(event.stageId);
     } else {
-      // Add stage
       selectedStageIds.add(event.stageId);
       if (!selectedSubStageIds.containsKey(event.stageId)) {
         selectedSubStageIds[event.stageId] = [];
@@ -242,6 +263,7 @@ class AddCommercialProjectBloc
       state.copyWith(
         selectedStageIds: selectedStageIds,
         selectedSubStageIds: selectedSubStageIds,
+        customSubStages: customSubStages,
       ),
     );
   }
@@ -268,7 +290,17 @@ class AddCommercialProjectBloc
 
     selectedSubStageIds[event.stageId] = subStageList;
 
-    emit(state.copyWith(selectedSubStageIds: selectedSubStageIds));
+    final selectedStageIds = List<String>.from(state.selectedStageIds);
+    if (subStageList.isNotEmpty && !selectedStageIds.contains(event.stageId)) {
+      selectedStageIds.add(event.stageId);
+    }
+
+    emit(
+      state.copyWith(
+        selectedStageIds: selectedStageIds,
+        selectedSubStageIds: selectedSubStageIds,
+      ),
+    );
   }
 
   void _onImagesSelected(
@@ -287,5 +319,41 @@ class AddCommercialProjectBloc
     final updatedImages = List<String>.from(state.selectedImages)
       ..removeAt(event.index);
     emit(state.copyWith(selectedImages: updatedImages));
+  }
+
+  void _onCustomSubStageAdded(
+    AddCommercialCustomSubStageAdded event,
+    Emitter<AddCommercialProjectState> emit,
+  ) {
+    final name = event.name.trim();
+    if (name.isEmpty) return;
+    final custom = Map<String, List<String>>.from(state.customSubStages);
+    custom[event.stageId] = [...(custom[event.stageId] ?? const []), name];
+    final selectedStageIds = List<String>.from(state.selectedStageIds);
+    if (!selectedStageIds.contains(event.stageId)) {
+      selectedStageIds.add(event.stageId);
+    }
+    emit(
+      state.copyWith(
+        customSubStages: custom,
+        selectedStageIds: selectedStageIds,
+      ),
+    );
+  }
+
+  void _onCustomSubStageRemoved(
+    AddCommercialCustomSubStageRemoved event,
+    Emitter<AddCommercialProjectState> emit,
+  ) {
+    final custom = Map<String, List<String>>.from(state.customSubStages);
+    final list = List<String>.from(custom[event.stageId] ?? const []);
+    if (event.index < 0 || event.index >= list.length) return;
+    list.removeAt(event.index);
+    if (list.isEmpty) {
+      custom.remove(event.stageId);
+    } else {
+      custom[event.stageId] = list;
+    }
+    emit(state.copyWith(customSubStages: custom));
   }
 }

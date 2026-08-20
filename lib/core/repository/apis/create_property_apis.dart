@@ -62,6 +62,8 @@ class CreatePropertyApis {
     AddPropertyModel model,
   ) async {
     try {
+      printState('Preview evaluation body: ${model.toEvaluationPreviewBody()}');
+
       final body = model.toEvaluationPreviewBody();
       printState('Preview evaluation body: $body');
 

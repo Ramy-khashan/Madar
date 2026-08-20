@@ -615,7 +615,8 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     PreviewEvaluationEvent event,
     Emitter<AddPropertyState> emit,
   ) async {
-    final model = _modelWithControllerValues();
+   try{
+     final model = _modelWithControllerValues();
     emit(
       state.copyWith(
         model: model,
@@ -644,6 +645,16 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
         ),
       ),
     );
+   }catch(e){
+    print('Error in preview evaluation: $e');
+      emit(
+          state.copyWith(
+            isPreviewLoading: false,
+            hasMarketData: false,
+            aiDescription: '',
+          ),
+        );
+   }
   }
 
   void _onApplyAiDescription(
@@ -868,6 +879,7 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
       ),
     );
   }
+
 
   void _onShowPortfolioSheet(
     ShowPortfolioSheetEvent event,

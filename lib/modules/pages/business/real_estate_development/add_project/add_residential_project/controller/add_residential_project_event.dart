@@ -25,7 +25,7 @@ final class AddResidentialManagerToggled extends AddResidentialProjectEvent {
   @override
   List<Object?> get props => [show];
 }
- 
+
 final class AddResidentialPickDateRequested extends AddResidentialProjectEvent {
   const AddResidentialPickDateRequested(this.field);
 
@@ -54,7 +54,8 @@ final class AddResidentialSendToManagerRequested
   const AddResidentialSendToManagerRequested();
 }
 
-final class AddResidentialManagerLoginResult extends AddResidentialProjectEvent {
+final class AddResidentialManagerLoginResult
+    extends AddResidentialProjectEvent {
   const AddResidentialManagerLoginResult(this.success);
 
   final bool success;
@@ -115,4 +116,26 @@ final class AddResidentialImageRemoved extends AddResidentialProjectEvent {
 
   @override
   List<Object?> get props => [index];
+}
+
+final class AddResidentialCustomSubStageAdded
+    extends AddResidentialProjectEvent {
+  const AddResidentialCustomSubStageAdded(this.stageId, this.name);
+
+  final String stageId;
+  final String name;
+
+  @override
+  List<Object?> get props => [stageId, name];
+}
+
+final class AddResidentialCustomSubStageRemoved
+    extends AddResidentialProjectEvent {
+  const AddResidentialCustomSubStageRemoved(this.stageId, this.index);
+
+  final String stageId;
+  final int index;
+
+  @override
+  List<Object?> get props => [stageId, index];
 }

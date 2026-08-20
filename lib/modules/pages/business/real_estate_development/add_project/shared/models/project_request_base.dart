@@ -26,13 +26,13 @@ class ProjectRequestBase extends Equatable {
 
   @override
   List<Object?> get props => [
-        projectName,
-        location,
-        startDate,
-        endDate,
-        price,
-        type,
-        stages,
-        manager,
-      ];
+    projectName,
+    location,
+    startDate,
+    endDate,
+    price,
+    type,
+    stages,
+    manager,
+  ];
 }

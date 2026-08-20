@@ -8,8 +8,7 @@ import '../../../../../core/connection/interfaces/api_consumer.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_images.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
- import '../../../../../core/utils/functions/service_locator.dart';
-import '../../../individual/individual_home/model/portfolio_property_model.dart';
+import '../../../../../core/utils/functions/service_locator.dart';
 import '../../../individual/individual_home/model/properties_item_model.dart';
 import '../../../individual/individual_home/model/smart_service_model.dart';
 import '../../business_properties/model/business_property_request_model.dart';
@@ -195,15 +194,17 @@ class BusinessHomeBloc extends Bloc<BusinessHomeEvent, BusinessHomeState> {
           );
         },
         (successResponse) async {
-          final List items = [];
+          final List<BusinessPropertyRequestModel> items = [];
           // final List<PortfolioPropertyModel> items = [];
-          for (var item in List.from(successResponse.response['requests'])) {
-            items.add(PortfolioPropertyModel.fromJson(item));
+          for (var item in List.from(
+            successResponse.response['data']['data'],
+          )) {
+            items.add(BusinessPropertyRequestModel.fromJson(item));
           }
           emit(
             state.copyWith(
               requestsLoadStatus: RequestStatus.success,
-              requests: [],
+              requests: items,
             ),
           );
         },
@@ -276,7 +277,11 @@ class BusinessHomeBloc extends Bloc<BusinessHomeEvent, BusinessHomeState> {
   Future<void> _updateUserLocation(Position position, String location) async {
     await sl.get<ApiConsumer>().put(
       EndPoints.profile,
-      body: {'latitude': position.latitude, 'longitude': position.longitude, 'location': location},
+      body: {
+        'latitude': position.latitude,
+        'longitude': position.longitude,
+        'location': location,
+      },
     );
   }
 
@@ -333,6 +338,5 @@ class BusinessHomeBloc extends Bloc<BusinessHomeEvent, BusinessHomeState> {
       description: AppStrings.realEstateNewsDescription,
       icon: AppImages.newsIcon,
     ),
-    
   ];
 }

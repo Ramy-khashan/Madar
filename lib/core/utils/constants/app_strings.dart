@@ -852,6 +852,7 @@ class AppStrings {
   static String get conversationsTitle => 'conversations_title'.trans;
   static String get searchConversation => 'search_conversation'.trans;
   static String get somethingWentWrong => 'something_went_wrong'.trans;
+  static String get retry => 'retry'.trans;
   static String get noConversations => 'no_conversations'.trans;
   // Filter
   static String get filterTitle => 'filter_title'.trans;
@@ -905,6 +906,18 @@ class AppStrings {
   static String get mainTenantsActivitiesHint =>
       'main_tenants_activities_hint'.trans;
   static String get mainPhasesLabel => 'main_phases_label'.trans;
+  static String get customSubStageHint => 'custom_sub_stage_hint'.trans;
+  static String get addCustomSubStage => 'add_custom_sub_stage'.trans;
+  static String get pleaseCompleteRequiredFields =>
+      'please_complete_required_fields'.trans;
+  static String get pleaseSelectProjectStage =>
+      'please_select_project_stage'.trans;
+  static String get pleaseAddProjectAttachment =>
+      'please_add_project_attachment'.trans;
+  static String get pleaseAddProjectManager =>
+      'please_add_project_manager'.trans;
+  static String get noProjectStagesAvailable =>
+      'no_project_stages_available'.trans;
   static String get mainPhasesHint => 'main_phases_hint'.trans;
   static String get otherAttachmentsOptional =>
       'other_attachments_optional'.trans;
