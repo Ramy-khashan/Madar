@@ -162,7 +162,7 @@ class BrokerCardWidget extends StatelessWidget {
                 child: AppButton(
                   text: AppStrings.selectBroker,
                   onTap: () => context.read<ChooseBrokerBloc>().add(
-                    ChooseBrokerSelect(broker?.userId ?? ''),
+                    ChooseBrokerSelect(broker?.id ?? ''),
                   ),
                 ),
               ),

@@ -46,8 +46,18 @@ class PropertyDetailsBloc
         );
       },
       (successResponse) {
+        final data = successResponse.response['data'];
+        if (data is! Map) {
+          emit(
+            state.copyWith(
+              getDetailsStatus: RequestStatus.failed,
+              errorMsg: AppStrings.somethingWentWrong,
+            ),
+          );
+          return;
+        }
         final property = PropertyDetailsModel.fromJson(
-          successResponse.response['data'],
+          Map<String, dynamic>.from(data),
         );
         emit(
           state.copyWith(

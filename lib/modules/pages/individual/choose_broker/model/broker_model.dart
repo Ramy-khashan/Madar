@@ -4,7 +4,7 @@ import '../../../../../core/utils/constants/app_images.dart';
 
 class BrokerModel extends Equatable {
   const BrokerModel({
-    // required this.id,
+    required this.id,
     required this.name,
     required this.licenseNumber,
     required this.propertiesCount,
@@ -15,7 +15,7 @@ class BrokerModel extends Equatable {
     this.imageUrl = '',
   });
 
-  // final String id;
+  final String id;
   final String name;
   final String licenseNumber;
   final int propertiesCount;
@@ -36,11 +36,12 @@ class BrokerModel extends Equatable {
     commissionPercent,
     description,
     imageUrl,
+    id
   ];
 
   factory BrokerModel.fromJson(Map<String, dynamic> json) {
     return BrokerModel(
-      // id: json['id'] ?? '',
+      id: json['id'] ?? '',
       userId: json['user_id'] ?? '',
       name: json['officeName'] ?? '',
       licenseNumber: json['license'] ?? '',

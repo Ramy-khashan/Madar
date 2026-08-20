@@ -144,7 +144,7 @@ class ChooseBrokerBloc extends Bloc<ChooseBrokerEvent, ChooseBrokerState> {
           emit(state.copyWith(confirmStatus: RequestStatus.failed));
         },
         (successResponse) {
-          AppToast(successResponse.response['message']);
+          AppToast(AppStrings.brokerRequestSentSuccessfully);
           emit(state.copyWith(confirmStatus: RequestStatus.success));
         },
       );

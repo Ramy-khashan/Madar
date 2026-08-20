@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../config/router/app_router_keys.dart';
 import '../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../core/components/app_appbar.dart';
 import '../../../../../core/components/image_item.dart';
@@ -10,7 +11,9 @@ import '../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../core/utils/constants/app_images.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/responsive.dart';
+import '../../../../../core/utils/functions/router_handler.dart';
 import '../controller/property_file_bloc.dart';
+import 'widgets/owner_property_content_item.dart';
 import 'widgets/property_files_content_item.dart';
 
 class PropertyFileScreen extends StatelessWidget {
@@ -32,13 +35,19 @@ class PropertyFileScreen extends StatelessWidget {
             PopupMenuButton<String>(
               icon: const Icon(Icons.more_vert),
               onSelected: (value) {
-                if (value == 'delete') {
+                if (value == 'send') {
+                  RouterHandler.navigate(
+                    context,
+                    AppRouterKeys.chooseBroker,
+                    extra: bloc.state.details?.propertyId ?? bloc.state.property?.id,
+                  );
+                } else if (value == 'delete') {
                   _confirmDelete(context, bloc);
                 }
               },
               itemBuilder: (_) => [
                 PopupMenuItem(
-                  value: 'delete',
+                  value: 'send',
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -96,13 +105,19 @@ class PropertyFileScreen extends StatelessWidget {
                 emptyMsg: '',
                 isEmptyList: false,
                 childIsLoader: true,
-                child: state.property == null
+                child: state.property == null && state.details == null
                     ? const SizedBox()
-                    : PropertyFileContentItem(
+                    : state.isMultiUnit
+                    ? PropertyFileContentItem(
                         property: state.property!,
                         colors: colors,
                         state: state,
                         bloc: bloc,
+                      )
+                    : OwnerPropertyContentItem(
+                        bloc: bloc,
+                        state: state,
+                        colors: colors,
                       ),
               );
             },

@@ -38,9 +38,14 @@ class SignUpScreen extends StatelessWidget {
           if (state.signUpStatus == RequestStatus.success) {
             if (PreferenceUtils().getString(StorageKeys.accountType) ==
                 AppConstant.business) {
-              RouterHandler.navigate(
+              // RouterHandler.navigate(
+              //   context,
+              //   AppRouterKeys.subscriptionPlans,
+              //   routerType: RouterType.goName,
+              // );
+                RouterHandler.navigate(
                 context,
-                AppRouterKeys.subscriptionPlans,
+                AppRouterKeys.navbar,
                 routerType: RouterType.goName,
               );
             } else {

@@ -237,7 +237,8 @@ final GoRouter appRouter = GoRouter(
     getRouteInstance(
       AppRouterKeys.propertyFileDetails,
       (state) => BlocProvider(
-        create: (_) => PropertyFileBloc()..add(const PropertyFileLoad()),
+        create: (_) => PropertyFileBloc()
+          ..add(PropertyFileLoad(propertyId: state.extra as String? ?? '')),
         child: const PropertyFileScreen(),
       ),
     ),

@@ -50,6 +50,16 @@ class AppImages {
   static const String floorIcon = 'assets/icons/floor.svg';
   static const String balconyIcon = 'assets/icons/balcony.svg';
   static const String propertyNumberIcon = 'assets/icons/property_number.svg';
+  static const String furnitureIcon = 'assets/icons/furnaiture.svg';
+  static const String developerNameIcon = 'assets/icons/developer_name.svg';
+  static const String elevatorStopsIcon = 'assets/icons/elv_stop_num.svg';
+  static const String setterNoIcon = 'assets/icons/setter_no.svg';
+  static const String streetNoIcon = 'assets/icons/street_no.svg';
+  static const String streetWidthIcon = 'assets/icons/street_width.svg';
+  static const String towerClassIcon = 'assets/icons/tower_classi.svg';
+  static const String unitsNoIcon = 'assets/icons/units_no.svg';
+  static const String viewIcon = 'assets/icons/view.svg';
+  static const String workingYearIcon = 'assets/icons/working_year.svg';
   static const String myAuctionIcon = 'assets/icons/my_auction.svg';
   static const String auctionSettingIcon = 'assets/icons/auction_setting.svg';
   static const String auctionHomeIcon = 'assets/icons/auction_home.svg';

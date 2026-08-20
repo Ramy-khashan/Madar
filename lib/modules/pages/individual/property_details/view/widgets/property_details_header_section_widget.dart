@@ -18,6 +18,15 @@ class PropertyDetailsHeaderSectionWidget extends StatelessWidget {
     final price = property?.price ?? 0;
     final formattedPrice =
         '${price.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+$)'), (m) => '${m[1]},')} ${AppStrings.currency}';
+    final location = [
+      property?.location?.city,
+      property?.location?.district,
+      property?.location?.street,
+    ].whereType<String>().where((e) => e.trim().isNotEmpty).join(', ');
+    final occupancy =
+        property?.financialPerformance?.occupancyRate ??
+        property?.details?.occupancyRate ??
+        0;
 
     return Row(
       children: [
@@ -49,8 +58,7 @@ class PropertyDetailsHeaderSectionWidget extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          property?.location?.city ??
-                              '${property?.location?.district != null ? ', ${property?.location?.district}' : ''}${property?.location?.street != null ? ', ${property?.location?.street}' : ''}',
+                          location,
                           style: TextStyle(
                             fontSize: context.responsiveFontScale(13),
                             color: colors.textSecondary,
@@ -71,10 +79,8 @@ class PropertyDetailsHeaderSectionWidget extends StatelessWidget {
                             ),
                           ),
                         ),
-//TODO: Recheck occupancy rate value
                         Text(
-                          // '${property?.occupancyRate ?? 0}%',
-                          "",
+                          '$occupancy%',
                           style: TextStyle(
                             fontSize: context.responsiveFontScale(13),
                             color: colors.primaryBrand,

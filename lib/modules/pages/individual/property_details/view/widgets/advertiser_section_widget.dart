@@ -49,10 +49,19 @@ class AdvertiserSectionWidget extends StatelessWidget {
                   CircleAvatar(
                     radius: 22.width,
                     backgroundColor: colors.primaryBrand.withValues(alpha: .3),
-                    child: Icon(
-                      Icons.person_outline,
-                      color: colors.textSecondary,
-                      size: 24.width,
+                    child: ClipOval(
+                      child: (advertiser?.image ?? '').isNotEmpty
+                          ? ImageItem(
+                              advertiser!.image!,
+                              width: 44.width,
+                              height: 44.width,
+                              fit: BoxFit.cover,
+                            )
+                          : Icon(
+                              Icons.person_outline,
+                              color: colors.textSecondary,
+                              size: 24.width,
+                            ),
                     ),
                   ),
                   SizedBox(width: 10.width),

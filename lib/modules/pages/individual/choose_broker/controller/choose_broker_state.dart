@@ -43,7 +43,7 @@ class ChooseBrokerState extends Equatable {
 
   BrokerModel? get selectedBroker => selectedBrokerId == null
       ? null
-      : brokers.where((b) => b.userId == selectedBrokerId).firstOrNull;
+      : brokers.where((b) => b.id == selectedBrokerId).firstOrNull;
 
   @override
   List<Object?> get props => [

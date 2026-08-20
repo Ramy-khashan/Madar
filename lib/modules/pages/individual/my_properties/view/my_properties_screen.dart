@@ -42,8 +42,14 @@ class MyPropertiesScreen extends StatelessWidget {
                     child: PaginationView(
                       isListView: context.isMobilePortrait,
                       itemBuilder: (context, index) {
-                        return PortfolioCardWidget(
-                          portfolio: state.properties[index],
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.width,
+                            vertical: 4.height,
+                          ),
+                          child: PortfolioCardWidget(
+                            portfolio: state.properties[index],
+                          ),
                         );
                       },
                       pageSize: MyPropertiesBloc.get(context).pageSize,

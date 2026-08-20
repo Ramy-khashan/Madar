@@ -5,6 +5,7 @@ import '../../../../../config/router/app_router_keys.dart';
 import '../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../core/components/app_appbar.dart';
 import '../../../../../core/components/app_textfield.dart';
+import '../../../../../core/components/image_item.dart';
 import '../../../../../core/components/loading_process.dart';
 import '../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
@@ -25,6 +26,7 @@ class ConversationsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
     appBar: AppAppbar(
+      isWithBack: false,
         title:
           AppStrings.conversationsTitle,
 

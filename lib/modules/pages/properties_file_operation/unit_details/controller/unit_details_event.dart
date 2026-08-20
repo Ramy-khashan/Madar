@@ -45,6 +45,13 @@ class UnitDetailsExpenseRemoved extends UnitDetailsEvent {
   List<Object?> get props => [index];
 }
 
+class UnitDetailsExpenseFilesPicked extends UnitDetailsEvent {
+  const UnitDetailsExpenseFilesPicked(this.paths);
+  final List<String> paths;
+  @override
+  List<Object?> get props => [paths];
+}
+
 class UnitDetailsSaved extends UnitDetailsEvent {
   const UnitDetailsSaved();
 }

@@ -73,7 +73,11 @@ class _UnitDetailsView extends StatelessWidget {
                 icon: const Icon(Icons.more_vert),
                 onSelected: (val) {
                   if (val == 'send') {
-                    RouterHandler.navigate(context, AppRouterKeys.chooseBroker);
+                    RouterHandler.navigate(
+                      context,
+                      AppRouterKeys.chooseBroker,
+                      extra: outerState.unit?.id,
+                    );
                   } else if (val == 'delete') {
                     _confirmDelete(context, bloc);
                   }
@@ -178,6 +182,15 @@ class _UnitDetailsView extends StatelessWidget {
                             showLeadingImage: false,
                             colors: colors,
                             isEditable: true,
+                            controller: bloc.titleController,
+                          ),
+                          SizedBox(height: 10.height),
+                          UnitInfoRow(
+                            label: AppStrings.projectName,
+                            value: unit.projectName,
+                            leadingImage: AppImages.propertyShapeIcon,
+                            colors: colors,
+                            controller: bloc.projectNameController,
                           ),
                           SizedBox(height: 10.height),
                           Row(
@@ -361,6 +374,7 @@ class _UnitDetailsView extends StatelessWidget {
                         AppConstant.business)
                       UnitExpensesSection(
                         expenses: unit.expenses,
+                        fileCount: state.expenseFiles.length,
                         bloc: bloc,
                         colors: colors,
                       ),

@@ -25,17 +25,25 @@ class ConversationItem extends StatelessWidget {
                 Container(
                   width: 56.width,
                   height: 56.width,
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
                   decoration: const BoxDecoration(
                     color: Color(0xFF3D63CB),
                     shape: BoxShape.circle,
                   ),
                   alignment: Alignment.center,
-                  child: Text(
-                    item?.initial ?? '',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: context.responsiveFontScale(22),
-                      fontFamily: 'app-header-font',
+                  child:item?.imageUrl.isNotEmpty == true
+                      ? ImageItem(
+                          item?.imageUrl??"",
+                          width: 56.width,
+                          height: 56.width,
+                          fit: BoxFit.cover,
+                        )
+                      : Text(
+                          item?.initial ?? '',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: context.responsiveFontScale(22),
+                            fontFamily: 'app-header-font',
                     ),
                   ),
                 ),

@@ -1,39 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:madar_app/core/components/image_item.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_button.dart';
 import '../../../../../../core/components/app_textfield.dart';
+import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
-import '../../../../../../core/utils/functions/image_picker_helper.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
-import '../../../property_file/model/property_file_model.dart';
-import '../../controller/unit_details_bloc.dart';
+import '../../model/property_file_model.dart';
 
-class UnitExpensesSection extends StatelessWidget {
-  const UnitExpensesSection({
+class OwnerPropertyExpenses extends StatelessWidget {
+  const OwnerPropertyExpenses({
     super.key,
     required this.expenses,
-    required this.bloc,
+    required this.fileCount,
     required this.colors,
-    this.fileCount = 0,
+    required this.descController,
+    required this.amountController,
+    required this.onAdd,
+    required this.onRemove,
+    required this.onPickFiles,
   });
 
   final List<UnitExpenseModel> expenses;
-  final UnitDetailsBloc bloc;
-  final AppThemeColors colors;
   final int fileCount;
+  final AppThemeColors colors;
+  final TextEditingController descController;
+  final TextEditingController amountController;
+  final VoidCallback onAdd;
+  final ValueChanged<int> onRemove;
+  final VoidCallback onPickFiles;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Section title
         Text(
           AppStrings.unitExpenses,
           style: TextStyle(
@@ -54,9 +59,7 @@ class UnitExpensesSection extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Add new row header
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   ImageItem(
                     AppImages.addIcon,
@@ -65,7 +68,6 @@ class UnitExpensesSection extends StatelessWidget {
                     height: 20.width,
                   ),
                   SizedBox(width: 4.width),
-
                   Text(
                     AppStrings.addNewExpense,
                     style: TextStyle(
@@ -78,14 +80,13 @@ class UnitExpensesSection extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 10.height),
-              // Input row
               Row(
                 children: [
                   Expanded(
                     child: AppTextField(
                       isWithTitle: false,
                       hint: '500',
-                      controller: bloc.expenseAmountController,
+                      controller: amountController,
                       textInputType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       textAlign: TextAlign.start,
@@ -95,14 +96,13 @@ class UnitExpensesSection extends StatelessWidget {
                   Expanded(
                     flex: 2,
                     child: AppTextField(
-                      controller: bloc.expenseDescController,
+                      controller: descController,
                       hint: AppStrings.expenseHint,
                       isWithTitle: false,
                     ),
                   ),
                 ],
               ),
-              // Existing expenses list
               if (expenses.isNotEmpty) ...[
                 SizedBox(height: 12.height),
                 ...expenses.asMap().entries.map(
@@ -116,8 +116,7 @@ class UnitExpensesSection extends StatelessWidget {
                             color: AppColors.errorColor,
                             size: 18.width,
                           ),
-                          onPressed: () =>
-                              bloc.add(UnitDetailsExpenseRemoved(entry.key)),
+                          onPressed: () => onRemove(entry.key),
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
                         ),
@@ -152,11 +151,7 @@ class UnitExpensesSection extends StatelessWidget {
               ],
               SizedBox(height: 8.height),
               GestureDetector(
-                onTap: () async {
-                  final files = await pickImages();
-                  if (files == null || files.isEmpty) return;
-                  bloc.add(UnitDetailsExpenseFilesPicked(files));
-                },
+                onTap: onPickFiles,
                 child: Text(
                   fileCount > 0
                       ? '${AppStrings.attachExpenseFiles} ($fileCount)'
@@ -172,17 +167,8 @@ class UnitExpensesSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 12.height),
-        // Add expense button
         AppButton(
-          onTap: () {
-            final desc = bloc.expenseDescController.text.trim();
-            final amtStr = bloc.expenseAmountController.text.trim();
-            if (desc.isEmpty || amtStr.isEmpty) return;
-            final amount = double.tryParse(amtStr) ?? 0;
-            bloc.add(
-              UnitDetailsExpenseAdded(description: desc, amount: amount),
-            );
-          },
+          onTap: onAdd,
           childText: AppStrings.addExpenseBtn,
           childIcon: Icons.add,
         ),

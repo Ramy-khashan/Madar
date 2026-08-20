@@ -1,28 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:share_plus/share_plus.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/translation.dart';
-import '../../controller/property_details_bloc.dart';
-import '../../model/property_details_model.dart';
+import '../../../../individual/property_details/model/property_details_model.dart';
 
-class PropertyDetailsImageSectionWidget extends StatefulWidget {
-  const PropertyDetailsImageSectionWidget({super.key, required this.property});
-
+class OwnerPropertyImages extends StatefulWidget {
+  const OwnerPropertyImages({super.key, required this.property});
 
   final PropertyDetailsModel? property;
 
   @override
-  State<PropertyDetailsImageSectionWidget> createState() =>
-      _PropertyDetailsImageSectionWidgetState();
+  State<OwnerPropertyImages> createState() => _OwnerPropertyImagesState();
 }
 
-class _PropertyDetailsImageSectionWidgetState
-    extends State<PropertyDetailsImageSectionWidget> {
+class _OwnerPropertyImagesState extends State<OwnerPropertyImages> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
@@ -35,8 +29,9 @@ class _PropertyDetailsImageSectionWidgetState
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
-    final images = widget.property?.media
-            ?.where((m) => m.url != null)
+    final images =
+        widget.property?.media
+            ?.where((m) => m.url != null && m.url!.isNotEmpty)
             .map((m) => m.url!)
             .toList() ??
         [];
@@ -105,7 +100,7 @@ class _PropertyDetailsImageSectionWidgetState
                 borderRadius: BorderRadius.circular(20.radius),
               ),
               child: Text(
-               ( widget.property?.type ?? '') .trans,
+                (widget.property?.type ?? '').trans,
                 style: TextStyle(
                   color: colors.primaryBrand,
                   fontSize: context.responsiveFontScale(13),
@@ -113,42 +108,6 @@ class _PropertyDetailsImageSectionWidgetState
                   fontWeight: FontWeight.w600,
                 ),
               ),
-            ),
-          ),
-          Positioned(
-            top: 12.height,
-            left: 12.width,
-            child: BlocBuilder<PropertyDetailsBloc, PropertyDetailsState>(
-              builder: (ctx, state) {
-                return GestureDetector(
-                  onTap: () => ctx
-                      .read<PropertyDetailsBloc>()
-                      .add(const PropertyDetailsToggleBookmark()),
-                  child: Container(
-                    padding: EdgeInsets.all(8.width),
-                    decoration: BoxDecoration(
-                      color:
-                          colors.cardBackground.withValues(alpha: 0.2),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
-                          blurRadius: 6,
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                      state.isSavedWishList == true
-                          ? Icons.bookmark
-                          : Icons.bookmark_border,
-                      size: 20.width,
-                      color: state.isSavedWishList == true
-                          ? colors.primaryBrand
-                          : colors.cardBackground,
-                    ),
-                  ),
-                );
-              },
             ),
           ),
         ],

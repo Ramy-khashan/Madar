@@ -74,13 +74,13 @@ class PropertyDetailsModel {
     }
 
     return PropertyDetailsModel(
-      propertyId: json['propertyId'],
+      propertyId: json['propertyId'] ?? json['property_id'],
       title: json['title'],
       projectName: json['projectName'],
       type: json['type'],
       listingType: json['listingType'],
-      price: json['price'],
-      totalArea: json['totalArea'],
+      price: _jsonInt(json['price']),
+      totalArea: _jsonInt(json['totalArea']),
       facadeDirection: json['facadeDirection'],
       streetsCount: json['streetsCount'],
       streetWidth: json['streetWidth'],
@@ -94,20 +94,21 @@ class PropertyDetailsModel {
       details: json['details'] != null
           ? PropertyDetails.fromJson(json['details'])
           : null,
-      features: json['features'] != null
-          ? PropertyFeatures.fromJson(json['features'])
-          : null,
+      features: PropertyFeatures.parse(json['features']),
       location: json['location'] != null
           ? PropertyLocation.fromJson(json['location'])
           : null,
-      media: json['media'] != null
-          ? (json['media'] as List)
-                .map((v) => PropertyMedia.fromJson(v))
+      media: json['media'] is List
+          ? ((json['media'] as List)
+                .whereType<Map>()
+                .map((v) => PropertyMedia.fromJson(Map<String, dynamic>.from(v)))
                 .toList()
+              ..sort((a, b) => (a.order ?? 0).compareTo(b.order ?? 0)))
           : null,
-      deeds: json['deeds'] != null
+      deeds: json['deeds'] is List
           ? (json['deeds'] as List)
-                .map((v) => PropertyDeeds.fromJson(v))
+                .whereType<Map>()
+                .map((v) => PropertyDeeds.fromJson(Map<String, dynamic>.from(v)))
                 .toList()
           : null,
       evaluation: json['evaluation'] != null
@@ -133,9 +134,12 @@ class PropertyDetailsModel {
                 .map((v) => PropertyContract.fromJson(v))
                 .toList()
           : null,
-      expenses: json['expenses'] != null
+      expenses: json['expenses'] is List
           ? (json['expenses'] as List)
-                .map((v) => PropertyExpense.fromJson(v))
+                .whereType<Map>()
+                .map(
+                  (v) => PropertyExpense.fromJson(Map<String, dynamic>.from(v)),
+                )
                 .toList()
           : null,
       financialPerformance: json['financialPerformance'] != null
@@ -276,6 +280,9 @@ class PropertyDetails {
   int? totalApartments;
   int? serviceFee;
   int? electricityKWShop;
+  String? apartmentNumber;
+  int? apartmentsPerFloor;
+  int? totalFloors;
 
   PropertyDetails({
     this.area,
@@ -359,23 +366,29 @@ class PropertyDetails {
     this.totalApartments,
     this.serviceFee,
     this.electricityKWShop,
+    this.apartmentNumber,
+    this.apartmentsPerFloor,
+    this.totalFloors,
   });
 
   PropertyDetails.fromJson(Map<String, dynamic> json) {
-    area = json['area'];
-    totalArea = json['totalArea'];
-    builtArea = json['builtArea'];
-    height = json['height'];
-    bedrooms = json['bedrooms'];
-    bathrooms = json['bathrooms'];
-    councils = json['councils'];
-    kitchens = json['kitchens'];
-    livingRooms = json['livingRooms'];
-    roomsCount = json['roomsCount'];
+    area = _jsonInt(json['area']);
+    totalArea = _jsonInt(json['totalArea']);
+    builtArea = _jsonInt(json['builtArea']);
+    height = _jsonInt(json['height']);
+    bedrooms = _jsonInt(json['bedrooms']);
+    bathrooms = _jsonInt(json['bathrooms']);
+    councils = _jsonInt(json['councils']);
+    kitchens = _jsonInt(json['kitchens']);
+    livingRooms = _jsonInt(json['livingRooms']);
+    roomsCount = _jsonInt(json['roomsCount']);
     maidRoom = json['maidRoom'];
     driverRoom = json['driverRoom'];
-    floor = json['floor'];
-    floorsCount = json['floorsCount'];
+    floor = _jsonInt(json['floor']);
+    floorsCount = _jsonInt(json['floorsCount'] ?? json['totalFloors']);
+    totalFloors = _jsonInt(json['totalFloors'] ?? json['floorsCount']);
+    apartmentNumber = json['apartmentNumber']?.toString();
+    apartmentsPerFloor = _jsonInt(json['apartmentsPerFloor']);
     allowedFloors = json['allowedFloors'];
     condition = json['condition'];
     classification = json['classification'];
@@ -407,7 +420,7 @@ class PropertyDetails {
     hasPrivateEntrance = json['hasPrivateEntrance'];
     hasRoof = json['hasRoof'];
     mallName = json['mallName'];
-    activities = (json['activities'] ?? []).cast<String>();
+    activities = _jsonStringList(json['activities']);
     locationType = json['locationType'];
     frontWidth = json['frontWidth'];
     hasStorage = json['hasStorage'];
@@ -416,15 +429,15 @@ class PropertyDetails {
     wellDepth = json['wellDepth'];
     wellsCount = json['wellsCount'];
     hasRestHouse = json['hasRestHouse'];
-    waterSources = (json['waterSources'] ?? []).cast<String>();
+    waterSources = _jsonStringList(json['waterSources']);
     distanceToCity = json['distanceToCity'];
     hasElectricity = json['hasElectricity'];
     palmTreesCount = json['palmTreesCount'];
     hasLivestockSheds = json['hasLivestockSheds'];
     name = json['name'];
-    views = (json['views'] ?? []).cast<String>();
-    amenities = (json['amenities'] ?? []).cast<String>();
-    facilities = (json['facilities'] ?? []).cast<String>();
+    views = _jsonStringList(json['views']);
+    amenities = _jsonStringList(json['amenities']);
+    facilities = _jsonStringList(json['facilities']);
     yearBuilt = json['yearBuilt'];
     totalUnits = json['totalUnits'];
     totalParking = json['totalParking'];
@@ -432,7 +445,7 @@ class PropertyDetails {
     elevatorsCount = json['elevatorsCount'];
     developerName = json['developerName'];
     compoundName = json['compoundName'];
-    services = (json['services'] ?? []).cast<String>();
+    services = _jsonStringList(json['services']);
     dimensions = json['dimensions'] != null
         ? Dimensions.fromJson(json['dimensions'])
         : null;
@@ -536,6 +549,11 @@ class PropertyDetails {
     if (electricityKWShop != null) {
       data['electricityKWShop'] = electricityKWShop;
     }
+    if (apartmentNumber != null) data['apartmentNumber'] = apartmentNumber;
+    if (apartmentsPerFloor != null) {
+      data['apartmentsPerFloor'] = apartmentsPerFloor;
+    }
+    if (totalFloors != null) data['totalFloors'] = totalFloors;
     return data;
   }
 }
@@ -565,18 +583,76 @@ class Dimensions {
   }
 }
 
-/// Unified Features class for all property types
+/// Unified Features class for all property types.
+///
+/// GET details returns `features` as a string list
+/// (`["CENTRAL_AC","PARKING"]`). Older payloads used a bool map.
 class PropertyFeatures {
   final Map<String, bool> features;
   final List<String> allowedActivities;
 
   PropertyFeatures({required this.features, required this.allowedActivities});
 
+  static PropertyFeatures? parse(dynamic raw) {
+    if (raw == null) return null;
+    if (raw is List) {
+      final keys = raw.map((e) => e.toString().toUpperCase()).toList();
+      final map = <String, bool>{};
+      for (final key in keys) {
+        map[key] = true;
+        final alias = _alias(key);
+        if (alias != null) map[alias] = true;
+      }
+      return PropertyFeatures(features: map, allowedActivities: const []);
+    }
+    if (raw is Map) {
+      final map = <String, bool>{};
+      raw.forEach((k, v) {
+        if (v == true || v == 1 || v == 'true') {
+          map[k.toString()] = true;
+        }
+      });
+      return PropertyFeatures(
+        features: map,
+        allowedActivities: List<String>.from(raw['allowedActivities'] ?? []),
+      );
+    }
+    return null;
+  }
+
   factory PropertyFeatures.fromJson(Map<String, dynamic> json) {
-    return PropertyFeatures(
-      features: Map<String, bool>.from(json),
-      allowedActivities: List<String>.from(json['allowedActivities'] ?? []),
-    );
+    return parse(json) ??
+        PropertyFeatures(features: const {}, allowedActivities: const []);
+  }
+
+  static String? _alias(String apiKey) {
+    const aliases = {
+      'ELECTRICITY': 'hasElectricity',
+      'SEWAGE': 'hasSewage',
+      'WATER': 'hasWater',
+      'FENCE': 'hasFence',
+      'IRRIGATION': 'hasIrrigation',
+      'INTERNET': 'hasInternet',
+      'CENTRAL_AC': 'hasCentralAC',
+      'ELEVATOR': 'hasElevator',
+      'MAID_ROOM': 'hasMaidRoom',
+      'TWO_ENTRANCES': 'hasTwoEntrances',
+      'DRIVER_ROOM': 'hasDriverRoom',
+      'BASEMENT': 'hasBasement',
+      'ROOF': 'hasRoof',
+      'WAREHOUSE': 'hasWarehouse',
+      'POOL': 'hasPool',
+      'WATER_WELL': 'hasWaterWell',
+      'CCTV': 'hasCctv',
+      'ELECTRONIC_GATE': 'hasElectronicGate',
+      'GARDEN': 'hasGarden',
+      'HEALTH_CLUB': 'hasHealthClub',
+      'GUARD': 'hasGuard',
+      'SECURITY': 'hasGuard',
+      'PARKING': 'hasParking',
+      'STORAGE': 'hasStorage',
+    };
+    return aliases[apiKey];
   }
 }
 
@@ -915,12 +991,14 @@ class PropertyOwner {
 
   factory PropertyOwner.fromJson(Map<String, dynamic> json) {
     return PropertyOwner(
-      userId: json['user_id'],
+      userId: json['userId'] ?? json['user_id'],
       fullName: json['fullName'],
       role: json['role'],
       adLicenseNumber: json['adLicenseNumber'],
       falLicenseNumber: json['falLicenseNumber'],
-      totalProperties: json['totalProperties'],
+      totalProperties:
+          json['totalProperties']?.toString() ??
+          json['propertiesCount']?.toString(),
     );
   }
 
@@ -986,7 +1064,7 @@ class ChildProperty {
 
   factory ChildProperty.fromJson(Map<String, dynamic> json) {
     return ChildProperty(
-      propertyId: json['propertyId'],
+      propertyId: json['propertyId'] ?? json['property_id'],
       title: json['title'],
       type: json['type'],
       status: json['status'],
@@ -1068,8 +1146,10 @@ class PropertyExpense {
   String? propertyId;
   String? expenseType;
   int? amount;
-  String? title; // For Apartment legacy format
-  bool? main; // For Apartment legacy format
+  String? title;
+  String? fileUrl;
+  String? createdAt;
+  bool? main;
 
   PropertyExpense({
     this.id,
@@ -1077,27 +1157,33 @@ class PropertyExpense {
     this.expenseType,
     this.amount,
     this.title,
+    this.fileUrl,
+    this.createdAt,
     this.main,
   });
 
   factory PropertyExpense.fromJson(Map<String, dynamic> json) {
     return PropertyExpense(
-      id: json['id'],
+      id: json['expenseId'] ?? json['id'],
       propertyId: json['propertyId'],
-      expenseType: json['expenseType'],
-      amount: json['amount'],
-      title: json['title'],
+      expenseType: json['type'] ?? json['expenseType'],
+      amount: _jsonInt(json['amount']),
+      title: json['title'] ?? json['type'],
+      fileUrl: json['file'] ?? json['fileUrl'],
+      createdAt: json['createdAt'],
       main: json['main'],
     );
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    if (id != null) data['id'] = id;
+    if (id != null) data['expenseId'] = id;
     if (propertyId != null) data['propertyId'] = propertyId;
-    if (expenseType != null) data['expenseType'] = expenseType;
+    if (expenseType != null) data['type'] = expenseType;
     if (amount != null) data['amount'] = amount;
     if (title != null) data['title'] = title;
+    if (fileUrl != null) data['file'] = fileUrl;
+    if (createdAt != null) data['createdAt'] = createdAt;
     if (main != null) data['main'] = main;
     return data;
   }
@@ -1105,16 +1191,45 @@ class PropertyExpense {
 
 class FinancialPerformance {
   int? totalChildUnits;
+  int? activeChildUnits;
+  int? occupancyRate;
+  int? monthlyIncome;
 
-  FinancialPerformance({this.totalChildUnits});
+  FinancialPerformance({
+    this.totalChildUnits,
+    this.activeChildUnits,
+    this.occupancyRate,
+    this.monthlyIncome,
+  });
 
   factory FinancialPerformance.fromJson(Map<String, dynamic> json) {
-    return FinancialPerformance(totalChildUnits: json['totalChildUnits']);
+    return FinancialPerformance(
+      totalChildUnits: _jsonInt(json['totalChildUnits']),
+      activeChildUnits: _jsonInt(json['activeChildUnits']),
+      occupancyRate: _jsonInt(json['occupancyRate']),
+      monthlyIncome: _jsonInt(json['monthlyIncome']),
+    );
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['totalChildUnits'] = totalChildUnits;
+    data['activeChildUnits'] = activeChildUnits;
+    data['occupancyRate'] = occupancyRate;
+    data['monthlyIncome'] = monthlyIncome;
     return data;
   }
+}
+
+int? _jsonInt(dynamic value) {
+  if (value == null) return null;
+  if (value is int) return value;
+  if (value is num) return value.toInt();
+  return int.tryParse(value.toString());
+}
+
+List<String>? _jsonStringList(dynamic value) {
+  if (value is! List) return null;
+  final items = value.map((e) => e.toString()).where((e) => e.isNotEmpty).toList();
+  return items.isEmpty ? null : items;
 }

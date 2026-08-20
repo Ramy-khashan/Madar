@@ -42,4 +42,6 @@ class EndPoints {
   static const String chatPrivate = 'chat/private';
   static String chatMessage(String chatId) => 'chat/$chatId/message';
   static const String socketUrl = 'https://api.madar.support';
+  static String propertyById(String id) => 'properties/$id';
+  static const String ownerPropertyExpense = 'owner/property-expense';
 }

@@ -29,7 +29,17 @@ Future<void> changeLanguage(BuildContext context, String lang) async {
 extension Translation on String {
   String get trans => this.tr();
 
-  String transNamed(Map<String, String> args) => tr(this,namedArgs: args);
+  String transNamed(Map<String, String> args) => tr(this, namedArgs: args);
+
+  bool get hasTrans {
+    try {
+      return trExists(this);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  String get transIfExists => hasTrans ? trans : this;
 }
 
 

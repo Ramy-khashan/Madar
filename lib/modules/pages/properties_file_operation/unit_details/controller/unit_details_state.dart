@@ -4,28 +4,47 @@ class UnitDetailsState extends Equatable {
   const UnitDetailsState({
     this.unit,
     this.saveStatus = RequestStatus.init,
+    this.loadStatus = RequestStatus.init,
     this.isDeleted = false,
     this.isSentToBroker = false,
+    this.expenseFiles = const [],
+    this.errorMsg = '',
   });
 
   final UnitModel? unit;
   final RequestStatus saveStatus;
+  final RequestStatus loadStatus;
   final bool isDeleted;
   final bool isSentToBroker;
+  final List<String> expenseFiles;
+  final String errorMsg;
 
   UnitDetailsState copyWith({
     UnitModel? unit,
     RequestStatus? saveStatus,
+    RequestStatus? loadStatus,
     bool? isDeleted,
     bool? isSentToBroker,
-  }) =>
-      UnitDetailsState(
-        unit: unit ?? this.unit,
-        saveStatus: saveStatus ?? this.saveStatus,
-        isDeleted: isDeleted ?? this.isDeleted,
-        isSentToBroker: isSentToBroker ?? this.isSentToBroker,
-      );
+    List<String>? expenseFiles,
+    String? errorMsg,
+  }) => UnitDetailsState(
+    unit: unit ?? this.unit,
+    saveStatus: saveStatus ?? this.saveStatus,
+    loadStatus: loadStatus ?? this.loadStatus,
+    isDeleted: isDeleted ?? this.isDeleted,
+    isSentToBroker: isSentToBroker ?? this.isSentToBroker,
+    expenseFiles: expenseFiles ?? this.expenseFiles,
+    errorMsg: errorMsg ?? this.errorMsg,
+  );
 
   @override
-  List<Object?> get props => [unit, saveStatus, isDeleted, isSentToBroker];
+  List<Object?> get props => [
+    unit,
+    saveStatus,
+    loadStatus,
+    isDeleted,
+    isSentToBroker,
+    expenseFiles,
+    errorMsg,
+  ];
 }

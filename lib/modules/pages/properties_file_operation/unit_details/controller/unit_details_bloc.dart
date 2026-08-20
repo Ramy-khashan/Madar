@@ -2,7 +2,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../core/repository/apis/property_file_apis.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
+import '../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../core/utils/functions/common_fun.dart';
 import '../../property_file/model/property_file_model.dart';
 
 part 'unit_details_event.dart';
@@ -15,28 +18,62 @@ class UnitDetailsBloc extends Bloc<UnitDetailsEvent, UnitDetailsState> {
     on<UnitDetailsDateTypeToggled>(_onDateTypeToggled);
     on<UnitDetailsExpenseAdded>(_onExpenseAdded);
     on<UnitDetailsExpenseRemoved>(_onExpenseRemoved);
+    on<UnitDetailsExpenseFilesPicked>(_onExpenseFilesPicked);
     on<UnitDetailsSaved>(_onSaved);
     on<UnitDetailsDeleted>(_onDeleted);
     on<UnitDetailsSentToBroker>(_onSentToBroker);
   }
 
-  // Text controllers owned by the BLoC, disposed on close
   final TextEditingController tenantNameController = TextEditingController();
   final TextEditingController tenantPhoneController = TextEditingController();
   final TextEditingController rentStartController = TextEditingController();
   final TextEditingController rentEndController = TextEditingController();
   final TextEditingController expenseDescController = TextEditingController();
   final TextEditingController expenseAmountController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController projectNameController = TextEditingController();
 
   static UnitDetailsBloc get(BuildContext context) =>
       context.read<UnitDetailsBloc>();
 
-  void _onInit(UnitDetailsInit event, Emitter<UnitDetailsState> emit) {
-    tenantNameController.text = event.unit.tenantName;
-    tenantPhoneController.text = event.unit.tenantPhone;
-    rentStartController.text = event.unit.rentStartDate;
-    rentEndController.text = event.unit.rentEndDate;
-    emit(state.copyWith(unit: event.unit));
+  Future<void> _onInit(
+    UnitDetailsInit event,
+    Emitter<UnitDetailsState> emit,
+  ) async {
+    _syncControllers(event.unit);
+    emit(
+      state.copyWith(unit: event.unit, loadStatus: RequestStatus.loading),
+    );
+    if (event.unit.id.isEmpty) {
+      emit(state.copyWith(loadStatus: RequestStatus.success));
+      return;
+    }
+    final result = await PropertyFileApis.getProperty(event.unit.id);
+    if (isClosed) return;
+    result.fold(
+      (error) {
+        emit(
+          state.copyWith(
+            loadStatus: RequestStatus.success,
+            errorMsg: error,
+          ),
+        );
+      },
+      (details) {
+        final merged = UnitModel.fromDetails(details, base: event.unit);
+        _syncControllers(merged);
+        emit(state.copyWith(unit: merged, loadStatus: RequestStatus.success));
+      },
+    );
+  }
+
+  void _syncControllers(UnitModel unit) {
+    tenantNameController.text = unit.tenantName;
+    tenantPhoneController.text = unit.tenantPhone;
+    rentStartController.text = unit.rentStartDate;
+    rentEndController.text = unit.rentEndDate;
+    titleController.text = unit.label;
+    projectNameController.text = unit.projectName;
   }
 
   void _onStatusToggled(
@@ -64,10 +101,12 @@ class UnitDetailsBloc extends Bloc<UnitDetailsEvent, UnitDetailsState> {
     final u = state.unit;
     if (u == null) return;
     final updated = List<UnitExpenseModel>.from(u.expenses)
-      ..add(UnitExpenseModel(
-        description: event.description,
-        amount: event.amount,
-      ));
+      ..add(
+        UnitExpenseModel(
+          description: event.description,
+          amount: event.amount,
+        ),
+      );
     emit(state.copyWith(unit: u.copyWith(expenses: updated)));
     expenseDescController.clear();
     expenseAmountController.clear();
@@ -79,37 +118,87 @@ class UnitDetailsBloc extends Bloc<UnitDetailsEvent, UnitDetailsState> {
   ) {
     final u = state.unit;
     if (u == null) return;
-    final updated = List<UnitExpenseModel>.from(u.expenses)..removeAt(event.index);
+    final updated = List<UnitExpenseModel>.from(u.expenses)
+      ..removeAt(event.index);
     emit(state.copyWith(unit: u.copyWith(expenses: updated)));
+  }
+
+  void _onExpenseFilesPicked(
+    UnitDetailsExpenseFilesPicked event,
+    Emitter<UnitDetailsState> emit,
+  ) {
+    emit(state.copyWith(expenseFiles: [...state.expenseFiles, ...event.paths]));
   }
 
   Future<void> _onSaved(
     UnitDetailsSaved event,
     Emitter<UnitDetailsState> emit,
   ) async {
-    emit(state.copyWith(saveStatus: RequestStatus.loading));
-    await Future.delayed(const Duration(milliseconds: 600));
     final u = state.unit;
-    if (u == null) {
+    if (u == null || u.id.isEmpty) {
       emit(state.copyWith(saveStatus: RequestStatus.failed));
       return;
     }
-    emit(state.copyWith(
-      unit: u.copyWith(
-        tenantName: tenantNameController.text,
-        tenantPhone: tenantPhoneController.text,
-        rentStartDate: rentStartController.text,
-        rentEndDate: rentEndController.text,
-      ),
-      saveStatus: RequestStatus.success,
-    ));
+    emit(state.copyWith(saveStatus: RequestStatus.loading));
+    final updatedUnit = u.copyWith(
+      tenantName: tenantNameController.text,
+      tenantPhone: tenantPhoneController.text,
+      rentStartDate: rentStartController.text,
+      rentEndDate: rentEndController.text,
+      label: titleController.text.trim().isEmpty
+          ? u.label
+          : titleController.text.trim(),
+      projectName: projectNameController.text.trim(),
+    );
+
+    final result = await PropertyFileApis.updateProperty(
+      propertyId: u.id,
+      title: updatedUnit.label,
+      projectName: updatedUnit.projectName,
+    );
+    if (isClosed) return;
+
+    await result.fold(
+      (error) async {
+        AppToast(error, isError: true);
+        emit(state.copyWith(saveStatus: RequestStatus.failed));
+      },
+      (_) async {
+        if (updatedUnit.expenses.any((e) => !e.isRemote) ||
+            state.expenseFiles.isNotEmpty) {
+          final expenseResult = await PropertyFileApis.saveExpenses(
+            propertyId: u.id,
+            expenses: updatedUnit.expenses.where((e) => !e.isRemote).toList(),
+            filePaths: state.expenseFiles,
+          );
+          expenseResult.fold(
+            (error) => AppToast(error, isError: true),
+            (_) {},
+          );
+        }
+        emit(
+          state.copyWith(
+            unit: updatedUnit,
+            saveStatus: RequestStatus.success,
+            expenseFiles: const [],
+          ),
+        );
+        AppToast(AppStrings.propertyUpdated);
+      },
+    );
   }
 
-  void _onDeleted(
+  Future<void> _onDeleted(
     UnitDetailsDeleted event,
     Emitter<UnitDetailsState> emit,
-  ) {
-    emit(state.copyWith(isDeleted: true));
+  ) async {
+    final id = state.unit?.id ?? '';
+    if (id.isEmpty) return;
+    final result = await PropertyFileApis.deleteProperty(id);
+    result.fold(
+      (error) => AppToast(error, isError: true),
+      (_) => emit(state.copyWith(isDeleted: true)),
+    );
   }
 
   void _onSentToBroker(
@@ -127,6 +216,8 @@ class UnitDetailsBloc extends Bloc<UnitDetailsEvent, UnitDetailsState> {
     rentEndController.dispose();
     expenseDescController.dispose();
     expenseAmountController.dispose();
+    titleController.dispose();
+    projectNameController.dispose();
     return super.close();
   }
 }

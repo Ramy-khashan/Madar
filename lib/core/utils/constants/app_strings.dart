@@ -6,6 +6,7 @@ class AppStrings {
   static String get view => 'view'.trans;
   static String get searchProperty => 'search_property'.trans;
   static String get cooling => 'cooling'.trans;
+  static String get brokerRequestSentSuccessfully => 'broker_request_sent_successfully'.trans;
   static String get flooring => 'flooring'.trans;
   static String get pleaseSelectPropertyToSend =>
       'please_select_property_to_end'.trans;
@@ -179,6 +180,9 @@ class AppStrings {
   static String get welcomeToMadar => 'welcome_to_madar'.trans;
   static String get valLicenseNumber => 'val_license_number'.trans;
   static String get enterValLicenseNumber => 'enter_val_license_number'.trans;
+  static String get falLicenseFile => 'fal_license_file'.trans;
+  static String get pleaseAttachFalLicense =>
+      'please_attach_fal_license'.trans;
   static String get home => 'home'.trans;
   static String get chat => 'chat'.trans;
   static String get documents => 'documents'.trans;
@@ -1084,6 +1088,9 @@ class AppStrings {
   static String get rentStartDate => 'rent_start_date'.trans;
   static String get rentEndDate => 'rent_end_date'.trans;
   static String get saveChanges => 'save_changes'.trans;
+  static String get projectName => 'project_name'.trans;
+  static String get propertyUpdated => 'property_updated'.trans;
+  static String get attachExpenseFiles => 'attach_expense_files'.trans;
   static String get apartments => 'apartments'.trans;
   static String get apartmentsCount => 'apartments_count'.trans;
   static String get monthlyRevenue => 'monthly_revenue'.trans;
@@ -1578,6 +1585,8 @@ class AppStrings {
   static String get featureGarden => 'feature_garden'.trans;
   static String get featureHealthClub => 'feature_health_club'.trans;
   static String get featureGuard => 'feature_guard'.trans;
+  static String get featureParking =>
+      'feature_parking'.hasTrans ? 'feature_parking'.trans : 'PARKING'.trans;
 
   // Account Types
   static String get accountTypeIndividual => 'account_type_individual'.trans;

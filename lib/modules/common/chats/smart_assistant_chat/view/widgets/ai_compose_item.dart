@@ -56,7 +56,7 @@ class AiComposeBar extends StatelessWidget {
                         borderColor: Colors.transparent,
                         fillColor: Colors.transparent,
                         controller: bloc.messageController,
-                        textAlign: TextAlign.end,
+                        textAlign: TextAlign.start,
                         enabled: !isBusy,
                         hint: AppStrings.typeYourMessage,
                         textInputAction: TextInputAction.send,
@@ -64,14 +64,14 @@ class AiComposeBar extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 12.width),
-                    IconButton(
-                      onPressed: isBusy ? null : () {},
-                      icon: Icon(
-                        Icons.mic_none_rounded,
-                        color: colors.primaryBrand,
-                        size: 30.fontSize,
-                      ),
-                    ),
+                    // IconButton(
+                    //   onPressed: isBusy ? null : () {},
+                    //   icon: Icon(
+                    //     Icons.mic_none_rounded,
+                    //     color: colors.primaryBrand,
+                    //     size: 30.fontSize,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
