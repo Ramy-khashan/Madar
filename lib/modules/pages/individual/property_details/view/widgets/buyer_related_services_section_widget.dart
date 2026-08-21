@@ -48,7 +48,7 @@
 //           ],
 //         ),
 //       //  Row(
-        
+
 //       //     children: [
 //       //       Expanded(child: InstallmentServiceCard(property: property)),
 //       //       SizedBox(width: 10.width),
@@ -109,7 +109,7 @@
 //                 Icons.check_circle ,
 //                 size: 16.width,
 //                 color: rentInfo?.isEligible == true
-//                     ? AppColors.successColor 
+//                     ? AppColors.successColor
 //                     : colors.textSecondary,
 //               ),
 //               SizedBox(width: 4.width),
@@ -120,7 +120,7 @@
 //                 style: TextStyle(
 //                   fontSize: context.responsiveFontScale(10),
 //                   color: rentInfo?.isEligible == true
-//                       ? AppColors.successColor 
+//                       ? AppColors.successColor
 //                       : colors.textSecondary,
 //                   fontFamily: AppConstant.appFont,
 //                   fontWeight: FontWeight.w600,
@@ -251,7 +251,7 @@
 //           ),
 
 //           SizedBox(height: 12.height),
-         
+
 //           Container(
 //             height: 110.height,
 //             decoration: BoxDecoration(
@@ -262,8 +262,7 @@
 //               mainAxisAlignment: MainAxisAlignment.center,
 //               mainAxisSize: MainAxisSize.min,
 //               children:[
-              
-                   
+
 //           ServiceRow(
 //             label: AppStrings.availableInsuranceTypes,
 //             value: insInfo?.availableTypes.join(' / ') ?? '',

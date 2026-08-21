@@ -38,7 +38,7 @@ class FinancialMetricCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
-             crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 padding: EdgeInsets.all(5.width),
@@ -71,7 +71,9 @@ class FinancialMetricCard extends StatelessWidget {
           ),
           SizedBox(height: 12.height),
           Padding(
-            padding: EdgeInsetsDirectional.only(start: isStartedTextVal ? 6.width : 0),
+            padding: EdgeInsetsDirectional.only(
+              start: isStartedTextVal ? 6.width : 0,
+            ),
             child: Text(
               AppStrings.amountVal(value),
               textAlign: isStartedTextVal ? TextAlign.start : TextAlign.center,

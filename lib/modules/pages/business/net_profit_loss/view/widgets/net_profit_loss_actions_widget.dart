@@ -17,10 +17,20 @@ class NetProfitLossActionsWidget extends StatelessWidget {
           padding: EdgeInsets.fromLTRB(16.width, 8.height, 16.width, 24.height),
           child: Column(
             children: [
-              AppButton(onTap: () {}, text: AppStrings.downloadPdf),
+              AppButton(
+                onTap: () => context.read<NetProfitLossBloc>().add(
+                  const NetProfitLossExportPdf(),
+                ),
+                text: AppStrings.downloadPdf,
+              ),
               SizedBox(height: 12.height),
-
-              AppButton(onTap: () {}, text: AppStrings.exportExcel,isOutline: true,),
+              AppButton(
+                onTap: () => context.read<NetProfitLossBloc>().add(
+                  const NetProfitLossExportExcel(),
+                ),
+                text: AppStrings.exportExcel,
+                isOutline: true,
+              ),
             ],
           ),
         );

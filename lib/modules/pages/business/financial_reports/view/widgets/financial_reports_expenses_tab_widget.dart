@@ -21,9 +21,10 @@ class FinancialReportsExpensesTabWidget extends StatelessWidget {
     return BlocBuilder<FinancialReportsBloc, FinancialReportsState>(
       buildWhen: (p, c) =>
           p.categoryItems != c.categoryItems ||
-          p.transactions != c.transactions,
+          p.transactions != c.transactions ||
+          p.totalExpenses != c.totalExpenses,
       builder: (context, state) {
-        return SingleChildScrollView(
+        return Padding(
           padding: EdgeInsets.all(16.width),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -124,6 +125,17 @@ class FinancialReportsExpensesTabWidget extends StatelessWidget {
                                       color: colors.textSecondary,
                                     ),
                                   ),
+                                  if (t.hasFile)
+                                    Text(
+                                      AppStrings.attachmentsSection,
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                        fontSize: context.responsiveFontScale(
+                                          11,
+                                        ),
+                                        color: colors.primaryBrand,
+                                      ),
+                                    ),
                                 ],
                               ),
                               Text(

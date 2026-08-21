@@ -3,55 +3,63 @@ part of 'net_profit_loss_bloc.dart';
 class NetProfitLossState extends Equatable {
   const NetProfitLossState({
     this.netProfit = 0,
-    this.annualProfit = 0,
+    this.totalIncome = 0,
     this.totalExpenses = 0,
-    this.previousPeriodProfit = 0,
+    this.incomeComparison = const ProfitLossComparisonItem(),
+    this.expensesComparison = const ProfitLossComparisonItem(),
+    this.netProfitComparison = const ProfitLossComparisonItem(),
+    this.insights = const [],
     this.status = RequestStatus.init,
     this.exportStatus = RequestStatus.init,
-    this.downloadStatus = RequestStatus.init,
-    this.errorMessage=''
+    this.errorMessage = '',
   });
 
   final double netProfit;
-  final double annualProfit;
+  final double totalIncome;
   final double totalExpenses;
-  final double previousPeriodProfit;
+  final ProfitLossComparisonItem incomeComparison;
+  final ProfitLossComparisonItem expensesComparison;
+  final ProfitLossComparisonItem netProfitComparison;
+  final List<String> insights;
   final RequestStatus status;
   final RequestStatus exportStatus;
-  final RequestStatus downloadStatus;
   final String errorMessage;
- 
 
   NetProfitLossState copyWith({
     double? netProfit,
-    double? annualProfit,
+    double? totalIncome,
     double? totalExpenses,
-    double? previousPeriodProfit,
+    ProfitLossComparisonItem? incomeComparison,
+    ProfitLossComparisonItem? expensesComparison,
+    ProfitLossComparisonItem? netProfitComparison,
+    List<String>? insights,
     RequestStatus? status,
-     RequestStatus? exportStatus,
-    RequestStatus? downloadStatus,
+    RequestStatus? exportStatus,
     String? errorMessage,
-  }) =>
-      NetProfitLossState(
-        netProfit: netProfit ?? this.netProfit,
-        annualProfit: annualProfit ?? this.annualProfit,
-        totalExpenses: totalExpenses ?? this.totalExpenses,
-        previousPeriodProfit:
-            previousPeriodProfit ?? this.previousPeriodProfit,
-        status: status ?? this.status,
-        exportStatus: exportStatus ?? this.exportStatus,
-        downloadStatus: downloadStatus ?? this.downloadStatus,
-        errorMessage: errorMessage ?? this.errorMessage,
-      );
+  }) => NetProfitLossState(
+    netProfit: netProfit ?? this.netProfit,
+    totalIncome: totalIncome ?? this.totalIncome,
+    totalExpenses: totalExpenses ?? this.totalExpenses,
+    incomeComparison: incomeComparison ?? this.incomeComparison,
+    expensesComparison: expensesComparison ?? this.expensesComparison,
+    netProfitComparison: netProfitComparison ?? this.netProfitComparison,
+    insights: insights ?? this.insights,
+    status: status ?? this.status,
+    exportStatus: exportStatus ?? this.exportStatus,
+    errorMessage: errorMessage ?? this.errorMessage,
+  );
+
   @override
   List<Object?> get props => [
-        netProfit,
-        annualProfit,
-        totalExpenses,
-        previousPeriodProfit,
-        status,
-        exportStatus,
-        downloadStatus,
-        errorMessage,
-      ];
+    netProfit,
+    totalIncome,
+    totalExpenses,
+    incomeComparison,
+    expensesComparison,
+    netProfitComparison,
+    insights,
+    status,
+    exportStatus,
+    errorMessage,
+  ];
 }

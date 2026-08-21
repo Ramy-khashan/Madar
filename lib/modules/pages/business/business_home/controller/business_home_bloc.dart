@@ -12,6 +12,7 @@ import '../../../../../core/utils/functions/service_locator.dart';
 import '../../../individual/individual_home/model/properties_item_model.dart';
 import '../../../individual/individual_home/model/smart_service_model.dart';
 import '../../business_properties/model/business_property_request_model.dart';
+import '../../../../../core/repository/apis/business_properties_apis.dart';
 import '../model/business_portfolio_property_model.dart';
 
 part 'business_home_event.dart';
@@ -183,9 +184,9 @@ class BusinessHomeBloc extends Bloc<BusinessHomeEvent, BusinessHomeState> {
   ) async {
     try {
       emit(state.copyWith(requestsLoadStatus: RequestStatus.loading));
-      final response = await sl.get<ApiConsumer>().get(EndPoints.requests);
-      await response.fold(
-        (failedResponse) async {
+      final result = await BusinessPropertiesApis.fetchRequests();
+      result.fold(
+        (failedResponse) {
           emit(
             state.copyWith(
               requestsLoadStatus: RequestStatus.failed,
@@ -193,14 +194,7 @@ class BusinessHomeBloc extends Bloc<BusinessHomeEvent, BusinessHomeState> {
             ),
           );
         },
-        (successResponse) async {
-          final List<BusinessPropertyRequestModel> items = [];
-          // final List<PortfolioPropertyModel> items = [];
-          for (var item in List.from(
-            successResponse.response['data']['data'],
-          )) {
-            items.add(BusinessPropertyRequestModel.fromJson(item));
-          }
+        (items) {
           emit(
             state.copyWith(
               requestsLoadStatus: RequestStatus.success,

@@ -5,7 +5,7 @@ import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
- import '../../model/property_details_model.dart';
+import '../../model/property_details_model.dart';
 
 class PropertyDetailsHeaderSectionWidget extends StatelessWidget {
   const PropertyDetailsHeaderSectionWidget({super.key, required this.property});

@@ -15,9 +15,11 @@ class EndPoints {
   static const String notifications = 'notifications';
   static const String netProfitLoss = 'dashboard/profit-loss';
   static const String realEstateProjects = 'projects';
-  static String projectUpdates(String projectId) => 'projects/updates/$projectId';
-   static const String evaluations = 'evaluations/smart-suggestion';
-   static String brokerProperties(String brokerId) => 'broker/$brokerId/properties';
+  static String projectUpdates(String projectId) =>
+      'projects/updates/$projectId';
+  static const String evaluations = 'evaluations/smart-suggestion';
+  static String brokerProperties(String brokerId) =>
+      'broker/$brokerId/properties';
 
   ///Wishlist Endpoints
   static const String wishlist = 'saved-properties';
@@ -28,7 +30,17 @@ class EndPoints {
   static const String getContracts = 'contracts';
   static String contractDetails(String id) => 'contracts/$id';
   static const String requests = 'broker/requests';
+  static String brokerRequestAction(String requestId) =>
+      'broker/requests/$requestId';
+  static const String incomingRequests = 'requests/incoming';
+  static String incomingRequestAction(String requestId) =>
+      'requests/$requestId';
   static const String financialReports = 'dashboard/financial-reports';
+  static const String financialReportsOverview =
+      'dashboard/financial-reports/overview';
+  static const String dashboardRevenues = 'dashboard/revenues';
+  static const String dashboardExpenses = 'dashboard/expenses';
+  static const String performanceReports = 'dashboard/performance-reports';
   static const String myAuctions = '/auctions/my-auctions';
   static const String brokers = 'auth/brokers';
   static const String sendToBrokers = 'properties/send-to-broker/';

@@ -11,11 +11,14 @@ class FinancialReportsState extends Equatable {
     this.netProfit = 0,
     this.totalExpenses = 0,
     this.lateRent = 0,
+    this.rentalTotal = 0,
+    this.otherIncomeTotal = 0,
     this.errorMessage,
     this.status = RequestStatus.init,
     this.categoryItems = const [],
     this.transactions = const [],
     this.rentItems = const [],
+    this.otherIncomeItems = const [],
     this.incomeDistribution = const [],
     this.incomeVsExpense = const [],
     this.lateTenants = const [],
@@ -32,6 +35,8 @@ class FinancialReportsState extends Equatable {
   final double netProfit;
   final double totalExpenses;
   final double lateRent;
+  final double rentalTotal;
+  final double otherIncomeTotal;
   final String? errorMessage;
   final RequestStatus status;
 
@@ -39,6 +44,7 @@ class FinancialReportsState extends Equatable {
   final List<FinancialPropertyItem> categoryItems;
   final List<FinancialTransaction> transactions;
   final List<FinancialRentItem> rentItems;
+  final List<FinancialRentItem> otherIncomeItems;
   final List<IncomeDistributionItem> incomeDistribution;
   final List<IncomeVsExpenseItem> incomeVsExpense;
   final List<FinancialTenant> lateTenants;
@@ -54,11 +60,14 @@ class FinancialReportsState extends Equatable {
     double? netProfit,
     double? totalExpenses,
     double? lateRent,
+    double? rentalTotal,
+    double? otherIncomeTotal,
     Object? errorMessage = _noValue,
     RequestStatus? status,
     List<FinancialPropertyItem>? categoryItems,
     List<FinancialTransaction>? transactions,
     List<FinancialRentItem>? rentItems,
+    List<FinancialRentItem>? otherIncomeItems,
     List<IncomeDistributionItem>? incomeDistribution,
     List<IncomeVsExpenseItem>? incomeVsExpense,
     List<FinancialTenant>? lateTenants,
@@ -73,6 +82,8 @@ class FinancialReportsState extends Equatable {
     netProfit: netProfit ?? this.netProfit,
     totalExpenses: totalExpenses ?? this.totalExpenses,
     lateRent: lateRent ?? this.lateRent,
+    rentalTotal: rentalTotal ?? this.rentalTotal,
+    otherIncomeTotal: otherIncomeTotal ?? this.otherIncomeTotal,
     errorMessage: identical(errorMessage, _noValue)
         ? this.errorMessage
         : errorMessage as String?,
@@ -80,6 +91,7 @@ class FinancialReportsState extends Equatable {
     categoryItems: categoryItems ?? this.categoryItems,
     transactions: transactions ?? this.transactions,
     rentItems: rentItems ?? this.rentItems,
+    otherIncomeItems: otherIncomeItems ?? this.otherIncomeItems,
     incomeDistribution: incomeDistribution ?? this.incomeDistribution,
     incomeVsExpense: incomeVsExpense ?? this.incomeVsExpense,
     lateTenants: lateTenants ?? this.lateTenants,
@@ -97,11 +109,14 @@ class FinancialReportsState extends Equatable {
     netProfit,
     totalExpenses,
     lateRent,
+    rentalTotal,
+    otherIncomeTotal,
     errorMessage,
     status,
     categoryItems,
     transactions,
     rentItems,
+    otherIncomeItems,
     incomeDistribution,
     incomeVsExpense,
     lateTenants,

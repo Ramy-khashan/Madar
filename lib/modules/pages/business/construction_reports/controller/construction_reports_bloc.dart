@@ -2,7 +2,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../core/repository/apis/dashboard_apis.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
+import '../model/performance_report_model.dart';
 
 part 'construction_reports_event.dart';
 part 'construction_reports_state.dart';
@@ -19,12 +21,28 @@ class ConstructionReportsBloc
   static ConstructionReportsBloc get(BuildContext context) =>
       context.read<ConstructionReportsBloc>();
 
-  void _onLoad(
+  Future<void> _onLoad(
     ConstructionReportsLoad event,
     Emitter<ConstructionReportsState> emit,
-  ) {
-    emit(state.copyWith(status: RequestStatus.loading));
-     emit(state.copyWith(status: RequestStatus.success));
+  ) async {
+    emit(state.copyWith(status: RequestStatus.loading, errorMessage: ''));
+    final result = await DashboardApis.performance(
+      period: state.selectedPeriod,
+    );
+    result.fold(
+      (err) =>
+          emit(state.copyWith(status: RequestStatus.failed, errorMessage: err)),
+      (payload) {
+        final report = PerformanceReportModel.fromJson(payload);
+        emit(
+          state.copyWith(
+            status: RequestStatus.success,
+            errorMessage: '',
+            report: report,
+          ),
+        );
+      },
+    );
   }
 
   void _onPeriodChanged(
@@ -32,6 +50,7 @@ class ConstructionReportsBloc
     Emitter<ConstructionReportsState> emit,
   ) {
     emit(state.copyWith(selectedPeriod: event.period));
+    add(const ConstructionReportsLoad());
   }
 
   void _onScopeChanged(

@@ -45,15 +45,21 @@ class FinancialTransaction extends Equatable {
     required this.date,
     required this.desc,
     required this.amount,
+    this.property = '',
+    this.fileUrl = '',
   });
 
   final String name;
   final DateTime date;
   final String desc;
   final String amount;
+  final String property;
+  final String fileUrl;
+
+  bool get hasFile => fileUrl.trim().isNotEmpty && fileUrl != 'null';
 
   @override
-  List<Object?> get props => [name, date, desc, amount];
+  List<Object?> get props => [name, date, desc, amount, property, fileUrl];
 }
 
 class FinancialTenant extends Equatable {
@@ -219,7 +225,7 @@ class IncomeDistributionItem extends Equatable {
 
   factory IncomeDistributionItem.fromJson(Map<String, dynamic> json) {
     return IncomeDistributionItem(
-      source: (json['source'] ?? '').toString(),
+      source: (json['type'] ?? json['source'] ?? '').toString(),
       amount: _asDouble(json['amount']),
       percentage: _asDouble(json['percentage']),
     );
@@ -257,11 +263,15 @@ class TransactionHistoryItem extends Equatable {
     required this.amount,
     required this.type,
     required this.date,
+    this.property = '',
+    this.fileUrl = '',
   });
 
   final double amount;
   final String type;
   final DateTime date;
+  final String property;
+  final String fileUrl;
 
   factory TransactionHistoryItem.fromJson(Map<String, dynamic> json) {
     return TransactionHistoryItem(
@@ -269,11 +279,13 @@ class TransactionHistoryItem extends Equatable {
       type: (json['type'] ?? '').toString(),
       date:
           DateTime.tryParse((json['date'] ?? '').toString()) ?? DateTime.now(),
+      property: (json['property'] ?? '').toString(),
+      fileUrl: (json['file'] ?? json['fileUrl'] ?? '').toString(),
     );
   }
 
   @override
-  List<Object?> get props => [amount, type, date];
+  List<Object?> get props => [amount, type, date, property, fileUrl];
 }
 
 class TopPropertyIncomeItem extends Equatable {
@@ -304,4 +316,119 @@ double _asDouble(dynamic value) {
     return value.toDouble();
   }
   return double.tryParse(value?.toString() ?? '') ?? 0;
+}
+
+Map<String, dynamic> _asMap(dynamic value) {
+  if (value is Map) return Map<String, dynamic>.from(value);
+  return const {};
+}
+
+List<Map<String, dynamic>> _asMapList(dynamic value) {
+  if (value is! List) return const [];
+  return value
+      .whereType<Map>()
+      .map((e) => Map<String, dynamic>.from(e))
+      .toList();
+}
+
+class DashboardRevenueItem extends Equatable {
+  const DashboardRevenueItem({
+    this.contractId = '',
+    this.property = '',
+    this.type = '',
+    this.amount = 0,
+    this.date,
+    this.status = '',
+  });
+
+  final String contractId;
+  final String property;
+  final String type;
+  final double amount;
+  final DateTime? date;
+  final String status;
+
+  bool get isActive => status.toUpperCase() == 'ACTIVE';
+
+  factory DashboardRevenueItem.fromJson(Map<String, dynamic> json) {
+    return DashboardRevenueItem(
+      contractId: (json['contractId'] ?? json['id'] ?? '').toString(),
+      property: (json['property'] ?? json['propertyTitle'] ?? '').toString(),
+      type: (json['type'] ?? '').toString(),
+      amount: _asDouble(json['amount']),
+      date: DateTime.tryParse((json['date'] ?? '').toString()),
+      status: (json['status'] ?? '').toString(),
+    );
+  }
+
+  @override
+  List<Object?> get props => [contractId, property, type, amount, date, status];
+}
+
+class DashboardRevenuesResponse extends Equatable {
+  const DashboardRevenuesResponse({
+    this.totalIncome = 0,
+    this.rentalsTotal = 0,
+    this.otherTotal = 0,
+    this.rentals = const [],
+    this.otherTransactions = const [],
+  });
+
+  final double totalIncome;
+  final double rentalsTotal;
+  final double otherTotal;
+  final List<DashboardRevenueItem> rentals;
+  final List<DashboardRevenueItem> otherTransactions;
+
+  factory DashboardRevenuesResponse.fromJson(Map<String, dynamic> json) {
+    final rentals = _asMap(json['rentals']);
+    final others = _asMap(json['otherTransactions']);
+    return DashboardRevenuesResponse(
+      totalIncome: _asDouble(json['totalIncome']),
+      rentalsTotal: _asDouble(rentals['total']),
+      otherTotal: _asDouble(others['total']),
+      rentals: _asMapList(
+        rentals['items'],
+      ).map(DashboardRevenueItem.fromJson).toList(),
+      otherTransactions: _asMapList(
+        others['items'],
+      ).map(DashboardRevenueItem.fromJson).toList(),
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+    totalIncome,
+    rentalsTotal,
+    otherTotal,
+    rentals,
+    otherTransactions,
+  ];
+}
+
+class DashboardExpensesResponse extends Equatable {
+  const DashboardExpensesResponse({
+    this.totalExpenses = 0,
+    this.distribution = const [],
+    this.transactions = const [],
+  });
+
+  final double totalExpenses;
+  final List<ExpenseDistributionItem> distribution;
+  final List<TransactionHistoryItem> transactions;
+
+  factory DashboardExpensesResponse.fromJson(Map<String, dynamic> json) {
+    return DashboardExpensesResponse(
+      totalExpenses: _asDouble(json['totalExpenses']),
+      distribution: _asMapList(
+        json['expenseDistribution'],
+      ).map(ExpenseDistributionItem.fromJson).toList(),
+      transactions: _asMapList(
+        json['transactions'] ?? json['transactionHistory'],
+      ).map(TransactionHistoryItem.fromJson).toList(),
+    );
+  }
+
+  @override
+  List<Object?> get props => [totalExpenses, distribution, transactions];
 }

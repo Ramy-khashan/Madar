@@ -20,10 +20,12 @@ class FinancialReportsRevenueTabWidget extends StatelessWidget {
     return BlocBuilder<FinancialReportsBloc, FinancialReportsState>(
       buildWhen: (p, c) =>
           p.rentItems != c.rentItems ||
-          p.totalIncome != c.totalIncome ||
-          p.incomeDistribution != c.incomeDistribution,
+          p.otherIncomeItems != c.otherIncomeItems ||
+          p.rentalTotal != c.rentalTotal ||
+          p.otherIncomeTotal != c.otherIncomeTotal ||
+          p.totalIncome != c.totalIncome,
       builder: (context, state) {
-        return SingleChildScrollView(
+        return Padding(
           padding: EdgeInsets.all(16.width),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -32,7 +34,7 @@ class FinancialReportsRevenueTabWidget extends StatelessWidget {
               _RevenueSection(
                 title: AppStrings.paidRentsLabel,
                 trailing: AppStrings.totalAmountLabel(
-                  formatPrice(state.totalIncome),
+                  formatPrice(state.rentalTotal),
                 ),
                 colors: colors,
                 child: Column(
@@ -57,7 +59,8 @@ class FinancialReportsRevenueTabWidget extends StatelessWidget {
               // مصادر دخل أخرى
               _OtherIncomeCard(
                 colors: colors,
-                incomeDistribution: state.incomeDistribution,
+                items: state.otherIncomeItems,
+                total: state.otherIncomeTotal,
               ),
             ],
           ),
@@ -187,14 +190,6 @@ class _PartialPaymentCard extends StatelessWidget {
                             color: colors.textPrimary,
                           ),
                         ),
-                        Text(
-                          AppStrings.remainingAmount('١٥٬٠٠٠'),
-                          style: TextStyle(
-                            fontSize: context.responsiveFontScale(14),
-                            fontWeight: FontWeight.w600,
-                            color: colors.textSecondary,
-                          ),
-                        ),
                       ],
                     ),
                   ],
@@ -211,18 +206,19 @@ class _PartialPaymentCard extends StatelessWidget {
 class _OtherIncomeCard extends StatelessWidget {
   const _OtherIncomeCard({
     required this.colors,
-    required this.incomeDistribution,
+    required this.items,
+    required this.total,
   });
 
   final AppThemeColors colors;
-  final List<IncomeDistributionItem> incomeDistribution;
+  final List<FinancialRentItem> items;
+  final double total;
 
   @override
   Widget build(BuildContext context) {
-    final totalAmount = incomeDistribution.fold<double>(
-      0,
-      (sum, item) => sum + item.amount,
-    );
+    if (items.isEmpty && total <= 0) {
+      return const SizedBox.shrink();
+    }
     return Container(
       padding: EdgeInsets.all(14.width),
       decoration: BoxDecoration(
@@ -247,7 +243,7 @@ class _OtherIncomeCard extends StatelessWidget {
                 ),
               ),
               Text(
-                AppStrings.totalAmountLabel(formatPrice(totalAmount)),
+                AppStrings.totalAmountLabel(formatPrice(total)),
                 style: TextStyle(
                   fontSize: context.responsiveFontScale(16),
                   color: colors.textFieldTitle,
@@ -256,31 +252,14 @@ class _OtherIncomeCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: 10.height),
-          ...incomeDistribution.map(
-            (item) => Padding(
-              padding: EdgeInsets.only(bottom: 8.height),
-              child: Row(
-                textDirection: TextDirection.rtl,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    item.source,
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                      fontSize: context.responsiveFontScale(13),
-                      color: colors.textPrimary,
-                    ),
-                  ),
-                  Text(
-                    AppStrings.amountVal(formatPrice(item.amount)),
-                    style: TextStyle(
-                      fontSize: context.responsiveFontScale(13),
-                      color: AppColors.secondBrand,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
+          ...items.map(
+            (item) => FinancialPropertyRow(
+              date: item.date,
+              status: item.status,
+              name: item.name,
+              amount: AppStrings.amountVal(item.amount),
+              paid: item.paid,
+              colors: colors,
             ),
           ),
         ],

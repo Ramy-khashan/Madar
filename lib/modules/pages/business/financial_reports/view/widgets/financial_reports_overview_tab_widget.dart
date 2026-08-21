@@ -30,7 +30,7 @@ class FinancialReportsOverviewTabWidget extends StatelessWidget {
           p.incomeSections != c.incomeSections ||
           p.expensesSections != c.expensesSections,
       builder: (context, state) {
-        return SingleChildScrollView(
+        return Padding(
           padding: EdgeInsets.all(16.width),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,32 +71,47 @@ class FinancialReportsOverviewTabWidget extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 12.height),
-              Row(
-                children: [
-                  Expanded(
-                    child: FinancialMetricCard(
-                      label: AppStrings.netProfit,
-                      value: formatPrice(state.netProfit),
-                      icon: AppImages.finalPriceIcon,
-                      valueColor: AppColors.successColor,
-                      colors: colors,
+              if (state.lateRent > 0 || state.lateTenants.isNotEmpty) ...[
+                Row(
+                  children: [
+                    Expanded(
+                      child: FinancialMetricCard(
+                        label: AppStrings.netProfit,
+                        value: formatPrice(state.netProfit),
+                        icon: AppImages.finalPriceIcon,
+                        valueColor: state.netProfit >= 0
+                            ? AppColors.successColor
+                            : AppColors.errorColor,
+                        colors: colors,
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 12.width),
-                  Expanded(
-                    child: FinancialMetricCard(
-                      label: AppStrings.lateRentLabel,
-                      value: formatPrice(state.lateRent),
-                      icon: AppImages.finalPriceIcon,
-                      valueColor: AppColors.errorColor,
-                      colors: colors,
+                    SizedBox(width: 12.width),
+                    Expanded(
+                      child: FinancialMetricCard(
+                        label: AppStrings.lateRentLabel,
+                        value: formatPrice(state.lateRent),
+                        icon: AppImages.finalPriceIcon,
+                        valueColor: AppColors.errorColor,
+                        colors: colors,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 16.height),
-              _LateTenantsCard(colors: colors, tenants: state.lateTenants),
-              SizedBox(height: 16.height),
+                  ],
+                ),
+                SizedBox(height: 16.height),
+                _LateTenantsCard(colors: colors, tenants: state.lateTenants),
+                SizedBox(height: 16.height),
+              ] else ...[
+                FinancialMetricCard(
+                  label: AppStrings.netProfit,
+                  value: formatPrice(state.netProfit),
+                  icon: AppImages.finalPriceIcon,
+                  valueColor: state.netProfit >= 0
+                      ? AppColors.successColor
+                      : AppColors.errorColor,
+                  colors: colors,
+                ),
+                SizedBox(height: 16.height),
+              ],
               _IncomeVsExpensesChart(
                 colors: colors,
                 points: state.incomeVsExpense,
@@ -278,7 +293,7 @@ class _IncomeVsExpensesChart extends StatelessWidget {
             SizedBox(height: 8.height),
             Row(
               children: List.generate(points.length, (i) {
-                final month = points[i].month;
+                final month = AppStrings.dashboardMonthLabel(points[i].month);
                 final shortMonth = month.length > 3
                     ? month.substring(0, 3)
                     : month;

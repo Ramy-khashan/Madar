@@ -22,8 +22,18 @@ class ConstructionReportsScreen extends StatelessWidget {
       appBar: AppAppbar(title: AppStrings.performanceReports),
       body: BlocBuilder<ConstructionReportsBloc, ConstructionReportsState>(
         builder: (context, state) {
-          if (state.status == RequestStatus.loading) {
+          if (state.status == RequestStatus.loading ||
+              state.status == RequestStatus.init) {
             return const Center(child: CircularProgressIndicator());
+          }
+          if (state.status == RequestStatus.failed) {
+            return Center(
+              child: Text(
+                state.errorMessage.isEmpty
+                    ? AppStrings.somethingWentWrong
+                    : state.errorMessage,
+              ),
+            );
           }
           return SafeArea(
             child: SingleChildScrollView(

@@ -15,23 +15,38 @@ class PropertyFeaturesWidget extends StatelessWidget {
     (
       title: AppStrings.featureCategoryBasicServices,
       items: [
-        (keys: ['ELECTRICITY', 'hasElectricity'], title: AppStrings.featureElectricity),
+        (
+          keys: ['ELECTRICITY', 'hasElectricity'],
+          title: AppStrings.featureElectricity,
+        ),
         (keys: ['SEWAGE', 'hasSewage'], title: AppStrings.featureSewage),
         (keys: ['WATER', 'hasWater'], title: AppStrings.featureWater),
         (keys: ['INTERNET', 'hasInternet'], title: AppStrings.featureInternet),
         (keys: ['PARKING', 'hasParking'], title: AppStrings.featureParking),
         (keys: ['FENCE', 'hasFence'], title: AppStrings.featureFence),
-        (keys: ['IRRIGATION', 'hasIrrigation'], title: AppStrings.featureIrrigation),
+        (
+          keys: ['IRRIGATION', 'hasIrrigation'],
+          title: AppStrings.featureIrrigation,
+        ),
       ],
     ),
     (
       title: AppStrings.featureCategoryInterior,
       items: [
-        (keys: ['CENTRAL_AC', 'hasCentralAC'], title: AppStrings.featureCentralAc),
+        (
+          keys: ['CENTRAL_AC', 'hasCentralAC'],
+          title: AppStrings.featureCentralAc,
+        ),
         (keys: ['ELEVATOR', 'hasElevator'], title: AppStrings.featureElevator),
         (keys: ['MAID_ROOM', 'hasMaidRoom'], title: AppStrings.featureMaidRoom),
-        (keys: ['TWO_ENTRANCES', 'hasTwoEntrances'], title: AppStrings.featureTwoEntrances),
-        (keys: ['DRIVER_ROOM', 'hasDriverRoom'], title: AppStrings.featureDriverRoom),
+        (
+          keys: ['TWO_ENTRANCES', 'hasTwoEntrances'],
+          title: AppStrings.featureTwoEntrances,
+        ),
+        (
+          keys: ['DRIVER_ROOM', 'hasDriverRoom'],
+          title: AppStrings.featureDriverRoom,
+        ),
         (keys: ['BASEMENT', 'hasBasement'], title: AppStrings.featureBasement),
         (keys: ['ROOF', 'hasRoof'], title: AppStrings.featureRoof),
         (keys: ['STORAGE', 'hasStorage'], title: AppStrings.featureWarehouse),
@@ -41,12 +56,24 @@ class PropertyFeaturesWidget extends StatelessWidget {
       title: AppStrings.featureCategoryExteriorSecurity,
       items: [
         (keys: ['POOL', 'hasPool'], title: AppStrings.featurePool),
-        (keys: ['WATER_WELL', 'hasWaterWell'], title: AppStrings.featureWaterWell),
+        (
+          keys: ['WATER_WELL', 'hasWaterWell'],
+          title: AppStrings.featureWaterWell,
+        ),
         (keys: ['CCTV', 'hasCctv'], title: AppStrings.featureCctv),
-        (keys: ['ELECTRONIC_GATE', 'hasElectronicGate'], title: AppStrings.featureElectronicGate),
+        (
+          keys: ['ELECTRONIC_GATE', 'hasElectronicGate'],
+          title: AppStrings.featureElectronicGate,
+        ),
         (keys: ['GARDEN', 'hasGarden'], title: AppStrings.featureGarden),
-        (keys: ['HEALTH_CLUB', 'hasHealthClub'], title: AppStrings.featureHealthClub),
-        (keys: ['SECURITY', 'GUARD', 'hasGuard'], title: AppStrings.featureGuard),
+        (
+          keys: ['HEALTH_CLUB', 'hasHealthClub'],
+          title: AppStrings.featureHealthClub,
+        ),
+        (
+          keys: ['SECURITY', 'GUARD', 'hasGuard'],
+          title: AppStrings.featureGuard,
+        ),
       ],
     ),
   ];

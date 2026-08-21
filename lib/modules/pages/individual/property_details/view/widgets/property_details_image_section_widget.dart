@@ -13,7 +13,6 @@ import '../../model/property_details_model.dart';
 class PropertyDetailsImageSectionWidget extends StatefulWidget {
   const PropertyDetailsImageSectionWidget({super.key, required this.property});
 
-
   final PropertyDetailsModel? property;
 
   @override
@@ -35,7 +34,8 @@ class _PropertyDetailsImageSectionWidgetState
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
-    final images = widget.property?.media
+    final images =
+        widget.property?.media
             ?.where((m) => m.url != null)
             .map((m) => m.url!)
             .toList() ??
@@ -105,7 +105,7 @@ class _PropertyDetailsImageSectionWidgetState
                 borderRadius: BorderRadius.circular(20.radius),
               ),
               child: Text(
-               ( widget.property?.type ?? '') .trans,
+                (widget.property?.type ?? '').trans,
                 style: TextStyle(
                   color: colors.primaryBrand,
                   fontSize: context.responsiveFontScale(13),
@@ -121,14 +121,13 @@ class _PropertyDetailsImageSectionWidgetState
             child: BlocBuilder<PropertyDetailsBloc, PropertyDetailsState>(
               builder: (ctx, state) {
                 return GestureDetector(
-                  onTap: () => ctx
-                      .read<PropertyDetailsBloc>()
-                      .add(const PropertyDetailsToggleBookmark()),
+                  onTap: () => ctx.read<PropertyDetailsBloc>().add(
+                    const PropertyDetailsToggleBookmark(),
+                  ),
                   child: Container(
                     padding: EdgeInsets.all(8.width),
                     decoration: BoxDecoration(
-                      color:
-                          colors.cardBackground.withValues(alpha: 0.2),
+                      color: colors.cardBackground.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(

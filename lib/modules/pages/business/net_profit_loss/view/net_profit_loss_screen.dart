@@ -16,27 +16,24 @@ class NetProfitLossScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) =>
-          NetProfitLossBloc()..add(const NetProfitLossLoad()),
-      child: const _NetProfitLossView(),
-    );
-  }
-}
-
-class _NetProfitLossView extends StatelessWidget {
-  const _NetProfitLossView();
-
-  @override
-  Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
     return Scaffold(
       backgroundColor: colors.backgroundPrimary,
       appBar: AppAppbar(title: AppStrings.netProfitLossTitle),
       body: BlocBuilder<NetProfitLossBloc, NetProfitLossState>(
         builder: (context, state) {
-          if (state.status == RequestStatus.loading) {
+          if (state.status == RequestStatus.loading ||
+              state.status == RequestStatus.init) {
             return const Center(child: CircularProgressIndicator());
+          }
+          if (state.status == RequestStatus.failed) {
+            return Center(
+              child: Text(
+                state.errorMessage.isEmpty
+                    ? AppStrings.somethingWentWrong
+                    : state.errorMessage,
+              ),
+            );
           }
           return SafeArea(
             child: SingleChildScrollView(
@@ -44,7 +41,7 @@ class _NetProfitLossView extends StatelessWidget {
                 children: [
                   NetProfitLossHeaderWidget(state: state),
                   NetProfitLossComparisonWidget(state: state),
-                  const NetProfitLossNotesWidget(),
+                  NetProfitLossNotesWidget(insights: state.insights),
                   const NetProfitLossActionsWidget(),
                 ],
               ),

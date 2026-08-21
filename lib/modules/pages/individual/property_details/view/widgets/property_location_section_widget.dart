@@ -48,38 +48,34 @@ class PropertyLocationSectionWidget extends StatelessWidget {
         SizedBox(height: 12.height),
 
         // ── Map ─────────────────────────────────────────────────────────
-        
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16.radius),
-            child: SizedBox(
-              height: 160.height,
-              child: GoogleMap(
-                onTap: (_) {
-                  RouterHandler.navigate(
-                    context,
-                    AppRouterKeys.propertyLocationMap,
-                    extra: PositionModel(
-                      latitude: latLng.latitude,
-                      longitude: latLng.longitude,
-                    ),
-                  );
-                },
-                initialCameraPosition: CameraPosition(target: latLng, zoom: 15),
-                markers: {
-                  Marker(
-                    markerId: const MarkerId('property'),
-                    position: latLng,
+        ClipRRect(
+          borderRadius: BorderRadius.circular(16.radius),
+          child: SizedBox(
+            height: 160.height,
+            child: GoogleMap(
+              onTap: (_) {
+                RouterHandler.navigate(
+                  context,
+                  AppRouterKeys.propertyLocationMap,
+                  extra: PositionModel(
+                    latitude: latLng.latitude,
+                    longitude: latLng.longitude,
                   ),
-                },
-                zoomControlsEnabled: false,
-                scrollGesturesEnabled: false,
-                tiltGesturesEnabled: false,
-                rotateGesturesEnabled: false,
-                myLocationButtonEnabled: false,
-                liteModeEnabled: true,
-              ),
+                );
+              },
+              initialCameraPosition: CameraPosition(target: latLng, zoom: 15),
+              markers: {
+                Marker(markerId: const MarkerId('property'), position: latLng),
+              },
+              zoomControlsEnabled: false,
+              scrollGesturesEnabled: false,
+              tiltGesturesEnabled: false,
+              rotateGesturesEnabled: false,
+              myLocationButtonEnabled: false,
+              liteModeEnabled: true,
             ),
           ),
+        ),
 
         SizedBox(height: 12.height),
 

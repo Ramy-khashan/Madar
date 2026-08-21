@@ -20,17 +20,29 @@ final class BusinessPropertiesTabChanged extends BusinessPropertiesEvent {
 }
 
 final class BusinessPropertiesAccept extends BusinessPropertiesEvent {
-  const BusinessPropertiesAccept(this.id);
+  const BusinessPropertiesAccept(
+    this.id, {
+    this.adLicenseNumber = '',
+    this.isIncoming = false,
+  });
   final String id;
+  final String adLicenseNumber;
+  final bool isIncoming;
 
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [id, adLicenseNumber, isIncoming];
 }
 
 final class BusinessPropertiesReject extends BusinessPropertiesEvent {
-  const BusinessPropertiesReject(this.id);
+  const BusinessPropertiesReject(
+    this.id, {
+    required this.rejectReason,
+    this.isIncoming = false,
+  });
   final String id;
+  final String rejectReason;
+  final bool isIncoming;
 
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [id, rejectReason, isIncoming];
 }

@@ -6,6 +6,8 @@ import '../../../../../core/components/app_appbar.dart';
 import '../../../../../core/components/loading_process.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../core/utils/functions/common_fun.dart';
+import '../../../../../core/utils/functions/router_handler.dart';
 import '../controller/property_details_bloc.dart';
 import 'widgets/property_details_content_widget.dart';
 import 'widgets/waiting_reply_dialog_widget.dart';
@@ -18,13 +20,24 @@ class PropertyDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<PropertyDetailsBloc, PropertyDetailsState>(
-      listenWhen: (prev, curr) => prev.submitStatus != curr.submitStatus,
+      listenWhen: (prev, curr) =>
+          prev.submitStatus != curr.submitStatus ||
+          prev.actionStatus != curr.actionStatus,
       listener: (ctx, state) {
-        if (state.submitStatus == RequestStatus.success) {
+        if (state.submitStatus == RequestStatus.success &&
+            !state.isBrokerRequest) {
           showDialog(
             context: ctx,
             builder: (_) => const WaitingOwnerReplyDialog(),
           );
+        }
+        if (state.actionStatus == RequestStatus.failed &&
+            state.actionMessage.isNotEmpty) {
+          AppToast(state.actionMessage, isError: true);
+        } else if (state.actionStatus == RequestStatus.success &&
+            state.actionMessage.isNotEmpty) {
+          AppToast(state.actionMessage);
+          RouterHandler.pop(ctx, true);
         }
       },
       builder: (context, state) {
@@ -36,9 +49,9 @@ class PropertyDetailsScreen extends StatelessWidget {
             child: LoadingProcess(
               status: state.getDetailsStatus,
               errorMsg: state.errorMsg,
-              onTapRefresh: () => context
-                  .read<PropertyDetailsBloc>()
-                  .add(PropertyDetailsLoad(propertyId)),
+              onTapRefresh: () => context.read<PropertyDetailsBloc>().add(
+                PropertyDetailsLoad(propertyId),
+              ),
               emptyMsg: '',
               isEmptyList: false,
               childIsLoader: true,

@@ -9,10 +9,17 @@ abstract class PropertyDetailsEvent extends Equatable {
 
 class PropertyDetailsLoad extends PropertyDetailsEvent {
   final String propertyId;
-  const PropertyDetailsLoad(this.propertyId);
+  final String? brokerRequestId;
+  final String? adLicenseNumber;
+
+  const PropertyDetailsLoad(
+    this.propertyId, {
+    this.brokerRequestId,
+    this.adLicenseNumber,
+  });
 
   @override
-  List<Object?> get props => [propertyId];
+  List<Object?> get props => [propertyId, brokerRequestId, adLicenseNumber];
 }
 
 class PropertyDetailsCheckIfPropertyIsSaved extends PropertyDetailsEvent {
@@ -37,4 +44,20 @@ class PropertyDetailsToggleBookmark extends PropertyDetailsEvent {
 
 class PropertyDetailsSubmitRequest extends PropertyDetailsEvent {
   const PropertyDetailsSubmitRequest();
+}
+
+class PropertyDetailsBrokerAccept extends PropertyDetailsEvent {
+  const PropertyDetailsBrokerAccept({required this.adLicenseNumber});
+  final String adLicenseNumber;
+
+  @override
+  List<Object?> get props => [adLicenseNumber];
+}
+
+class PropertyDetailsBrokerReject extends PropertyDetailsEvent {
+  const PropertyDetailsBrokerReject({required this.rejectReason});
+  final String rejectReason;
+
+  @override
+  List<Object?> get props => [rejectReason];
 }

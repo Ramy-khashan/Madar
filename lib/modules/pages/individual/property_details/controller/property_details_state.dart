@@ -7,6 +7,10 @@ class PropertyDetailsState extends Equatable {
     this.getDetailsStatus = RequestStatus.init,
     this.errorMsg = '',
     this.submitStatus = RequestStatus.init,
+    this.brokerRequestId,
+    this.adLicenseNumber,
+    this.actionStatus = RequestStatus.init,
+    this.actionMessage = '',
   });
 
   final PropertyDetailsModel? property;
@@ -14,6 +18,12 @@ class PropertyDetailsState extends Equatable {
   final String errorMsg;
   final bool isSavedWishList;
   final RequestStatus submitStatus;
+  final String? brokerRequestId;
+  final String? adLicenseNumber;
+  final RequestStatus actionStatus;
+  final String actionMessage;
+
+  bool get isBrokerRequest => (brokerRequestId ?? '').isNotEmpty;
 
   @override
   List<Object?> get props => [
@@ -22,6 +32,10 @@ class PropertyDetailsState extends Equatable {
     getDetailsStatus,
     errorMsg,
     submitStatus,
+    brokerRequestId,
+    adLicenseNumber,
+    actionStatus,
+    actionMessage,
   ];
 
   PropertyDetailsState copyWith({
@@ -30,6 +44,10 @@ class PropertyDetailsState extends Equatable {
     String? errorMsg,
     bool? isSavedWishList,
     RequestStatus? submitStatus,
+    String? brokerRequestId,
+    String? adLicenseNumber,
+    RequestStatus? actionStatus,
+    String? actionMessage,
   }) {
     return PropertyDetailsState(
       isSavedWishList: isSavedWishList ?? this.isSavedWishList,
@@ -37,6 +55,10 @@ class PropertyDetailsState extends Equatable {
       getDetailsStatus: getDetailsStatus ?? this.getDetailsStatus,
       errorMsg: errorMsg ?? this.errorMsg,
       submitStatus: submitStatus ?? this.submitStatus,
+      brokerRequestId: brokerRequestId ?? this.brokerRequestId,
+      adLicenseNumber: adLicenseNumber ?? this.adLicenseNumber,
+      actionStatus: actionStatus ?? this.actionStatus,
+      actionMessage: actionMessage ?? this.actionMessage,
     );
   }
 }

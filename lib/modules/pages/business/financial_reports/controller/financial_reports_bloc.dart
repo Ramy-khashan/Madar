@@ -2,13 +2,12 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../core/connection/concept/end_points.dart';
-import '../../../../../core/connection/interfaces/api_consumer.dart';
 import '../../../../../core/model/statistic_circle_model.dart';
+import '../../../../../core/repository/apis/dashboard_apis.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/common_fun.dart';
-import '../../../../../core/utils/functions/service_locator.dart';
+import '../../../../../core/utils/functions/translation.dart';
 import '../model/financial_report_models.dart';
 
 part 'financial_reports_event.dart';
@@ -46,25 +45,24 @@ class FinancialReportsBloc
     FinancialReportsLoad event,
     Emitter<FinancialReportsState> emit,
   ) async {
-    emit(state.copyWith(status: RequestStatus.loading));
+    emit(state.copyWith(status: RequestStatus.loading, errorMessage: null));
+    switch (state.selectedTab) {
+      case 1:
+        await _loadRevenues(emit);
+      case 2:
+        await _loadExpenses(emit);
+      default:
+        await _loadOverview(emit);
+    }
+  }
 
-    final response = await sl.get<ApiConsumer>().get(
-      EndPoints.financialReports,
-      queryParameters: {'period': state.selectedPeriod},
-    );
-
-    await response.fold(
-      (failure) async {
-        emit(
-          state.copyWith(status: RequestStatus.failed, errorMessage: failure),
-        );
-      },
-      (success) async {
-        final payload = Map<String, dynamic>.from(
-          success.response['data'] ?? {},
-        );
+  Future<void> _loadOverview(Emitter<FinancialReportsState> emit) async {
+    final result = await DashboardApis.overview(period: state.selectedPeriod);
+    result.fold(
+      (err) =>
+          emit(state.copyWith(status: RequestStatus.failed, errorMessage: err)),
+      (payload) {
         final report = FinancialReportsResponse.fromJson(payload);
-
         emit(
           state.copyWith(
             status: RequestStatus.success,
@@ -72,41 +70,8 @@ class FinancialReportsBloc
             totalIncome: report.financialSummary.totalIncome,
             totalExpenses: report.financialSummary.totalExpenses,
             netProfit: report.financialSummary.netProfit,
-            lateRent: 0,
-            categoryItems: report.expenseDistribution
-                .map(
-                  (item) => FinancialPropertyItem(
-                    name: item.type,
-                    amount: formatPrice(item.amount),
-                    paid: true,
-                    status: '${item.percentage.toStringAsFixed(2)}%',
-                  ),
-                )
-                .toList(),
-            transactions: report.transactionHistory
-                .map(
-                  (item) => FinancialTransaction(
-                    name: item.type,
-                    date: item.date,
-                    desc: item.amount >= 0 ? AppStrings.transactionTypeIncome : AppStrings.transactionTypeExpense,
-                    amount:
-                        '${item.amount >= 0 ? '+' : '-'}${formatPrice(item.amount.abs())}',
-                  ),
-                )
-                .toList(),
-            rentItems: report.topProperties
-                .map(
-                  (item) => FinancialRentItem(
-                    name: item.property,
-                    amount: formatPrice(item.income),
-                    paid: true,
-                  ),
-                )
-                .toList(),
             incomeDistribution: report.incomeDistribution,
             incomeVsExpense: report.incomeVsExpense,
-            lateTenants: const [],
-            settlements: const [],
             incomeSections: _buildIncomeSections(report.incomeDistribution),
             expensesSections: _buildExpenseSections(report.expenseDistribution),
           ),
@@ -115,11 +80,95 @@ class FinancialReportsBloc
     );
   }
 
+  Future<void> _loadRevenues(Emitter<FinancialReportsState> emit) async {
+    final result = await DashboardApis.revenues(period: state.selectedPeriod);
+    result.fold(
+      (err) =>
+          emit(state.copyWith(status: RequestStatus.failed, errorMessage: err)),
+      (payload) {
+        final report = DashboardRevenuesResponse.fromJson(payload);
+        emit(
+          state.copyWith(
+            status: RequestStatus.success,
+            errorMessage: null,
+            totalIncome: report.totalIncome,
+            rentalTotal: report.rentalsTotal,
+            otherIncomeTotal: report.otherTotal,
+            rentItems: report.rentals.map(_rentItemFromRevenue).toList(),
+            otherIncomeItems: report.otherTransactions
+                .map(_rentItemFromRevenue)
+                .toList(),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _loadExpenses(Emitter<FinancialReportsState> emit) async {
+    final result = await DashboardApis.expenses(period: state.selectedPeriod);
+    result.fold(
+      (err) =>
+          emit(state.copyWith(status: RequestStatus.failed, errorMessage: err)),
+      (payload) {
+        final report = DashboardExpensesResponse.fromJson(payload);
+        emit(
+          state.copyWith(
+            status: RequestStatus.success,
+            errorMessage: null,
+            totalExpenses: report.totalExpenses,
+            categoryItems: report.distribution
+                .map(
+                  (item) => FinancialPropertyItem(
+                    name: item.type.transIfExists,
+                    amount: formatPrice(item.amount),
+                    paid: true,
+                    status: '${item.percentage.toStringAsFixed(2)}%',
+                  ),
+                )
+                .toList(),
+            transactions: report.transactions.map(_transactionFromApi).toList(),
+            expensesSections: _buildExpenseSections(report.distribution),
+          ),
+        );
+      },
+    );
+  }
+
+  FinancialRentItem _rentItemFromRevenue(DashboardRevenueItem item) {
+    return FinancialRentItem(
+      name: item.property,
+      amount: formatPrice(item.amount),
+      date: item.date,
+      status: item.type.isNotEmpty
+          ? item.type.transIfExists
+          : item.status.transIfExists,
+      paid: item.isActive,
+    );
+  }
+
+  FinancialTransaction _transactionFromApi(TransactionHistoryItem item) {
+    final isIncome = item.amount >= 0;
+    return FinancialTransaction(
+      name: item.type.transIfExists,
+      date: item.date,
+      desc: item.property.isNotEmpty
+          ? item.property
+          : (isIncome
+                ? AppStrings.transactionTypeIncome
+                : AppStrings.transactionTypeExpense),
+      amount: '${isIncome ? '+' : '-'}${formatPrice(item.amount.abs())}',
+      property: item.property,
+      fileUrl: item.fileUrl,
+    );
+  }
+
   void _onTabChanged(
     FinancialReportsTabChanged event,
     Emitter<FinancialReportsState> emit,
   ) {
+    if (event.tabIndex == state.selectedTab) return;
     emit(state.copyWith(selectedTab: event.tabIndex));
+    add(const FinancialReportsLoad());
   }
 
   void _onPeriodChanged(
@@ -147,7 +196,7 @@ class FinancialReportsBloc
                   : entry.value.percentage)
               .clamp(0.0, 1.0);
       return StatisticCircleModel(
-        label: entry.value.source,
+        label: entry.value.source.transIfExists,
         value: value.toDouble(),
         color: _incomePalette[entry.key % _incomePalette.length],
       );
@@ -164,7 +213,7 @@ class FinancialReportsBloc
                   : entry.value.percentage)
               .clamp(0.0, 1.0);
       return StatisticCircleModel(
-        label: entry.value.type,
+        label: entry.value.type.transIfExists,
         value: value.toDouble(),
         color: _expensePalette[entry.key % _expensePalette.length],
       );

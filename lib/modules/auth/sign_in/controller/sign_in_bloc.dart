@@ -32,7 +32,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       final res = await sl.get<ApiConsumer>().auth(
         EndPoints.login,
         body: {
-          'phone': phoneController.text.replaceAll("+", ""),
+          'phone': phoneController.text ,
           'password': passwordController.text,
         },
       );

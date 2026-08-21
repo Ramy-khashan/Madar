@@ -5,48 +5,46 @@ class ConstructionReportsState extends Equatable {
     this.selectedPeriod = 'monthly',
     this.selectedScope = 'all',
     this.selectedPropertyTypeIds = const [],
-    this.occupancyRate = 0.5,
-    this.activeContracts = 4,
-    this.monthlyIncome = 120000,
+    this.report = const PerformanceReportModel(),
     this.status = RequestStatus.init,
+    this.errorMessage = '',
   });
 
   final String selectedPeriod;
   final String selectedScope;
   final List<String> selectedPropertyTypeIds;
-  final double occupancyRate;
-  final int activeContracts;
-  final double monthlyIncome;
+  final PerformanceReportModel report;
   final RequestStatus status;
+  final String errorMessage;
+
+  int get activeContracts => report.activeContracts.count;
+  double get occupancyRate => report.occupancyRate;
+  double get monthlyIncome => report.monthlyIncome;
 
   ConstructionReportsState copyWith({
     String? selectedPeriod,
     String? selectedScope,
     List<String>? selectedPropertyTypeIds,
-    double? occupancyRate,
-    int? activeContracts,
-    double? monthlyIncome,
+    PerformanceReportModel? report,
     RequestStatus? status,
-  }) =>
-      ConstructionReportsState(
-        selectedPeriod: selectedPeriod ?? this.selectedPeriod,
-        selectedScope: selectedScope ?? this.selectedScope,
-        selectedPropertyTypeIds:
-            selectedPropertyTypeIds ?? this.selectedPropertyTypeIds,
-        occupancyRate: occupancyRate ?? this.occupancyRate,
-        activeContracts: activeContracts ?? this.activeContracts,
-        monthlyIncome: monthlyIncome ?? this.monthlyIncome,
-        status: status ?? this.status,
-      );
+    String? errorMessage,
+  }) => ConstructionReportsState(
+    selectedPeriod: selectedPeriod ?? this.selectedPeriod,
+    selectedScope: selectedScope ?? this.selectedScope,
+    selectedPropertyTypeIds:
+        selectedPropertyTypeIds ?? this.selectedPropertyTypeIds,
+    report: report ?? this.report,
+    status: status ?? this.status,
+    errorMessage: errorMessage ?? this.errorMessage,
+  );
 
   @override
   List<Object?> get props => [
-        selectedPeriod,
-        selectedScope,
-        selectedPropertyTypeIds,
-        occupancyRate,
-        activeContracts,
-        monthlyIncome,
-        status,
-      ];
+    selectedPeriod,
+    selectedScope,
+    selectedPropertyTypeIds,
+    report,
+    status,
+    errorMessage,
+  ];
 }

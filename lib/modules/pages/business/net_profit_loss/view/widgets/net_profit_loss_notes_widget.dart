@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../../../../core/components/outline_section.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../../config/theme/app_theme_colors.dart';
@@ -6,40 +7,32 @@ import '../../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
 
 class NetProfitLossNotesWidget extends StatelessWidget {
-  const NetProfitLossNotesWidget({super.key});
+  const NetProfitLossNotesWidget({super.key, required this.insights});
+
+  final List<String> insights;
 
   @override
   Widget build(BuildContext context) {
+    if (insights.isEmpty) return const SizedBox.shrink();
     final colors = AppThemeColors.of(context);
     return OutlinedSection(
       title: AppStrings.analyticalInsights,
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          _InsightCard(
-            emoji: '💡',
-            message: AppStrings.netProfitNote1,
-            bgColor: AppColors.backgroundLight,
-            borderColor: AppColors.secondBrand.withValues(alpha: 0.2),
-            textColor: colors.textPrimary,
-          ),
-          SizedBox(height: 8.height),
-          _InsightCard(
-            emoji: '⚠️',
-            message: AppStrings.netProfitNote2,
-            bgColor: AppColors.rate.withValues(alpha: 0.08),
-            borderColor: AppColors.rate.withValues(alpha: 0.3),
-            textColor: AppColors.brownColor,
-          ),
-          SizedBox(height: 8.height),
-          _InsightCard(
-            emoji: '✅',
-            message: AppStrings.netProfitNote3,
-            bgColor: AppColors.successColor.withValues(alpha: 0.06),
-            borderColor: AppColors.successColor.withValues(alpha: 0.25),
-            textColor: AppColors.successColor,
-          ),
+          for (var i = 0; i < insights.length; i++) ...[
+            if (i > 0) SizedBox(height: 8.height),
+            _InsightCard(
+              message: insights[i],
+              bgColor: i == 0
+                  ? AppColors.backgroundLight
+                  : AppColors.successColor.withValues(alpha: 0.06),
+              borderColor: i == 0
+                  ? AppColors.secondBrand.withValues(alpha: 0.2)
+                  : AppColors.successColor.withValues(alpha: 0.25),
+              textColor: i == 0 ? colors.textPrimary : AppColors.successColor,
+            ),
+          ],
         ],
       ),
     );
@@ -48,14 +41,12 @@ class NetProfitLossNotesWidget extends StatelessWidget {
 
 class _InsightCard extends StatelessWidget {
   const _InsightCard({
-    required this.emoji,
     required this.message,
     required this.bgColor,
     required this.borderColor,
     required this.textColor,
   });
 
-  final String emoji;
   final String message;
   final Color bgColor;
   final Color borderColor;
@@ -64,33 +55,21 @@ class _InsightCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       padding: EdgeInsets.all(14.width),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(10.radius),
         border: Border.all(color: borderColor),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            emoji,
-            style: TextStyle(fontSize: context.responsiveFontScale(16)),
-          ),
-          SizedBox(width: 8.width),
-
-          Expanded(
-            child: Text(
-              message,
-              textAlign: TextAlign.right,
-              style: TextStyle(
-                fontSize: context.responsiveFontScale(14),
-                color: textColor,
-                height: 1.5,
-              ),
-            ),
-          ),
-        ],
+      child: Text(
+        message,
+        textAlign: TextAlign.right,
+        style: TextStyle(
+          fontSize: context.responsiveFontScale(14),
+          color: textColor,
+          height: 1.5,
+        ),
       ),
     );
   }

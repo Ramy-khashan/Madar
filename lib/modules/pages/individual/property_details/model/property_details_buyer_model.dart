@@ -351,7 +351,6 @@
 //     role = json['role'];
 //   }
 
-   
 // }
 // class Broker {
 //   String? userId;
@@ -374,7 +373,6 @@
 //     isVerified = json['is_verified'];
 //   }
 
-   
 // }
 
 // class ParentProperty {

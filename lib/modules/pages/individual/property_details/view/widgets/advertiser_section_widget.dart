@@ -1,14 +1,14 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../../../../config/router/app_router_keys.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_button.dart';
 import '../../../../../../core/components/image_item.dart';
- import '../../../../../../core/utils/constants/app_constant.dart';
+import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
- import '../../model/property_details_model.dart';
+import '../../model/property_details_model.dart';
 
 class AdvertiserSectionWidget extends StatelessWidget {
   const AdvertiserSectionWidget({super.key, required this.advertiser});
@@ -21,16 +21,16 @@ class AdvertiserSectionWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-            Text(
-            AppStrings.advertiserDetailsSection,
-            style: TextStyle(
-              fontSize: context.responsiveFontScale(18),
-              fontWeight: FontWeight.w700,
-              fontFamily: AppConstant.appHeaderFont,
-              color: colors.textFieldTitle,
-            ),
+        Text(
+          AppStrings.advertiserDetailsSection,
+          style: TextStyle(
+            fontSize: context.responsiveFontScale(18),
+            fontWeight: FontWeight.w700,
+            fontFamily: AppConstant.appHeaderFont,
+            color: colors.textFieldTitle,
           ),
-          SizedBox(height: 12.height),
+        ),
+        SizedBox(height: 12.height),
         Container(
           padding: EdgeInsets.all(16.width),
           decoration: BoxDecoration(
@@ -41,8 +41,6 @@ class AdvertiserSectionWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-          
-        
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -114,10 +112,9 @@ class AdvertiserSectionWidget extends StatelessWidget {
                   //   ),
                 ],
               ),
-        
-            
+
               SizedBox(height: 16.height),
-        
+
               Container(
                 padding: EdgeInsets.symmetric(
                   vertical: 13.height,
@@ -129,10 +126,7 @@ class AdvertiserSectionWidget extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    ImageItem(
-                      AppImages.safetyIcon,
-                      width: 16.width,
-                    ),
+                    ImageItem(AppImages.safetyIcon, width: 16.width),
                     SizedBox(width: 8.width),
                     Text(
                       '${AppStrings.falLicenseLabel}: \n  ${advertiser?.falLicenseNumber ?? ''} ',
@@ -142,7 +136,7 @@ class AdvertiserSectionWidget extends StatelessWidget {
                         fontFamily: AppConstant.appFont,
                       ),
                     ),
-        
+
                     // const Spacer(),
                     // if (advertiser?.isVerified == true)
                     //   Container(
@@ -180,10 +174,7 @@ class AdvertiserSectionWidget extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                   ImageItem(
-                      AppImages.safetyIcon,
-                      width: 16.width,
-                    ),
+                    ImageItem(AppImages.safetyIcon, width: 16.width),
                     SizedBox(width: 8.width),
                     Text(
                       '${AppStrings.adLicenseLabel}:\n  ${advertiser?.adLicenseNumber ?? ''} ',
@@ -201,9 +192,12 @@ class AdvertiserSectionWidget extends StatelessWidget {
                 text:
                     '${AppStrings.viewOwnerProperties} (${advertiser?.propertiesCount ?? 0})',
                 onTap: () {
-                  RouterHandler.navigate(context, AppRouterKeys.ownerProperties);
+                  RouterHandler.navigate(
+                    context,
+                    AppRouterKeys.ownerProperties,
+                  );
                 },
-                 textSize: context.responsiveFontScale(14),
+                textSize: context.responsiveFontScale(14),
                 height: 44.height,
               ),
             ],

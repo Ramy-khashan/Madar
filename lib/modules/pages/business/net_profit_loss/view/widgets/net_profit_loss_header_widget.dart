@@ -12,19 +12,22 @@ class NetProfitLossHeaderWidget extends StatelessWidget {
   const NetProfitLossHeaderWidget({super.key, required this.state});
 
   final NetProfitLossState state;
- 
+
   @override
   Widget build(BuildContext context) {
-    final isPositive = 0 >= 0;
+    final isProfit = state.netProfit >= 0;
+    final change = state.netProfitComparison.percent;
+    final accent = isProfit ? AppColors.successColor : AppColors.errorColor;
+    final dark = isProfit ? AppColors.darkGreenColor : AppColors.errorColor;
+    final signedChange =
+        '${change > 0 ? '+' : ''}${change.toStringAsFixed(0)}٪ ${AppStrings.comparedToPrevMonth}';
     return Container(
       margin: EdgeInsets.all(16.width),
       padding: EdgeInsets.all(20.width),
       decoration: BoxDecoration(
-        color: AppColors.successColor.withValues(alpha: 0.12),
+        color: accent.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(16.radius),
-        border: Border.all(
-          color: AppColors.successColor.withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: accent.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -33,7 +36,7 @@ class NetProfitLossHeaderWidget extends StatelessWidget {
             AppStrings.netProfitPeriodLabel,
             style: TextStyle(
               fontSize: context.responsiveFontScale(14),
-              color: AppColors.successColor,
+              color: accent,
             ),
           ),
           SizedBox(height: 6.height),
@@ -42,25 +45,20 @@ class NetProfitLossHeaderWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: context.responsiveFontScale(36),
               fontWeight: FontWeight.w800,
-              color: AppColors.darkGreenColor,
+              color: dark,
             ),
           ),
           SizedBox(height: 8.height),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const ImageItem(
-                AppImages.occupancyIcon,
-                color: AppColors.successColor,
-              ),
+              ImageItem(AppImages.occupancyIcon, color: accent),
               SizedBox(width: 6.width),
-
               Text(
-                "",
-                // '${isPositive ? '+' : ''}${state.profitChangePercent.toStringAsFixed(0)}٪ ${AppStrings.comparedToPrevMonth}',
+                signedChange,
                 style: TextStyle(
                   fontSize: context.responsiveFontScale(16),
-                  color: AppColors.successColor,
+                  color: accent,
                 ),
               ),
             ],
@@ -71,18 +69,20 @@ class NetProfitLossHeaderWidget extends StatelessWidget {
               Expanded(
                 child: _SummaryTile(
                   label: AppStrings.totalIncomeLabel,
-                  value: formatPrice(state.annualProfit),
+                  value: formatPrice(state.totalIncome),
+                  color: dark,
+                  captionColor: accent,
                 ),
               ),
-               SizedBox(width: 12.width),
-
+              SizedBox(width: 12.width),
               Expanded(
                 child: _SummaryTile(
                   label: AppStrings.totalExpensesLabel,
                   value: formatPrice(state.totalExpenses),
+                  color: dark,
+                  captionColor: accent,
                 ),
               ),
-             
             ],
           ),
         ],
@@ -92,10 +92,17 @@ class NetProfitLossHeaderWidget extends StatelessWidget {
 }
 
 class _SummaryTile extends StatelessWidget {
-  const _SummaryTile({required this.label, required this.value});
+  const _SummaryTile({
+    required this.label,
+    required this.value,
+    required this.color,
+    required this.captionColor,
+  });
 
   final String label;
   final String value;
+  final Color color;
+  final Color captionColor;
 
   @override
   Widget build(BuildContext context) {
@@ -107,15 +114,15 @@ class _SummaryTile extends StatelessWidget {
           style: TextStyle(
             fontSize: context.responsiveFontScale(24),
             fontWeight: FontWeight.w700,
-            color: AppColors.darkGreenColor,
+            color: color,
           ),
         ),
         Text(
           label,
           style: TextStyle(
             fontSize: context.responsiveFontScale(12),
-            color: AppColors.successColor,
-            fontWeight: FontWeight.w600
+            color: captionColor,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ],

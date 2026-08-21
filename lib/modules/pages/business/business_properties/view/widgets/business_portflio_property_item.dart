@@ -8,7 +8,6 @@ import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../config/router/app_router_keys.dart';
 import '../../../../../../core/components/app_button.dart';
 import '../../../../../../core/components/portfolio_card_widget.dart';
-import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../model/business_property_request_model.dart';
 
@@ -52,24 +51,6 @@ class BusinessPortflioPropertyItem extends StatelessWidget {
             imageUrl: portfolio.imageUrl,
             colors: colors,
           ),
-          SizedBox(height: 10.height),
-          PropertyInfo(
-            info: '${AppStrings.contractsCount}: ${portfolio.contractNumber}',
-            icon: AppImages.documentsIcon,
-            colors: colors,
-          ),
-          PropertyInfo(
-            info:
-                '${AppStrings.occupancyRate}: ${portfolio.occupancyRate.toInt()}%',
-            icon: AppImages.occupancyRateIcon,
-            colors: colors,
-          ),
-          PropertyInfo(
-            info: '${AppStrings.lastUpdate}: ${portfolio.lastUpdate}',
-            icon: AppImages.updateIcon,
-            colors: colors,
-          ),
-
           SizedBox(height: 10.height),
           AppButton(
             onTap: () {

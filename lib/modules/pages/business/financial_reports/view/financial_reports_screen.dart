@@ -32,14 +32,6 @@ class FinancialReportsScreen extends StatelessWidget {
         buildWhen: (p, c) =>
             p.status != c.status || p.selectedTab != c.selectedTab,
         builder: (context, state) {
-          if (state.status == RequestStatus.loading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state.status == RequestStatus.failed) {
-            return Center(
-              child: Text(state.errorMessage ?? AppStrings.somethingWentWrong),
-            );
-          }
           return SafeArea(
             child: Column(
               children: [
@@ -52,23 +44,31 @@ class FinancialReportsScreen extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 250),
-                    child: SingleChildScrollView(
-                      key: ValueKey(state.selectedTab),
-                      child: Column(
-                        children: [
-                          const FinancialReportsFilterWidget(),
-                          if (state.selectedTab == 0)
-                            const FinancialReportsOverviewTabWidget()
-                          else if (state.selectedTab == 1)
-                            const FinancialReportsRevenueTabWidget()
-                          else
-                            const FinancialReportsExpensesTabWidget(),
-                        ],
-                      ),
-                    ),
-                  ),
+                  child: state.status == RequestStatus.loading
+                      ? const Center(child: CircularProgressIndicator())
+                      : state.status == RequestStatus.failed
+                      ? Center(
+                          child: Text(
+                            state.errorMessage ?? AppStrings.somethingWentWrong,
+                          ),
+                        )
+                      : AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 250),
+                          child: SingleChildScrollView(
+                            key: ValueKey(state.selectedTab),
+                            child: Column(
+                              children: [
+                                const FinancialReportsFilterWidget(),
+                                if (state.selectedTab == 0)
+                                  const FinancialReportsOverviewTabWidget()
+                                else if (state.selectedTab == 1)
+                                  const FinancialReportsRevenueTabWidget()
+                                else
+                                  const FinancialReportsExpensesTabWidget(),
+                              ],
+                            ),
+                          ),
+                        ),
                 ),
               ],
             ),

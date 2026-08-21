@@ -103,6 +103,7 @@ import '../../modules/pages/individual/properties/view/properties_listing_screen
 import '../../modules/pages/individual/properties_map/view/properties_map_screen.dart';
 import '../../core/model/google_map_model.dart';
 import '../../modules/pages/individual/property_details/controller/property_details_bloc.dart';
+import '../../modules/pages/individual/property_details/model/property_details_route_args.dart';
 import '../../modules/pages/individual/property_details/view/property_details_screen.dart';
 import '../../modules/pages/individual/property_insurance/controller/property_insurance_bloc.dart';
 import '../../modules/pages/individual/property_insurance/view/property_insurance_screen.dart';
@@ -237,8 +238,9 @@ final GoRouter appRouter = GoRouter(
     getRouteInstance(
       AppRouterKeys.propertyFileDetails,
       (state) => BlocProvider(
-        create: (_) => PropertyFileBloc()
-          ..add(PropertyFileLoad(propertyId: state.extra as String? ?? '')),
+        create: (_) =>
+            PropertyFileBloc()
+              ..add(PropertyFileLoad(propertyId: state.extra as String? ?? '')),
         child: const PropertyFileScreen(),
       ),
     ),
@@ -259,15 +261,20 @@ final GoRouter appRouter = GoRouter(
         child: const MyPropertyDetailsScreen(),
       ),
     ),
-    getRouteInstance(
-      AppRouterKeys.propertyDetails,
-      (state) => BlocProvider(
-        create: (_) =>
-            PropertyDetailsBloc()
-              ..add(PropertyDetailsLoad(state.extra as String? ?? '1')),
-        child: PropertyDetailsScreen(propertyId: state.extra as String? ?? '1'),
-      ),
-    ),
+    getRouteInstance(AppRouterKeys.propertyDetails, (state) {
+      final args = PropertyDetailsRouteArgs.fromExtra(state.extra);
+      return BlocProvider(
+        create: (_) => PropertyDetailsBloc()
+          ..add(
+            PropertyDetailsLoad(
+              args.propertyId,
+              brokerRequestId: args.brokerRequestId,
+              adLicenseNumber: args.adLicenseNumber,
+            ),
+          ),
+        child: PropertyDetailsScreen(propertyId: args.propertyId),
+      );
+    }),
     getRouteInstance(
       AppRouterKeys.conversationDetail,
       (state) => BlocProvider(
@@ -282,18 +289,15 @@ final GoRouter appRouter = GoRouter(
         ),
       ),
     ),
-    getRouteInstance(
-      AppRouterKeys.chooseBroker,
-      (state) {
-        printState('chooseBroker: ${state.extra}');
-        return BlocProvider(
+    getRouteInstance(AppRouterKeys.chooseBroker, (state) {
+      printState('chooseBroker: ${state.extra}');
+      return BlocProvider(
         create: (context) => ChooseBrokerBloc()
           ..add(const ChooseBrokerLoad())
           ..add(GetPropertyIdEvent(state.extra as String? ?? '')),
         child: const ChooseBrokerScreen(),
       );
-      },
-    ),
+    }),
     getRouteInstance(
       AppRouterKeys.rentInstallment,
       (state) => BlocProvider(
@@ -585,8 +589,8 @@ final GoRouter appRouter = GoRouter(
     getRouteInstance(
       AppRouterKeys.brokerProperties,
       (state) => BlocProvider(
-        create: (_) =>
-            BrokerPropertiesBloc()..add(  BrokerPropertiesLoad(brokerId: state.extra as String? ?? '')),
+        create: (_) => BrokerPropertiesBloc()
+          ..add(BrokerPropertiesLoad(brokerId: state.extra as String? ?? '')),
         child: const BrokerPropertiesScreen(),
       ),
     ),

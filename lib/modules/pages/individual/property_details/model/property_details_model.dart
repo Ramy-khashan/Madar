@@ -38,7 +38,7 @@ class PropertyDetailsModel {
     this.title,
     this.projectName,
     this.type,
-     this.listingType,
+    this.listingType,
     this.price,
     this.totalArea,
     this.facadeDirection,
@@ -101,14 +101,18 @@ class PropertyDetailsModel {
       media: json['media'] is List
           ? ((json['media'] as List)
                 .whereType<Map>()
-                .map((v) => PropertyMedia.fromJson(Map<String, dynamic>.from(v)))
+                .map(
+                  (v) => PropertyMedia.fromJson(Map<String, dynamic>.from(v)),
+                )
                 .toList()
               ..sort((a, b) => (a.order ?? 0).compareTo(b.order ?? 0)))
           : null,
       deeds: json['deeds'] is List
           ? (json['deeds'] as List)
                 .whereType<Map>()
-                .map((v) => PropertyDeeds.fromJson(Map<String, dynamic>.from(v)))
+                .map(
+                  (v) => PropertyDeeds.fromJson(Map<String, dynamic>.from(v)),
+                )
                 .toList()
           : null,
       evaluation: json['evaluation'] != null
@@ -924,7 +928,8 @@ class PropertyEvaluation {
     data['furnishing'] = furnishing;
     return data;
   }
-} 
+}
+
 class Publisher {
   String? userId;
   String? fullName;
@@ -972,6 +977,7 @@ class Publisher {
     return data;
   }
 }
+
 class PropertyOwner {
   String? userId;
   String? fullName;
@@ -1230,6 +1236,9 @@ int? _jsonInt(dynamic value) {
 
 List<String>? _jsonStringList(dynamic value) {
   if (value is! List) return null;
-  final items = value.map((e) => e.toString()).where((e) => e.isNotEmpty).toList();
+  final items = value
+      .map((e) => e.toString())
+      .where((e) => e.isNotEmpty)
+      .toList();
   return items.isEmpty ? null : items;
 }

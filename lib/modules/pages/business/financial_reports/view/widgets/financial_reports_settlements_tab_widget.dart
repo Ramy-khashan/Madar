@@ -62,7 +62,7 @@ class _SettlementCard extends StatelessWidget {
         border: Border.all(color: colors.borderColor),
       ),
       child: Row(
-         crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: Column(

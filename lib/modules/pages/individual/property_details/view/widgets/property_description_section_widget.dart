@@ -6,7 +6,10 @@ import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 
 class PropertyDescriptionSectionWidget extends StatelessWidget {
-  const PropertyDescriptionSectionWidget({super.key, required this.description});
+  const PropertyDescriptionSectionWidget({
+    super.key,
+    required this.description,
+  });
 
   final String? description;
 
@@ -16,16 +19,16 @@ class PropertyDescriptionSectionWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-          Text(
-            AppStrings.propertyDescriptionSection,
-            style: TextStyle(
-              fontSize: context.responsiveFontScale(16),
-              fontWeight: FontWeight.w700,
-              fontFamily: AppConstant.appHeaderFont,
-              color: colors.textFieldTitle,
-            ),
+        Text(
+          AppStrings.propertyDescriptionSection,
+          style: TextStyle(
+            fontSize: context.responsiveFontScale(16),
+            fontWeight: FontWeight.w700,
+            fontFamily: AppConstant.appHeaderFont,
+            color: colors.textFieldTitle,
           ),
-          SizedBox(height: 10.height),
+        ),
+        SizedBox(height: 10.height),
         Container(
           padding: EdgeInsets.all(16.width),
           decoration: BoxDecoration(

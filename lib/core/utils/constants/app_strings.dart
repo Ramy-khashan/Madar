@@ -6,7 +6,8 @@ class AppStrings {
   static String get view => 'view'.trans;
   static String get searchProperty => 'search_property'.trans;
   static String get cooling => 'cooling'.trans;
-  static String get brokerRequestSentSuccessfully => 'broker_request_sent_successfully'.trans;
+  static String get brokerRequestSentSuccessfully =>
+      'broker_request_sent_successfully'.trans;
   static String get flooring => 'flooring'.trans;
   static String get pleaseSelectPropertyToSend =>
       'please_select_property_to_end'.trans;
@@ -181,8 +182,7 @@ class AppStrings {
   static String get valLicenseNumber => 'val_license_number'.trans;
   static String get enterValLicenseNumber => 'enter_val_license_number'.trans;
   static String get falLicenseFile => 'fal_license_file'.trans;
-  static String get pleaseAttachFalLicense =>
-      'please_attach_fal_license'.trans;
+  static String get pleaseAttachFalLicense => 'please_attach_fal_license'.trans;
   static String get home => 'home'.trans;
   static String get chat => 'chat'.trans;
   static String get documents => 'documents'.trans;
@@ -383,6 +383,44 @@ class AppStrings {
   static String get apr => 'apr'.trans;
   static String get may => 'may'.trans;
   static String get jun => 'jun'.trans;
+  static String get jul => 'jul'.trans;
+  static String get aug => 'aug'.trans;
+  static String get sep => 'sep'.trans;
+  static String get oct => 'oct'.trans;
+  static String get nov => 'nov'.trans;
+  static String get dec => 'dec'.trans;
+
+  static String dashboardMonthLabel(String month) {
+    switch (month.trim().toLowerCase()) {
+      case 'january':
+        return jan;
+      case 'february':
+        return feb;
+      case 'march':
+        return mar;
+      case 'april':
+        return apr;
+      case 'may':
+        return may;
+      case 'june':
+        return jun;
+      case 'july':
+        return jul;
+      case 'august':
+        return aug;
+      case 'september':
+        return sep;
+      case 'october':
+        return oct;
+      case 'november':
+        return nov;
+      case 'december':
+        return dec;
+      default:
+        return month;
+    }
+  }
+
   static String get propertyDescriptionSection =>
       'property_description_section'.trans;
   static String get advertiserDetailsSection =>
@@ -882,12 +920,37 @@ class AppStrings {
       'business_properties_individual_label'.trans;
   static String get businessPropertiesRequestDateLabel =>
       'business_properties_request_date_label'.trans;
+  static String get applicantDetailsSection =>
+      'applicant_details_section'.trans;
   static String get businessPropertiesPublishDateLabel =>
       'business_properties_publish_date_label'.trans;
   static String get businessPropertiesReject =>
       'business_properties_reject'.trans;
   static String get businessPropertiesAccept =>
       'business_properties_accept'.trans;
+  static String get businessPropertiesAcceptSuccess =>
+      'business_properties_accept_success'.trans;
+  static String get businessPropertiesRejectSuccess =>
+      'business_properties_reject_success'.trans;
+  static String get rejectReasonTitle => 'reject_reason_title'.trans;
+  static String get rejectReasonIncompleteData =>
+      'reject_reason_incomplete_data'.trans;
+  static String get rejectReasonOutOfCoverage =>
+      'reject_reason_out_of_coverage'.trans;
+  static String get rejectReasonUnsuitableType =>
+      'reject_reason_unsuitable_type'.trans;
+  static String get rejectReasonOther => 'reject_reason_other'.trans;
+  static String get rejectReasonOtherHint => 'reject_reason_other_hint'.trans;
+  static String get sendRejection => 'send_rejection'.trans;
+  static String get pleaseSelectRejectReason =>
+      'please_select_reject_reason'.trans;
+  static String get pleaseEnterOtherRejectReason =>
+      'please_enter_other_reject_reason'.trans;
+  static String get acceptRequestTitle => 'accept_request_title'.trans;
+  static String get acceptRequestMessage => 'accept_request_message'.trans;
+  static String get acceptIncomingRequestMessage =>
+      'accept_incoming_request_message'.trans;
+  static String get pleaseEnterAdLicense => 'please_enter_ad_license'.trans;
 
   // Real Estate Development
   static String get addCommercialProjectTitle =>
