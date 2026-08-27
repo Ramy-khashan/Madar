@@ -352,9 +352,6 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
       );
       if (next == AddPropertyStep.review) {
         add(const PreviewEvaluationEvent());
-        if (model.propertyType == PropertyApiEnums.typeApartment) {
-          add(const LoadParentCandidatesEvent());
-        }
       }
     }
   }
@@ -931,12 +928,17 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
       );
       return;
     }
+    final canAttachToBuilding = model.isApartment;
     emit(
       state.copyWith(
-        model: model,
+        model: canAttachToBuilding
+            ? model
+            : model.copyWith(clearPropertyParent: true),
         fieldErrors: const {},
         errorMessage: null,
         showPortfolioSheet: true,
+        hasPortfolioMode: !canAttachToBuilding,
+        isNewFolder: true,
       ),
     );
   }
@@ -952,11 +954,17 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     SelectPortfolioModeEvent event,
     Emitter<AddPropertyState> emit,
   ) {
-    emit(state.copyWith(isNewFolder: event.isNew));
-    if (event.isNew) {
-      add(const ClearParentPropertyEvent());
-    } else {
+    final attachToExisting = !event.isNew && state.model.isApartment;
+    emit(
+      state.copyWith(
+        isNewFolder: !attachToExisting,
+        hasPortfolioMode: true,
+      ),
+    );
+    if (attachToExisting) {
       add(const LoadParentCandidatesEvent());
+    } else {
+      add(const ClearParentPropertyEvent());
     }
   }
 
@@ -1001,7 +1009,7 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     Emitter<AddPropertyState> emit,
   ) async {
     var model = _modelWithControllerValues();
-    if (state.isNewFolder) {
+    if (event.openChooseBrokerOnSuccess || state.isNewFolder) {
       model = model.copyWith(clearPropertyParent: true);
     }
     final errors = _errorsForSubmit(model);
@@ -1085,7 +1093,7 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     LoadParentCandidatesEvent event,
     Emitter<AddPropertyState> emit,
   ) async {
-    if (GuestMode.isGuest) {
+    if (GuestMode.isGuest || !state.model.isApartment) {
       emit(
         state.copyWith(
           parentCandidates: const [],
@@ -1098,7 +1106,11 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     try {
       final response = await sl.get<ApiConsumer>().get(
         EndPoints.portfolio,
-        queryParameters: const {'page': 1, 'limit': 50},
+        queryParameters: const {
+          'type': PropertyApiEnums.typeBuilding,
+          'page': 1,
+          'limit': 200,
+        },
       );
       await response.fold(
         (failed) async {
@@ -1141,7 +1153,7 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     return raw
         .whereType<Map>()
         .map((e) => MyPropertiesModel.fromJson(Map<String, dynamic>.from(e)))
-        .where((e) => e.id.isNotEmpty && e.isBuildingOrTower)
+        .where((e) => e.id.isNotEmpty && e.isBuilding)
         .toList();
   }
 
@@ -1149,6 +1161,7 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     SelectParentPropertyEvent event,
     Emitter<AddPropertyState> emit,
   ) {
+    if (!state.model.isApartment) return;
     emit(
       state.copyWith(
         model: state.model.copyWith(

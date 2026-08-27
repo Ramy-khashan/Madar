@@ -71,6 +71,8 @@ dependencies:
   autocomplete_textfield: ^2.0.1
   search_autocomplete: ^1.0.3
   socket_io_client: ^3.1.6
+  firebase_remote_config: ^6.6.0
+  video_player: ^2.14.0
 
 dev_dependencies:
   flutter_test:

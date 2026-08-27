@@ -92,11 +92,6 @@ class PropertyFileModel extends Equatable {
       p.location?.street,
     ].whereType<String>().where((e) => e.isNotEmpty).join(' - ');
     final media = p.media ?? [];
-    final main =
-        media
-            .where((m) => m.isMain == true && (m.url ?? '').isNotEmpty)
-            .firstOrNull ??
-        media.where((m) => (m.url ?? '').isNotEmpty).firstOrNull;
     final units = (p.childProperties ?? [])
         .asMap()
         .entries
@@ -109,7 +104,7 @@ class PropertyFileModel extends Equatable {
       id: p.propertyId ?? '',
       name: p.title ?? '',
       location: loc,
-      imageUrl: main?.url ?? '',
+      imageUrl: media.coverUrl,
       propertyType: labelForType(p.type),
       occupancyRate: (apiRate != null && apiRate > 0)
           ? apiRate
@@ -246,12 +241,9 @@ class UnitModel extends Equatable {
       isHijriDate: base?.isHijriDate ?? true,
       expenses: expenses,
       projectName: p.projectName ?? base?.projectName ?? '',
-      imageUrl: (p.media ?? [])
-              .where((m) => (m.url ?? '').isNotEmpty)
-              .map((m) => m.url!)
-              .firstOrNull ??
-          base?.imageUrl ??
-          '',
+      imageUrl: (p.media ?? []).coverUrl.isNotEmpty
+          ? (p.media ?? []).coverUrl
+          : (base?.imageUrl ?? ''),
       listingType: p.listingType ?? base?.listingType ?? '',
       rawStatus: p.status ?? base?.rawStatus ?? '',
     );

@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../property_details/model/property_details_model.dart';
+
 class PropertyModel extends Equatable {
   final String id;
   final String title;
@@ -40,7 +42,10 @@ class PropertyModel extends Equatable {
       // Build a readable location from the nested location object
       location: _buildLocation(locationData),
 
-      imageUrl: json['mainImage']?.toString() ?? '',
+      imageUrl: PropertyMedia.coverFrom(
+        json['media'],
+        fallback: json['mainImage']?.toString() ?? '',
+      ),
 
       beds: _toInt(json['bedrooms']),
       baths: _toInt(json['bathrooms']),

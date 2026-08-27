@@ -30,11 +30,8 @@ class MarkerInfoCard extends StatelessWidget {
   String get _imageUrl {
     final media = property?.media;
     if (media == null || media.isEmpty) return AppImages.propertyImage;
-    final main = media.firstWhere(
-      (m) => m.isMain == true,
-      orElse: () => media.first,
-    );
-    return main.url?.isNotEmpty == true ? main.url! : AppImages.propertyImage;
+    final cover = media.coverUrl;
+    return cover.isNotEmpty ? cover : AppImages.propertyImage;
   }
 
   @override

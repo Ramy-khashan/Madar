@@ -13,8 +13,13 @@ class PortfolioContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AddPropertyBloc, AddPropertyState>(
-      buildWhen: (prev, curr) => prev.isNewFolder != curr.isNewFolder,
+      buildWhen: (prev, curr) =>
+          prev.isNewFolder != curr.isNewFolder ||
+          prev.hasPortfolioMode != curr.hasPortfolioMode,
       builder: (context, state) {
+        if (!state.hasPortfolioMode) {
+          return const SizedBox.shrink();
+        }
         if (state.isNewFolder) {
           return AppTextField(
             controller: AddPropertyBloc.get(context).portfolioNameController,

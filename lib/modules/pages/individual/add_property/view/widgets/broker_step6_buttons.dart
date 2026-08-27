@@ -43,7 +43,7 @@ class BrokerStep6Buttons extends StatelessWidget {
               )) {
                 return;
               }
-              AddPropertyBloc.get(context).add(const ConfirmSaveEvent());
+              AddPropertyBloc.get(context).add(const ShowPortfolioSheetEvent());
             },
           ),
         ],

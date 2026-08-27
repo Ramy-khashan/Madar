@@ -1,3 +1,5 @@
+import '../../property_details/model/property_details_model.dart';
+
 class PropertiesItemModel {
   String? propertyId;
   String? type;
@@ -49,7 +51,10 @@ class PropertiesItemModel {
         : <String, dynamic>{};
     city = (json['city'] ?? location['city'] ?? '').toString();
     district = (json['district'] ?? location['district'] ?? '').toString();
-    image = json['image'] ?? json['mainImage'];
+    image = PropertyMedia.coverFrom(
+      json['media'],
+      fallback: (json['image'] ?? json['mainImage'])?.toString(),
+    );
     publisherId = json['publisherId'] ?? '';
     publisherName = json['publisherName'] ?? '';
     publisherPhone = json['publisherPhone'] ?? '';

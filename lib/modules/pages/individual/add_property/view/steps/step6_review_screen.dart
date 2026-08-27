@@ -9,7 +9,6 @@ import '../widgets/ad_summary_table.dart';
 import '../widgets/ai_generate_button.dart';
 import '../widgets/ai_price_card.dart';
 import '../widgets/description_field.dart';
-import '../widgets/parent_building_picker.dart';
 import '../widgets/price_input_section.dart';
 import '../widgets/save_portfolio_sheet.dart';
 import '../widgets/service_cards_row.dart';
@@ -87,8 +86,6 @@ class AddPropertyStep6Screen extends StatelessWidget {
                   DescriptionField(controller: bloc.descriptionController),
                   20.height.toSizedBox,
                   const AdSummaryTable(),
-                  20.height.toSizedBox,
-                  const ParentBuildingPicker(),
                   32.height.toSizedBox,
                 ],
               ),

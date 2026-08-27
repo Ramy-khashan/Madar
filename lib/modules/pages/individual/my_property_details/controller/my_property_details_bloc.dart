@@ -64,9 +64,11 @@ class MyPropertyDetailsBloc
     _MyPropertyDetailsAutoScrollTick event,
     Emitter<MyPropertyDetailsState> emit,
   ) {
-    final imageCount = state.property?.media?.length ?? 0;
-    if (imageCount <= 1) return;
-    final next = (state.currentImagePage + 1) % imageCount;
+    final items = state.property?.media?.playable ?? const [];
+    if (items.length <= 1) return;
+    final currentIndex = state.currentImagePage.clamp(0, items.length - 1);
+    if (items[currentIndex].isVideo) return;
+    final next = (currentIndex + 1) % items.length;
     emit(state.copyWith(currentImagePage: next));
     if (pageController.hasClients) {
       pageController.animateToPage(

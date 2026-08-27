@@ -51,6 +51,9 @@ class AppStrings {
   static String get guestLoginRequiredToast =>
       'guest_login_required_toast'.trans;
   static String get guestUserName => 'guest_user_name'.trans;
+  static String get appPausedTitle => 'app_paused_title'.trans;
+  static String get appPausedDescription => 'app_paused_description'.trans;
+  static String get appPausedRefresh => 'app_paused_refresh'.trans;
   static String get chooseRealEstateBroker => 'choose_real_estate_broker'.trans;
   static String get completed => 'completed_task'.trans;
   static String get ongoing => 'ongoing_task'.trans;
@@ -1320,6 +1323,8 @@ class AppStrings {
   static String get chooseSaveLocation => 'choose_save_location'.trans;
   static String get saveBtn => 'save_btn'.trans;
   static String get confirmSave => 'confirm_save'.trans;
+  static String get createAndSave => 'create_and_save'.trans;
+  static String get pleaseEnterFileName => 'please_enter_file_name'.trans;
   static String get chooseTheFile => 'choose_the_file'.trans;
   static String get pleaseSelectExistingFile =>
       'please_select_existing_file'.trans;

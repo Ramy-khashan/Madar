@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'property_enums.dart';
+
 class AddPropertyModel extends Equatable {
   const AddPropertyModel({
     this.operationType = 'sell',
@@ -123,6 +125,8 @@ class AddPropertyModel extends Equatable {
   final String propertyParentTitle;
 
   bool get hasParentProperty => propertyParentId.isNotEmpty;
+
+  bool get isApartment => propertyType == PropertyApiEnums.typeApartment;
 
   AddPropertyModel copyWith({
     String? operationType,

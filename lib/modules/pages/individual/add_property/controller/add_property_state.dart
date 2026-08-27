@@ -11,6 +11,7 @@ class AddPropertyState extends Equatable {
     this.isLoading = false,
     this.showPortfolioSheet = false,
     this.isNewFolder = true,
+    this.hasPortfolioMode = false,
     this.submitStatus = SubmitStatus.initial,
     this.errorMessage,
     this.createdPropertyId,
@@ -30,6 +31,7 @@ class AddPropertyState extends Equatable {
   final bool isLoading;
   final bool showPortfolioSheet;
   final bool isNewFolder;
+  final bool hasPortfolioMode;
   final SubmitStatus submitStatus;
   final String? errorMessage;
   final String? createdPropertyId;
@@ -69,6 +71,7 @@ class AddPropertyState extends Equatable {
     bool? isLoading,
     bool? showPortfolioSheet,
     bool? isNewFolder,
+    bool? hasPortfolioMode,
     SubmitStatus? submitStatus,
     String? errorMessage,
     String? createdPropertyId,
@@ -88,6 +91,7 @@ class AddPropertyState extends Equatable {
       isLoading: isLoading ?? this.isLoading,
       showPortfolioSheet: showPortfolioSheet ?? this.showPortfolioSheet,
       isNewFolder: isNewFolder ?? this.isNewFolder,
+      hasPortfolioMode: hasPortfolioMode ?? this.hasPortfolioMode,
       submitStatus: submitStatus ?? this.submitStatus,
       errorMessage: errorMessage,
       createdPropertyId: createdPropertyId ?? this.createdPropertyId,
@@ -112,6 +116,7 @@ class AddPropertyState extends Equatable {
     isLoading,
     showPortfolioSheet,
     isNewFolder,
+    hasPortfolioMode,
     submitStatus,
     errorMessage,
         createdPropertyId,

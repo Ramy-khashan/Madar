@@ -1,3 +1,5 @@
+import '../../../individual/property_details/model/property_details_model.dart';
+
 class BusinessPropertyRequestModel {
   BusinessPropertyRequestModel({
     this.requestId,
@@ -89,13 +91,16 @@ class BusinessPropertyRequestModel {
         json['requestDate'],
         json['date'],
       ]),
-      image: _firstNonEmpty([
-        json['image'],
-        json['mainImage'],
-        json['cover'],
-        property['image'],
-        property['mainImage'],
-      ]),
+      image: PropertyMedia.coverFrom(
+        property['media'] ?? json['media'],
+        fallback: _firstNonEmpty([
+          json['image'],
+          json['mainImage'],
+          json['cover'],
+          property['image'],
+          property['mainImage'],
+        ]),
+      ),
       city: _firstNonEmpty([
         json['city'],
         property['city'],
@@ -329,15 +334,18 @@ class BusinessRequestPublishedPropertyModel {
           : (locationFromParts.isNotEmpty
                 ? locationFromParts
                 : (_firstNonEmpty([json['address']]) ?? '')),
-      imageUrl:
-          _firstNonEmpty([
-            json['propertyImage'],
-            json['image'],
-            json['imageUrl'],
-            json['mainImage'],
-            property['image'],
-          ]) ??
-          '',
+      imageUrl: PropertyMedia.coverFrom(
+        property['media'] ?? json['media'],
+        fallback:
+            _firstNonEmpty([
+              json['propertyImage'],
+              json['image'],
+              json['imageUrl'],
+              json['mainImage'],
+              property['image'],
+            ]) ??
+            '',
+      ),
       price: priceRaw is num
           ? priceRaw.toDouble()
           : double.tryParse(priceRaw.toString()) ?? 0,

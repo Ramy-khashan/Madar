@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../config/router/app_router_keys.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
+import '../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
@@ -81,6 +82,7 @@ class AddPropertyView extends StatelessWidget {
                       context,
                       AppRouterKeys.chooseBroker,
                       extra: state.createdPropertyId,
+                      routerType: RouterType.pushReplacementNamed,
                     );
                   } else {
                     RouterHandler.pop(context);

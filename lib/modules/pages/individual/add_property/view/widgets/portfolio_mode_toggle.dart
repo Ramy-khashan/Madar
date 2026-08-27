@@ -15,15 +15,21 @@ class PortfolioModeToggle extends StatelessWidget {
   Widget build(BuildContext context) {
     final tc = AppThemeColors.of(context);
     return BlocBuilder<AddPropertyBloc, AddPropertyState>(
-      buildWhen: (prev, curr) => prev.isNewFolder != curr.isNewFolder,
+      buildWhen: (prev, curr) =>
+          prev.isNewFolder != curr.isNewFolder ||
+          prev.hasPortfolioMode != curr.hasPortfolioMode ||
+          prev.model.propertyType != curr.model.propertyType,
       builder: (context, state) {
+        if (!state.model.isApartment) {
+          return const SizedBox.shrink();
+        }
         return Row(
           children: [
             _ModeOption(
               label: AppStrings.saveToExistingFile,
               image: AppImages.instrument,
               hint: AppStrings.addToExistingFileHint,
-              isActive: !state.isNewFolder,
+              isActive: state.hasPortfolioMode && !state.isNewFolder,
               onTap: () => AddPropertyBloc.get(
                 context,
               ).add(const SelectPortfolioModeEvent(false)),
@@ -34,7 +40,7 @@ class PortfolioModeToggle extends StatelessWidget {
               label: AppStrings.saveAsNewFile,
               image: AppImages.addIcon,
               hint: AppStrings.createNewPropertyFile,
-              isActive: state.isNewFolder,
+              isActive: state.hasPortfolioMode && state.isNewFolder,
               onTap: () => AddPropertyBloc.get(
                 context,
               ).add(const SelectPortfolioModeEvent(true)),

@@ -5,6 +5,7 @@ import 'config/app_controller/app_controller_bloc.dart';
 import 'config/router/app_router.dart';
 import 'config/router/app_router_keys.dart';
 import 'config/theme/theme.dart';
+import 'core/app_kill_switch.dart';
 import 'core/components/guest_auth_sheet.dart';
 import 'core/utils/constants/app_constant.dart';
 import 'core/utils/functions/fcm_token_service.dart';
@@ -85,6 +86,9 @@ class _MadarAppState extends State<MadarApp> {
               title: AppConstant.appName,
               routerConfig: appRouter,
               debugShowCheckedModeBanner: true,
+              builder: (context, child) => AppKillSwitchGate(
+                child: child ?? const SizedBox.shrink(),
+              ),
             ),
           );
         },

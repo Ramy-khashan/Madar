@@ -1,3 +1,5 @@
+import '../../property_details/model/property_details_model.dart';
+
 class PortfolioPropertyModel {
   String? id;
   String? title;
@@ -27,7 +29,11 @@ class PortfolioPropertyModel {
     id = json['id'];
     title = json['title'];
     location = json['location'];
-    imageUrl = json['imageUrl'];
+    imageUrl = PropertyMedia.coverFrom(
+      json['media'],
+      fallback: (json['imageUrl'] ?? json['mainImage'] ?? json['image'])
+          ?.toString(),
+    );
     status = json['status'];
     bed = json['bed'];
     bath = json['bath'];

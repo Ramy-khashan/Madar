@@ -108,12 +108,7 @@ class PropertyDetailsModel {
             )
           : null,
       media: json['media'] is List
-          ? ((json['media'] as List)
-                .whereType<Map>()
-                .map(
-                  (v) => PropertyMedia.fromJson(Map<String, dynamic>.from(v)),
-                )
-                .toList()
+          ? (PropertyMedia.parseList(json['media'])
               ..sort((a, b) => (a.order ?? 0).compareTo(b.order ?? 0)))
           : null,
       deeds: json['deeds'] is List
@@ -791,6 +786,20 @@ class PropertyMedia {
     );
   }
 
+  static List<PropertyMedia> parseList(dynamic raw) {
+    if (raw is! List) return const [];
+    return raw
+        .whereType<Map>()
+        .map((e) => PropertyMedia.fromJson(Map<String, dynamic>.from(e)))
+        .toList();
+  }
+
+  static String coverFrom(dynamic mediaJson, {String? fallback}) {
+    final cover = parseList(mediaJson).coverUrl;
+    if (cover.isNotEmpty) return cover;
+    return fallback ?? '';
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
@@ -801,6 +810,60 @@ class PropertyMedia {
     data['order'] = order;
     data['createdAt'] = createdAt;
     return data;
+  }
+
+  bool get hasUrl => (url ?? '').trim().isNotEmpty;
+
+  String get normalizedType => (type ?? '').toUpperCase().trim();
+
+  bool get isVirtualTour {
+    final t = normalizedType;
+    return t == 'VIRTUAL_TOUR' || t == 'TOUR_360' || t == '360';
+  }
+
+  bool get isVideo {
+    if (isVirtualTour || normalizedType == 'VIDEO') return true;
+    final u = (url ?? '').toLowerCase();
+    return u.contains('/video/') ||
+        u.endsWith('.mp4') ||
+        u.endsWith('.mov') ||
+        u.endsWith('.webm') ||
+        u.endsWith('.m3u8');
+  }
+
+  bool get isImage => !isVideo && hasUrl;
+
+  String get thumbnailUrl {
+    if (!hasUrl) return '';
+    if (!isVideo) return url!;
+    var u = url!;
+    if (u.contains('/video/upload/')) {
+      u = u.replaceFirst('/video/upload/', '/video/upload/so_0/');
+      u = u.replaceFirst(
+        RegExp(r'\.(mp4|mov|webm)(\?.*)?$', caseSensitive: false),
+        '.jpg',
+      );
+    }
+    return u;
+  }
+}
+
+extension PropertyMediaListX on List<PropertyMedia> {
+  List<PropertyMedia> get playable {
+    final list = where((m) => m.hasUrl).toList()
+      ..sort((a, b) => (a.order ?? 0).compareTo(b.order ?? 0));
+    return list;
+  }
+
+  String get coverUrl {
+    final items = playable;
+    if (items.isEmpty) return '';
+    final images = items.where((m) => m.isImage).toList();
+    final mainImage = images.where((m) => m.isMain == true);
+    if (mainImage.isNotEmpty) return mainImage.first.url!;
+    if (images.isNotEmpty) return images.first.url!;
+    final mainAny = items.where((m) => m.isMain == true);
+    return (mainAny.isNotEmpty ? mainAny.first : items.first).thumbnailUrl;
   }
 }
 
@@ -1083,6 +1146,10 @@ class ChildProperty {
   });
 
   factory ChildProperty.fromJson(Map<String, dynamic> json) {
+    final image = PropertyMedia.coverFrom(
+      json['media'],
+      fallback: json['mainImage']?.toString(),
+    );
     return ChildProperty(
       propertyId: json['propertyId'] ?? json['property_id'],
       title: json['title'],
@@ -1091,7 +1158,7 @@ class ChildProperty {
       listingType: json['listingType'],
       price: _jsonInt(json['price']),
       isActive: json['isActive'],
-      mainImage: json['mainImage'],
+      mainImage: image,
     );
   }
 

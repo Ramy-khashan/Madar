@@ -1,3 +1,5 @@
+import '../../../individual/property_details/model/property_details_model.dart';
+
 class MyPropertiesModel {
   final String id;
   final String title;
@@ -14,6 +16,8 @@ class MyPropertiesModel {
     this.type = '',
     this.unitsCount = 0,
   });
+
+  bool get isBuilding => type.toUpperCase() == 'BUILDING';
 
   bool get isBuildingOrTower {
     final value = type.toUpperCase();
@@ -39,8 +43,11 @@ class MyPropertiesModel {
           .toString(),
       title: (json['title'] ?? json['name'] ?? '').toString(),
       location: locationFromString.isNotEmpty ? locationFromString : composed,
-      imageUrl: (json['image'] ?? json['imageUrl'] ?? json['propertyImage'] ?? '')
-          .toString(),
+      imageUrl: PropertyMedia.coverFrom(
+        json['media'],
+        fallback: (json['image'] ?? json['imageUrl'] ?? json['propertyImage'] ?? '')
+            .toString(),
+      ),
       type: (json['type'] ?? json['propertyType'] ?? '').toString(),
       unitsCount: unitsRaw is num ? unitsRaw.toInt() : int.tryParse('$unitsRaw') ?? 0,
     );
