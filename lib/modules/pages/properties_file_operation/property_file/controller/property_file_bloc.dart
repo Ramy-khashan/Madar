@@ -36,7 +36,9 @@ class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState> {
     PropertyFileLoad event,
     Emitter<PropertyFileState> emit,
   ) async {
-    _propertyId = event.propertyId;
+    if (event.propertyId.isNotEmpty) {
+      _propertyId = event.propertyId;
+    }
     emit(const PropertyFileState(status: RequestStatus.loading));
     if (_propertyId.isEmpty) {
       emit(
@@ -62,9 +64,7 @@ class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState> {
           state.copyWith(
             details: details,
             property: mapped,
-            expenses: mapped.isMultiUnit
-                ? const []
-                : UnitModel.fromDetails(details).expenses,
+            expenses: UnitModel.fromDetails(details).expenses,
             status: RequestStatus.success,
           ),
         );
@@ -141,9 +141,7 @@ class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState> {
           state.copyWith(
             details: nextDetails,
             property: mapped,
-            expenses: mapped.isMultiUnit
-                ? state.expenses
-                : UnitModel.fromDetails(nextDetails).expenses,
+            expenses: UnitModel.fromDetails(nextDetails).expenses,
             saveStatus: RequestStatus.success,
             expenseFiles: const [],
           ),

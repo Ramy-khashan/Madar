@@ -3,12 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pinput.dart';
 
+import '../../../../config/router/app_router_keys.dart';
 import '../../../../config/theme/app_theme_colors.dart';
 import '../../../../core/components/app_appbar.dart';
 import '../../../../core/components/app_button.dart';
 import '../../../../core/utils/constants/app_constant.dart';
+import '../../../../core/utils/constants/app_enums.dart';
 import '../../../../core/utils/constants/app_strings.dart';
+import '../../../../core/utils/functions/common_fun.dart';
 import '../../../../core/utils/functions/responsive.dart';
+import '../../../../core/utils/functions/router_handler.dart';
 import '../controller/otp_verification_bloc.dart';
 
 class OtpVerificationScreen extends StatelessWidget {
@@ -21,8 +25,8 @@ class OtpVerificationScreen extends StatelessWidget {
     final bloc = OtpVerificationBloc.get(context);
 
     final defaultTheme = PinTheme(
-      width: 56,
-      height: 56,
+                    width: 48,
+                    height: 56,
       textStyle: TextStyle(
         fontSize: context.responsiveFontScale(22),
         fontWeight: FontWeight.w700,
@@ -43,7 +47,20 @@ class OtpVerificationScreen extends StatelessWidget {
     );
 
     return BlocListener<OtpVerificationBloc, OtpVerificationState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is OtpVerificationSuccess) {
+          RouterHandler.navigate(
+            context,
+            AppRouterKeys.resetPassword,
+            extra: phoneNumber,
+            routerType: RouterType.pushReplacementNamed,
+          );
+        } else if (state is OtpVerificationError) {
+          AppToast(state.message);
+        } else if (state is OtpResendSuccess) {
+          AppToast(state.message);
+        }
+      },
       child: Scaffold(
         appBar: AppAppbar(title: AppStrings.changePassword),
         body: Align(
@@ -106,7 +123,7 @@ class OtpVerificationScreen extends StatelessWidget {
                       textDirection: TextDirection.ltr,
                       child: Pinput(
                         controller: bloc.pinController,
-                        length: 4,
+                        length: 6,
                         defaultPinTheme: defaultTheme,
                         focusedPinTheme: focusedTheme,
                         keyboardType: TextInputType.number,

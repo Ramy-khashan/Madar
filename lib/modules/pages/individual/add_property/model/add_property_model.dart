@@ -47,6 +47,8 @@ class AddPropertyModel extends Equatable {
     this.hasRentInstallment = false,
     this.hasInsurance = false,
     this.portfolioFolderName = '',
+    this.propertyParentId = '',
+    this.propertyParentTitle = '',
   });
 
   final String operationType; // 'sell' | 'rent'
@@ -117,6 +119,10 @@ class AddPropertyModel extends Equatable {
   final bool hasRentInstallment;
   final bool hasInsurance;
   final String portfolioFolderName;
+  final String propertyParentId;
+  final String propertyParentTitle;
+
+  bool get hasParentProperty => propertyParentId.isNotEmpty;
 
   AddPropertyModel copyWith({
     String? operationType,
@@ -167,6 +173,9 @@ class AddPropertyModel extends Equatable {
     bool? hasRentInstallment,
     bool? hasInsurance,
     String? portfolioFolderName,
+    String? propertyParentId,
+    String? propertyParentTitle,
+    bool clearPropertyParent = false,
   }) {
     return AddPropertyModel(
       operationType: operationType ?? this.operationType,
@@ -218,6 +227,12 @@ class AddPropertyModel extends Equatable {
       hasRentInstallment: hasRentInstallment ?? this.hasRentInstallment,
       hasInsurance: hasInsurance ?? this.hasInsurance,
       portfolioFolderName: portfolioFolderName ?? this.portfolioFolderName,
+      propertyParentId: clearPropertyParent
+          ? ''
+          : (propertyParentId ?? this.propertyParentId),
+      propertyParentTitle: clearPropertyParent
+          ? ''
+          : (propertyParentTitle ?? this.propertyParentTitle),
     );
   }
 
@@ -268,5 +283,7 @@ class AddPropertyModel extends Equatable {
     hasRentInstallment,
     hasInsurance,
     portfolioFolderName,
+    propertyParentId,
+    propertyParentTitle,
   ];
 }

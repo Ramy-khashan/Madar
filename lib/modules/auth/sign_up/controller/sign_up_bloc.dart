@@ -10,6 +10,7 @@ import '../../../../core/utils/constants/app_constant.dart';
 import '../../../../core/utils/constants/app_enums.dart';
 import '../../../../core/utils/constants/app_strings.dart';
 import '../../../../core/utils/constants/storage_keys.dart';
+import '../../../../core/utils/functions/fcm_token_service.dart';
 import '../../../../core/utils/functions/handle_multi_callback.dart';
 import '../../../../core/utils/functions/preference_utils.dart';
 import '../../../../core/utils/functions/service_locator.dart';
@@ -95,6 +96,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         },
         (successResponse) async {
           await _persistSession(successResponse.response);
+          FcmTokenService.instance.syncToken();
           emit(state.copyWith(signUpStatus: RequestStatus.success));
         },
       );
@@ -180,6 +182,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         ),
       );
     }
+    saves.add(sl.get<PreferenceUtils>().setBool(StorageKeys.isGuest, false));
     if (saves.isNotEmpty) await Future.wait(saves);
   }
 

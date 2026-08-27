@@ -7,6 +7,7 @@ import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../core/utils/functions/router_handler.dart';
 
 class AcceptRequestDialog extends StatefulWidget {
   const AcceptRequestDialog({
@@ -46,10 +47,10 @@ class _AcceptRequestDialogState extends State<AcceptRequestDialog> {
         AppToast(AppStrings.pleaseEnterAdLicense, isError: true);
         return;
       }
-      Navigator.of(context).pop(license);
+   RouterHandler.pop(context,license);
       return;
     }
-    Navigator.of(context).pop('');
+   RouterHandler.pop(context,'');
   }
 
   @override

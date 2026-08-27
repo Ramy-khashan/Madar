@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../config/router/app_router_keys.dart';
 import '../constants/app_enums.dart';
+import '../constants/app_strings.dart';
+import 'common_fun.dart';
 
- 
 class RouterHandler {
   RouterHandler._();
+
+  static const _comingSoonRoutes = {
+    AppRouterKeys.auctionNavbar,
+    AppRouterKeys.auctionList,
+    AppRouterKeys.auctionDetails,
+    AppRouterKeys.auctionDeposit,
+    AppRouterKeys.auctionBidResult,
+    AppRouterKeys.myBids,
+    AppRouterKeys.addAuctionProperty,
+    AppRouterKeys.myListings,
+  };
 
   static Future<dynamic> navigate(
     BuildContext context,
@@ -15,6 +28,10 @@ class RouterHandler {
     Map<String, String> queryParameters = const <String, String>{},
     Object? extra,
   }) async {
+    if (_comingSoonRoutes.contains(routerName)) {
+      AppToast(AppStrings.comingSoon);
+      return null;
+    }
     switch (routerType) {
       case RouterType.goName:
         context.goNamed(

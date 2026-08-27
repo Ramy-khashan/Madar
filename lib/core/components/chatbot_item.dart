@@ -4,6 +4,7 @@ import '../../config/router/app_router_keys.dart';
 import '../../config/theme/app_theme_colors.dart';
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_images.dart';
+import '../utils/functions/guest_mode.dart';
 import '../utils/functions/router_handler.dart';
 import 'image_item.dart';
 
@@ -20,6 +21,12 @@ class ChatbotItem extends StatelessWidget {
           key: const Key('chatbot_fab'),
           heroTag: null,
           onPressed: () {
+            if (!GuestMode.requireAuth(
+              context,
+              prompt: GuestAuthPrompt.toast,
+            )) {
+              return;
+            }
             RouterHandler.navigate(context, AppRouterKeys.smartAssistantChat);
           },
           backgroundColor: AppColors.primary300,

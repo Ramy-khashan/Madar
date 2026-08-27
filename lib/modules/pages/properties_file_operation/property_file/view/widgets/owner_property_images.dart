@@ -100,7 +100,7 @@ class _OwnerPropertyImagesState extends State<OwnerPropertyImages> {
                 borderRadius: BorderRadius.circular(20.radius),
               ),
               child: Text(
-                (widget.property?.type ?? '').trans,
+                (widget.property?.type ?? '').transIfExists,
                 style: TextStyle(
                   color: colors.primaryBrand,
                   fontSize: context.responsiveFontScale(13),

@@ -34,7 +34,7 @@ class RatePropertyCertifiedSuccessDialog extends StatelessWidget {
             Align(
               alignment: AlignmentDirectional.topStart,
               child: GestureDetector(
-                onTap: () => Navigator.pop(context),
+                onTap: () => RouterHandler.pop(context),
                 child: Container(
                   width: 28.width,
                   height: 28.width,

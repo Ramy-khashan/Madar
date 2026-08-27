@@ -8,8 +8,9 @@ import '../../../../../core/utils/functions/responsive.dart';
 import '../controller/smart_assistant_chat_bloc.dart';
 import 'widgets/ai_compose_item.dart';
 import 'widgets/ai_typing_bubble.dart';
+import 'widgets/bot_bubble.dart';
 import 'widgets/feed_back_item.dart';
-import 'widgets/messages_bubble_item.dart';
+import 'widgets/user_bubble.dart';
 
 class SmartAssistantChatScreen extends StatelessWidget {
   const SmartAssistantChatScreen({super.key});

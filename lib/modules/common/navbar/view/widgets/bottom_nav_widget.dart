@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../core/components/image_item.dart';
 import '../../../../../core/utils/constants/app_colors.dart';
+import '../../../../../core/utils/functions/guest_mode.dart';
 import '../../../../../core/utils/functions/translation.dart';
 import '../../controller/navbar_bloc.dart';
 
@@ -16,7 +17,7 @@ class NavbarBottomBar extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).canvasColor,
         boxShadow: [
-          BoxShadow(
+          const BoxShadow(
             color: Colors.black12,
             blurRadius: 8,
             offset: Offset(0, -2),
@@ -30,12 +31,19 @@ class NavbarBottomBar extends StatelessWidget {
           child: Row(
             children: List.generate(state.navbarItems.length, (index) {
               if (index == 2) {
-                return Expanded(child: SizedBox.shrink());
+                return const Expanded(child: SizedBox.shrink());
               }
               final isSelected = state.selectedItem == index;
               return Expanded(
                 child: InkWell(
                   onTap: () {
+                    if (index == 1 &&
+                        !GuestMode.requireAuth(
+                          context,
+                          prompt: GuestAuthPrompt.toast,
+                        )) {
+                      return;
+                    }
                     NavbarBloc.get(context).add(NavbarItemSelected(index));
                   },
                   child: Column(

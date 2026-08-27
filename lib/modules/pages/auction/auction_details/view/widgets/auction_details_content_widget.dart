@@ -309,7 +309,8 @@ class AuctionDetailsContentWidget extends StatelessWidget {
                                 onTap: () {
                                   RouterHandler.navigate(
                                     context,
-                                    AppRouterKeys.ownerProperties,
+                                    AppRouterKeys.brokerProperties,
+                                    
                                   );
                                 },
                                 text: AppStrings.viewSellerProfile,

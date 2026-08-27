@@ -48,18 +48,20 @@ class ContractDetailsContentWidget extends StatelessWidget {
                     title: AppStrings.contractInfoSection,
                     child: Column(
                       children: [
-                        IconInfoRow(
-                          icon: Icons.calendar_today_outlined,
-                          label: AppStrings.startDateLabel,
-                          value: contract?.startDate ?? '',
-                        ),
-                        SizedBox(height: 14.height),
-                        IconInfoRow(
-                          icon: Icons.calendar_today_outlined,
-                          label: AppStrings.endDateLabel,
-                          value: contract?.endDate ?? '',
-                        ),
-                        SizedBox(height: 14.height),
+                        if (contract?.isRent == true) ...[
+                          IconInfoRow(
+                            icon: Icons.calendar_today_outlined,
+                            label: AppStrings.startDateLabel,
+                            value: contract?.startDate ?? '',
+                          ),
+                          SizedBox(height: 14.height),
+                          IconInfoRow(
+                            icon: Icons.calendar_today_outlined,
+                            label: AppStrings.endDateLabel,
+                            value: contract?.endDate ?? '',
+                          ),
+                          SizedBox(height: 14.height),
+                        ],
                         if (PreferenceUtils().getString(
                               StorageKeys.accountType,
                             ) ==
@@ -76,10 +78,32 @@ class ContractDetailsContentWidget extends StatelessWidget {
                         IconInfoRow(
                           icon: Icons.description_outlined,
                           label: AppStrings.contractTypeLabel,
-                          value: ContractDetailsModel.typeLabel(
-                            contract?.type ?? 'buy',
+                          value: ContractDetailsModel.typeDisplay(
+                            contract?.type ?? '',
+                            fallback: contract?.typeLabel ?? '',
                           ),
                         ),
+                        if ((contract?.location ?? '').isNotEmpty) ...[
+                          SizedBox(height: 14.height),
+                          IconInfoRow(
+                            icon: Icons.location_on_outlined,
+                            label: AppStrings.propertyLocationLabel,
+                            value: contract!.location,
+                          ),
+                        ],
+                        if ((contract?.commissionAmount ?? 0) > 0 &&
+                            PreferenceUtils().getString(
+                                  StorageKeys.accountType,
+                                ) ==
+                                AppConstant.business) ...[
+                          SizedBox(height: 14.height),
+                          IconInfoRow(
+                            icon: Icons.percent_outlined,
+                            label: AppStrings.commissionAmountLabel,
+                            value:
+                                '${formatPrice(contract!.commissionAmount)} ${AppStrings.currency}',
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -95,22 +119,24 @@ class ContractDetailsContentWidget extends StatelessWidget {
               child: Column(
                 children: [
                   ContractSidesItem(contract: contract),
-                  SizedBox(height: 16.height),
-                  OutlinedSection(
-                    title: AppStrings.termsAndConditions,
-                    child: Container(
-                      width: double.infinity,
-                       alignment: Alignment.topRight,
-                      child: SelectableText(
-                        contract?.terms ?? '',
-                        style: TextStyle(
-                          fontSize: context.responsiveFontScale(14),
-                          fontFamily: AppConstant.appFont,
-                          color: AppThemeColors.of(context).textSecondary,
+                  if ((contract?.terms ?? '').isNotEmpty) ...[
+                    SizedBox(height: 16.height),
+                    OutlinedSection(
+                      title: AppStrings.termsAndConditions,
+                      child: Container(
+                        width: double.infinity,
+                        alignment: Alignment.topRight,
+                        child: SelectableText(
+                          contract?.terms ?? '',
+                          style: TextStyle(
+                            fontSize: context.responsiveFontScale(14),
+                            fontFamily: AppConstant.appFont,
+                            color: AppThemeColors.of(context).textSecondary,
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ],
               ),
             ),

@@ -7,6 +7,8 @@ class NotificationState extends Equatable {
     this.errorMsg = '',
     this.isLoadMore = false,
     this.totalCount = 0,
+    this.unreadCount = 0,
+    this.markAllStatus = RequestStatus.init,
   });
 
   final List<NotificationModel> notifications;
@@ -14,6 +16,8 @@ class NotificationState extends Equatable {
   final String errorMsg;
   final bool isLoadMore;
   final int totalCount;
+  final int unreadCount;
+  final RequestStatus markAllStatus;
 
   NotificationState copyWith({
     List<NotificationModel>? notifications,
@@ -21,6 +25,8 @@ class NotificationState extends Equatable {
     String? errorMsg,
     bool? isLoadMore,
     int? totalCount,
+    int? unreadCount,
+    RequestStatus? markAllStatus,
   }) {
     return NotificationState(
       notifications: notifications ?? this.notifications,
@@ -28,6 +34,8 @@ class NotificationState extends Equatable {
       errorMsg: errorMsg ?? this.errorMsg,
       isLoadMore: isLoadMore ?? this.isLoadMore,
       totalCount: totalCount ?? this.totalCount,
+      unreadCount: unreadCount ?? this.unreadCount,
+      markAllStatus: markAllStatus ?? this.markAllStatus,
     );
   }
 
@@ -38,5 +46,7 @@ class NotificationState extends Equatable {
     errorMsg,
     isLoadMore,
     totalCount,
+    unreadCount,
+    markAllStatus,
   ];
 }

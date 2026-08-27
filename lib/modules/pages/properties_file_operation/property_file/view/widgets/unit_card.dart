@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
-import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../core/utils/functions/translation.dart';
 import '../../../property_file/model/property_file_model.dart';
+import 'property_info_item.dart';
 
 class UnitCard extends StatelessWidget {
   const UnitCard({
@@ -23,12 +25,18 @@ class UnitCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isRented = unit.status == UnitStatus.rented;
-    final statusColor = isRented
-        ? AppColors.lightSuccessColor
-        : colors.textFieldBorder;
-    final statusLabel =
-        isRented ? AppStrings.rentedStatus : AppStrings.vacantStatus;
+    final statusColor = switch (unit.status) {
+      UnitStatus.rented => AppColors.lightSuccessColor,
+      UnitStatus.sold => AppColors.errorColor,
+      UnitStatus.vacant => colors.textFieldBorder,
+    };
+    final statusLabel = unit.rawStatus.isNotEmpty
+        ? unit.rawStatus.transIfExists
+        : switch (unit.status) {
+            UnitStatus.rented => AppStrings.rentedStatus,
+            UnitStatus.sold => AppStrings.soldStatus,
+            UnitStatus.vacant => AppStrings.vacantStatus,
+          };
 
     return GestureDetector(
       onTap: onTap,
@@ -42,34 +50,30 @@ class UnitCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Status badge
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Center(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 7.width,
-                      vertical: 4.height,
-                    ),
-                    decoration: BoxDecoration(
-                      color: colors.primaryBrand,
-                      borderRadius: BorderRadius.circular(4.radius),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      unit.number,
-                      style: TextStyle(
-                        fontSize: context.responsiveFontScale(14),
-                        fontWeight: FontWeight.w500,
-                        color: colors.onPrimary,
-                        fontFamily: AppConstant.appHeaderFont,
-                      ),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 7.width,
+                    vertical: 4.height,
+                  ),
+                  decoration: BoxDecoration(
+                    color: colors.primaryBrand,
+                    borderRadius: BorderRadius.circular(4.radius),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    unit.number,
+                    style: TextStyle(
+                      fontSize: context.responsiveFontScale(14),
+                      fontWeight: FontWeight.w500,
+                      color: colors.onPrimary,
+                      fontFamily: AppConstant.appHeaderFont,
                     ),
                   ),
                 ),
-
                 Container(
                   padding: EdgeInsets.symmetric(
                     horizontal: 8.width,
@@ -91,41 +95,54 @@ class UnitCard extends StatelessWidget {
                 ),
               ],
             ),
-            Spacer(),
-            // Label
+            const Spacer(),
             Text(
               unit.label,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                fontSize: context.responsiveFontScale(14),
+                fontSize: context.responsiveFontScale(12),
                 fontWeight: FontWeight.w500,
                 color: colors.textFieldTitle,
                 fontFamily: AppConstant.appHeaderFont,
               ),
             ),
             SizedBox(height: 4.height),
-            // Stats row
-            Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            if (unit.monthlyRent > 0)
+              Text(
+                '${formatPrice(unit.monthlyRent)} ${AppStrings.currency}',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: context.responsiveFontScale(11),
+                  fontWeight: FontWeight.w700,
+                  color: colors.primaryBrand,
+                  fontFamily: AppConstant.appHeaderFont,
+                ),
+              ),
+            if (unit.rooms > 0 || unit.area > 0) ...[
+              SizedBox(height: 4.height),
+              Row(
                 children: [
-                  Expanded(
-                    child: PropertyInfoItem(
-                      icon: AppImages.bedroomIcon,
-                      value: AppStrings.roomsCount(unit.rooms),
-                      colors: colors,
+                  if (unit.rooms > 0)
+                    Expanded(
+                      child: PropertyInfoItem(
+                        icon: AppImages.bedroomIcon,
+                        value: AppStrings.roomsCount(unit.rooms),
+                        colors: colors,
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 6.width),
-                  Expanded(
-                    child: PropertyInfoItem(
-                      icon: AppImages.totalSpaceIcon,
-                      value: AppStrings.areaWithUnit(unit.area),
-                      colors: colors,
+                  if (unit.area > 0)
+                    Expanded(
+                      child: PropertyInfoItem(
+                        icon: AppImages.totalSpaceIcon,
+                        value: AppStrings.areaWithUnit(unit.area),
+                        colors: colors,
+                      ),
                     ),
-                  ),
                 ],
               ),
-            ),
+            ],
           ],
         ),
       ),
@@ -133,41 +150,3 @@ class UnitCard extends StatelessWidget {
   }
 }
 
-class PropertyInfoItem extends StatelessWidget {
-  const PropertyInfoItem({
-    super.key,
-    required this.icon,
-    required this.value,
-    required this.colors,
-  });
-
-  final String icon;
-  final String value;
-  final AppThemeColors colors;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        ImageItem(
-          icon,
-          color: colors.textSecondary,
-          width: 12.width,
-          height: 12.width,
-        ),
-        SizedBox(width: 2.width),
-        Expanded(
-          child: Text(
-            value,
-            style: TextStyle(
-              fontSize: context.responsiveFontScale(9),
-              color: colors.textFieldTitle,
-              fontWeight: FontWeight.w500,
-              fontFamily: AppConstant.appFont,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}

@@ -46,6 +46,15 @@ class PropertyDetailsSubmitRequest extends PropertyDetailsEvent {
   const PropertyDetailsSubmitRequest();
 }
 
+class PropertyDetailsCheckExistingRequest extends PropertyDetailsEvent {
+  const PropertyDetailsCheckExistingRequest(this.propertyId);
+
+  final String propertyId;
+
+  @override
+  List<Object?> get props => [propertyId];
+}
+
 class PropertyDetailsBrokerAccept extends PropertyDetailsEvent {
   const PropertyDetailsBrokerAccept({required this.adLicenseNumber});
   final String adLicenseNumber;

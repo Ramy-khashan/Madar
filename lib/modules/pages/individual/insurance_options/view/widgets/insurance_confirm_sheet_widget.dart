@@ -9,6 +9,7 @@ import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../controller/insurance_options_bloc.dart';
 
 class InsuranceConfirmSheetWidget extends StatelessWidget {
@@ -52,7 +53,7 @@ class InsuranceConfirmSheetWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GestureDetector(
-                        onTap: () => Navigator.pop(context),
+                        onTap: () => RouterHandler.pop(context),
                         child: Container(
                           width: 28.width,
                           height: 28.width,
@@ -265,7 +266,7 @@ class InsuranceConfirmSheetWidget extends StatelessWidget {
                       text: AppStrings.confirmRequestBtn,
                       isLoading: state.confirmStatus == RequestStatus.loading,
                       onTap: () {
-                        Navigator.pop(context);
+                        RouterHandler.pop(context);
                         context.read<InsuranceOptionsBloc>().add(
                           const InsuranceOptionsConfirm(),
                         );

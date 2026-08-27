@@ -5,6 +5,7 @@ import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../../../../../core/utils/functions/translation.dart';
 import '../../../../../common/settings/controller/settings_bloc.dart';
 import '../../../../../common/settings/view/widgets/language_bottom_sheet_widget.dart';
@@ -36,7 +37,7 @@ class ProfileBottomSheet extends StatelessWidget {
                     Align(
                       alignment: AlignmentDirectional.bottomEnd,
                       child: GestureDetector(
-                        onTap: () => Navigator.pop(context),
+                        onTap: () => RouterHandler.pop(context),
                         child: const Icon(
                           Icons.close,
                           size: 24,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:madar_app/core/utils/functions/translation.dart';
 
 import '../../../../../../config/router/app_router_keys.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
@@ -9,6 +8,7 @@ import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
+import '../../../../../../core/utils/functions/translation.dart';
 import '../../../../business/real_estate_development/projects_list/model/realstate_projects_model.dart';
 import '../../../project_details/view/widgets/project_status_badge.dart';
 
@@ -34,6 +34,7 @@ class ProjectCardItem extends StatelessWidget {
         ],
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -88,7 +89,9 @@ class ProjectCardItem extends StatelessWidget {
                             ],
                           ),
                         ),
-                        ProjectStatusBadge(status: (project?.status ?? '').toLowerCase().trans),
+                        ProjectStatusBadge(
+                          status: (project?.status ?? '').toLowerCase().trans,
+                        ),
                       ],
                     ),
                     SizedBox(height: 14.height),
@@ -120,7 +123,7 @@ class ProjectCardItem extends StatelessWidget {
                           (project?.progress ?? 0).toString(),
                         ),
                         backgroundColor: tc.borderColor.withValues(alpha: 0.5),
-                        valueColor: AlwaysStoppedAnimation<Color>(
+                        valueColor: const AlwaysStoppedAnimation<Color>(
                           AppColors.successColor,
                         ),
                         minHeight: 6,
@@ -137,7 +140,7 @@ class ProjectCardItem extends StatelessWidget {
             onTap: () => RouterHandler.navigate(
               context,
               AppRouterKeys.projectManagerDetails,
-              extra: project?.id??"",
+              extra: project?.id ?? '',
             ),
           ),
         ],

@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
+import '../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../core/utils/functions/guest_mode.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/translation.dart';
 import '../../controller/property_details_bloc.dart';
@@ -121,9 +123,17 @@ class _PropertyDetailsImageSectionWidgetState
             child: BlocBuilder<PropertyDetailsBloc, PropertyDetailsState>(
               builder: (ctx, state) {
                 return GestureDetector(
-                  onTap: () => ctx.read<PropertyDetailsBloc>().add(
-                    const PropertyDetailsToggleBookmark(),
-                  ),
+                  onTap: () {
+                    if (!GuestMode.requireAuth(
+                      ctx,
+                      subtitle: AppStrings.guestFeaturesMessage,
+                    )) {
+                      return;
+                    }
+                    ctx.read<PropertyDetailsBloc>().add(
+                      const PropertyDetailsToggleBookmark(),
+                    );
+                  },
                   child: Container(
                     padding: EdgeInsets.all(8.width),
                     decoration: BoxDecoration(

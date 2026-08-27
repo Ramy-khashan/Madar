@@ -25,10 +25,10 @@ part 'navbar_state.dart';
 class NavbarBloc extends Bloc<NavbarEvent, NavbarState> {
   NavbarBloc() : super(const NavbarState()) {
     on<NavBarInitList>((event, emit) {
-      String userType = sl.get<PreferenceUtils>().getString(
+      final String userType = sl.get<PreferenceUtils>().getString(
         StorageKeys.accountType,
       ); // This should be fetched from user preferences or authentication state
-      List<NavbarModel> items = userType == AppConstant.individual
+      final List<NavbarModel> items = userType == AppConstant.individual
           ? NavbarBloc.navbarIndividualItems
           : NavbarBloc.navbarBusinessItems;
       emit(state.copyWith(navbarItems: items));
@@ -63,7 +63,7 @@ class NavbarBloc extends Bloc<NavbarEvent, NavbarState> {
         child: const ConversationsScreen(),
       ),
     ),
-    NavbarModel(title: '', icon: "", screen: Scaffold()),
+    NavbarModel(title: '', icon: '', screen: const Scaffold()),
     NavbarModel(
       title: 'documents',
       icon: AppImages.documentsIcon,
@@ -100,7 +100,7 @@ class NavbarBloc extends Bloc<NavbarEvent, NavbarState> {
         child: const ConversationsScreen(),
       ),
     ),
-    NavbarModel(title: '', icon: "", screen: Scaffold()),
+    NavbarModel(title: '', icon: '', screen: const Scaffold()),
 
     NavbarModel(
       title: 'documents',

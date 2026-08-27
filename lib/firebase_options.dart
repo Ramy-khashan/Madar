@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBYw436Lf1d1QuUVxJaPU8bQXUU7oa255E',
-    appId: '1:841201638383:android:92820a07d030c6fb2bf41a',
-    messagingSenderId: '841201638383',
-    projectId: 'apps-logger-63d7b',
-    storageBucket: 'apps-logger-63d7b.firebasestorage.app',
+    apiKey: 'AIzaSyACpZ9c2l6m852oqoUDr7jr7imepb6R7bI',
+    appId: '1:754579709479:android:11a0372ad9150ae31f7802',
+    messagingSenderId: '754579709479',
+    projectId: 'madar-d98a0',
+    storageBucket: 'madar-d98a0.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyB1esfozWUYBbLlE30xvpfgz6-SBMc12Mo',
-    appId: '1:841201638383:ios:ba3fb23e378a8b022bf41a',
-    messagingSenderId: '841201638383',
-    projectId: 'apps-logger-63d7b',
-    storageBucket: 'apps-logger-63d7b.firebasestorage.app',
+    apiKey: 'AIzaSyDABuMHchwBRPNzNmI2HsGUMAyO74Hubhc',
+    appId: '1:754579709479:ios:7abd00aa5b9ac1881f7802',
+    messagingSenderId: '754579709479',
+    projectId: 'madar-d98a0',
+    storageBucket: 'madar-d98a0.firebasestorage.app',
     iosBundleId: 'com.example.madarApp',
   );
 }

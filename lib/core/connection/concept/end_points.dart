@@ -3,6 +3,11 @@ class EndPoints {
   static const String register = 'auth/register';
   static const String login = 'auth/login';
   static const String fcmToken = 'auth/save-fcm-token';
+  static const String logout = 'auth/logout';
+  static const String refreshToken = 'auth/refresh-token';
+  static const String otpSend = 'otp/send';
+  static const String otpVerify = 'otp/verify';
+  static const String otpResetPassword = 'otp/reset-password';
   static const String realEstateNews = 'news';
   static const String getProfile = 'users/profile';
   static const String properties = 'properties';
@@ -13,6 +18,8 @@ class EndPoints {
   static const String portfolio = 'properties/my-properties';
   static const String profile = 'users/profile';
   static const String notifications = 'notifications';
+  static String notificationRead(String id) => 'notifications/$id/read';
+  static const String notificationsReadAll = 'notifications/read';
   static const String netProfitLoss = 'dashboard/profit-loss';
   static const String realEstateProjects = 'projects';
   static String projectUpdates(String projectId) =>
@@ -29,12 +36,24 @@ class EndPoints {
   static const String wishlistCount = 'saved-properties/count';
   static const String getContracts = 'contracts';
   static String contractDetails(String id) => 'contracts/$id';
+  static const String renewContract = 'contracts/renew';
+  static String approveContract(String contractId) =>
+      'contracts/$contractId/approve';
+  static String rejectContract(String contractId) =>
+      'contracts/$contractId/reject';
   static const String requests = 'broker/requests';
   static String brokerRequestAction(String requestId) =>
       'broker/requests/$requestId';
   static const String incomingRequests = 'requests/incoming';
   static String incomingRequestAction(String requestId) =>
       'requests/$requestId';
+  static const String propertyRequests = 'requests';
+  static const String myPropertyRequests = 'requests/me';
+  static String propertyRequestById(String requestId) => 'requests/$requestId';
+  static String propertyRequestStatus(String requestId) =>
+      'requests/$requestId/status';
+  static String propertyRequestsByProperty(String propertyId) =>
+      'requests/property/$propertyId';
   static const String financialReports = 'dashboard/financial-reports';
   static const String financialReportsOverview =
       'dashboard/financial-reports/overview';
@@ -56,4 +75,4 @@ class EndPoints {
   static const String socketUrl = 'https://api.madar.support';
   static String propertyById(String id) => 'properties/$id';
   static const String ownerPropertyExpense = 'owner/property-expense';
-}
+} 

@@ -111,7 +111,10 @@ extension AddPropertyRequestMapper on AddPropertyModel {
 
   /// Returns `null` when the form is missing data the endpoint requires
   /// (property type or map coordinates).
-  CreatePropertyRequestModel? toCreateRequest({String? brokerId}) {
+  CreatePropertyRequestModel? toCreateRequest({
+    String? brokerId,
+    String? adLicenseNumber,
+  }) {
     final type = propertyType;
     if (type == null || type.isEmpty) return null;
     if (latitude == null || longitude == null) return null;
@@ -148,6 +151,13 @@ extension AddPropertyRequestMapper on AddPropertyModel {
       description: description,
       rentPeriod: PropertyApiEnums.rentPeriodFromUi(rentalPeriod),
       projectName: developerName.isNotEmpty ? developerName : null,
+      propertyParentId:
+          (propertyParentId.isNotEmpty && type == PropertyApiEnums.typeApartment)
+          ? propertyParentId
+          : null,
+      adLicenseNumber: (adLicenseNumber != null && adLicenseNumber.isNotEmpty)
+          ? adLicenseNumber
+          : null,
       propertyAge: propertyAge,
       facadeDirection: facade,
       streetsCount: streetCount,

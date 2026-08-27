@@ -5,9 +5,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/connection/concept/end_points.dart';
 import '../../../../../core/connection/interfaces/api_consumer.dart';
 import '../../../../../core/repository/apis/business_properties_apis.dart';
+import '../../../../../core/repository/apis/user_requests_apis.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../core/utils/constants/storage_keys.dart';
+import '../../../../../core/utils/functions/guest_mode.dart';
+import '../../../../../core/utils/functions/preference_utils.dart';
+import '../../../../../core/utils/functions/print_state.dart';
 import '../../../../../core/utils/functions/service_locator.dart';
+import '../../my_requests/model/my_property_request_model.dart';
 import '../model/property_details_model.dart';
 
 part 'property_details_event.dart';
@@ -19,6 +25,7 @@ class PropertyDetailsBloc
     on<PropertyDetailsLoad>(_onLoad);
     on<PropertyDetailsToggleBookmark>(_onToggleBookmark);
     on<PropertyDetailsSubmitRequest>(_onSubmitRequest);
+    on<PropertyDetailsCheckExistingRequest>(_onCheckExistingRequest);
     on<PropertyDetailsCheckIfPropertyIsSaved>(_onCheckIfPropertyIsSaved);
     on<AddedPropertyToSavedEvent>(_onAddedPropertyToSaved);
     on<PropertyDetailsBrokerAccept>(_onBrokerAccept);
@@ -75,7 +82,10 @@ class PropertyDetailsBloc
             ),
           );
           if (isClosed) return;
-          add(PropertyDetailsCheckIfPropertyIsSaved(event.propertyId));
+          if (!GuestMode.isGuest) {
+            add(PropertyDetailsCheckIfPropertyIsSaved(event.propertyId));
+            add(PropertyDetailsCheckExistingRequest(event.propertyId));
+          }
         },
       );
     } catch (e) {
@@ -92,6 +102,7 @@ class PropertyDetailsBloc
     PropertyDetailsToggleBookmark event,
     Emitter<PropertyDetailsState> emit,
   ) {
+    if (GuestMode.isGuest) return;
     add(AddedPropertyToSavedEvent(state.property!.propertyId ?? ''));
   }
 
@@ -99,8 +110,61 @@ class PropertyDetailsBloc
     PropertyDetailsSubmitRequest event,
     Emitter<PropertyDetailsState> emit,
   ) async {
-    emit(state.copyWith(submitStatus: RequestStatus.loading));
-    emit(state.copyWith(submitStatus: RequestStatus.success));
+    if (GuestMode.isGuest) return;
+    final propertyId = state.property?.propertyId ?? '';
+    if (propertyId.isEmpty || state.submitStatus == RequestStatus.loading) {
+      return;
+    }
+    emit(
+      state.copyWith(submitStatus: RequestStatus.loading, submitMessage: ''),
+    );
+    final result = await UserRequestsApis.createRequest(propertyId: propertyId);
+    result.fold(
+      (err) => emit(
+        state.copyWith(submitStatus: RequestStatus.failed, submitMessage: err),
+      ),
+      (request) => emit(
+        state.copyWith(
+          submitStatus: RequestStatus.success,
+          submitMessage: AppStrings.requestSentSuccess,
+          existingRequest: request,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _onCheckExistingRequest(
+    PropertyDetailsCheckExistingRequest event,
+    Emitter<PropertyDetailsState> emit,
+  ) async {
+    final userId = sl.get<PreferenceUtils>().getString(StorageKeys.userID);
+    MyPropertyRequestModel? mine;
+    var propertyCallFailed = false;
+    final propertyResult = await UserRequestsApis.fetchPropertyRequests(
+      propertyId: event.propertyId,
+    );
+    propertyResult.fold((_) => propertyCallFailed = true, (items) {
+      for (final item in items) {
+        if (userId.isNotEmpty && item.userId == userId) {
+          mine = item;
+          break;
+        }
+      }
+    });
+    if (mine == null && propertyCallFailed) {
+      final meResult = await UserRequestsApis.fetchMyRequests();
+      meResult.fold((_) {}, (items) {
+        for (final item in items) {
+          if (item.propertyId == event.propertyId) {
+            mine = item;
+            break;
+          }
+        }
+      });
+    }
+    if (mine != null && !isClosed) {
+      emit(state.copyWith(existingRequest: mine));
+    }
   }
 
   Future<void> _onCheckIfPropertyIsSaved(
@@ -132,6 +196,7 @@ class PropertyDetailsBloc
     AddedPropertyToSavedEvent event,
     Emitter<PropertyDetailsState> emit,
   ) async {
+    if (GuestMode.isGuest) return;
     try {
       final response = await sl.get<ApiConsumer>().post(
         EndPoints.addToWishlist(event.propertyId),
@@ -143,7 +208,9 @@ class PropertyDetailsBloc
           ),
         );
       });
-    } catch (e) {}
+    } catch (e){
+      printState('Error adding property to saved: $e');
+    } 
   }
 
   Future<void> _onBrokerAccept(

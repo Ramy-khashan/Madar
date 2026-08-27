@@ -4,12 +4,25 @@ import 'package:flutter/material.dart';
 import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
-import '../../../../../config/router/app_router_keys.dart';
-import '../../../../../core/utils/constants/app_enums.dart';
+import '../../../../../core/repository/apis/auth_apis.dart';
 import '../../../../../core/utils/functions/router_handler.dart';
 
-class LogoutDialog extends StatelessWidget {
+class LogoutDialog extends StatefulWidget {
   const LogoutDialog({super.key});
+
+  @override
+  State<LogoutDialog> createState() => _LogoutDialogState();
+}
+
+class _LogoutDialogState extends State<LogoutDialog> {
+  bool _isLoading = false;
+
+  Future<void> _logout() async {
+    if (_isLoading) return;
+    setState(() => _isLoading = true);
+    await AuthApis.logoutAndGoToChooseAccount(context);
+    if (mounted) setState(() => _isLoading = false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,21 +48,21 @@ class LogoutDialog extends StatelessWidget {
       content: Text(AppStrings.logoutConfirmation),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: _isLoading ? null : () => RouterHandler.pop(context),
           child: Text(AppStrings.cancel),
         ),
         TextButton(
-          onPressed: () {
-            RouterHandler.navigate(
-              context,
-              AppRouterKeys.chooseAccount,
-              routerType: RouterType.pushReplacementNamed,
-            );
-          },
-          child: Text(
-            AppStrings.confirm,
-            style: const TextStyle(color: AppColors.errorColor),
-          ),
+          onPressed: _isLoading ? null : _logout,
+          child: _isLoading
+              ? const SizedBox(
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : Text(
+                  AppStrings.confirm,
+                  style: const TextStyle(color: AppColors.errorColor),
+                ),
         ),
       ],
     );

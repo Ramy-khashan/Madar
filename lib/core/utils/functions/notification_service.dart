@@ -13,6 +13,8 @@ class NotificationService {
   static const String _channelDescription =
       'General notifications for Madar app';
 
+  void Function(String? payload)? onTap;
+
   /// Call once at app startup.
   Future<void> init() async {
     const androidSettings = AndroidInitializationSettings(
@@ -30,9 +32,13 @@ class NotificationService {
       iOS: iosSettings,
     );
 
-    await _plugin.initialize( initSettings);
+    await _plugin.initialize(
+      initSettings,
+      onDidReceiveNotificationResponse: (response) {
+        onTap?.call(response.payload);
+      },
+    );
 
-    // Create the Android notification channel (required for Android 8+).
     await _plugin
         .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin
@@ -46,7 +52,12 @@ class NotificationService {
           ),
         );
 
-    // Request iOS permission explicitly.
+    await _plugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >()
+        ?.requestNotificationsPermission();
+
     await _plugin
         .resolvePlatformSpecificImplementation<
           IOSFlutterLocalNotificationsPlugin
@@ -83,7 +94,7 @@ class NotificationService {
     await _plugin.show(id, title, body, details, payload: payload);
   }
 
-  Future<void> cancel(int id) => _plugin.cancel( id);
+  Future<void> cancel(int id) => _plugin.cancel(id);
 
   Future<void> cancelAll() => _plugin.cancelAll();
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../config/theme/app_theme_colors.dart';
 import '../utils/constants/app_constant.dart';
 import '../utils/functions/responsive.dart';
+import '../utils/functions/router_handler.dart';
 
 class AppAppbar extends StatelessWidget implements PreferredSizeWidget {
   const AppAppbar({
@@ -29,7 +30,7 @@ class AppAppbar extends StatelessWidget implements PreferredSizeWidget {
               onPressed:
                   onTapBack ??
                   () {
-                    Navigator.of(context).pop();
+                    RouterHandler.pop(context);
                   },
             )
           : const SizedBox.shrink(),

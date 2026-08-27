@@ -6,6 +6,7 @@ import '../../connection/interfaces/api_consumer.dart';
 import '../../utils/constants/app_strings.dart';
 import '../../utils/functions/print_state.dart';
 import '../../utils/functions/service_locator.dart';
+import 'user_requests_apis.dart';
 
 class BusinessPropertiesApis {
   BusinessPropertiesApis._();
@@ -40,7 +41,7 @@ class BusinessPropertiesApis {
       while (page <= 10) {
         final response = await sl.get<ApiConsumer>().get(
           EndPoints.incomingRequests,
-          queryParameters: {'page': page, 'page_size': pageSize},
+          queryParameters: {'page': page, 'limit': pageSize},
         );
         String? error;
         dynamic body;
@@ -74,17 +75,25 @@ class BusinessPropertiesApis {
     bool isIncoming = false,
   }) async {
     try {
-      final body = <String, dynamic>{'action': action};
-      if (!isIncoming && action == approveAction) {
-        body['adLicenseNumber'] = adLicenseNumber?.trim() ?? '';
-      }
-      if (action == rejectAction) {
-        body['rejectReason'] = rejectReason?.trim() ?? '';
-      }
-
       final path = isIncoming
-          ? EndPoints.incomingRequestAction(requestId)
+          ? EndPoints.propertyRequestStatus(requestId)
           : EndPoints.brokerRequestAction(requestId);
+      final body = isIncoming
+          ? <String, dynamic>{
+              'status': action == approveAction
+                  ? UserRequestsApis.approvedStatus
+                  : UserRequestsApis.rejectedStatus,
+              if (action == rejectAction &&
+                  (rejectReason?.trim().isNotEmpty ?? false))
+                'rejectReason': rejectReason!.trim(),
+            }
+          : <String, dynamic>{
+              'action': action,
+              if (action == approveAction)
+                'adLicenseNumber': adLicenseNumber?.trim() ?? '',
+              if (action == rejectAction)
+                'rejectReason': rejectReason?.trim() ?? '',
+            };
       final response = await sl.get<ApiConsumer>().patch(path, body: body);
       return response.fold((failed) => Left(failed), (success) {
         printState(

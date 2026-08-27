@@ -37,8 +37,7 @@ class TaskRowItem extends StatelessWidget {
             child: CheckboxListTile(
               value: state.selectedSubPhases.contains(task.id ?? ''),
               onChanged: (_) {
-                print('Task ${task.id} progress: ${task.progress}');
-                PhaseDetailsBloc.get(context)
+                 PhaseDetailsBloc.get(context)
                     .add(ToggleTaskEvent(task.id ?? ''));
               },
               title: Text(

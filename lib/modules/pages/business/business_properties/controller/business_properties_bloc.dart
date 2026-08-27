@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/repository/apis/business_properties_apis.dart';
+import '../../../../../core/repository/apis/contracts_apis.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../model/business_property_request_model.dart';
@@ -84,13 +85,28 @@ class BusinessPropertiesBloc
     await _handleAction(
       emit,
       requestId: event.id,
-      action: () => BusinessPropertiesApis.respondToRequest(
-        requestId: event.id,
-        action: BusinessPropertiesApis.approveAction,
-        adLicenseNumber: event.adLicenseNumber,
-        isIncoming: event.isIncoming,
-      ),
-      successMessage: AppStrings.businessPropertiesAcceptSuccess,
+      action: () {
+        if (event.isIncoming) {
+          if (event.contractId.trim().isEmpty) {
+            return Future<Either<String, dynamic>>.value(
+              Left(AppStrings.somethingWentWrong),
+            );
+          }
+          return ContractsApis.approve(
+            contractId: event.contractId,
+            durationInYears: event.durationInYears,
+            finalPrice: event.finalPrice ?? 0,
+          );
+        }
+        return BusinessPropertiesApis.respondToRequest(
+          requestId: event.id,
+          action: BusinessPropertiesApis.approveAction,
+          adLicenseNumber: event.adLicenseNumber,
+        );
+      },
+      successMessage: event.isIncoming
+          ? AppStrings.contractApprovedSuccess
+          : AppStrings.businessPropertiesAcceptSuccess,
       publishedStatus: event.isIncoming ? 'APPROVED' : 'ACCEPTED',
     );
   }
@@ -102,12 +118,17 @@ class BusinessPropertiesBloc
     await _handleAction(
       emit,
       requestId: event.id,
-      action: () => BusinessPropertiesApis.respondToRequest(
-        requestId: event.id,
-        action: BusinessPropertiesApis.rejectAction,
-        rejectReason: event.rejectReason,
-        isIncoming: event.isIncoming,
-      ),
+      action: () {
+        if (event.isIncoming && event.contractId.trim().isNotEmpty) {
+          return ContractsApis.reject(contractId: event.contractId);
+        }
+        return BusinessPropertiesApis.respondToRequest(
+          requestId: event.id,
+          action: BusinessPropertiesApis.rejectAction,
+          rejectReason: event.rejectReason,
+          isIncoming: event.isIncoming,
+        );
+      },
       successMessage: AppStrings.businessPropertiesRejectSuccess,
       publishedStatus: 'REJECTED',
       rejectReason: event.rejectReason,
@@ -156,6 +177,7 @@ class BusinessPropertiesBloc
                       ? item.copyWith(
                           status: publishedStatus,
                           rejectReason: rejectReason,
+                          contractStatus: publishedStatus,
                         )
                       : item,
                 )

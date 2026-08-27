@@ -65,14 +65,13 @@ class ChooseBrokerBloc extends Bloc<ChooseBrokerEvent, ChooseBrokerState> {
           );
         },
         (successResponse) async {
-          final dataWrapper =
-              successResponse.response['data'] as Map<String, dynamic>? ?? {};
+       
           final List<BrokerModel> items = [];
-          for (var item in List.from(dataWrapper['data'] ?? [])) {
+          for (var item in List.from(successResponse.response['data']  ?? [])) {
             items.add(BrokerModel.fromJson(item));
           }
           final pagination =
-              dataWrapper['pagination'] as Map<String, dynamic>? ?? {};
+              successResponse.response['pagination'] as Map<String, dynamic>? ?? {};
           final total = pagination['total'] ?? 0;
 
           emit(

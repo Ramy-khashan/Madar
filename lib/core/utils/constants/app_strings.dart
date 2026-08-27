@@ -44,6 +44,13 @@ class AppStrings {
   static String get propertyLicenseNumberHint =>
       'property_license_number_hint'.trans;
   static String get guestMode => 'guest_mode'.trans;
+  static String get guestAuthTitle => 'guest_auth_title'.trans;
+  static String get guestAuthSubtitle => 'guest_auth_subtitle'.trans;
+  static String get guestFeaturesMessage => 'guest_features_message'.trans;
+  static String get guestCompleteProcess => 'guest_complete_process'.trans;
+  static String get guestLoginRequiredToast =>
+      'guest_login_required_toast'.trans;
+  static String get guestUserName => 'guest_user_name'.trans;
   static String get chooseRealEstateBroker => 'choose_real_estate_broker'.trans;
   static String get completed => 'completed_task'.trans;
   static String get ongoing => 'ongoing_task'.trans;
@@ -78,6 +85,19 @@ class AppStrings {
   static String get baths => 'baths'.trans;
   static String get renewalContract => 'renewal_contract'.trans;
   static String get saveContract => 'save_contract'.trans;
+  static String get contractDurationYears => 'contract_duration_years'.trans;
+  static String get contractFinalPrice => 'contract_final_price'.trans;
+  static String get pleaseEnterContractDuration =>
+      'please_enter_contract_duration'.trans;
+  static String get pleaseEnterContractPrice =>
+      'please_enter_contract_price'.trans;
+  static String get contractApprovedSuccess =>
+      'contract_approved_success'.trans;
+  static String get contractRejectedSuccess =>
+      'contract_rejected_success'.trans;
+  static String get contractRenewedSuccess => 'contract_renewed_success'.trans;
+  static String get contractRejectConfirmation =>
+      'contract_reject_confirmation'.trans;
   static String get myWishlistTitle => 'my_wishlist_title'.trans;
   static String get logoutConfirmation => 'logout_confirmation'.trans;
   static String get managerLogoutHint => 'manager_logout_hint'.trans;
@@ -164,6 +184,8 @@ class AppStrings {
   static String get allProperties => 'all_properties'.trans;
   static String get addProperty => 'add_property'.trans;
   static String get searchByArea => 'search_by_area'.trans;
+  static String get city => 'city'.trans;
+  static String get enterCity => 'enter_city'.trans;
   static String get enterFullName => 'enter_full_name'.trans;
   static String get identityNumber => 'identity_number'.trans;
   static String get enterIdentityNumber => 'enter_identity_number'.trans;
@@ -214,6 +236,13 @@ class AppStrings {
   static String get changeAccountIndividual =>
       'change_account_individual'.trans;
   static String get noNotifications => 'no_notifications'.trans;
+  static String get markAllAsRead => 'mark_all_as_read'.trans;
+  static String get comingSoon => 'coming_soon'.trans;
+  static String get newPassword => 'new_password'.trans;
+  static String get enterNewPassword => 'enter_new_password'.trans;
+  static String get passwordResetSuccessfully =>
+      'password_reset_successfully'.trans;
+  static String get otpSentSuccessfully => 'otp_sent_successfully'.trans;
   static String get notificationTypeMessage =>
       'notification_type_message'.trans;
   static String get notificationTypeProperty =>
@@ -444,6 +473,20 @@ class AppStrings {
   static String get sendRequest => 'send_request'.trans;
   static String get waitingOwnerReply => 'waiting_owner_reply'.trans;
   static String get goHome => 'go_home'.trans;
+  static String get myRequestsTitle => 'my_requests_title'.trans;
+  static String get myRequestsEmpty => 'my_requests_empty'.trans;
+  static String get myRequestDetailsTitle => 'my_request_details_title'.trans;
+  static String get viewMyRequest => 'view_my_request'.trans;
+  static String get requestSentSuccess => 'request_sent_success'.trans;
+  static String get deleteRequest => 'delete_request'.trans;
+  static String get deleteRequestConfirmation =>
+      'delete_request_confirmation'.trans;
+  static String get requestDeletedSuccess => 'request_deleted_success'.trans;
+  static String get acceptContract => 'accept_contract'.trans;
+  static String get rejectContract => 'reject_contract'.trans;
+  static String get contractAcceptedSuccess =>
+      'contract_accepted_success'.trans;
+  static String get commissionAmountLabel => 'commission_amount_label'.trans;
   static String get installmentOptionsTitle =>
       'installment_options_title'.trans;
   static String get insuranceOptionsTitle => 'insurance_options_title'.trans;
@@ -640,6 +683,7 @@ class AppStrings {
   static String get newsServicesTab => 'news_services_tab'.trans;
   static String get readNewsBtn => 'read_news_btn'.trans;
   static String get readMoreNewsBtn => 'read_more_news_btn'.trans;
+  static String get showLess => 'show_less'.trans;
   // Rent Installment Screen
   static String get installmentRequestsTab => 'installment_requests_tab'.trans;
   static String get installmentInfoTab => 'installment_info_tab'.trans;
@@ -1176,6 +1220,9 @@ class AppStrings {
   static String get addExpenseBtn => 'add_expense_btn'.trans;
   static String get rentedStatus => 'rented_status'.trans;
   static String get vacantStatus => 'vacant_status'.trans;
+  static String get soldStatus => 'sold_status'.trans;
+  static String get attachExpenseFileHint => 'attach_expense_file_hint'.trans;
+  static String get enterAmount => 'enter_amount'.trans;
   static String rentedFromTotal(int rented, int total) =>
       'rented_from_total'.transNamed({'rented': '$rented', 'total': '$total'});
   static String roomsCount(int count) =>
@@ -1262,8 +1309,20 @@ class AppStrings {
       'amenities_count'.transNamed({'count': '$count'});
   static String get adSummary => 'ad_summary'.trans;
   static String get saveToMyPropertyFiles => 'save_to_my_property_files'.trans;
+  static String get publishAd => 'publish_ad'.trans;
+  static String get saveAndPublish => 'save_and_publish'.trans;
+  static String get adLicenseHint => 'ad_license_hint'.trans;
+  static String get selectParentBuilding => 'select_parent_building'.trans;
+  static String get selectParentBuildingHint =>
+      'select_parent_building_hint'.trans;
+  static String get noParentBuildings => 'no_parent_buildings'.trans;
+  static String get clearParentSelection => 'clear_parent_selection'.trans;
   static String get chooseSaveLocation => 'choose_save_location'.trans;
   static String get saveBtn => 'save_btn'.trans;
+  static String get confirmSave => 'confirm_save'.trans;
+  static String get chooseTheFile => 'choose_the_file'.trans;
+  static String get pleaseSelectExistingFile =>
+      'please_select_existing_file'.trans;
   static String get saveToExistingFile => 'save_to_existing_file'.trans;
   static String get addToExistingFileHint => 'add_to_existing_file_hint'.trans;
   static String get saveAsNewFile => 'save_as_new_file'.trans;

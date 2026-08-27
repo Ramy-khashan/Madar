@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/components/app_appbar.dart';
+import '../../../../../core/components/guest_locked_view.dart';
 import '../../../../../core/components/loading_process.dart';
 import '../../../../../core/components/pagination.dart';
 import '../../../../../core/components/portfolio_card_widget.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../core/utils/functions/guest_mode.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 import '../controller/my_properties_bloc.dart';
 import 'widgets/my_properties_loader.dart';
@@ -18,7 +20,9 @@ class MyPropertiesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppAppbar(title: AppStrings.myProperties),
-      body: SafeArea(
+      body: GuestMode.isGuest
+          ? const GuestLockedView()
+          : SafeArea(
         child: Column(
           children: [
             Expanded(
@@ -40,6 +44,21 @@ class MyPropertiesScreen extends StatelessWidget {
                         state.properties.isEmpty,
                     loader: const MyPropertiesLoader(),
                     child: PaginationView(
+                        countItemInRow: ResponsiveUtils.types(
+                        context,
+                        mobilePortrait: 1,
+                        mobileLandscape: 2,
+                        tabletPortrait: 2,
+                        tabletLandscape: 3,
+                      ).toInt(),
+
+                      mainAxisExtent: ResponsiveUtils.types(
+                        context,
+                         mobilePortrait: 165.height,
+                                mobileLandscape: 190.height,
+                                tabletPortrait: 150.height,
+                                tabletLandscape: 190.height,
+                      ),
                       isListView: context.isMobilePortrait,
                       itemBuilder: (context, index) {
                         return Padding(

@@ -9,6 +9,7 @@ import '../../../../../core/connection/interfaces/api_consumer.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_images.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../core/utils/functions/guest_mode.dart';
 import '../../../../../core/utils/functions/print_state.dart';
 import '../../../../../core/utils/functions/service_locator.dart';
 import '../../../business/business_home/model/business_portfolio_property_model.dart';
@@ -24,9 +25,16 @@ class IndividualHomeBloc
   IndividualHomeBloc() : super(const IndividualHomeState()) {
     on<IndividualHomeLoad>((even, emit) async {
       add(const IndividualHomeLoadProperties());
-
-      add(const IndividualHomeLoadPortfolio());
-
+      if (GuestMode.isGuest) {
+        emit(
+          state.copyWith(
+            portfolioStatus: RequestStatus.success,
+            portfolio: [],
+          ),
+        );
+      } else {
+        add(const IndividualHomeLoadPortfolio());
+      }
       add(const IndividualHomeLoadAds());
       add(const IndividualHomeLoadUserLocation());
     });
@@ -96,7 +104,9 @@ class IndividualHomeBloc
         },
         (successResponse) async {
           final List<PropertiesItemModel> items = [];
-          for (var item in List.from(successResponse.response['properties'])) {
+          for (var item in List.from(
+            successResponse.response['properties'] ?? const [],
+          )) {
             items.add(PropertiesItemModel.fromJson(item));
           }
           emit(
@@ -121,6 +131,15 @@ class IndividualHomeBloc
     IndividualHomeLoadPortfolio event,
     Emitter<IndividualHomeState> emit,
   ) async {
+    if (GuestMode.isGuest) {
+      emit(
+        state.copyWith(
+          portfolioStatus: RequestStatus.success,
+          portfolio: [],
+        ),
+      );
+      return;
+    }
     try {
       emit(
         state.copyWith(portfolioStatus: RequestStatus.loading, portfolio: []),
@@ -208,7 +227,9 @@ class IndividualHomeBloc
       }
 
       emit(state.copyWith(userLocation: locationLabel));
-      await _updateUserLocation(position, locationLabel);
+      if (!GuestMode.isGuest) {
+        await _updateUserLocation(position, locationLabel);
+      }
     } catch (e) {
       printState(e.toString());
       emit(state.copyWith(userLocation: ''));

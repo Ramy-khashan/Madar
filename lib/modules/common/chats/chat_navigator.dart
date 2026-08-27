@@ -4,6 +4,7 @@ import '../../../config/router/app_router_keys.dart';
 import '../../../core/repository/apis/chat_apis.dart';
 import '../../../core/utils/constants/app_strings.dart';
 import '../../../core/utils/functions/common_fun.dart';
+import '../../../core/utils/functions/guest_mode.dart';
 import '../../../core/utils/functions/router_handler.dart';
 import 'conversation_detail/model/conversation_info.dart';
 
@@ -16,6 +17,9 @@ class ChatNavigator {
     required String participantName,
     String? participantAvatarUrl,
   }) async {
+    if (!GuestMode.requireAuth(context, prompt: GuestAuthPrompt.toast)) {
+      return;
+    }
     if (receiverId.trim().isEmpty) {
       AppToast(AppStrings.somethingWentWrong, isError: true);
       return;

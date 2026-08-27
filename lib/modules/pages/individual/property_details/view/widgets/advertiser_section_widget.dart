@@ -194,7 +194,9 @@ class AdvertiserSectionWidget extends StatelessWidget {
                 onTap: () {
                   RouterHandler.navigate(
                     context,
-                    AppRouterKeys.ownerProperties,
+                    AppRouterKeys.brokerProperties,
+                    extra:advertiser?.userId,
+
                   );
                 },
                 textSize: context.responsiveFontScale(14),

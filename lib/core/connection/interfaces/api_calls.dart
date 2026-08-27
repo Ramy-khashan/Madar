@@ -17,7 +17,7 @@ abstract class ApisCalls {
   Future<Either<String, ApiModel>> put(String path,
       {Map<String, dynamic> body, Map<String, dynamic>? queryParameters});
   Future<Either<String, ApiModel>> delete(String path,
-      {Map<String, dynamic>? queryParameters});
+      {Map<String, dynamic>? body, Map<String, dynamic>? queryParameters});
   Future<Either<String, ApiModel>> patch(String path,
       {Map<String, dynamic>? body, Map<String, dynamic>? queryParameters});
   Future<Either<String, ApiModel>> postFormData(String path,

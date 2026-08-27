@@ -218,4 +218,6 @@ extension SizeExtension on num {
   double get radius => r;
 
   EdgeInsets get edgeInsets => EdgeInsets.all(r);
+
+  SizedBox get toSizedBox => SizedBox(height: toDouble(), width: toDouble());
 }

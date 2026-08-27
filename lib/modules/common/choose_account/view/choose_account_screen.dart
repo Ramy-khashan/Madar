@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../config/router/app_router_keys.dart';
 import '../../../../config/theme/app_theme_colors.dart';
+import '../../../../core/components/app_text_button.dart';
 import '../../../../core/components/image_item.dart';
 import '../../../../core/utils/constants/app_constant.dart';
+import '../../../../core/utils/constants/app_enums.dart';
 import '../../../../core/utils/constants/app_strings.dart';
 import '../../../../core/utils/constants/storage_keys.dart';
 import '../../../../core/utils/functions/preference_utils.dart';
@@ -74,18 +76,41 @@ class ChooseAccountScreen extends StatelessWidget {
                                 .setString(
                                   StorageKeys.accountType,
                                   account.accountType,
-                                )
-                                .whenComplete(() {
-                                  if (context.mounted) {
-                                    RouterHandler.navigate(
-                                      context,
-                                      AppRouterKeys.signIn,
-                                    );
-                                  }
-                                });
+                                );
+                            await PreferenceUtils().setBool(
+                              StorageKeys.isGuest,
+                              false,
+                            );
+                            if (context.mounted) {
+                              RouterHandler.navigate(
+                                context,
+                                AppRouterKeys.signIn,
+                              );
+                            }
                           },
                         );
                       },
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 8.height, bottom: 16.height),
+                child: AppTextButton(
+                  color: AppThemeColors.of(context).primaryBrand,
+                  text: AppStrings.guestMode,
+                  onTap: () async {
+                    final prefs = PreferenceUtils();
+                    await prefs.setString(
+                      StorageKeys.accountType,
+                      AppConstant.individual,
+                    );
+                    await prefs.setBool(StorageKeys.isGuest, true);
+                    if (!context.mounted) return;
+                    RouterHandler.navigate(
+                      context,
+                      AppRouterKeys.navbar,
+                      routerType: RouterType.pushReplacementNamed,
                     );
                   },
                 ),

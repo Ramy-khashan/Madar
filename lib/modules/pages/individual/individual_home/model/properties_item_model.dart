@@ -11,7 +11,9 @@ class PropertiesItemModel {
   String? city;
   String? district;
   String? image;
-
+      String?   publisherId ;
+      String?  publisherName ;
+    String?   publisherPhone;
   PropertiesItemModel({
     this.propertyId,
     this.type,
@@ -25,6 +27,9 @@ class PropertiesItemModel {
     this.city,
     this.district,
     this.image,
+    this.publisherId,
+    this.publisherName,
+    this.publisherPhone,
   });
 
   PropertiesItemModel.fromJson(Map<String, dynamic> json) {
@@ -32,14 +37,22 @@ class PropertiesItemModel {
     type = json['type'];
     status = json['status'];
     title = json['title'];
-    price = json['price'];
+    price = json['price'] is num
+        ? (json['price'] as num).toInt()
+        : int.tryParse('${json['price'] ?? ''}');
     listingType = json['listingType'];
     totalArea = json['totalArea'];
     bedrooms = json['bedrooms'];
     bathrooms = json['bathrooms'];
-    city = json['city'] ?? json['location']['city'] ?? '';
-    district = json['district'] ?? json['location']['district'] ?? '';
+    final location = json['location'] is Map
+        ? Map<String, dynamic>.from(json['location'] as Map)
+        : <String, dynamic>{};
+    city = (json['city'] ?? location['city'] ?? '').toString();
+    district = (json['district'] ?? location['district'] ?? '').toString();
     image = json['image'] ?? json['mainImage'];
+    publisherId = json['publisherId'] ?? '';
+    publisherName = json['publisherName'] ?? '';
+    publisherPhone = json['publisherPhone'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
@@ -56,6 +69,9 @@ class PropertiesItemModel {
     data['city'] = city;
     data['district'] = district;
     data['image'] = image;
+    data['publisherId'] = publisherId;
+    data['publisherName'] = publisherName;
+    data['publisherPhone'] = publisherPhone;
     return data;
   }
 }

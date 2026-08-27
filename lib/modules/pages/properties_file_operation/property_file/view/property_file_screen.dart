@@ -4,20 +4,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../config/router/app_router_keys.dart';
 import '../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../core/components/app_appbar.dart';
-import '../../../../../core/components/image_item.dart';
+import '../../../../../core/components/confirm_delete_dialog.dart';
 import '../../../../../core/components/loading_process.dart';
-import '../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../core/utils/constants/app_constant.dart';
-import '../../../../../core/utils/constants/app_images.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
-import '../../../../../core/utils/functions/responsive.dart';
+import '../../../../../core/utils/constants/storage_keys.dart';
+import '../../../../../core/utils/functions/preference_utils.dart';
 import '../../../../../core/utils/functions/router_handler.dart';
 import '../controller/property_file_bloc.dart';
 import 'widgets/owner_property_content_item.dart';
+import 'widgets/property_file_overflow_menu.dart';
 import 'widgets/property_files_content_item.dart';
 
 class PropertyFileScreen extends StatelessWidget {
   const PropertyFileScreen({super.key});
+
+  bool get _isBroker =>
+      PreferenceUtils().getString(StorageKeys.accountType) ==
+      AppConstant.business;
 
   @override
   Widget build(BuildContext context) {
@@ -26,72 +30,28 @@ class PropertyFileScreen extends StatelessWidget {
 
     return BlocListener<PropertyFileBloc, PropertyFileState>(
       listenWhen: (prev, curr) => curr.isDeleted && !prev.isDeleted,
-      listener: (context, state) => Navigator.of(context).pop(),
+      listener: (context, state) =>RouterHandler.pop(context),
       child: Scaffold(
         backgroundColor: colors.backgroundPrimary,
         appBar: AppAppbar(
           title: AppStrings.propertyFileTitle,
           actions: [
-            PopupMenuButton<String>(
-              icon: const Icon(Icons.more_vert),
-              onSelected: (value) {
-                if (value == 'send') {
-                  RouterHandler.navigate(
-                    context,
-                    AppRouterKeys.chooseBroker,
-                    extra: bloc.state.details?.propertyId ?? bloc.state.property?.id,
-                  );
-                } else if (value == 'delete') {
-                  _confirmDelete(context, bloc);
-                }
-              },
-              itemBuilder: (_) => [
-                PopupMenuItem(
-                  value: 'send',
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        AppStrings.sendPropertyFileToBroker,
-                        style: TextStyle(
-                          color: colors.textFieldTitle,
-                          fontFamily: AppConstant.appFont,
-                          fontSize: context.responsiveFontScale(14),
-                        ),
-                      ),
-                      SizedBox(width: 10.width),
-
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        size: 16.width,
-                        color: colors.textFieldTitle,
-                      ),
-                    ],
-                  ),
-                ),
-                PopupMenuItem(
-                  value: 'delete',
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        AppStrings.deleteProperty,
-                        style: TextStyle(
-                          color: AppColors.errorColor,
-                          fontFamily: AppConstant.appFont,
-                          fontSize: context.responsiveFontScale(14),
-                        ),
-                      ),
-                      SizedBox(width: 8.width),
-
-                      ImageItem(
-                        AppImages.deleteIcon,
-                        color: AppColors.errorColor,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+            PropertyFileOverflowMenu(
+              showSend: !_isBroker,
+              onSend: () => RouterHandler.navigate(
+                context,
+                AppRouterKeys.chooseBroker,
+                extra:
+                    bloc.state.details?.propertyId ??
+                    bloc.state.property?.id,
+              ),
+              onDelete: () => showConfirmDeleteDialog(
+                context: context,
+                title: AppStrings.deleteProperty,
+                content: AppStrings.deletePropertyConfirmation,
+                onConfirm: () =>
+                    bloc.add(const PropertyFileDeleteProperty()),
+              ),
             ),
           ],
         ),
@@ -105,11 +65,13 @@ class PropertyFileScreen extends StatelessWidget {
                 emptyMsg: '',
                 isEmptyList: false,
                 childIsLoader: true,
-                child: state.property == null && state.details == null
-                    ? const SizedBox()
-                    : state.isMultiUnit
+                child: 
+                // state.property == null && state.details == null
+                //     ? const SizedBox()
+                //     :
+                     state.isMultiUnit
                     ? PropertyFileContentItem(
-                        property: state.property!,
+                        property: state.property,
                         colors: colors,
                         state: state,
                         bloc: bloc,
@@ -123,32 +85,6 @@ class PropertyFileScreen extends StatelessWidget {
             },
           ),
         ),
-      ),
-    );
-  }
-
-  void _confirmDelete(BuildContext context, PropertyFileBloc bloc) {
-    showDialog<bool>(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: Text(AppStrings.deleteProperty),
-        content: Text(AppStrings.deletePropertyConfirmation),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(AppStrings.cancel),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              bloc.add(const PropertyFileDeleteProperty());
-            },
-            child: Text(
-              AppStrings.deleteBtn,
-              style: const TextStyle(color: AppColors.errorColor),
-            ),
-          ),
-        ],
       ),
     );
   }

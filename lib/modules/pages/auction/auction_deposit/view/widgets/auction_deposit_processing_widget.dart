@@ -112,7 +112,7 @@ class AnimatedDots extends StatelessWidget {
         );
         return AnimatedBuilder(
           animation: anim,
-          builder: (_, __) => Padding(
+          builder: (_, _) => Padding(
             padding: EdgeInsets.symmetric(horizontal: 4.width),
             child: Opacity(
               opacity: anim.value,

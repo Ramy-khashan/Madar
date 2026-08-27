@@ -9,8 +9,7 @@ import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../../property_details/model/property_details_model.dart';
-import '../../model/property_details_model.dart';
-
+ 
 class PropertyHeaderSectionWidget extends StatelessWidget {
   const PropertyHeaderSectionWidget({super.key, required this.property});
 
@@ -37,7 +36,7 @@ class PropertyHeaderSectionWidget extends StatelessWidget {
               ),
             ),
             GestureDetector(
-              key: Key('location_on_map_button'),
+              key: const Key('location_on_map_button'),
               onTap: () {
                 RouterHandler.navigate(
                   context,
@@ -83,8 +82,7 @@ class PropertyHeaderSectionWidget extends StatelessWidget {
               children: [
                 const ImageItem(AppImages.occupancyIcon),
                 SizedBox(width: 4.width),
-                //TODO: Recheck occupancy rate value
-                // Text(
+                 // Text(
                 //   '${AppStrings.occupancyRate}: ${property?.occupancyRate.toInt() ?? 0}%',
                 //   style: TextStyle(
                 //     fontSize: context.responsiveFontScale(13),

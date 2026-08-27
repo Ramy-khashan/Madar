@@ -4,8 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/loading_process.dart';
 import '../../../../../../core/components/pagination.dart';
-import '../../../../../../core/components/search_item.dart';
-import '../../../../../../core/utils/constants/app_enums.dart';
+ import '../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
@@ -54,8 +53,8 @@ class BrokerListContentWidget extends StatelessWidget {
                     horizontal: context.responsiveHorizontalPadding,
                     vertical: 10.height,
                   ),
-                  itemBuilder: (_, _) =>   BrokerCardWidget(),
-                  separatorBuilder: (_, __) => SizedBox(height: 10.height),
+                  itemBuilder: (_, _) =>   const BrokerCardWidget(),
+                  separatorBuilder: (_, _) => SizedBox(height: 10.height),
                   itemCount: 15,
                 ),
                 emptyMsg: AppStrings.chooseBrokerTitle,

@@ -7,6 +7,8 @@ class PropertyDetailsState extends Equatable {
     this.getDetailsStatus = RequestStatus.init,
     this.errorMsg = '',
     this.submitStatus = RequestStatus.init,
+    this.submitMessage = '',
+    this.existingRequest,
     this.brokerRequestId,
     this.adLicenseNumber,
     this.actionStatus = RequestStatus.init,
@@ -18,6 +20,8 @@ class PropertyDetailsState extends Equatable {
   final String errorMsg;
   final bool isSavedWishList;
   final RequestStatus submitStatus;
+  final String submitMessage;
+  final MyPropertyRequestModel? existingRequest;
   final String? brokerRequestId;
   final String? adLicenseNumber;
   final RequestStatus actionStatus;
@@ -32,6 +36,8 @@ class PropertyDetailsState extends Equatable {
     getDetailsStatus,
     errorMsg,
     submitStatus,
+    submitMessage,
+    existingRequest,
     brokerRequestId,
     adLicenseNumber,
     actionStatus,
@@ -44,6 +50,8 @@ class PropertyDetailsState extends Equatable {
     String? errorMsg,
     bool? isSavedWishList,
     RequestStatus? submitStatus,
+    String? submitMessage,
+    MyPropertyRequestModel? existingRequest,
     String? brokerRequestId,
     String? adLicenseNumber,
     RequestStatus? actionStatus,
@@ -55,6 +63,8 @@ class PropertyDetailsState extends Equatable {
       getDetailsStatus: getDetailsStatus ?? this.getDetailsStatus,
       errorMsg: errorMsg ?? this.errorMsg,
       submitStatus: submitStatus ?? this.submitStatus,
+      submitMessage: submitMessage ?? this.submitMessage,
+      existingRequest: existingRequest ?? this.existingRequest,
       brokerRequestId: brokerRequestId ?? this.brokerRequestId,
       adLicenseNumber: adLicenseNumber ?? this.adLicenseNumber,
       actionStatus: actionStatus ?? this.actionStatus,

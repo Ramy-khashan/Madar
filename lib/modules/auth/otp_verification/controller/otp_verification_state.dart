@@ -23,5 +23,11 @@ final class OtpVerificationError extends OtpVerificationState {
 
 final class OtpResendLoading extends OtpVerificationState {}
 
-final class OtpResendSuccess extends OtpVerificationState {}
+final class OtpResendSuccess extends OtpVerificationState {
+  final String message;
+  const OtpResendSuccess(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
 

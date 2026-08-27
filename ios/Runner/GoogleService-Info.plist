@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyB1esfozWUYBbLlE30xvpfgz6-SBMc12Mo</string>
+	<string>AIzaSyDABuMHchwBRPNzNmI2HsGUMAyO74Hubhc</string>
 	<key>GCM_SENDER_ID</key>
-	<string>841201638383</string>
+	<string>754579709479</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.example.madarApp</string>
 	<key>PROJECT_ID</key>
-	<string>apps-logger-63d7b</string>
+	<string>madar-d98a0</string>
 	<key>STORAGE_BUCKET</key>
-	<string>apps-logger-63d7b.firebasestorage.app</string>
+	<string>madar-d98a0.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:841201638383:ios:ba3fb23e378a8b022bf41a</string>
+	<string>1:754579709479:ios:7abd00aa5b9ac1881f7802</string>
 </dict>
 </plist>

@@ -40,3 +40,28 @@ final class SelectMarkerEvent extends PropertiesMapEvent {
 final class CloseMarkerEvent extends PropertiesMapEvent {
   const CloseMarkerEvent();
 }
+
+final class MapFilterApplied extends PropertiesMapEvent {
+  const MapFilterApplied(this.filter);
+  final PropertyFilterModel filter;
+
+  @override
+  List<Object?> get props => [filter];
+}
+
+final class MapSearchChanged extends PropertiesMapEvent {
+  const MapSearchChanged(this.search);
+  final String search;
+
+  @override
+  List<Object?> get props => [search];
+}
+
+final class MapCameraMoved extends PropertiesMapEvent {
+  const MapCameraMoved(this.latitude, this.longitude);
+  final double latitude;
+  final double longitude;
+
+  @override
+  List<Object?> get props => [latitude, longitude];
+}

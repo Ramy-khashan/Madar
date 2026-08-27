@@ -22,7 +22,7 @@ class BrokerPropertiesBloc
   static BrokerPropertiesBloc get(BuildContext context) =>
       context.read<BrokerPropertiesBloc>();
 
-  final int pageSize = 3;
+  final int pageSize = 10;
 
   Future<void> _onLoad(
     BrokerPropertiesLoad event,
@@ -37,7 +37,7 @@ class BrokerPropertiesBloc
       );
       final res = await sl.get<ApiConsumer>().get(
         EndPoints.brokerProperties(event.brokerId),
-        queryParameters: {'page': event.page, 'page_size': pageSize},
+        queryParameters: {'page': event.page, 'limit': pageSize},
       );
       await res.fold(
         (l) async {

@@ -82,6 +82,13 @@ class SelectDateTypeEvent extends AddPropertyEvent {
   List<Object?> get props => [dateType];
 }
 
+class DeedDatePickedEvent extends AddPropertyEvent {
+  const DeedDatePickedEvent(this.date);
+  final DateTime date;
+  @override
+  List<Object?> get props => [date];
+}
+
 // ─── Step 4 — Images ───────────────────────────────────────────────────────
 
 class AddImageEvent extends AddPropertyEvent {
@@ -280,11 +287,33 @@ class ConfirmSaveEvent extends AddPropertyEvent {
   const ConfirmSaveEvent({
     this.brokerId,
     this.openChooseBrokerOnSuccess = false,
+    this.adLicenseNumber,
   });
   final String? brokerId;
   final bool openChooseBrokerOnSuccess;
+  final String? adLicenseNumber;
   @override
-  List<Object?> get props => [brokerId, openChooseBrokerOnSuccess];
+  List<Object?> get props => [
+    brokerId,
+    openChooseBrokerOnSuccess,
+    adLicenseNumber,
+  ];
+}
+
+class LoadParentCandidatesEvent extends AddPropertyEvent {
+  const LoadParentCandidatesEvent();
+}
+
+class SelectParentPropertyEvent extends AddPropertyEvent {
+  const SelectParentPropertyEvent({required this.id, required this.title});
+  final String id;
+  final String title;
+  @override
+  List<Object?> get props => [id, title];
+}
+
+class ClearParentPropertyEvent extends AddPropertyEvent {
+  const ClearParentPropertyEvent();
 }
 
 class SendToBrokerEvent extends AddPropertyEvent {

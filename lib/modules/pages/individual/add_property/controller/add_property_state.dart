@@ -21,6 +21,8 @@ class AddPropertyState extends Equatable {
     this.suggestedMin,
     this.suggestedMax,
     this.aiDescription,
+    this.parentCandidates = const [],
+    this.parentCandidatesStatus = RequestStatus.init,
   });
 
   final AddPropertyStep step;
@@ -38,6 +40,8 @@ class AddPropertyState extends Equatable {
   final num? suggestedMin;
   final num? suggestedMax;
   final String? aiDescription;
+  final List<MyPropertiesModel> parentCandidates;
+  final RequestStatus parentCandidatesStatus;
 
   /// Maps the current step to a 0-based indicator index (5 segments total).
   /// period shares index 0 with type (it's a sub-step of the type phase).
@@ -75,6 +79,8 @@ class AddPropertyState extends Equatable {
     num? suggestedMin,
     num? suggestedMax,
     String? aiDescription,
+    List<MyPropertiesModel>? parentCandidates,
+    RequestStatus? parentCandidatesStatus,
   }) {
     return AddPropertyState(
       step: step ?? this.step,
@@ -93,6 +99,9 @@ class AddPropertyState extends Equatable {
       suggestedMin: suggestedMin ?? this.suggestedMin,
       suggestedMax: suggestedMax ?? this.suggestedMax,
       aiDescription: aiDescription ?? this.aiDescription,
+      parentCandidates: parentCandidates ?? this.parentCandidates,
+      parentCandidatesStatus:
+          parentCandidatesStatus ?? this.parentCandidatesStatus,
     );
   }
 
@@ -113,5 +122,7 @@ class AddPropertyState extends Equatable {
         suggestedMin,
         suggestedMax,
         aiDescription,
+        parentCandidates,
+        parentCandidatesStatus,
       ];
 }

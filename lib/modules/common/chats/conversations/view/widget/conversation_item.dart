@@ -33,7 +33,7 @@ class ConversationItem extends StatelessWidget {
                   alignment: Alignment.center,
                   child:item?.imageUrl.isNotEmpty == true
                       ? ImageItem(
-                          item?.imageUrl??"",
+                          item?.imageUrl??'',
                           width: 56.width,
                           height: 56.width,
                           fit: BoxFit.cover,

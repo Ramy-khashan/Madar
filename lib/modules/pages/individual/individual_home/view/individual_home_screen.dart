@@ -7,6 +7,7 @@ import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 import '../../../../../core/utils/functions/router_handler.dart';
 import '../../../../common/filter/view/filter_sheet_view.dart';
+import '../../properties/view/properties_listing_screen.dart';
 import '../controller/individual_home_bloc.dart';
 import 'widgets/home_banner_widget.dart';
 import 'widgets/home_header_widget.dart';
@@ -41,11 +42,21 @@ class IndividualHomeView extends StatelessWidget {
                       ),
                       SliverToBoxAdapter(
                         child: SearchItem(
+                          onSubmitted: (value) {
+                            PropertiesListingScreen.open(
+                              context,
+                              search: value,
+                            );
+                          },
                           onFilterTap: () {
                             showFilterSheet(
                               context,
-                              // initialFilter: filter,
-                              onApply: (result) {},
+                              onApply: (result) {
+                                PropertiesListingScreen.open(
+                                  context,
+                                  filter: result,
+                                );
+                              },
                             );
                           },
                         ),

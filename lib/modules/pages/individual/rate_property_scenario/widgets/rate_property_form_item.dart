@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import '../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../core/components/app_drop_down.dart';
 import '../../../../../core/components/app_textfield.dart';
-import '../../../../../core/components/search_property_item.dart';
 import '../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/responsive.dart';
@@ -28,7 +27,7 @@ class RatePropertyFormItem extends StatelessWidget {
     this.onSearch,
     this.onSelectProperty,
   });
-  
+
   final TextEditingController ratePropertyArea;
   final TextEditingController propertyLocation;
   final String? propertyAge;
@@ -54,7 +53,7 @@ class RatePropertyFormItem extends StatelessWidget {
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: AppConstant.propertyTypes.length,
-            separatorBuilder: (_, __) => SizedBox(width: 8.width),
+            separatorBuilder: (_, _) => SizedBox(width: 8.width),
             itemBuilder: (ctx, i) {
               final propertyType = AppConstant.propertyTypes[i];
               final isSelected = selectedType == propertyType;
@@ -116,10 +115,10 @@ class RatePropertyFormItem extends StatelessWidget {
         AppDropDownItem(
           title: AppStrings.propertyAgeLabel,
           hintText: AppStrings.choosePropertyAge,
-           
+
           value: propertyAge!.isEmpty ? null : propertyAge,
           items: AppConstant.propertyAges,
-          onChanged:onPropertyAgeChanged,
+          onChanged: onPropertyAgeChanged,
         ),
         AppDropDownItem(
           title: AppStrings.ratePropertyFinishingLabel,
@@ -140,4 +139,3 @@ class RatePropertyFormItem extends StatelessWidget {
     );
   }
 }
-

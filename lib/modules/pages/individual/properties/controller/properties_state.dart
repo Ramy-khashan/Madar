@@ -8,6 +8,7 @@ class PropertiesState extends Equatable {
     this.totalCount = 0,
     this.isLoadMore = false,
     this.filter,
+    this.search = '',
   });
   final String errorMsg;
   final List<PropertiesItemModel> properties;
@@ -15,6 +16,7 @@ class PropertiesState extends Equatable {
   final int totalCount;
   final bool isLoadMore;
   final PropertyFilterModel? filter;
+  final String search;
 
   @override
   List<Object?> get props => [
@@ -24,6 +26,7 @@ class PropertiesState extends Equatable {
     totalCount,
     isLoadMore,
     filter,
+    search,
   ];
 
   PropertiesState copyWith({
@@ -33,6 +36,7 @@ class PropertiesState extends Equatable {
     int? totalCount,
     bool? isLoadMore,
     PropertyFilterModel? filter,
+    String? search,
   }) => PropertiesState(
     errorMsg: errorMsg ?? this.errorMsg,
     properties: properties ?? this.properties,
@@ -40,5 +44,6 @@ class PropertiesState extends Equatable {
     totalCount: totalCount ?? this.totalCount,
     isLoadMore: isLoadMore ?? this.isLoadMore,
     filter: filter ?? this.filter,
+    search: search ?? this.search,
   );
 }

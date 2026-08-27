@@ -9,6 +9,7 @@ import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/constants/storage_keys.dart';
 import '../../../../../../core/utils/functions/preference_utils.dart';
+import '../../../../../../core/utils/functions/guest_mode.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../../../../../core/utils/functions/service_locator.dart';
@@ -87,6 +88,12 @@ class HomeHeaderWidget extends StatelessWidget {
           ),
           IconButton(
             onPressed: () {
+              if (!GuestMode.requireAuth(
+                context,
+                subtitle: AppStrings.guestFeaturesMessage,
+              )) {
+                return;
+              }
               RouterHandler.navigate(context, AppRouterKeys.notification);
             },
             icon: const Icon(CupertinoIcons.bell),

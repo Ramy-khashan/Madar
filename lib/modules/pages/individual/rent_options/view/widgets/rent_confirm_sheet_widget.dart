@@ -7,6 +7,7 @@ import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../controller/rent_options_bloc.dart';
 import '../../model/row_model.dart';
 
@@ -51,7 +52,7 @@ class RentConfirmSheetWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GestureDetector(
-                        onTap: () => Navigator.pop(context),
+                        onTap: () =>RouterHandler.pop(context),
                         child: Container(
                           width: 28.width,
                           height: 28.width,
@@ -203,7 +204,7 @@ class RentConfirmSheetWidget extends StatelessWidget {
                     text: AppStrings.confirmRequestBtn,
                     isLoading: state.confirmStatus == RequestStatus.loading,
                     onTap: () {
-                      Navigator.pop(context);
+                     RouterHandler.pop(context);
                       context.read<RentOptionsBloc>().add(
                         const RentOptionsConfirm(),
                       );

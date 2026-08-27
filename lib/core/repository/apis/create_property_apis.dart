@@ -34,7 +34,7 @@ class CreatePropertyApis {
     CreatePropertyRequestModel request,
   ) async {
     try {
-      printState("Property Request: " + request.toJson().toString());
+      printState('Property Request: ${request.toJson()}');
       final formData = await request.toFormData();
 
       printState(

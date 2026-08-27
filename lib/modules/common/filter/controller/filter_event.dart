@@ -54,6 +54,13 @@ final class FilterDurationChanged extends FilterEvent {
   List<Object> get props => [?duration];
 }
 
+final class FilterCityChanged extends FilterEvent {
+  const FilterCityChanged({required this.city});
+  final String city;
+  @override
+  List<Object> get props => [city];
+}
+
 /// Fired when the user taps Apply — triggers the onApply callback upstream.
 final class FilterApplied extends FilterEvent {
   const FilterApplied();

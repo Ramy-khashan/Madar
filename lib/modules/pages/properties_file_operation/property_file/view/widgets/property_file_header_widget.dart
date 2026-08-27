@@ -4,7 +4,7 @@ import 'package:madar_app/core/utils/functions/preference_utils.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/image_item.dart';
- import '../../../../../../core/utils/constants/app_constant.dart';
+import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
@@ -19,7 +19,7 @@ class PropertyFileHeaderWidget extends StatelessWidget {
     required this.onBookmarkTap,
   });
 
-  final PropertyFileModel property;
+  final PropertyFileModel? property;
   final AppThemeColors colors;
   final VoidCallback onBookmarkTap;
 
@@ -34,7 +34,7 @@ class PropertyFileHeaderWidget extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(20.radius),
               child: ImageItem(
-                property.imageUrl,
+                property?.imageUrl ?? '',
                 width: double.infinity,
                 height: 200.height,
                 fit: BoxFit.cover,
@@ -59,7 +59,7 @@ class PropertyFileHeaderWidget extends StatelessWidget {
                     ],
                   ),
                   child: Icon(
-                    property.isBookmarked
+                    property?.isBookmarked ?? false
                         ? Icons.bookmark
                         : Icons.bookmark_border,
                     color: colors.primaryBrand,
@@ -91,7 +91,7 @@ class PropertyFileHeaderWidget extends StatelessWidget {
                     ),
                     SizedBox(width: 4.width),
                     Text(
-                      property.propertyType,
+                      property?.propertyType ?? '',
                       style: TextStyle(
                         color: colors.onPrimary,
                         fontSize: context.responsiveFontScale(12),
@@ -107,7 +107,7 @@ class PropertyFileHeaderWidget extends StatelessWidget {
         SizedBox(height: 12.height),
         // Name
         Text(
-          property.name,
+          property?.name ?? 'Property Name',
           style: TextStyle(
             fontSize: context.responsiveFontScale(20),
             fontWeight: FontWeight.w700,
@@ -128,7 +128,7 @@ class PropertyFileHeaderWidget extends StatelessWidget {
             SizedBox(width: 4.width),
 
             Text(
-              property.location,
+              property?.location ?? 'Location not available',
               style: TextStyle(
                 fontSize: context.responsiveFontScale(13),
                 color: colors.textSecondary,
@@ -146,7 +146,7 @@ class PropertyFileHeaderWidget extends StatelessWidget {
                   Expanded(
                     child: PropertyStatusCard(
                       icon: Icons.home_outlined,
-                      value: '${property.totalUnits}',
+                      value: '${property?.totalUnits ?? 0}',
                       label: AppStrings.apartments,
                       colors: colors,
                     ),
@@ -156,7 +156,7 @@ class PropertyFileHeaderWidget extends StatelessWidget {
                   Expanded(
                     child: PropertyStatusCard(
                       icon: Icons.bar_chart,
-                      value: '${property.occupancyRate}%',
+                      value: '${property?.occupancyRate ?? 0}%',
                       label: AppStrings.occupancyRate,
                       colors: colors,
                     ),
@@ -165,7 +165,7 @@ class PropertyFileHeaderWidget extends StatelessWidget {
                   Expanded(
                     child: PropertyStatusCard(
                       icon: Icons.description_outlined,
-                      value: '${property.monthlyRevenue}',
+                      value: '${property?.monthlyRevenue ?? 0}',
                       label: AppStrings.monthlyRevenue,
                       colors: colors,
                     ),
@@ -199,7 +199,7 @@ class PropertyFileHeaderWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${property.totalUnits}',
+                          '${property?.totalUnits ?? 0}',
                           style: TextStyle(
                             fontSize: context.responsiveFontScale(16),
                             fontWeight: FontWeight.w700,
@@ -225,6 +225,4 @@ class PropertyFileHeaderWidget extends StatelessWidget {
       ],
     );
   }
- 
 }
-

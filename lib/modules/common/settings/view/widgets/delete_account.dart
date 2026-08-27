@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../core/utils/functions/router_handler.dart';
 
 class DeleteAccountDialog extends StatelessWidget {
   const DeleteAccountDialog({super.key});
@@ -32,7 +33,7 @@ class DeleteAccountDialog extends StatelessWidget {
       content: Text(AppStrings.deleteAccountConfirmation),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => RouterHandler.pop(context),
           child: Text(AppStrings.cancel),
         ),
         TextButton(

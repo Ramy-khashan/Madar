@@ -27,6 +27,14 @@ class PropertyDetailsHeaderSectionWidget extends StatelessWidget {
         property?.financialPerformance?.occupancyRate ??
         property?.details?.occupancyRate ??
         0;
+    final type = (property?.type ?? '').toUpperCase();
+    final showOccupancy = type == 'BUILDING' || type == 'TOWER';
+    final listingType = (property?.listingType ?? '').toUpperCase();
+    final listingLabel = listingType == 'RENT'
+        ? AppStrings.forRent
+        : listingType == 'SALE'
+        ? AppStrings.forSale
+        : '';
 
     return Row(
       children: [
@@ -34,6 +42,28 @@ class PropertyDetailsHeaderSectionWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (listingLabel.isNotEmpty) ...[
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.width,
+                    vertical: 3.height,
+                  ),
+                  decoration: BoxDecoration(
+                    color: colors.borderColor,
+                    borderRadius: BorderRadius.circular(8.radius),
+                  ),
+                  child: Text(
+                    listingLabel,
+                    style: TextStyle(
+                      fontSize: context.responsiveFontScale(11),
+                      color: colors.textSecondary,
+                      fontFamily: AppConstant.appFont,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 6.height),
+              ],
               Text(
                 property?.title ?? '',
                 style: TextStyle(
@@ -65,28 +95,29 @@ class PropertyDetailsHeaderSectionWidget extends StatelessWidget {
                             fontFamily: AppConstant.appFont,
                           ),
                         ),
-                        SizedBox(width: 8.width),
-                        ImageItem(AppImages.occupancyIcon, width: 16.width),
-
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 4.width),
-                          child: Text(
-                            AppStrings.occupancyRate,
+                        if (showOccupancy) ...[
+                          SizedBox(width: 8.width),
+                          ImageItem(AppImages.occupancyIcon, width: 16.width),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 4.width),
+                            child: Text(
+                              AppStrings.occupancyRate,
+                              style: TextStyle(
+                                fontSize: context.responsiveFontScale(13),
+                                color: colors.primaryBrand,
+                                fontFamily: AppConstant.appFont,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            '$occupancy%',
                             style: TextStyle(
                               fontSize: context.responsiveFontScale(13),
                               color: colors.primaryBrand,
                               fontFamily: AppConstant.appFont,
                             ),
                           ),
-                        ),
-                        Text(
-                          '$occupancy%',
-                          style: TextStyle(
-                            fontSize: context.responsiveFontScale(13),
-                            color: colors.primaryBrand,
-                            fontFamily: AppConstant.appFont,
-                          ),
-                        ),
+                        ],
                       ],
                     ),
                   ],

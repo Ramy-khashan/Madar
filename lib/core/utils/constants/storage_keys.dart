@@ -7,4 +7,5 @@ class StorageKeys {
   static const String userID = 'user_id';
   static const String lang = 'lang';
   static const String image = 'image';
+  static const String isGuest = 'is_guest';
 }

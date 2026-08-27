@@ -7,6 +7,8 @@ class PropertiesMapState extends Equatable {
   final int selectedIndex;
   final bool isNearestToMe;
   final PositionModel? mapCenter;
+  final PropertyFilterModel? filter;
+  final String search;
 
   const PropertiesMapState({
     this.status = RequestStatus.init,
@@ -15,6 +17,8 @@ class PropertiesMapState extends Equatable {
     this.selectedIndex = -1,
     this.isNearestToMe = false,
     this.mapCenter,
+    this.filter,
+    this.search = '',
   });
 
   PropertyDetailsModel? get selectedProperty =>
@@ -29,6 +33,8 @@ class PropertiesMapState extends Equatable {
     int? selectedIndex,
     bool? isNearestToMe,
     PositionModel? mapCenter,
+    PropertyFilterModel? filter,
+    String? search,
   }) {
     return PropertiesMapState(
       status: status ?? this.status,
@@ -37,6 +43,8 @@ class PropertiesMapState extends Equatable {
       selectedIndex: selectedIndex ?? this.selectedIndex,
       isNearestToMe: isNearestToMe ?? this.isNearestToMe,
       mapCenter: mapCenter ?? this.mapCenter,
+      filter: filter ?? this.filter,
+      search: search ?? this.search,
     );
   }
 
@@ -48,5 +56,7 @@ class PropertiesMapState extends Equatable {
     selectedIndex,
     isNearestToMe,
     mapCenter,
+    filter,
+    search,
   ];
 }

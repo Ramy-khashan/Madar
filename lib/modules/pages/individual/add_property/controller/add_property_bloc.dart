@@ -2,9 +2,17 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../core/connection/concept/end_points.dart';
+import '../../../../../core/connection/interfaces/api_consumer.dart';
 import '../../../../../core/repository/apis/create_property_apis.dart';
+import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_images.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../core/utils/functions/guest_mode.dart';
+import '../../../../../core/utils/functions/hijri_date.dart';
+import '../../../../../core/utils/functions/print_state.dart';
+import '../../../../../core/utils/functions/service_locator.dart';
+import '../../../business/business_home/model/business_portfolio_property_model.dart';
 import '../model/add_property_model.dart';
 import '../model/add_property_request_mapper.dart';
 import '../model/add_property_validator.dart';
@@ -24,6 +32,7 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     on<UpdateCoordinatesEvent>(_onUpdateCoordinates);
     on<SelectDeedTypeEvent>(_onSelectDeedType);
     on<SelectDateTypeEvent>(_onSelectDateType);
+    on<DeedDatePickedEvent>(_onDeedDatePicked);
     on<AddImageEvent>(_onAddImage);
     on<AddImagesEvent>(_onAddImages);
     on<RemoveImageEvent>(_onRemoveImage);
@@ -57,6 +66,9 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     on<SelectPortfolioModeEvent>(_onSelectPortfolioMode);
     on<ConfirmSaveEvent>(_onConfirmSave);
     on<SendToBrokerEvent>(_onSendToBroker);
+    on<LoadParentCandidatesEvent>(_onLoadParentCandidates);
+    on<SelectParentPropertyEvent>(_onSelectParentProperty);
+    on<ClearParentPropertyEvent>(_onClearParentProperty);
   }
 
   // ── TextEditingControllers ───────────────────────────────────────────────
@@ -67,6 +79,7 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
   final TextEditingController streetController = TextEditingController();
   final TextEditingController deedNumberController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
+  DateTime? deedPickedAt;
   final TextEditingController areaController = TextEditingController();
   final TextEditingController apartmentNumberController =
       TextEditingController();
@@ -264,10 +277,7 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
   static const List<String> floorTypeOptions = [
     PropertyApiEnums.floorTypeGround,
     PropertyApiEnums.floorTypeUpper,
-    PropertyApiEnums.floorTypeBasement,
-    PropertyApiEnums.floorTypeRoof,
   ];
-
   static const List<String> shopLocationOptions = [
     PropertyApiEnums.shopLocationMainStreet,
     PropertyApiEnums.shopLocationSideStreet,
@@ -342,6 +352,9 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
       );
       if (next == AddPropertyStep.review) {
         add(const PreviewEvaluationEvent());
+        if (model.propertyType == PropertyApiEnums.typeApartment) {
+          add(const LoadParentCandidatesEvent());
+        }
       }
     }
   }
@@ -391,11 +404,7 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     final prev = _previousStep(state.step, state.model.operationType);
     if (prev != null) {
       emit(
-        state.copyWith(
-          step: prev,
-          fieldErrors: const {},
-          errorMessage: null,
-        ),
+        state.copyWith(step: prev, fieldErrors: const {}, errorMessage: null),
       );
     }
   }
@@ -457,7 +466,15 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     Emitter<AddPropertyState> emit,
   ) {
     emit(
-      state.copyWith(model: state.model.copyWith(propertyType: event.typeId)),
+      state.copyWith(
+        model: state.model.copyWith(
+          propertyType: event.typeId,
+          clearPropertyParent: event.typeId != PropertyApiEnums.typeApartment,
+        ),
+        parentCandidates: event.typeId == PropertyApiEnums.typeApartment
+            ? state.parentCandidates
+            : const [],
+      ),
     );
   }
 
@@ -509,6 +526,23 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     Emitter<AddPropertyState> emit,
   ) {
     emit(state.copyWith(model: state.model.copyWith(dateType: event.dateType)));
+    if (deedPickedAt != null) {
+      dateController.text = HijriDate.format(
+        deedPickedAt!,
+        hijri: event.dateType == 'hijri',
+      );
+    }
+  }
+
+  void _onDeedDatePicked(
+    DeedDatePickedEvent event,
+    Emitter<AddPropertyState> emit,
+  ) {
+    deedPickedAt = event.date;
+    dateController.text = HijriDate.format(
+      event.date,
+      hijri: state.model.dateType == 'hijri',
+    );
   }
 
   // ── Step 4 handlers ──────────────────────────────────────────────────────
@@ -615,46 +649,45 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     PreviewEvaluationEvent event,
     Emitter<AddPropertyState> emit,
   ) async {
-   try{
-     final model = _modelWithControllerValues();
-    emit(
-      state.copyWith(
-        model: model,
-        isPreviewLoading: true,
-        hasMarketData: false,
-      ),
-    );
-
-    final result = await CreatePropertyApis.previewEvaluation(model);
-
-    result.fold(
-      (_) => emit(
-        state.copyWith(
-          isPreviewLoading: false,
-          hasMarketData: false,
-          aiDescription: '',
-        ),
-      ),
-      (preview) => emit(
-        state.copyWith(
-          isPreviewLoading: false,
-          hasMarketData: preview.hasMarketData,
-          suggestedMin: preview.suggestedMin,
-          suggestedMax: preview.suggestedMax,
-          aiDescription: preview.aiDescription,
-        ),
-      ),
-    );
-   }catch(e){
-    print('Error in preview evaluation: $e');
+    try {
+      final model = _modelWithControllerValues();
       emit(
+        state.copyWith(
+          model: model,
+          isPreviewLoading: true,
+          hasMarketData: false,
+        ),
+      );
+
+      final result = await CreatePropertyApis.previewEvaluation(model);
+
+      result.fold(
+        (_) => emit(
           state.copyWith(
             isPreviewLoading: false,
             hasMarketData: false,
             aiDescription: '',
           ),
-        );
-   }
+        ),
+        (preview) => emit(
+          state.copyWith(
+            isPreviewLoading: false,
+            hasMarketData: preview.hasMarketData,
+            suggestedMin: preview.suggestedMin,
+            suggestedMax: preview.suggestedMax,
+            aiDescription: preview.aiDescription,
+          ),
+        ),
+      );
+    } catch (e) {
+       emit(
+        state.copyWith(
+          isPreviewLoading: false,
+          hasMarketData: false,
+          aiDescription: '',
+        ),
+      );
+    }
   }
 
   void _onApplyAiDescription(
@@ -662,13 +695,12 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     Emitter<AddPropertyState> emit,
   ) {
     final text = state.aiDescription?.trim() ?? '';
+    if (text.contains('404') || text.contains('error')) {
+      return;
+    }
     if (text.isEmpty) return;
     descriptionController.text = text;
-    emit(
-      state.copyWith(
-        model: state.model.copyWith(description: text),
-      ),
-    );
+    emit(state.copyWith(model: state.model.copyWith(description: text)));
   }
 
   // ── Step 5 handlers ──────────────────────────────────────────────────────
@@ -880,7 +912,6 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     );
   }
 
-
   void _onShowPortfolioSheet(
     ShowPortfolioSheetEvent event,
     Emitter<AddPropertyState> emit,
@@ -922,6 +953,11 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     Emitter<AddPropertyState> emit,
   ) {
     emit(state.copyWith(isNewFolder: event.isNew));
+    if (event.isNew) {
+      add(const ClearParentPropertyEvent());
+    } else {
+      add(const LoadParentCandidatesEvent());
+    }
   }
 
   /// Snapshots the free-text controllers into the model before submitting,
@@ -964,7 +1000,10 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     ConfirmSaveEvent event,
     Emitter<AddPropertyState> emit,
   ) async {
-    final model = _modelWithControllerValues();
+    var model = _modelWithControllerValues();
+    if (state.isNewFolder) {
+      model = model.copyWith(clearPropertyParent: true);
+    }
     final errors = _errorsForSubmit(model);
 
     if (errors.isNotEmpty) {
@@ -983,7 +1022,10 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
       return;
     }
 
-    final request = model.toCreateRequest(brokerId: event.brokerId);
+    final request = model.toCreateRequest(
+      brokerId: event.brokerId,
+      adLicenseNumber: event.adLicenseNumber,
+    );
 
     if (request == null) {
       emit(
@@ -1037,6 +1079,93 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     Emitter<AddPropertyState> emit,
   ) {
     add(ConfirmSaveEvent(brokerId: event.brokerId));
+  }
+
+  Future<void> _onLoadParentCandidates(
+    LoadParentCandidatesEvent event,
+    Emitter<AddPropertyState> emit,
+  ) async {
+    if (GuestMode.isGuest) {
+      emit(
+        state.copyWith(
+          parentCandidates: const [],
+          parentCandidatesStatus: RequestStatus.success,
+        ),
+      );
+      return;
+    }
+    emit(state.copyWith(parentCandidatesStatus: RequestStatus.loading));
+    try {
+      final response = await sl.get<ApiConsumer>().get(
+        EndPoints.portfolio,
+        queryParameters: const {'page': 1, 'limit': 50},
+      );
+      await response.fold(
+        (failed) async {
+          emit(
+            state.copyWith(
+              parentCandidates: const [],
+              parentCandidatesStatus: RequestStatus.failed,
+            ),
+          );
+        },
+        (success) async {
+          final items = _parentCandidatesFrom(success.response);
+          emit(
+            state.copyWith(
+              parentCandidates: items,
+              parentCandidatesStatus: RequestStatus.success,
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      printState('load parent candidates: $e');
+      emit(
+        state.copyWith(
+          parentCandidates: const [],
+          parentCandidatesStatus: RequestStatus.failed,
+        ),
+      );
+    }
+  }
+
+  List<MyPropertiesModel> _parentCandidatesFrom(dynamic body) {
+    if (body is! Map) return const [];
+    final map = Map<String, dynamic>.from(body);
+    dynamic raw = map['data'] ?? map['properties'] ?? map['items'] ?? [];
+    if (raw is Map) {
+      raw = raw['data'] ?? raw['items'] ?? raw['list'] ?? [];
+    }
+    if (raw is! List) return const [];
+    return raw
+        .whereType<Map>()
+        .map((e) => MyPropertiesModel.fromJson(Map<String, dynamic>.from(e)))
+        .where((e) => e.id.isNotEmpty && e.isBuildingOrTower)
+        .toList();
+  }
+
+  void _onSelectParentProperty(
+    SelectParentPropertyEvent event,
+    Emitter<AddPropertyState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        model: state.model.copyWith(
+          propertyParentId: event.id,
+          propertyParentTitle: event.title,
+        ),
+      ),
+    );
+  }
+
+  void _onClearParentProperty(
+    ClearParentPropertyEvent event,
+    Emitter<AddPropertyState> emit,
+  ) {
+    emit(
+      state.copyWith(model: state.model.copyWith(clearPropertyParent: true)),
+    );
   }
 
   String? _extractCreatedPropertyId(dynamic data) {

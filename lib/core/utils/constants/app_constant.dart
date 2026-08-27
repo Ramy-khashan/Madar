@@ -106,9 +106,9 @@ class AppConstant {
     'MOSQUE_IN_COMPOUND',
   ];
   static List<String> get furnishingOptions=>[
-    "FURNISHED", "UNFURNISHED"
+    'FURNISHED', 'UNFURNISHED'
   ];  static List<String> get availabilityOptions=>[
-    "EXIST", "NOT_EXIST"
+    'EXIST', 'NOT_EXIST'
   ];
 
 }

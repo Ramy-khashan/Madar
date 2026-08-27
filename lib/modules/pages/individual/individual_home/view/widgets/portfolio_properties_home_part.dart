@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../config/router/app_router_keys.dart';
+import '../../../../../../core/components/guest_locked_view.dart';
 import '../../../../../../core/components/loading_process.dart';
 import '../../../../../../core/components/portfolio_card_widget.dart';
 import '../../../../../../core/components/section_header_widget.dart';
 import '../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../core/utils/functions/guest_mode.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../controller/individual_home_bloc.dart';
@@ -27,16 +29,34 @@ class PortfolioPropertiesHomePart extends StatelessWidget {
                 SectionHeaderWidget(
                   title: AppStrings.myPortfolio,
                   onViewAll: () {
+                    if (!GuestMode.requireAuth(
+                      context,
+                      subtitle: AppStrings.guestFeaturesMessage,
+                    )) {
+                      return;
+                    }
                     RouterHandler.navigate(context, AppRouterKeys.myProperties);
                   },
                 ),
+                if (GuestMode.isGuest)
+                  SizedBox(
+                    height: ResponsiveUtils.types(
+                      context,
+                      mobilePortrait: 100.height,
+                      mobileLandscape: 110.height,
+                      tabletPortrait: 100.height,
+                      tabletLandscape: 120.height,
+                    ),
+                    child: const GuestLockedView(compact: true),
+                  )
+                else
                 SizedBox(
                   height: ResponsiveUtils.types(
                     context,
                     mobilePortrait: 165.height,
                     mobileLandscape: 190.height,
                     tabletPortrait: 150.height,
-                    tabletLandscape: 270.height,
+                    tabletLandscape: 180.height,
                   ),
                   child: LoadingProcess(
                     // status: state.portfolioStatus,

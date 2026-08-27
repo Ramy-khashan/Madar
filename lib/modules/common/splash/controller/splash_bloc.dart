@@ -92,7 +92,8 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
         isDoneSplash: true,
         isOnboardingCompleted: isOnboardingCompleted,
         isHaveToken: isHaveToken,
-        role: PreferenceUtils().getString(StorageKeys.accountType)
+        isGuest: PreferenceUtils().getBool(StorageKeys.isGuest),
+        role: PreferenceUtils().getString(StorageKeys.accountType),
       ),
     );
   }

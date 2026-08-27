@@ -5,6 +5,7 @@ import '../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../core/components/app_appbar.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../core/utils/functions/router_handler.dart';
 import '../controller/choose_broker_bloc.dart';
 import 'widgets/broker_details_content_widget.dart';
 import 'widgets/broker_list_content_widget.dart';
@@ -18,6 +19,7 @@ class ChooseBrokerScreen extends StatelessWidget {
       listenWhen: (prev, curr) => prev.confirmStatus != curr.confirmStatus,
       listener: (ctx, state) {
         if (state.confirmStatus == RequestStatus.success) {
+          
           Navigator.of(ctx).popUntil((route) => route.isFirst);
         }
       },
@@ -40,7 +42,7 @@ class ChooseBrokerScreen extends StatelessWidget {
                     const ChooseBrokerBack(),
                   );
                 } else {
-                  Navigator.of(context).pop();
+                  RouterHandler.pop(context);
                 }
               },
             ),

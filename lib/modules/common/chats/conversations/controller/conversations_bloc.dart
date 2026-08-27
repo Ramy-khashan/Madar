@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/repository/apis/chat_apis.dart';
 import '../../../../../core/repository/socket/chat_socket_service.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
+import '../../../../../core/utils/functions/guest_mode.dart';
 import '../model/conversation_model.dart';
 
 part 'conversations_event.dart';
@@ -26,6 +27,15 @@ class ConversationsBloc extends Bloc<ConversationsEvent, ConversationsState> {
     Emitter<ConversationsState> emit,
   ) async {
     emit(state.copyWith(loadingConversationsStatus: RequestStatus.loading));
+    if (GuestMode.isGuest) {
+      emit(
+        state.copyWith(
+          conversations: [],
+          loadingConversationsStatus: RequestStatus.success,
+        ),
+      );
+      return;
+    }
     unawaited(ChatSocketService.instance.connect());
 
     final result = await ChatApis.getMyChats();

@@ -30,6 +30,9 @@ class PropertyDetailsScreen extends StatelessWidget {
             context: ctx,
             builder: (_) => const WaitingOwnerReplyDialog(),
           );
+        } else if (state.submitStatus == RequestStatus.failed &&
+            state.submitMessage.isNotEmpty) {
+          AppToast(state.submitMessage, isError: true);
         }
         if (state.actionStatus == RequestStatus.failed &&
             state.actionMessage.isNotEmpty) {

@@ -1,12 +1,17 @@
 class ContractModel {
   String? id;
   String? contractNo;
+  String? listingTitle;
   String? propertyId;
+  String? location;
   String? buyerId;
   String? sellerId;
   String? brokerId;
   String? type;
+  String? typeLabel;
+  String? subLabel;
   String? status;
+  String? statusLabel;
   int? price;
   String? startDate;
   String? endDate;
@@ -20,12 +25,17 @@ class ContractModel {
   ContractModel({
     this.id,
     this.contractNo,
+    this.listingTitle,
     this.propertyId,
+    this.location,
     this.buyerId,
     this.sellerId,
     this.brokerId,
     this.type,
+    this.typeLabel,
+    this.subLabel,
     this.status,
+    this.statusLabel,
     this.price,
     this.startDate,
     this.endDate,
@@ -37,31 +47,92 @@ class ContractModel {
     this.property,
   });
 
-  String get title => contractNo ?? '';
-  String get propertyName => property?.title ?? property?.projectName ?? '';
-  String get date => startDate ?? createdAt ?? '';
+  String get title =>
+      (listingTitle ?? '').trim().isNotEmpty
+          ? listingTitle!
+          : (contractNo ?? '');
+  String get propertyName =>
+      (location ?? '').trim().isNotEmpty
+          ? location!
+          : (property?.title ?? property?.projectName ?? '');
+  String get date {
+    final raw = createdAt ?? startDate ?? '';
+    final parsed = DateTime.tryParse(raw);
+    if (parsed == null) return raw;
+    final local = parsed.toLocal();
+    final y = local.year.toString().padLeft(4, '0');
+    final m = local.month.toString().padLeft(2, '0');
+    final d = local.day.toString().padLeft(2, '0');
+    return '$y-$m-$d';
+  }
+
   double get amount => (price ?? 0).toDouble();
 
   ContractModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    contractNo = json['contractNo'];
-    propertyId = json['propertyId'];
-    buyerId = json['buyerId'];
-    sellerId = json['sellerId'];
-    brokerId = json['brokerId'];
-    type = json['type'];
-    status = json['status'];
-    price = json['price'];
-    startDate = json['startDate'];
-    endDate = json['endDate'];
-    createdAt = json['createdAt'];
-    commissionAmount = json['commissionAmount'];
-    buyer = json['buyer'] != null ? Buyer.fromJson(json['buyer']) : null;
-    seller = json['seller'] != null ? Buyer.fromJson(json['seller']) : null;
-    broker = json['broker'];
-    property = json['property'] != null
-        ? Property.fromJson(json['property'])
+    final propertyMap = json['property'] is Map
+        ? Map<String, dynamic>.from(json['property'] as Map)
         : null;
+    id = _text(json['contractId'] ?? json['id']);
+    contractNo = _text(json['contractNo']);
+    listingTitle = _text(json['title']);
+    propertyId = _text(
+      json['propertyId'] ?? json['property_id'] ?? propertyMap?['property_id'],
+    );
+    location = _locationFrom(json['location'] ?? propertyMap?['location']);
+    buyerId = _text(json['buyerId']);
+    sellerId = _text(json['sellerId']);
+    brokerId = _text(json['brokerId']);
+    type = _text(json['type']);
+    typeLabel = _text(json['typeLabel'] ?? json['subLabel']);
+    subLabel = _text(json['subLabel']);
+    status = _text(json['status']);
+    statusLabel = _text(json['statusLabel']);
+    price = _asInt(json['price'] ?? propertyMap?['price']);
+    startDate = _text(json['startDate']);
+    endDate = _text(json['endDate']);
+    createdAt = _text(json['date'] ?? json['createdAt']);
+    commissionAmount = _asInt(json['commissionAmount']);
+    buyer = json['buyer'] is Map
+        ? Buyer.fromJson(Map<String, dynamic>.from(json['buyer'] as Map))
+        : null;
+    seller = json['seller'] is Map
+        ? Buyer.fromJson(Map<String, dynamic>.from(json['seller'] as Map))
+        : null;
+    final brokerRaw = json['broker'];
+    if (brokerRaw is Map) {
+      broker = _text(brokerRaw['fullName']);
+    } else {
+      broker = _text(brokerRaw);
+    }
+    property = propertyMap == null ? null : Property.fromJson(propertyMap);
+  }
+
+  static String? _text(dynamic value) {
+    if (value == null) return null;
+    final text = value.toString().trim();
+    if (text.isEmpty || text == 'null') return null;
+    return text;
+  }
+
+  static int? _asInt(dynamic value) {
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    return int.tryParse(value?.toString() ?? '');
+  }
+
+  static String? _locationFrom(dynamic value) {
+    if (value == null) return null;
+    if (value is String) return _text(value);
+    if (value is Map) {
+      final map = Map<String, dynamic>.from(value);
+      final parts = [
+        _text(map['district']),
+        _text(map['city']),
+      ].whereType<String>().where((e) => e.isNotEmpty);
+      final joined = parts.join('، ');
+      return joined.isEmpty ? null : joined;
+    }
+    return null;
   }
 
   Map<String, dynamic> toJson() {

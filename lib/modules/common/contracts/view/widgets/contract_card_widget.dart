@@ -65,7 +65,10 @@ class ContractCardWidget extends StatelessWidget {
                 ),
                 SizedBox(width: 8.width),
 
-                ContractStatusBadge(status: contract?.status ?? 'active'),
+                ContractStatusBadge(
+                  status: contract?.status ?? 'PENDING',
+                  label: contract?.statusLabel,
+                ),
               ],
             ),
             Padding(
@@ -81,7 +84,11 @@ class ContractCardWidget extends StatelessWidget {
             ),
             Row(
                children: [
-                TypeBadge(type: contract?.type ?? 'buy', colors: colors),
+                TypeBadge(
+                  type: contract?.type ?? 'SALE',
+                  label: contract?.typeLabel,
+                  colors: colors,
+                ),
 SizedBox(width: 12.width),
                 Text(
                   contract?.date ?? '12/12/2023',

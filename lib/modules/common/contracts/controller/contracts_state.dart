@@ -7,6 +7,8 @@ class ContractsState extends Equatable {
     this.errorMsg = '',
     this.isLoadMore = false,
     this.totalCount = 0,
+    this.hasNext = false,
+    this.counts = const {},
     this.selectedFilter = 'ALL',
   });
 
@@ -15,6 +17,8 @@ class ContractsState extends Equatable {
   final String errorMsg;
   final bool isLoadMore;
   final int totalCount;
+  final bool hasNext;
+  final Map<String, int> counts;
   final String selectedFilter;
 
   ContractsState copyWith({
@@ -23,6 +27,8 @@ class ContractsState extends Equatable {
     String? errorMsg,
     bool? isLoadMore,
     int? totalCount,
+    bool? hasNext,
+    Map<String, int>? counts,
     String? selectedFilter,
   }) {
     return ContractsState(
@@ -31,6 +37,8 @@ class ContractsState extends Equatable {
       errorMsg: errorMsg ?? this.errorMsg,
       isLoadMore: isLoadMore ?? this.isLoadMore,
       totalCount: totalCount ?? this.totalCount,
+      hasNext: hasNext ?? this.hasNext,
+      counts: counts ?? this.counts,
       selectedFilter: selectedFilter ?? this.selectedFilter,
     );
   }
@@ -42,6 +50,8 @@ class ContractsState extends Equatable {
     errorMsg,
     isLoadMore,
     totalCount,
+    hasNext,
+    counts,
     selectedFilter,
   ];
 }

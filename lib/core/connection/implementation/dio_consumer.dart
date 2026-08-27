@@ -30,6 +30,9 @@ import '../interfaces/network_info.dart';
 
 class DioConsumer implements ApiConsumer {
   final Dio client;
+  bool _isRefreshing = false;
+  bool _isLoggingOut = false;
+  Completer<bool>? _refreshCompleter;
 
   DioConsumer({required this.client}) {
     client.interceptors.addAll([
@@ -373,11 +376,13 @@ class DioConsumer implements ApiConsumer {
   @override
   Future<Either<String, ApiModel>> delete(
     String path, {
+    Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
   }) async {
     try {
       final response = await client.delete(
         path,
+        data: body,
         queryParameters: queryParameters,
       );
       return handleResponseStatus(response);
@@ -387,7 +392,11 @@ class DioConsumer implements ApiConsumer {
         stackTrace: stackTrace,
         location: 'DioConsumer.delete',
         operation: 'API DELETE Request',
-        contextData: {'path': path, 'query_parameters': queryParameters},
+        contextData: {
+          'path': path,
+          'has_body': body != null,
+          'query_parameters': queryParameters,
+        },
       );
       return left(handleDioError(e).toString());
     } catch (e, stackTrace) {
@@ -557,14 +566,126 @@ class DioConsumer implements ApiConsumer {
   // ---------------------------------------------------------------------------
 
   Future<void> _logOut() async {
-    await sl<HandleMultiCallLocal>().clear();
-    final context = MadarApp.navigatorKey.currentContext;
-    if (context != null && context.mounted) {
-      RouterHandler.navigate(
-        context,
-        AppRouterKeys.chooseAccount,
-        routerType: RouterType.pushReplacementNamed,
+    if (_isLoggingOut) return;
+    _isLoggingOut = true;
+    try {
+      await sl<HandleMultiCallLocal>().clear();
+      final prefs = sl<PreferenceUtils>();
+      await Future.wait([
+        prefs.clear(StorageKeys.userID),
+        prefs.clear(StorageKeys.name),
+        prefs.clear(StorageKeys.image),
+        prefs.clear(StorageKeys.accountType),
+        prefs.clear(StorageKeys.isGuest),
+      ]);
+      final context = MadarApp.navigatorKey.currentContext;
+      if (context != null && context.mounted) {
+        RouterHandler.navigate(
+          context,
+          AppRouterKeys.chooseAccount,
+          routerType: RouterType.pushReplacementNamed,
+        );
+      }
+    } finally {
+      _isLoggingOut = false;
+    }
+  }
+
+  bool _shouldAttemptRefresh(RequestOptions options) {
+    if (options.extra['skipAuthRefresh'] == true) return false;
+    if (options.extra['requiresToken'] == false) return false;
+    final path = options.path;
+    if (path.contains(EndPoints.refreshToken) ||
+        path.contains(EndPoints.login) ||
+        path.contains(EndPoints.register) ||
+        path.contains('otp/')) {
+      return false;
+    }
+    return true;
+  }
+
+  Future<Response<dynamic>?> _retryUnauthorizedRequest(
+    RequestOptions requestOptions,
+  ) async {
+    if (!_shouldAttemptRefresh(requestOptions)) {
+      if (requestOptions.extra['skipAuthRefresh'] == true &&
+          requestOptions.extra['requiresToken'] != false) {
+        await _logOut();
+      }
+      return null;
+    }
+
+    final refreshed = await _refreshAccessToken();
+    if (!refreshed) {
+      final accessToken = await sl<HandleMultiCallLocal>().getLocalData(
+        keyType: LocalEnumKey.accessToken,
       );
+      if (accessToken != null && accessToken.isNotEmpty) {
+        await _logOut();
+      }
+      return null;
+    }
+
+    final accessToken = await sl<HandleMultiCallLocal>().getLocalData(
+      keyType: LocalEnumKey.accessToken,
+    );
+    requestOptions.headers['Authorization'] = 'Bearer $accessToken';
+    requestOptions.extra['skipAuthRefresh'] = true;
+    return client.fetch(requestOptions);
+  }
+
+  Future<bool> _refreshAccessToken() async {
+    if (_isRefreshing) {
+      return _refreshCompleter?.future ?? Future.value(false);
+    }
+
+    _isRefreshing = true;
+    _refreshCompleter = Completer<bool>();
+    var success = false;
+    try {
+      final refreshToken = await sl<HandleMultiCallLocal>().getLocalData(
+        keyType: LocalEnumKey.refreshToken,
+      );
+      if (refreshToken == null || refreshToken.isEmpty) {
+        return false;
+      }
+
+      final response = await client.post(
+        EndPoints.refreshToken,
+        data: {'refreshToken': refreshToken},
+        options: Options(
+          extra: {'requiresToken': false, 'skipAuthRefresh': true},
+        ),
+      );
+      final body = handleResponseAsJson(response);
+      final accessToken = body['accessToken']?.toString();
+      final newRefreshToken = body['refreshToken']?.toString();
+      if ((response.statusCode ?? 0) >= 200 &&
+          (response.statusCode ?? 0) < 300 &&
+          body['success'] != false &&
+          accessToken != null &&
+          accessToken.isNotEmpty) {
+        await sl<HandleMultiCallLocal>().saveLocalData(
+          data: accessToken,
+          keyType: LocalEnumKey.accessToken,
+        );
+        if (newRefreshToken != null && newRefreshToken.isNotEmpty) {
+          await sl<HandleMultiCallLocal>().saveLocalData(
+            data: newRefreshToken,
+            keyType: LocalEnumKey.refreshToken,
+          );
+        }
+        success = true;
+      }
+      return success;
+    } catch (_) {
+      return false;
+    } finally {
+      _isRefreshing = false;
+      if (!(_refreshCompleter?.isCompleted ?? true)) {
+        _refreshCompleter!.complete(success);
+      }
+      _refreshCompleter = null;
     }
   }
 
@@ -613,6 +734,16 @@ class DioConsumer implements ApiConsumer {
 
         handler.next(options);
       },
+      onResponse: (response, handler) async {
+        if (response.statusCode != StatusCode.unauthorized) {
+          return handler.next(response);
+        }
+        final retried = await _retryUnauthorizedRequest(response.requestOptions);
+        if (retried != null) {
+          return handler.resolve(retried);
+        }
+        return handler.next(response);
+      },
       onError: (DioException e, ErrorInterceptorHandler handler) async {
         await CrashlyticsCollector().logInterceptorError(
           error: e,
@@ -632,9 +763,11 @@ class DioConsumer implements ApiConsumer {
           },
         );
 
-        // 401 — no refresh token; clear session and go to login.
         if (e.response?.statusCode == StatusCode.unauthorized) {
-          await _logOut();
+          final retried = await _retryUnauthorizedRequest(e.requestOptions);
+          if (retried != null) {
+            return handler.resolve(retried);
+          }
           return handler.reject(e);
         }
 

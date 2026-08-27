@@ -8,12 +8,40 @@ import '../utils/functions/responsive.dart';
 import '../utils/functions/router_handler.dart';
 import 'app_textfield.dart';
 
-class SearchItem extends StatelessWidget {
-  const SearchItem({super.key, this.onFilterTap, this.showMapButton=true, this.onSearchChanged});
+class SearchItem extends StatefulWidget {
+  const SearchItem({
+    super.key,
+    this.onFilterTap,
+    this.showMapButton = true,
+    this.onSearchChanged,
+    this.onSubmitted,
+    this.initialQuery,
+  });
 
   final bool showMapButton;
   final VoidCallback? onFilterTap;
   final ValueChanged<String>? onSearchChanged;
+  final ValueChanged<String>? onSubmitted;
+  final String? initialQuery;
+
+  @override
+  State<SearchItem> createState() => _SearchItemState();
+}
+
+class _SearchItemState extends State<SearchItem> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialQuery);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +55,8 @@ class SearchItem extends StatelessWidget {
           Expanded(
             child: AppTextField(
               isWithTitle: false,
-
+              controller: _controller,
+              textInputAction: TextInputAction.search,
               prefixIconPadding: const EdgeInsetsDirectional.fromSTEB(
                 18,
                 14,
@@ -35,7 +64,7 @@ class SearchItem extends StatelessWidget {
                 14,
               ),
               prefixImage: AppImages.searchIcon,
-              hint: AppStrings.searchByArea,
+              hint: AppStrings.searchProperty,
               suffixImage: AppImages.filterImage,
               suffixIconPadding: const EdgeInsetsDirectional.fromSTEB(
                 8,
@@ -43,36 +72,37 @@ class SearchItem extends StatelessWidget {
                 14,
                 14,
               ),
-              onTapSuffixIcon: onFilterTap,
-              onChanged: onSearchChanged,
+              onTapSuffixIcon: widget.onFilterTap,
+              onChanged: widget.onSearchChanged,
+              onSubmitted: widget.onSubmitted,
             ),
           ),
           SizedBox(width: 8.width),
-          if(showMapButton)
-          InkWell(
-            borderRadius: BorderRadius.circular(100),
-            onTap: () {
-              RouterHandler.navigate(
-                context,
-                AppRouterKeys.propertyLocationMap,
-              );
-            },
-            child: Container(
-              padding: EdgeInsets.all(14.width),
-              decoration: BoxDecoration(
-                color: AppThemeColors.of(context).primaryBrand,
-                shape: BoxShape.circle,
-                border: Border.all(
-                  width: 2.5.width,
-                  color: AppThemeColors.of(context).borderColor,
+          if (widget.showMapButton)
+            InkWell(
+              borderRadius: BorderRadius.circular(100),
+              onTap: () {
+                RouterHandler.navigate(
+                  context,
+                  AppRouterKeys.propertyLocationMap,
+                );
+              },
+              child: Container(
+                padding: EdgeInsets.all(14.width),
+                decoration: BoxDecoration(
+                  color: AppThemeColors.of(context).primaryBrand,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    width: 2.5.width,
+                    color: AppThemeColors.of(context).borderColor,
+                  ),
+                ),
+                child: Icon(
+                  Icons.map_outlined,
+                  color: AppThemeColors.of(context).onPrimary,
                 ),
               ),
-              child: Icon(
-                Icons.map_outlined,
-                color: AppThemeColors.of(context).onPrimary,
-              ),
             ),
-          ),
         ],
       ),
     );

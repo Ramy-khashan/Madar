@@ -21,34 +21,34 @@ class ServerException extends Equatable implements Exception {
 
 class FetchDataException extends ServerException {
   FetchDataException([String? message])
-    : super(message ?? "error_communication".tr());
+    : super(message ?? 'error_communication'.tr());
 }
 
 class BadRequestException extends ServerException {
-  BadRequestException([String? message]) : super(message ?? "bad_request".tr());
+  BadRequestException([String? message]) : super(message ?? 'bad_request'.tr());
 }
 
 class UnauthorizedException extends ServerException {
   UnauthorizedException([String? message])
-    : super(message ?? "unauthorized".tr());
+    : super(message ?? 'unauthorized'.tr());
 }
 
 class NotFoundException extends ServerException {
-  NotFoundException([String? message]) : super(message ?? "request_info".tr());
+  NotFoundException([String? message]) : super(message ?? 'request_info'.tr());
 }
 
 class ConflictException extends ServerException {
-  ConflictException([String? message]) : super(message ?? "conflict".tr());
+  ConflictException([String? message]) : super(message ?? 'conflict'.tr());
 }
 
 class InternalServerException extends ServerException {
   InternalServerException([String? message])
-    : super(message ?? "server_failed".tr());
+    : super(message ?? 'server_failed'.tr());
 }
 
 class NoInternetConnectionException extends ServerException {
   NoInternetConnectionException([String? message])
-    : super(message ?? "no_internet".tr()) {
+    : super(message ?? 'no_internet'.tr()) {
     final context = MadarApp.navigatorKey.currentContext;
 
     if (context != null) {

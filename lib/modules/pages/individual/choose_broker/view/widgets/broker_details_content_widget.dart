@@ -139,7 +139,7 @@ class BrokerDetailsContentWidget extends StatelessWidget {
                 text: AppStrings.sendToBrokerBtn,
                 isLoading: state.confirmStatus.name == 'loading',
                 onTap: () =>
-                    context.read<ChooseBrokerBloc>().add(ChooseBrokerConfirm()),
+                    context.read<ChooseBrokerBloc>().add(const ChooseBrokerConfirm()),
               ),
             ),
           ],

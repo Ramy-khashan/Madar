@@ -6,3 +6,19 @@ sealed class ForgetPasswordEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+final class ForgetPasswordPhoneChanged extends ForgetPasswordEvent {
+  const ForgetPasswordPhoneChanged(this.phone);
+  final String phone;
+
+  @override
+  List<Object> get props => [phone];
+}
+
+final class ForgetPasswordSendOtp extends ForgetPasswordEvent {
+  const ForgetPasswordSendOtp();
+}
+
+final class ForgetPasswordResetSubmitted extends ForgetPasswordEvent {
+  const ForgetPasswordResetSubmitted();
+}

@@ -1,32 +1,13 @@
 {
   "project_info": {
-    "project_number": "841201638383",
-    "project_id": "apps-logger-63d7b",
-    "storage_bucket": "apps-logger-63d7b.firebasestorage.app"
+    "project_number": "754579709479",
+    "project_id": "madar-d98a0",
+    "storage_bucket": "madar-d98a0.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:841201638383:android:1bee70242285c3042bf41a",
-        "android_client_info": {
-          "package_name": "ap.Ramy.logger"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBYw436Lf1d1QuUVxJaPU8bQXUU7oa255E"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:841201638383:android:92820a07d030c6fb2bf41a",
+        "mobilesdk_app_id": "1:754579709479:android:11a0372ad9150ae31f7802",
         "android_client_info": {
           "package_name": "com.example.madar_app"
         }
@@ -34,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBYw436Lf1d1QuUVxJaPU8bQXUU7oa255E"
+          "current_key": "AIzaSyACpZ9c2l6m852oqoUDr7jr7imepb6R7bI"
         }
       ],
       "services": {

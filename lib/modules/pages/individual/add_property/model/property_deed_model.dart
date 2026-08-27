@@ -70,9 +70,9 @@ class PropertyDeedModel extends Equatable {
   Map<String, String> toJson() {
     return {
       'deedType': deedType,
-      if (deedNumber != null) 'deedNumber': deedNumber!,
-      if (calendarType != null) 'calendarType': calendarType!,
-      if (deedDate != null) 'deedDate': deedDate!,
+      'deedNumber': ?deedNumber,
+      'calendarType': ?calendarType,
+      'deedDate': ?deedDate,
     };
   }
 }

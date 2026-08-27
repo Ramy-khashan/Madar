@@ -74,7 +74,7 @@ class PropertyDetailsModel {
     }
 
     return PropertyDetailsModel(
-      propertyId: json['propertyId'] ?? json['property_id'],
+      propertyId: json['propertyId'] ?? json['property_id'] ?? json['id'],
       title: json['title'],
       projectName: json['projectName'],
       type: json['type'],
@@ -95,8 +95,17 @@ class PropertyDetailsModel {
           ? PropertyDetails.fromJson(json['details'])
           : null,
       features: PropertyFeatures.parse(json['features']),
-      location: json['location'] != null
-          ? PropertyLocation.fromJson(json['location'])
+      location: json['location'] is Map
+          ? PropertyLocation.fromJson(
+              Map<String, dynamic>.from(json['location'] as Map),
+            )
+          : (json['latitude'] != null || json['longitude'] != null)
+          ? PropertyLocation(
+              city: json['city']?.toString(),
+              district: json['district']?.toString(),
+              latitude: _jsonDouble(json['latitude']),
+              longitude: _jsonDouble(json['longitude']),
+            )
           : null,
       media: json['media'] is List
           ? ((json['media'] as List)
@@ -273,6 +282,7 @@ class PropertyDetails {
   int? elevatorsCount;
   String? developerName;
   String? compoundName;
+  bool? hasClubhouse;
   List<String>? services;
   Dimensions? dimensions;
   String? planNumber;
@@ -359,6 +369,7 @@ class PropertyDetails {
     this.elevatorsCount,
     this.developerName,
     this.compoundName,
+    this.hasClubhouse,
     this.services,
     this.dimensions,
     this.planNumber,
@@ -449,6 +460,7 @@ class PropertyDetails {
     elevatorsCount = json['elevatorsCount'];
     developerName = json['developerName'];
     compoundName = json['compoundName'];
+    hasClubhouse = json['hasClubhouse'];
     services = _jsonStringList(json['services']);
     dimensions = json['dimensions'] != null
         ? Dimensions.fromJson(json['dimensions'])
@@ -540,6 +552,7 @@ class PropertyDetails {
     if (elevatorsCount != null) data['elevatorsCount'] = elevatorsCount;
     if (developerName != null) data['developerName'] = developerName;
     if (compoundName != null) data['compoundName'] = compoundName;
+    if (hasClubhouse != null) data['hasClubhouse'] = hasClubhouse;
     if (services != null) data['services'] = services;
     if (dimensions != null) data['dimensions'] = dimensions!.toJson();
     if (planNumber != null) data['planNumber'] = planNumber;
@@ -632,6 +645,7 @@ class PropertyFeatures {
   static String? _alias(String apiKey) {
     const aliases = {
       'ELECTRICITY': 'hasElectricity',
+      'ELECTRICTY': 'hasElectricity',
       'SEWAGE': 'hasSewage',
       'WATER': 'hasWater',
       'FENCE': 'hasFence',
@@ -687,8 +701,8 @@ class PropertyLocation {
       city: json['city'],
       district: json['district'],
       street: json['street'],
-      latitude: json['latitude']?.toDouble(),
-      longitude: json['longitude']?.toDouble(),
+      latitude: _jsonDouble(json['latitude']),
+      longitude: _jsonDouble(json['longitude']),
       nearby: json['nearby'] != null
           ? (json['nearby'] is List
                 ? (json['nearby'] as List).map((v) {
@@ -1030,7 +1044,7 @@ class ParentProperty {
 
   factory ParentProperty.fromJson(Map<String, dynamic> json) {
     return ParentProperty(
-      propertyId: json['property_id'],
+      propertyId: json['propertyId'] ?? json['property_id'],
       title: json['title'],
       type: json['type'],
       status: json['status'],
@@ -1075,7 +1089,7 @@ class ChildProperty {
       type: json['type'],
       status: json['status'],
       listingType: json['listingType'],
-      price: json['price'],
+      price: _jsonInt(json['price']),
       isActive: json['isActive'],
       mainImage: json['mainImage'],
     );
@@ -1104,7 +1118,11 @@ class PropertyContract {
   String? status;
   String? startDate;
   String? endDate;
-  String? name; // For Apartment legacy format
+  String? name;
+  num? price;
+  String? buyerName;
+  String? sellerName;
+  String? brokerName;
 
   PropertyContract({
     this.id,
@@ -1116,33 +1134,55 @@ class PropertyContract {
     this.name,
     this.startDate,
     this.endDate,
+    this.price,
+    this.buyerName,
+    this.sellerName,
+    this.brokerName,
   });
 
+  bool get isActive => (status ?? '').toUpperCase() == 'ACTIVE';
+  bool get isRent => (contractType ?? '').toUpperCase().contains('RENT');
+
   factory PropertyContract.fromJson(Map<String, dynamic> json) {
+    Map<String, dynamic> asMap(dynamic value) =>
+        value is Map ? Map<String, dynamic>.from(value) : const {};
+    final buyer = asMap(json['buyer']);
+    final seller = asMap(json['seller']);
+    final broker = asMap(json['broker']);
+    final buyerName = (buyer['fullName'] ?? buyer['name'])?.toString();
+    final sellerName = (seller['fullName'] ?? seller['name'])?.toString();
+    final brokerName = (broker['fullName'] ?? broker['name'])?.toString();
     return PropertyContract(
-      id: json['id'],
+      id: json['contractId'] ?? json['id'],
       propertyId: json['propertyId'],
-      contractType: json['contractType'],
+      contractType: json['type'] ?? json['contractType'],
       fileUrl: json['fileUrl'],
       createdAt: json['createdAt'],
-      name: json['name'],
+      name: json['name'] ?? buyerName ?? sellerName,
       status: json['status'],
       startDate: json['startDate'],
       endDate: json['endDate'],
+      price: json['price'] is num
+          ? json['price'] as num
+          : num.tryParse('${json['price'] ?? ''}'),
+      buyerName: buyerName,
+      sellerName: sellerName,
+      brokerName: brokerName,
     );
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    if (id != null) data['id'] = id;
+    if (id != null) data['contractId'] = id;
     if (propertyId != null) data['propertyId'] = propertyId;
-    if (contractType != null) data['contractType'] = contractType;
+    if (contractType != null) data['type'] = contractType;
     if (fileUrl != null) data['fileUrl'] = fileUrl;
     if (createdAt != null) data['createdAt'] = createdAt;
     if (name != null) data['name'] = name;
     if (status != null) data['status'] = status;
     if (startDate != null) data['startDate'] = startDate;
     if (endDate != null) data['endDate'] = endDate;
+    if (price != null) data['price'] = price;
     return data;
   }
 }
@@ -1232,6 +1272,13 @@ int? _jsonInt(dynamic value) {
   if (value is int) return value;
   if (value is num) return value.toInt();
   return int.tryParse(value.toString());
+}
+
+double? _jsonDouble(dynamic value) {
+  if (value == null) return null;
+  if (value is double) return value;
+  if (value is num) return value.toDouble();
+  return double.tryParse(value.toString());
 }
 
 List<String>? _jsonStringList(dynamic value) {

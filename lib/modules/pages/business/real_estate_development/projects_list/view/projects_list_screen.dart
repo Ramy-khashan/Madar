@@ -88,7 +88,7 @@ class ProjectsListScreen extends StatelessWidget {
                           context,
                           mobilePortrait: 250,
                           mobileLandscape: 220,
-                          tabletPortrait: 300,
+                          tabletPortrait: 310,
                           tabletLandscape: 320,
                         ).toDouble(),
                       ),

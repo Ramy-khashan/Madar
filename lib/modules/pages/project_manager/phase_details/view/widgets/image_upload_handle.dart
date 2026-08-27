@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
- import '../../../../../../core/utils/constants/app_colors.dart';
-import '../../../../../../core/utils/constants/app_strings.dart';
+ import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/image_picker_helper.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../business/real_estate_development/add_project/shared/widgets/file_upload_widget.dart';
@@ -25,7 +24,6 @@ class ImagesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isRequired = true;
     return BlocBuilder<PhaseDetailsBloc, PhaseDetailsState>(
       builder: (context, state) {
         return Column(
@@ -77,59 +75,7 @@ class ImagesSection extends StatelessWidget {
     );
   }
 }
-
-class _UploadArea extends StatelessWidget {
-  const _UploadArea({required this.tc, required this.bloc});
-  final AppThemeColors tc;
-  final PhaseDetailsBloc bloc;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () async {
-        // Handled by FileUploadWidget in screen
-      },
-      child: Container(
-        width: double.infinity,
-        height: 120,
-        decoration: BoxDecoration(
-          color: tc.cardBackground,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: tc.borderColor),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.cloud_upload_outlined,
-              size: 32,
-              color: tc.textSecondary,
-            ),
-            SizedBox(height: 10.height),
-
-            Text(
-              AppStrings.clickToUploadPhotos,
-              style: TextStyle(
-                fontSize: context.responsiveFontScale(14),
-                fontWeight: FontWeight.w600,
-                color: tc.textPrimary,
-              ),
-            ),
-            SizedBox(height: 4.height),
-            Text(
-              AppStrings.orDragImagesHere,
-              style: TextStyle(
-                fontSize: context.responsiveFontScale(12),
-                color: tc.textSecondary,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
+ 
 class _ImageGrid extends StatelessWidget {
   const _ImageGrid({
     required this.imagePaths,

@@ -21,3 +21,10 @@ class PropertiesFilterApplied extends PropertiesEvent {
   @override
   List<Object?> get props => [filter];
 }
+
+class PropertiesSearchChanged extends PropertiesEvent {
+  const PropertiesSearchChanged(this.search);
+  final String search;
+  @override
+  List<Object?> get props => [search];
+}

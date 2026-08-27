@@ -3,10 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../config/router/app_router_keys.dart';
 import '../../../../core/components/app_appbar.dart';
+import '../../../../core/components/guest_locked_view.dart';
 import '../../../../core/components/loading_process.dart';
 import '../../../../core/components/pagination.dart';
 import '../../../../core/utils/constants/app_enums.dart';
 import '../../../../core/utils/constants/app_strings.dart';
+import '../../../../core/utils/functions/guest_mode.dart';
 import '../../../../core/utils/functions/responsive.dart';
 import '../../../../core/utils/functions/router_handler.dart';
 import '../controller/contracts_bloc.dart';
@@ -20,7 +22,9 @@ class ContractsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppAppbar(isWithBack: false, title: AppStrings.contracts),
-      body: SafeArea(
+      body: GuestMode.isGuest
+          ? const GuestLockedView()
+          : SafeArea(
         child: BlocBuilder<ContractsBloc, ContractsState>(
           builder: (context, state) {
             return Column(
@@ -29,6 +33,7 @@ class ContractsScreen extends StatelessWidget {
                 ContractsFilterTabsWidget(
                   selectedFilter: state.selectedFilter,
                   totalCount: state.totalCount,
+                  counts: state.counts,
                   onFilterChanged: (filter) => ContractsBloc.get(
                     context,
                   ).add(ContractsFilterChanged(filter)),
@@ -89,7 +94,8 @@ class ContractsScreen extends StatelessWidget {
                         tabletLandscape: 3,
                       ).toInt(),
                       requestStatus: state.contractsStatus,
-                      hasReachedMax: state.contracts.length >= state.totalCount,
+                      hasReachedMax: !state.hasNext &&
+                          state.contracts.length >= state.totalCount,
                       onLoadMore: (page) => context.read<ContractsBloc>().add(
                         ContractsLoad(page: page, isLoadMore: true),
                       ),
@@ -99,7 +105,12 @@ class ContractsScreen extends StatelessWidget {
                           context,
                           AppRouterKeys.contractDetails,
                           extra: state.contracts[index].id,
-                        ),
+                        ).then((_) {
+                          if (!context.mounted) return;
+                          context.read<ContractsBloc>().add(
+                            const ContractsLoad(),
+                          );
+                        }),
                       ),
                     ),
                   ),

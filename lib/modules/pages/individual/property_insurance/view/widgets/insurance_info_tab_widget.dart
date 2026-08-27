@@ -8,6 +8,7 @@ import '../../../../../../core/components/info_card_item.dart';
 import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../core/utils/functions/guest_mode.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../controller/property_insurance_bloc.dart';
@@ -185,6 +186,12 @@ class InsuranceInfoTabWidget extends StatelessWidget {
               child: AppButton(
                 text: AppStrings.choosePropertyForInsurance,
                 onTap: () {
+                  if (!GuestMode.requireAuth(
+                    context,
+                    subtitle: AppStrings.guestFeaturesMessage,
+                  )) {
+                    return;
+                  }
                   RouterHandler.navigate(context, AppRouterKeys.myProperties);
                 },
               ),

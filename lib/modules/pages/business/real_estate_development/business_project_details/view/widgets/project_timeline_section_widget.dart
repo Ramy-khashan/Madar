@@ -108,7 +108,7 @@ class _TimelineItem extends StatelessWidget {
                 ),
                 SizedBox(height: 2.height),
                 Text(
-                  item.content ?? "stage content",
+                  item.content ?? 'stage content',
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(16),
                     color: colors.textSecondary,

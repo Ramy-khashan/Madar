@@ -39,8 +39,8 @@ class BusinessPropertiesRequestsListWidget extends StatelessWidget {
           context,
           mobilePortrait: 230.height,
           mobileLandscape: 230.height,
-          tabletPortrait: 350.height,
-          tabletLandscape: 380.height,
+          tabletPortrait: 180.height,
+          tabletLandscape: 220.height,
         ).toDouble(),
       ),
       itemBuilder: (context, index) {

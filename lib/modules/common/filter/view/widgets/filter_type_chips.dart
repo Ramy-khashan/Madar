@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:madar_app/core/utils/functions/translation.dart';
-
+ 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
-import '../../../../../../core/utils/constants/app_strings.dart';
-import '../../../../../../core/utils/functions/responsive.dart';
+ import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../core/utils/functions/translation.dart';
 
 class FilterTypeChips extends StatelessWidget {
   const FilterTypeChips({

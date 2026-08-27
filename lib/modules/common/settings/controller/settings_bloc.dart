@@ -6,13 +6,15 @@ import 'package:image_picker/image_picker.dart';
 import 'package:madar_app/core/utils/constants/app_enums.dart';
 
 import '../../../../../config/app_controller/app_controller_bloc.dart';
-import '../../../../../core/utils/constants/app_strings.dart';
-import '../../../../../core/utils/functions/service_locator.dart';
+ import '../../../../../core/utils/functions/service_locator.dart';
 import '../../../../../core/utils/functions/translation.dart';
 import '../../../../../madar_app.dart';
 import '../../../../core/connection/concept/end_points.dart';
 import '../../../../core/connection/interfaces/api_consumer.dart';
+import '../../../../core/utils/constants/app_constant.dart';
+import '../../../../core/utils/constants/app_strings.dart';
 import '../../../../core/utils/constants/storage_keys.dart';
+import '../../../../core/utils/functions/guest_mode.dart';
 import '../../../../core/utils/functions/preference_utils.dart';
 import '../../../../core/utils/functions/router_handler.dart';
 import '../model/user_profile_model.dart';
@@ -37,9 +39,29 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   static SettingsBloc get(BuildContext context) => context.read<SettingsBloc>();
 
   void _onLoad(SettingsLoad event, Emitter<SettingsState> emit) {
+    final isDark = sl<AppControllerBloc>().state.isDark;
+    if (GuestMode.isGuest) {
+      emit(
+        state.copyWith(
+          notificationsEnabled: true,
+          selectedLanguage: MadarApp.navigatorKey.currentContext != null
+              ? locale(MadarApp.navigatorKey.currentContext!).languageCode
+              : 'ar',
+          darkModeEnabled: isDark,
+          loadingProfile: RequestStatus.success,
+          loadingSavedItems: RequestStatus.success,
+          savedItem: 0,
+          profile: UserProfileModel(
+            name: AppStrings.guestUserName,
+            phone: '—',
+            accountType: AppConstant.individual,
+          ),
+        ),
+      );
+      return;
+    }
     add(const SettingsGetSavedCount());
     add(const SettingsGetProfile());
-    final isDark = sl<AppControllerBloc>().state.isDark;
     emit(
       state.copyWith(
         notificationsEnabled: true,
@@ -80,6 +102,12 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     SettingsGetSavedCount event,
     Emitter<SettingsState> emit,
   ) async {
+    if (GuestMode.isGuest) {
+      emit(
+        state.copyWith(savedItem: 0, loadingSavedItems: RequestStatus.success),
+      );
+      return;
+    }
     try {
       emit(state.copyWith(loadingSavedItems: RequestStatus.loading));
       final response = await sl.get<ApiConsumer>().get(EndPoints.wishlistCount);
@@ -103,8 +131,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         },
       );
     } catch (e) {
-      print('Error fetching saved items count: $e');
-      emit(
+       emit(
         state.copyWith(savedItem: 0, loadingSavedItems: RequestStatus.failed),
       );
     }
@@ -114,6 +141,9 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     SettingsGetProfile event,
     Emitter<SettingsState> emit,
   ) async {
+    if (GuestMode.isGuest) {
+      return;
+    }
     try {
       emit(state.copyWith(loadingProfile: RequestStatus.loading));
       final response = await sl.get<ApiConsumer>().get(EndPoints.getProfile);
@@ -145,8 +175,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         },
       );
     } catch (e) {
-      print('Error fetching profile: $e');
-      emit(state.copyWith(profile: null, loadingProfile: RequestStatus.failed));
+       emit(state.copyWith(profile: null, loadingProfile: RequestStatus.failed));
     }
   }
 
@@ -255,8 +284,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         },
       );
     } catch (e) {
-      print('Error updating phone: $e');
-      emit(state.copyWith(updatePhoneStatus: RequestStatus.failed));
+       emit(state.copyWith(updatePhoneStatus: RequestStatus.failed));
     }
   }
 }

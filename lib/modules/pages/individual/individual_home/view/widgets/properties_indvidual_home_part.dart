@@ -39,7 +39,7 @@ class PropertiesIndvidualHomePart extends StatelessWidget {
                     mobilePortrait: 365.height,
                     mobileLandscape: 360.height,
                     tabletPortrait: 310.height,
-                    tabletLandscape: 350.height,
+                    tabletLandscape: 380.height,
                   ),
                   child: LoadingProcess(
                     status: state.propertiesStatus,

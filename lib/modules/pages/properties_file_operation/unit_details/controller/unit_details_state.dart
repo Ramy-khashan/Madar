@@ -3,6 +3,7 @@ part of 'unit_details_bloc.dart';
 class UnitDetailsState extends Equatable {
   const UnitDetailsState({
     this.unit,
+    this.details,
     this.saveStatus = RequestStatus.init,
     this.loadStatus = RequestStatus.init,
     this.isDeleted = false,
@@ -12,6 +13,7 @@ class UnitDetailsState extends Equatable {
   });
 
   final UnitModel? unit;
+  final PropertyDetailsModel? details;
   final RequestStatus saveStatus;
   final RequestStatus loadStatus;
   final bool isDeleted;
@@ -21,6 +23,7 @@ class UnitDetailsState extends Equatable {
 
   UnitDetailsState copyWith({
     UnitModel? unit,
+    PropertyDetailsModel? details,
     RequestStatus? saveStatus,
     RequestStatus? loadStatus,
     bool? isDeleted,
@@ -29,6 +32,7 @@ class UnitDetailsState extends Equatable {
     String? errorMsg,
   }) => UnitDetailsState(
     unit: unit ?? this.unit,
+    details: details ?? this.details,
     saveStatus: saveStatus ?? this.saveStatus,
     loadStatus: loadStatus ?? this.loadStatus,
     isDeleted: isDeleted ?? this.isDeleted,
@@ -40,6 +44,7 @@ class UnitDetailsState extends Equatable {
   @override
   List<Object?> get props => [
     unit,
+    details,
     saveStatus,
     loadStatus,
     isDeleted,

@@ -39,7 +39,7 @@ class AppRouterKeys {
   static const String ratePropertyCertifiedForm = '/ratePropertyCertifiedForm';
   static const String propertiesListing = '/propertiesListing';
   static const String brokerProperties = '/brokerProperties';
-  static const String ownerProperties = '/ownerProperties';
+  // static const String ownerProperties = '/ownerProperties';
   static const String propertyLocationMap = '/propertyLocationMap';
   static const String projectManagerHome = '/projectManagerHome';
   static const String projectManagerDetails = '/projectManagerDetails';
@@ -51,6 +51,7 @@ class AppRouterKeys {
    static const String termsAndConditionScreen = '/termsAndCondition';
   static const String notification = '/notification';
   static const String myWishlist = '/my_wishlist';
+  static const String myRequests = '/myRequests';
   static const String constructionReportsScreen = '/constructionReports';
   static const String financialReportsScreen = '/financialReports';
   static const String netProfitLossScreen = '/net-profit-loss';
@@ -60,6 +61,7 @@ class AppRouterKeys {
   static const String subscriptionLoadingPay = '/subscriptionLoadingPay';
   static const String subscriptionSummary = '/subscriptionSummary';
   static const String otpVerification = '/otp_verification';
+  static const String resetPassword = '/resetPassword';
   static const String phaseDetails = '/phaseDetails';
   static const String propertyFileDetails = '/propertyFileDetails';
   static const String unitDetailsScreen = '/unitDetailsScreen';

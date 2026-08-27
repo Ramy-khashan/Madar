@@ -13,8 +13,7 @@ String formatPrice(double price) {
 }
 
 Future<void> urlLauncher(String url) async {
-  print('urlLauncher: $url');
-  if (await canLaunchUrl(Uri.parse(url))) {
+   if (await canLaunchUrl(Uri.parse(url))) {
     await launchUrl(Uri.parse(url));
   } else {
     throw 'Could not launch $url';

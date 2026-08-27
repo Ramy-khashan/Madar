@@ -157,8 +157,7 @@ class PropertyApiEnums {
   // ── Floor type (FLOOR property) ────────────────────────────────────────
   static const String floorTypeGround = 'GROUND';
   static const String floorTypeUpper = 'UPPER';
-  static const String floorTypeBasement = 'BASEMENT';
-  static const String floorTypeRoof = 'ROOF';
+ 
 
   // ── Features (top-level `features[]`) ──────────────────────────────────
   static const String featureInternet = 'INTERNET';

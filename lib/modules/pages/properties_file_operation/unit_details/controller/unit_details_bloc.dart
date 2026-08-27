@@ -6,6 +6,7 @@ import '../../../../../core/repository/apis/property_file_apis.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/common_fun.dart';
+import '../../../individual/property_details/model/property_details_model.dart';
 import '../../property_file/model/property_file_model.dart';
 
 part 'unit_details_event.dart';
@@ -62,7 +63,13 @@ class UnitDetailsBloc extends Bloc<UnitDetailsEvent, UnitDetailsState> {
       (details) {
         final merged = UnitModel.fromDetails(details, base: event.unit);
         _syncControllers(merged);
-        emit(state.copyWith(unit: merged, loadStatus: RequestStatus.success));
+        emit(
+          state.copyWith(
+            unit: merged,
+            details: details,
+            loadStatus: RequestStatus.success,
+          ),
+        );
       },
     );
   }

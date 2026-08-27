@@ -1,20 +1,21 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../../core/components/image_item.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
-import '../../../../../../core/components/app_button.dart';
 import '../../../../../../core/components/app_textfield.dart';
-import '../../../../../../core/model/google_map_model.dart';
-import '../../../../../../core/repository/maps/map_service.dart';
+import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
-import '../../../../../../core/utils/functions/image_picker_helper.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
-import '../../../../../../core/utils/functions/service_locator.dart';
 import '../../controller/add_property_bloc.dart';
 import '../../model/add_property_validator.dart';
+import '../widgets/add_property_location_card.dart';
+import '../widgets/add_property_location_map.dart';
+import '../widgets/add_property_section_label.dart';
+import '../widgets/add_property_step_buttons.dart';
+import '../widgets/date_type_toggle.dart';
+import '../widgets/deed_document_picker.dart';
+import '../widgets/deed_type_selector.dart';
 import '../widgets/field_error_text.dart';
 
 class AddPropertyStep3Screen extends StatelessWidget {
@@ -35,9 +36,8 @@ class AddPropertyStep3Screen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _SectionLabel(label: AppStrings.locationAndDeed, tc: tc),
+                AddPropertySectionLabel(label: AppStrings.locationAndDeed),
                 4.height.toSizedBox,
-
                 Text(
                   AppStrings.setLocationAndDeed,
                   style: TextStyle(
@@ -54,7 +54,7 @@ class AddPropertyStep3Screen extends StatelessWidget {
                   onChanged: (v) => bloc.add(UpdateLocationEvent(v)),
                 ),
                 16.height.toSizedBox,
-                const _MapWidget(),
+                const AddPropertyLocationMap(),
                 const FieldErrorText(AddPropertyField.location),
                 16.height.toSizedBox,
                 BlocBuilder<AddPropertyBloc, AddPropertyState>(
@@ -65,7 +65,7 @@ class AddPropertyStep3Screen extends StatelessWidget {
                         state.model.location!.isEmpty) {
                       return const SizedBox.shrink();
                     }
-                    return _LocationCard(
+                    return AddPropertyLocationCard(
                       location: state.model.location!,
                       tc: tc,
                     );
@@ -95,7 +95,7 @@ class AddPropertyStep3Screen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                         color: AppThemeColors.of(context).activeColor,
                       ),
-                      child: ImageItem(
+                      child: const ImageItem(
                         AppImages.instrument,
                         width: 40,
                         height: 40,
@@ -115,7 +115,6 @@ class AddPropertyStep3Screen extends StatelessWidget {
                                 color: tc.primaryBrand,
                               ),
                             ),
-
                             Text(
                               AppStrings.chooseDeedTypeHint,
                               style: TextStyle(
@@ -131,7 +130,7 @@ class AddPropertyStep3Screen extends StatelessWidget {
                   ],
                 ),
                 12.height.toSizedBox,
-                const _DeedTypeSelector(),
+                const DeedTypeSelector(),
                 const FieldErrorText(AddPropertyField.deedType),
                 12.height.toSizedBox,
                 BlocBuilder<AddPropertyBloc, AddPropertyState>(
@@ -151,18 +150,21 @@ class AddPropertyStep3Screen extends StatelessWidget {
                   },
                 ),
                 12.height.toSizedBox,
-                _SectionLabel(label: AppStrings.deedDate, tc: tc),
+                AddPropertySectionLabel(label: AppStrings.deedDate),
                 8.height.toSizedBox,
-                _DateTypeToggle(),
+                const DateTypeToggle(),
                 12.height.toSizedBox,
                 BlocBuilder<AddPropertyBloc, AddPropertyState>(
                   buildWhen: (prev, curr) =>
                       prev.fieldErrors[AddPropertyField.deedDate] !=
-                      curr.fieldErrors[AddPropertyField.deedDate],
+                          curr.fieldErrors[AddPropertyField.deedDate] ||
+                      prev.model.dateType != curr.model.dateType,
                   builder: (context, state) {
                     return AppTextField(
                       controller: bloc.dateController,
-                      hint: AppStrings.enterHijriDateHint,
+                      hint: state.model.dateType == 'hijri'
+                          ? AppStrings.enterHijriDateHint
+                          : AppStrings.deedDate,
                       prefixIcon: Icons.calendar_today_rounded,
                       isReadOnly: true,
                       errorText: state.fieldErrors[AddPropertyField.deedDate],
@@ -170,508 +172,25 @@ class AddPropertyStep3Screen extends StatelessWidget {
                         final now = DateTime.now();
                         final picked = await showDatePicker(
                           context: context,
-                          initialDate: now,
+                          initialDate: bloc.deedPickedAt ?? now,
                           firstDate: DateTime(1950),
                           lastDate: now,
                         );
                         if (picked == null) return;
-                        final y = picked.year.toString().padLeft(4, '0');
-                        final m = picked.month.toString().padLeft(2, '0');
-                        final d = picked.day.toString().padLeft(2, '0');
-                        bloc.dateController.text = '$y-$m-$d';
+                        bloc.add(DeedDatePickedEvent(picked));
                       },
                     );
                   },
                 ),
                 12.height.toSizedBox,
-                const _DeedDocumentPicker(),
+                const DeedDocumentPicker(),
                 20.height.toSizedBox,
               ],
             ),
           ),
         ),
-        _Step3Buttons(tc: tc),
+        const AddPropertyStepButtons(),
       ],
     );
   }
-}
-
-class _SectionLabel extends StatelessWidget {
-  const _SectionLabel({required this.label, required this.tc});
-  final String label;
-  final AppThemeColors tc;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      label,
-      style: TextStyle(
-        fontSize: context.responsiveFontScale(16),
-        fontWeight: FontWeight.w700,
-        color: tc.textPrimary,
-      ),
-    );
-  }
-}
-
-class _MapWidget extends StatefulWidget {
-  const _MapWidget();
-
-  @override
-  State<_MapWidget> createState() => _MapWidgetState();
-}
-
-class _MapWidgetState extends State<_MapWidget> {
-  PositionModel? _selected;
-
-  Future<({String label, String city, String district})?> _reverseGeocode(
-    double lat,
-    double lon,
-  ) async {
-    try {
-      final response = await sl.get<Dio>().get<Map<String, dynamic>>(
-        'https://nominatim.openstreetmap.org/reverse',
-        queryParameters: {
-          'format': 'json',
-          'lat': lat,
-          'lon': lon,
-          'accept-language': 'ar',
-        },
-        options: Options(headers: {'User-Agent': 'MadarApp/1.0'}),
-      );
-      final addr = response.data?['address'] as Map<String, dynamic>?;
-      if (addr == null) return null;
-
-      final neighbourhood = (addr['neighbourhood'] ?? addr['suburb'] ?? '')
-          .toString();
-      final city = (addr['city'] ?? addr['town'] ?? addr['village'] ?? '')
-          .toString();
-      final road = (addr['road'] ?? addr['street'] ?? '').toString();
-      final house = (addr['house_number'] ?? '').toString();
-
-      final line1 = [neighbourhood, city].where((s) => s.isNotEmpty).join('، ');
-      final line2 = [road, house].where((s) => s.isNotEmpty).join(' ');
-
-      return (
-        label: [line1, line2].where((s) => s.isNotEmpty).join('\n'),
-        city: city,
-        district: neighbourhood,
-      );
-    } catch (_) {
-      return null;
-    }
-  }
-
-  Future<void> _onMapTap(PositionModel pos, BuildContext context) async {
-    setState(() => _selected = pos);
-    final bloc = AddPropertyBloc.get(context);
-    // Show fallback coordinates immediately
-    bloc.add(
-      UpdateLocationEvent(
-        '${pos.position.latitude.toStringAsFixed(5)}, ${pos.position.longitude.toStringAsFixed(5)}',
-      ),
-    );
-    bloc.add(
-      UpdateCoordinatesEvent(
-        latitude: pos.position.latitude,
-        longitude: pos.position.longitude,
-      ),
-    );
-    // Replace with human-readable address once resolved
-    final address = await _reverseGeocode(
-      pos.position.latitude,
-      pos.position.longitude,
-    );
-    if (address != null && mounted) {
-      bloc.add(UpdateLocationEvent(address.label));
-      bloc.add(
-        UpdateCoordinatesEvent(
-          latitude: pos.position.latitude,
-          longitude: pos.position.longitude,
-          city: address.city,
-          district: address.district,
-        ),
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final tc = AppThemeColors.of(context);
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        height: 220,
-        decoration: BoxDecoration(
-          border: Border.all(color: tc.borderColor),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: sl.get<MapService>().buildMap(
-            onTap: (pos) => _onMapTap(pos, context),
-            markers: _selected == null
-                ? const {}
-                : {
-                    MarkerModel(
-                      markerId: 'property_location',
-                      position: _selected!,
-                    ),
-                  },
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _LocationCard extends StatelessWidget {
-  const _LocationCard({required this.location, required this.tc});
-  final String location;
-  final AppThemeColors tc;
-
-  @override
-  Widget build(BuildContext context) {
-    final lines = location.split('\n');
-    final line1 = lines.isNotEmpty ? lines[0] : location;
-    final line2 = lines.length > 1 ? lines[1] : null;
-
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.width, vertical: 12.height),
-      decoration: BoxDecoration(
-        color: tc.primaryBrand.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: tc.primaryBrand.withValues(alpha: 0.3)),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 10.height),
-            child: Icon(
-              Icons.location_on_rounded,
-              color: tc.primaryBrand,
-              size: 20,
-            ),
-          ),
-          SizedBox(width: 10.width),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  line1,
-                  style: TextStyle(
-                    fontSize: context.responsiveFontScale(13),
-                    fontWeight: FontWeight.w600,
-                    color: tc.textPrimary,
-                  ),
-                ),
-                if (line2 != null && line2.isNotEmpty) ...[
-                  SizedBox(height: 2.height),
-                  Text(
-                    line2,
-                    style: TextStyle(
-                      fontSize: context.responsiveFontScale(12),
-                      color: tc.textSecondary,
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-          Icon(Icons.edit, color: tc.primaryBrand, size: 20),
-        ],
-      ),
-    );
-  }
-}
-
-class _DeedTypeSelector extends StatelessWidget {
-  const _DeedTypeSelector();
-
-  @override
-  Widget build(BuildContext context) {
-    final tc = AppThemeColors.of(context);
-    return BlocBuilder<AddPropertyBloc, AddPropertyState>(
-      buildWhen: (prev, curr) => prev.model.deedType != curr.model.deedType,
-      builder: (context, state) {
-        final deedTypes = AddPropertyBloc.deedTypes;
-        return Column(
-          spacing: 8,
-          children: deedTypes.map((deed) {
-            final isSelected = state.model.deedType == deed['id'];
-            return GestureDetector(
-              onTap: () => AddPropertyBloc.get(
-                context,
-              ).add(SelectDeedTypeEvent(deed['id']!)),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                padding: EdgeInsets.symmetric(
-                  horizontal: 16.width,
-                  vertical: 12.height,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: isSelected ? tc.primaryBrand : tc.borderColor,
-                    width: isSelected ? 1.5 : 1,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 40.width,
-                      height: 40.width,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: ImageItem(
-                        deed['icon'] as String,
-                        width: 40,
-                        height: 40,
-                      ),
-                    ),
-                    10.width.toSizedBox,
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            deed['label']!,
-                            style: TextStyle(
-                              fontSize: context.responsiveFontScale(13),
-                              fontWeight: FontWeight.w700,
-                              color: tc.primaryBrand,
-                            ),
-                          ),
-                          4.height.toSizedBox,
-                          Text(
-                            deed['hint']!,
-                            style: TextStyle(
-                              fontSize: context.responsiveFontScale(10),
-                              fontWeight: FontWeight.w400,
-                              color: tc.primaryBrand,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }).toList(),
-        );
-      },
-    );
-  }
-}
-
-class _DateTypeToggle extends StatelessWidget {
-  const _DateTypeToggle();
-
-  @override
-  Widget build(BuildContext context) {
-    final tc = AppThemeColors.of(context);
-    return BlocBuilder<AddPropertyBloc, AddPropertyState>(
-      buildWhen: (prev, curr) => prev.model.dateType != curr.model.dateType,
-      builder: (context, state) {
-        final isGregorian = state.model.dateType == 'gregorian';
-        return Container(
-          decoration: BoxDecoration(
-            color: tc.borderColor.withValues(alpha: 0.4),
-            borderRadius: BorderRadius.circular(32),
-          ),
-          padding: const EdgeInsets.all(3),
-          child: Row(
-            children: [
-              _DateTypeOption(
-                label: AppStrings.gregorian,
-                isActive: isGregorian,
-                onTap: () => AddPropertyBloc.get(
-                  context,
-                ).add(const SelectDateTypeEvent('gregorian')),
-                tc: tc,
-              ),
-              _DateTypeOption(
-                label: AppStrings.hijri,
-                isActive: !isGregorian,
-                onTap: () => AddPropertyBloc.get(
-                  context,
-                ).add(const SelectDateTypeEvent('hijri')),
-                tc: tc,
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-
-class _DateTypeOption extends StatelessWidget {
-  const _DateTypeOption({
-    required this.label,
-    required this.isActive,
-    required this.onTap,
-    required this.tc,
-  });
-  final String label;
-  final bool isActive;
-  final VoidCallback onTap;
-  final AppThemeColors tc;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          alignment: Alignment.center,
-          height: 38,
-          decoration: BoxDecoration(
-            color: isActive ? tc.primaryBrand : Colors.transparent,
-            borderRadius: BorderRadius.circular(28),
-          ),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: context.responsiveFontScale(13),
-              fontWeight: FontWeight.w700,
-              color: isActive ? tc.onPrimary : tc.textSecondary,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _DeedDocumentPicker extends StatelessWidget {
-  const _DeedDocumentPicker();
-
-  @override
-  Widget build(BuildContext context) {
-    final tc = AppThemeColors.of(context);
-    return BlocBuilder<AddPropertyBloc, AddPropertyState>(
-      buildWhen: (prev, curr) =>
-          prev.model.ownershipDocumentPath != curr.model.ownershipDocumentPath,
-      builder: (context, state) {
-        final path = state.model.ownershipDocumentPath;
-        final hasFile = path != null && path.isNotEmpty;
-        final fileName = hasFile
-            ? path.split(RegExp(r'[/\\]')).last
-            : AppStrings.tapToAddDeedDocument;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              AppStrings.ownershipDocumentOptional,
-              style: TextStyle(
-                fontSize: context.responsiveFontScale(13),
-                fontWeight: FontWeight.w600,
-                color: tc.textFieldTitle,
-              ),
-            ),
-            8.height.toSizedBox,
-            InkWell(
-              onTap: () async {
-                final picked = await pickSingleImage();
-                if (picked == null || !context.mounted) return;
-                AddPropertyBloc.get(context).add(SetDeedDocumentEvent(picked));
-              },
-              borderRadius: BorderRadius.circular(12),
-              child: Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(
-                  horizontal: 14.width,
-                  vertical: 14.height,
-                ),
-                decoration: BoxDecoration(
-                  color: tc.cardBackground,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: tc.borderColor),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.attach_file_rounded,
-                      color: tc.primaryBrand,
-                      size: 20,
-                    ),
-                    SizedBox(width: 10.width),
-                    Expanded(
-                      child: Text(
-                        fileName,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: context.responsiveFontScale(13),
-                          color: tc.textPrimary,
-                        ),
-                      ),
-                    ),
-                    if (hasFile)
-                      GestureDetector(
-                        onTap: () => AddPropertyBloc.get(
-                          context,
-                        ).add(const ClearDeedDocumentEvent()),
-                        child: Text(
-                          AppStrings.removeFile,
-                          style: TextStyle(
-                            fontSize: context.responsiveFontScale(12),
-                            color: tc.primaryBrand,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class _Step3Buttons extends StatelessWidget {
-  const _Step3Buttons({required this.tc});
-  final AppThemeColors tc;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16.width, 8.height, 16.width, 24.height),
-      child: Row(
-        children: [
-          Expanded(
-            child: AppButton(
-              text: AppStrings.back,
-              isOutline: true,
-              onTap: () =>
-                  AddPropertyBloc.get(context).add(const PreviousStepEvent()),
-            ),
-          ),
-          12.width.toSizedBox,
-          Expanded(
-            child: AppButton(
-              text: AppStrings.next,
-              onTap: () =>
-                  AddPropertyBloc.get(context).add(const NextStepEvent()),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-extension on num {
-  SizedBox get toSizedBox => SizedBox(height: toDouble(), width: toDouble());
 }

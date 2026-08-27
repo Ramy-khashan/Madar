@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../config/theme/app_theme_colors.dart';
 import '../../../../core/components/app_button.dart';
+import '../../../../core/components/app_textfield.dart';
 import '../../../../core/model/property_filter_model.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../core/utils/constants/app_constant.dart';
@@ -43,7 +44,7 @@ class FilterSheetView extends StatelessWidget {
     return BlocListener<FilterBloc, FilterState>(
       listener: (context, state) {
         if (state is FilterApplyRequested) {
-          Navigator.of(context).pop();
+          RouterHandler.pop(context);
           onApply(state.filter);
         }
       },
@@ -84,13 +85,14 @@ class FilterSheetView extends StatelessWidget {
                     builder: (context, state) {
                       final s = state is FilterUpdated
                           ? state
-                          : FilterUpdated(
+                          : const FilterUpdated(
                               isForSale: true,
                               typeId: null,
                               minPrice: PropertyFilterModel.kMinPrice,
                               maxPrice: PropertyFilterModel.kMaxPrice,
                               paymentSystem: null,
                               duration: null,
+                              city: null,
                             );
 
                       return SingleChildScrollView(
@@ -117,8 +119,25 @@ class FilterSheetView extends StatelessWidget {
                             FilterTypeChips(
                               selected: s.typeId,
                               onChanged: (id) => context.read<FilterBloc>().add(
-                                FilterPropertyTypeChanged(typeId: id),
+                                FilterPropertyTypeChanged(
+                                  typeId: id == s.typeId ? null : id,
+                                ),
                               ),
+                            ),
+                            SizedBox(height: 20.height),
+
+                            FilterSectionLabel(AppStrings.city),
+                            SizedBox(height: 12.height),
+                            AppTextField(
+                              isWithTitle: false,
+                              hint: AppStrings.enterCity,
+                              controller: context
+                                  .read<FilterBloc>()
+                                  .cityController,
+                              onChanged: (value) =>
+                                  context.read<FilterBloc>().add(
+                                    FilterCityChanged(city: value),
+                                  ),
                             ),
                             SizedBox(height: 20.height),
 
@@ -147,18 +166,20 @@ class FilterSheetView extends StatelessWidget {
                                 FilterPaymentSystemChanged(paymentSystem: v),
                               ),
                             ),
-                            SizedBox(height: 20.height),
-
-                            FilterSectionLabel(AppStrings.filterDuration),
-                            SizedBox(height: 12.height),
-                            FilterDropdown(
-                              hint: AppStrings.filterAnyDuration,
-                              value: s.duration,
-                              items: AppConstant.durations,
-                              onChanged: (v) => context.read<FilterBloc>().add(
-                                FilterDurationChanged(duration: v),
+                            if (!s.isForSale) ...[
+                              SizedBox(height: 20.height),
+                              FilterSectionLabel(AppStrings.filterDuration),
+                              SizedBox(height: 12.height),
+                              FilterDropdown(
+                                hint: AppStrings.filterAnyDuration,
+                                value: s.duration,
+                                items: AppConstant.durations,
+                                onChanged: (v) =>
+                                    context.read<FilterBloc>().add(
+                                      FilterDurationChanged(duration: v),
+                                    ),
                               ),
-                            ),
+                            ],
                             SizedBox(height: 28.height),
                           ],
                         ),

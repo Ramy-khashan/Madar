@@ -25,12 +25,12 @@ class NavbarScreen extends StatelessWidget {
             heroTag: null,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
-              side: BorderSide(color: AppColors.white, width: 2.5),
+              side: const BorderSide(color: AppColors.white, width: 2.5),
             ),
             onPressed: () {
               RouterHandler.navigate(context, AppRouterKeys.addProperty);
             },
-            child: Icon(Icons.add),
+            child: const Icon(Icons.add),
           ),
           bottomNavigationBar: NavbarBottomBar(state: state),
         );

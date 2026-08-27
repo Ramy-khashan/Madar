@@ -6,12 +6,13 @@ import '../../../../../config/router/app_router_keys.dart';
 import '../../../../../core/utils/functions/router_handler.dart';
 
 import '../../../../../core/components/app_appbar.dart';
+import '../../../../../core/components/guest_locked_view.dart';
 import '../../../../../core/components/property_card_footer_widget.dart';
  import '../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../core/utils/functions/guest_mode.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 import '../../../../../core/components/property_card_widget.dart';
- import '../../chats/conversation_detail/model/conversation_info.dart';
- import '../controller/my_wishlist_bloc.dart';
+  import '../controller/my_wishlist_bloc.dart';
 
 class MyWishlistScreen extends StatelessWidget {
   const MyWishlistScreen({super.key});
@@ -20,7 +21,9 @@ class MyWishlistScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppAppbar(title: AppStrings.myWishlistTitle),
-      body: SafeArea(
+      body: GuestMode.isGuest
+          ? const GuestLockedView()
+          : SafeArea(
         child: Column(
           children: [
             Expanded(
@@ -71,7 +74,17 @@ class MyWishlistScreen extends StatelessWidget {
                           },
                           property: property,
                           footer: PropertyCardDualFooter(
-                            onSendRequest: () {},
+                            isWithChatButton: false,
+                            
+                            onSendRequest: () {
+                              final id = property?.propertyId;
+                              if (id == null || id.isEmpty) return;
+                              RouterHandler.navigate(
+                                context,
+                                AppRouterKeys.propertyDetails,
+                                extra: id,
+                              );
+                            },
                             onChat: () {
                               RouterHandler.navigate(
                                 context,

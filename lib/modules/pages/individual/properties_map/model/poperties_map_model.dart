@@ -11,14 +11,28 @@ class PropertiesMapResponseModel {
   });
 
   factory PropertiesMapResponseModel.fromJson(Map<String, dynamic> json) {
+    final data = json['data'] is Map
+        ? Map<String, dynamic>.from(json['data'] as Map)
+        : json;
+    final raw = data['properties'] ?? data['items'] ?? data['data'];
+    final properties = raw is List
+        ? raw
+              .whereType<Map>()
+              .map(
+                (e) => PropertyDetailsModel.fromJson(
+                  Map<String, dynamic>.from(e),
+                ),
+              )
+              .toList()
+        : <PropertyDetailsModel>[];
+
+    final paginationJson = data['pagination'] ?? json['pagination'];
     return PropertiesMapResponseModel(
-      properties: json['properties'] != null
-          ? (json['properties'] as List)
-                .map((e) => PropertyDetailsModel.fromJson(e))
-                .toList()
-          : [],
-      pagination: json['pagination'] != null
-          ? PropertiesMapPagination.fromJson(json['pagination'])
+      properties: properties,
+      pagination: paginationJson is Map
+          ? PropertiesMapPagination.fromJson(
+              Map<String, dynamic>.from(paginationJson),
+            )
           : null,
     );
   }
@@ -43,12 +57,17 @@ class PropertiesMapPagination {
 
   factory PropertiesMapPagination.fromJson(Map<String, dynamic> json) {
     return PropertiesMapPagination(
-      page: json['page'],
-      pageSize: json['page_size'],
-      total: json['total'],
-      totalPages: json['totalPages'],
-      hasNext: json['hasNext'],
-      hasPrevious: json['hasPrevious'],
+      page: _asInt(json['page']),
+      pageSize: _asInt(json['limit'] ?? json['pageSize']),
+      total: _asInt(json['total']),
+      totalPages: _asInt(json['totalPages'] ?? json['pages']),
+      hasNext: json['hasNext'] == true,
+      hasPrevious: json['hasPrevious'] == true,
     );
+  }
+
+  static int? _asInt(dynamic value) {
+    if (value is num) return value.toInt();
+    return int.tryParse(value?.toString() ?? '');
   }
 }

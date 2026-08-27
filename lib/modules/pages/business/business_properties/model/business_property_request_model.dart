@@ -174,11 +174,18 @@ class BusinessRequestPublishedPropertyModel {
     this.propertyId = '',
     this.price = 0,
     this.listingType = '',
+    this.paymentType = '',
+    this.wantsInsurance = false,
     this.requestDate = '',
     this.status = '',
     this.applicant = const PublishedPropertyApplicant(),
     this.adLicenseNumber = '',
     this.rejectReason = '',
+    this.contractId = '',
+    this.contractNo = '',
+    this.contractStatus = '',
+    this.commissionAmount = 0,
+    this.commissionPayer = '',
   });
 
   final String id;
@@ -188,11 +195,21 @@ class BusinessRequestPublishedPropertyModel {
   final String imageUrl;
   final double price;
   final String listingType;
+  final String paymentType;
+  final bool wantsInsurance;
   final String requestDate;
   final String status;
   final PublishedPropertyApplicant applicant;
   final String adLicenseNumber;
   final String rejectReason;
+  final String contractId;
+  final String contractNo;
+  final String contractStatus;
+  final double commissionAmount;
+  final String commissionPayer;
+
+  bool get isRent => listingType.toUpperCase().contains('RENT');
+  bool get hasContract => contractId.isNotEmpty;
 
   bool get isPending {
     final value = status.toUpperCase();
@@ -208,6 +225,7 @@ class BusinessRequestPublishedPropertyModel {
   BusinessRequestPublishedPropertyModel copyWith({
     String? status,
     String? rejectReason,
+    String? contractStatus,
   }) {
     return BusinessRequestPublishedPropertyModel(
       id: id,
@@ -217,11 +235,18 @@ class BusinessRequestPublishedPropertyModel {
       imageUrl: imageUrl,
       price: price,
       listingType: listingType,
+      paymentType: paymentType,
+      wantsInsurance: wantsInsurance,
       requestDate: requestDate,
       status: status ?? this.status,
       applicant: applicant,
       adLicenseNumber: adLicenseNumber,
       rejectReason: rejectReason ?? this.rejectReason,
+      contractId: contractId,
+      contractNo: contractNo,
+      contractStatus: contractStatus ?? this.contractStatus,
+      commissionAmount: commissionAmount,
+      commissionPayer: commissionPayer,
     );
   }
 
@@ -275,7 +300,10 @@ class BusinessRequestPublishedPropertyModel {
       district,
       city,
     ].where((e) => e.trim().isNotEmpty).join(' - ');
-    final priceRaw = json['price'] ?? property['price'] ?? 0;
+    final contract = _asMap(json['contract']);
+    final priceRaw =
+        json['price'] ?? contract['price'] ?? property['price'] ?? 0;
+    final commissionRaw = contract['commissionAmount'] ?? 0;
 
     return BusinessRequestPublishedPropertyModel(
       id:
@@ -321,6 +349,8 @@ class BusinessRequestPublishedPropertyModel {
             property['listingType'],
           ]) ??
           '',
+      paymentType: _firstNonEmpty([json['paymentType'], json['payment_type']]) ?? '',
+      wantsInsurance: json['wantsInsurance'] == true,
       requestDate:
           _firstNonEmpty([
             json['createdAt'],
@@ -328,7 +358,12 @@ class BusinessRequestPublishedPropertyModel {
             json['requestDate'],
           ]) ??
           '',
-      status: _firstNonEmpty([json['status'], json['requestStatus']]) ?? '',
+      status: _firstNonEmpty([
+            json['status'],
+            json['requestStatus'],
+            contract['status'],
+          ]) ??
+          '',
       adLicenseNumber:
           _firstNonEmpty([
             json['adLicenseNumber'],
@@ -344,6 +379,19 @@ class BusinessRequestPublishedPropertyModel {
             json['note'],
           ]) ??
           '',
+      contractId:
+          _firstNonEmpty([
+            contract['id'],
+            contract['contractId'],
+            json['contractId'],
+          ]) ??
+          '',
+      contractNo: _firstNonEmpty([contract['contractNo'], contract['title']]) ?? '',
+      contractStatus: _firstNonEmpty([contract['status']]) ?? '',
+      commissionAmount: commissionRaw is num
+          ? commissionRaw.toDouble()
+          : double.tryParse(commissionRaw.toString()) ?? 0,
+      commissionPayer: _firstNonEmpty([contract['commissionPayer']]) ?? '',
       applicant: applicantRaw is Map
           ? PublishedPropertyApplicant.fromJson(
               Map<String, dynamic>.from(applicantRaw),

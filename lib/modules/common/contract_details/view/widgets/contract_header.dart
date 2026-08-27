@@ -20,7 +20,10 @@ class ContractSummaryCard extends StatelessWidget {
         children: [
           Align(
             alignment: AlignmentDirectional.topEnd,
-            child: ContractStatusBadge(status: contract?.status ?? 'active'),
+            child: ContractStatusBadge(
+              status: contract?.status ?? 'PENDING',
+              label: contract?.statusLabel,
+            ),
           ),
           SizedBox(height: 10.height),
           Row(
@@ -37,7 +40,9 @@ class ContractSummaryCard extends StatelessWidget {
                 ),
               ),
               Text(
-                contract?.id ?? '',
+                contract?.contractNo.isNotEmpty == true
+                    ? contract!.contractNo
+                    : (contract?.id ?? ''),
                 style: TextStyle(
                   fontSize: context.responsiveFontScale(17),
                   fontWeight: FontWeight.w500,
@@ -50,24 +55,28 @@ class ContractSummaryCard extends StatelessWidget {
           SizedBox(height: 10.height),
           Row(
             children: [
-              Expanded(
-                child: Text(
-                  AppStrings.descriptionLabel,
-                  style: TextStyle(
-                    fontSize: context.responsiveFontScale(16),
-                    fontWeight: FontWeight.w700,
-                    fontFamily: AppConstant.appHeaderFont,
-                    color: colors.primaryBrand,
-                  ),
-                ),
-              ),
               Text(
-                contract?.propertyName ?? '',
+                AppStrings.descriptionLabel,
                 style: TextStyle(
-                  fontSize: context.responsiveFontScale(15),
-                  fontWeight: FontWeight.w400,
-                  fontFamily: AppConstant.appFont,
-                  color: colors.textFieldTitle,
+                  fontSize: context.responsiveFontScale(16),
+                  fontWeight: FontWeight.w700,
+                  fontFamily: AppConstant.appHeaderFont,
+                  color: colors.primaryBrand,
+                ),
+              ),SizedBox(width: 10.width),
+              Expanded(
+                child: Align(
+                  alignment: AlignmentDirectional.centerEnd,
+                  child: Text(
+                    contract?.propertyName ?? '',
+                    style: TextStyle(
+                      fontSize: context.responsiveFontScale(15),
+                      
+                      fontWeight: FontWeight.w400,
+                      fontFamily: AppConstant.appFont,
+                      color: colors.textFieldTitle,
+                    ),
+                  ),
                 ),
               ),
             ],

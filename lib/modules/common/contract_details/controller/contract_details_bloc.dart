@@ -1,13 +1,12 @@
+import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/connection/concept/end_points.dart';
-import '../../../../core/connection/interfaces/api_consumer.dart';
+import '../../../../core/repository/apis/contracts_apis.dart';
 import '../../../../core/utils/constants/app_enums.dart';
 import '../../../../core/utils/constants/app_strings.dart';
 import '../../../../core/utils/functions/print_state.dart';
-import '../../../../core/utils/functions/service_locator.dart';
 import '../model/contract_details_model.dart';
 
 part 'contract_details_event.dart';
@@ -17,6 +16,9 @@ class ContractDetailsBloc
     extends Bloc<ContractDetailsEvent, ContractDetailsState> {
   ContractDetailsBloc() : super(const ContractDetailsState()) {
     on<ContractDetailsLoad>(_onLoad);
+    on<ContractDetailsApprove>(_onApprove);
+    on<ContractDetailsReject>(_onReject);
+    on<ContractDetailsRenew>(_onRenew);
   }
 
   static ContractDetailsBloc get(BuildContext context) =>
@@ -27,14 +29,20 @@ class ContractDetailsBloc
     Emitter<ContractDetailsState> emit,
   ) async {
     try {
-      emit(state.copyWith(loadStatus: RequestStatus.loading));
-
-      final response = await sl.get<ApiConsumer>().get(
-        EndPoints.contractDetails(event.contractId),
+        emit(
+        state.copyWith(
+          loadStatus: RequestStatus.loading,
+          contractId: event.contractId,
+          actionStatus: RequestStatus.init,
+          actionMessage: '',
+          shouldPop: false,
+        ),
       );
-
-      await response.fold(
-        (failedResponse) async {
+      final result = await ContractsApis.fetchDetails(
+        contractId: event.contractId,
+      );
+      result.fold(
+        (failedResponse) {
           emit(
             state.copyWith(
               loadStatus: RequestStatus.failed,
@@ -42,10 +50,7 @@ class ContractDetailsBloc
             ),
           );
         },
-        (successResponse) async {
-          final data = ContractDetailsModel.fromJson(
-            successResponse.response,
-          );
+        (data) {
           emit(
             state.copyWith(
               loadStatus: RequestStatus.success,
@@ -64,5 +69,76 @@ class ContractDetailsBloc
         ),
       );
     }
+  }
+
+  Future<void> _onApprove(
+    ContractDetailsApprove event,
+    Emitter<ContractDetailsState> emit,
+  ) async {
+    await _runAction(
+      emit,
+      () => ContractsApis.approve(
+        contractId: _contractId,
+        durationInYears: event.durationInYears,
+        finalPrice: event.finalPrice,
+      ),
+      AppStrings.contractApprovedSuccess,
+      popOnSuccess: true,
+    );
+  }
+
+  Future<void> _onReject(
+    ContractDetailsReject event,
+    Emitter<ContractDetailsState> emit,
+  ) async {
+    await _runAction(
+      emit,
+      () => ContractsApis.reject(contractId: _contractId),
+      AppStrings.contractRejectedSuccess,
+      popOnSuccess: true,
+    );
+  }
+
+  Future<void> _onRenew(
+    ContractDetailsRenew event,
+    Emitter<ContractDetailsState> emit,
+  ) async {
+    await _runAction(
+      emit,
+      () => ContractsApis.renew(contractId: _contractId),
+      AppStrings.contractRenewedSuccess,
+    );
+  }
+
+  String get _contractId =>
+      state.contractId.isNotEmpty
+          ? state.contractId
+          : (state.contract?.id ?? '');
+
+  Future<void> _runAction(
+    Emitter<ContractDetailsState> emit,
+    Future<Either<String, dynamic>> Function() action,
+    String successMessage, {
+    bool popOnSuccess = false,
+  }) async {
+    if (_contractId.isEmpty || state.actionStatus == RequestStatus.loading) {
+      return;
+    }
+    emit(
+      state.copyWith(actionStatus: RequestStatus.loading, actionMessage: ''),
+    );
+    final result = await action();
+    result.fold(
+      (err) => emit(
+        state.copyWith(actionStatus: RequestStatus.failed, actionMessage: err),
+      ),
+      (_) => emit(
+        state.copyWith(
+          actionStatus: RequestStatus.success,
+          actionMessage: successMessage,
+          shouldPop: popOnSuccess,
+        ),
+      ),
+    );
   }
 }

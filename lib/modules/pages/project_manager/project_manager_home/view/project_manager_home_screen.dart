@@ -101,7 +101,25 @@ class ProjectManagerHomeScreen extends StatelessWidget {
                           childIsLoader: true,
                           emptyMsg: AppStrings.noProjectsExist,
                           isEmptyList: state.projects.isEmpty,
-                          child: ListView.separated(
+                          child: GridView.builder(
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: ResponsiveUtils.types(
+                                context,
+                                mobilePortrait: 1,
+                                mobileLandscape: 2,
+                                tabletPortrait: 2,
+                                tabletLandscape: 3,
+                              ).toInt(),
+                              mainAxisExtent: ResponsiveUtils.types(
+                                context,
+                                mobilePortrait: 215.height,
+                                mobileLandscape: 230.height,
+                                tabletPortrait: 160.height,
+                                tabletLandscape: 220.height,
+                              ),
+                              crossAxisSpacing: 12.width,
+                              mainAxisSpacing: 12.height,
+                            ),
                             padding: EdgeInsets.symmetric(
                               horizontal: 16.width,
                               vertical: 12.height,
@@ -110,8 +128,7 @@ class ProjectManagerHomeScreen extends StatelessWidget {
                                 state.loadingStatus == RequestStatus.loading
                                 ? 10
                                 : state.projects.length,
-                            separatorBuilder: (_, _) =>
-                                SizedBox(height: 12.height),
+                          
                             itemBuilder: (context, i) {
                               return ProjectCardItem(
                                 project:

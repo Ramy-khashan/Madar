@@ -4,6 +4,7 @@ import '../../../../../../core/components/app_button.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../core/utils/functions/router_handler.dart';
 
 class WaitingOwnerReplyDialog extends StatelessWidget {
   const WaitingOwnerReplyDialog({super.key});
@@ -23,7 +24,7 @@ class WaitingOwnerReplyDialog extends StatelessWidget {
             Align(
               alignment: AlignmentDirectional.topStart,
               child: GestureDetector(
-                onTap: () => Navigator.pop(context),
+                onTap: () => RouterHandler.pop(context),
                 child: Container(
                   width: 28.width,
                   height: 28.width,
@@ -69,7 +70,7 @@ class WaitingOwnerReplyDialog extends StatelessWidget {
               text: AppStrings.goHome,
               textSize: 14,
               height: 48.height,
-              onTap: () => Navigator.pop(context),
+              onTap: () => RouterHandler.pop(context),
             ),
           ],
         ),

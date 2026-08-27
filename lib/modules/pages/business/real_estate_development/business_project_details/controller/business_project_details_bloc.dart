@@ -7,8 +7,7 @@ import '../../../../../../core/connection/interfaces/api_consumer.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/print_state.dart';
 import '../../../../../../core/utils/functions/service_locator.dart';
-import '../../projects_list/model/realstate_projects_model.dart';
-import '../../../../../../../../../core/utils/constants/app_enums.dart';
+ import '../../../../../../../../../core/utils/constants/app_enums.dart';
 import '../model/real_state_project_model.dart';
 
 part 'business_project_details_event.dart';

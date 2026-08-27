@@ -7,11 +7,11 @@ import '../../../../../core/connection/interfaces/api_consumer.dart';
 import '../../../../../core/model/property_filter_model.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../core/utils/functions/guest_mode.dart';
 import '../../../../../core/utils/functions/print_state.dart';
 import '../../../../../core/utils/functions/service_locator.dart';
 import '../../../business/business_home/model/business_portfolio_property_model.dart';
-import '../../individual_home/model/portfolio_property_model.dart';
-
+ 
 part 'my_properties_event.dart';
 part 'my_properties_state.dart';
 
@@ -26,6 +26,16 @@ class MyPropertiesBloc extends Bloc<MyPropertiesEvent, MyPropertiesState> {
     MyPropertiesLoad event,
     Emitter<MyPropertiesState> emit,
   ) async {
+    if (GuestMode.isGuest) {
+      emit(
+        state.copyWith(
+          propertiesStatus: RequestStatus.success,
+          properties: [],
+          isLoadMore: false,
+        ),
+      );
+      return;
+    }
     try {
       emit(
         state.copyWith(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/components/loading_process.dart';
+import '../../../../../core/model/property_filter_model.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 import '../../../../../config/router/app_router_keys.dart';
@@ -12,13 +13,28 @@ import '../../../../../core/components/property_card_footer_widget.dart';
 import '../../../../../core/components/search_item.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/components/property_card_widget.dart';
-import '../../../../common/chats/conversation_detail/model/conversation_info.dart';
+import '../../../../common/chats/chat_navigator.dart';
 import '../../../../common/filter/view/filter_sheet_view.dart';
 import '../controller/properties_bloc.dart';
 import 'widgets/properties_loading_item.dart';
 
 class PropertiesListingScreen extends StatelessWidget {
   const PropertiesListingScreen({super.key});
+
+  static void open(
+    BuildContext context, {
+    PropertyFilterModel? filter,
+    String? search,
+  }) {
+    RouterHandler.navigate(
+      context,
+      AppRouterKeys.propertiesListing,
+      extra: {
+        'filter': ?filter,
+        if (search != null && search.trim().isNotEmpty) 'search': search.trim(),
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,31 +43,26 @@ class PropertiesListingScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            BlocBuilder<PropertiesBloc, PropertiesState>(
-              builder: (context, state) {
-                final filter = state.propertiesStatus == RequestStatus.success
-                    ? state.filter
-                    : null;
-                return SearchItem(
-                  onFilterTap: () async {
-                    showFilterSheet(
-                      context,
-                      initialFilter: filter,
-                      onApply: (result) {
-                        context.read<PropertiesBloc>().add(
-                          PropertiesFilterApplied(result),
-                        );
-                      },
+            SearchItem(
+              initialQuery: context.read<PropertiesBloc>().state.search,
+              onSearchChanged: (value) {
+                context.read<PropertiesBloc>().add(
+                  PropertiesSearchChanged(value),
+                );
+              },
+              onSubmitted: (value) {
+                context.read<PropertiesBloc>().add(
+                  PropertiesSearchChanged(value),
+                );
+              },
+              onFilterTap: () {
+                showFilterSheet(
+                  context,
+                  initialFilter: context.read<PropertiesBloc>().state.filter,
+                  onApply: (result) {
+                    context.read<PropertiesBloc>().add(
+                      PropertiesFilterApplied(result),
                     );
-                    // final result = await showPropertyFilterSheet(
-                    //   context,
-                    //   initialFilter: filter,
-                    // );
-                    // if (result != null && context.mounted) {
-                    //   context.read<PropertiesBloc>().add(
-                    //     PropertiesFilterApplied(result),
-                    //   );
-                    // }
                   },
                 );
               },
@@ -75,22 +86,44 @@ class PropertiesListingScreen extends StatelessWidget {
                         state.properties.isEmpty,
                     loader: const PropertiesLoadingItem(),
                     child: PaginationView(
+                      countItemInRow: ResponsiveUtils.types(
+                        context,
+                        mobilePortrait: 1,
+                        mobileLandscape: 2,
+                        tabletPortrait: 2,
+                        tabletLandscape: 3,
+                      ).toInt(),
+
+                      mainAxisExtent: ResponsiveUtils.types(
+                        context,
+                        mobilePortrait: 365.height,
+                        mobileLandscape: 370.height,
+                        tabletPortrait: 330.height,
+                        tabletLandscape: 370.height,
+                      ),
                       isListView: context.isMobilePortrait,
                       itemBuilder: (context, index) {
                         return PropertyCardWidget(
                           property: state.properties[index],
                           isViewAll: true,
                           footer: PropertyCardDualFooter(
-                            onSendRequest: () {},
-                            onChat: () {
+                            onSendRequest: () {
+                              final id = state.properties[index].propertyId;
+                              if (id == null || id.isEmpty) return;
                               RouterHandler.navigate(
                                 context,
-                                AppRouterKeys.conversationDetail,
-                                extra: ConversationInfo(
-                                  conversationId: '',
-                                  participantName: '',
-                                  participantAvatarUrl: '',
-                                ),
+                                AppRouterKeys.propertyDetails,
+                                extra: id,
+                              );
+                            },
+                            onChat: () {
+                              ChatNavigator.openPrivateChat(
+                                context,
+                                receiverId:
+                                    state.properties[index].publisherId ?? '',
+                                participantName:
+                                    state.properties[index].publisherName ?? '',
+                                participantAvatarUrl: '',
                               );
                             },
                           ),

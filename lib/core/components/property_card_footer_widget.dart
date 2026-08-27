@@ -11,10 +11,12 @@ class PropertyCardDualFooter extends StatelessWidget {
     super.key,
     this.onSendRequest,
     this.onChat,
+    this.isWithChatButton = true,
   });
 
   final VoidCallback? onSendRequest;
   final VoidCallback? onChat;
+  final bool isWithChatButton;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,6 @@ class PropertyCardDualFooter extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            
             child: AppButton(
               key: const Key('property_card_send_request_btn'),
               onTap: onSendRequest,
@@ -32,19 +33,20 @@ class PropertyCardDualFooter extends StatelessWidget {
               textSize: 14,
             ),
           ),
-          SizedBox(width: 8.width),
-          Expanded(
-           
-            child: AppButton(
-              key: const Key('property_card_chat_btn'),
-              onTap: onChat,
-              isOutline: true,
-              childText: AppStrings.conversation,
-              childImage: AppImages.chatIcon,
-              height: 44,
-              textSize: 14,
+          if (isWithChatButton) ...[
+            SizedBox(width: 8.width),
+            Expanded(
+              child: AppButton(
+                key: const Key('property_card_chat_btn'),
+                onTap: onChat,
+                isOutline: true,
+                childText: AppStrings.conversation,
+                childImage: AppImages.chatIcon,
+                height: 44,
+                textSize: 14,
+              ),
             ),
-          ),
+          ],
         ],
       ),
     );
@@ -54,10 +56,7 @@ class PropertyCardDualFooter extends StatelessWidget {
 /// Single full-width chat button footer for a property card.
 /// Used in broker and owner property listing screens.
 class PropertyCardChatFooter extends StatelessWidget {
-  const PropertyCardChatFooter({
-    super.key,
-    this.onChat,
-  });
+  const PropertyCardChatFooter({super.key, this.onChat});
 
   final VoidCallback? onChat;
 

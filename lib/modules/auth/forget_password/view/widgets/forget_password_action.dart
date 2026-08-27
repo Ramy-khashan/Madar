@@ -14,14 +14,18 @@ class ForgetPasswordAction extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AppButton(
-              text: AppStrings.confirm,
-              onTap: () {
-                RouterHandler.navigate(context, AppRouterKeys.otpVerification, extra: '01120103010');
+            BlocBuilder<ForgetPasswordBloc, ForgetPasswordState>(
+              builder: (context, state) {
+                return AppButton(
+                  text: AppStrings.confirm,
+                  isLoading: state.sendStatus == RequestStatus.loading,
+                  onTap: () => ForgetPasswordBloc.get(
+                    context,
+                  ).add(const ForgetPasswordSendOtp()),
+                  width: 560.width,
+                );
               },
-              width: 560.width,
             ),
-           
           ],
         ),
       ),

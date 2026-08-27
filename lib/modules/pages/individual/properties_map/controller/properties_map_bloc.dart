@@ -1,6 +1,6 @@
+import 'dart:async';
 import 'dart:math' as math;
-import 'dart:typed_data';
-import 'dart:ui' as ui;
+ import 'dart:ui' as ui;
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +12,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../../../core/connection/concept/end_points.dart';
 import '../../../../../core/connection/interfaces/api_consumer.dart';
 import '../../../../../core/model/google_map_model.dart';
+import '../../../../../core/model/property_filter_model.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_images.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
@@ -30,11 +31,16 @@ class PropertiesMapBloc extends Bloc<PropertiesMapEvent, PropertiesMapState> {
     on<ToggleNearestToMeEvent>(_onToggleNearestToMe);
     on<SelectMarkerEvent>(_onSelectMarker);
     on<CloseMarkerEvent>(_onCloseMarker);
+    on<MapFilterApplied>(_onFilterApplied);
+    on<MapSearchChanged>(_onSearchChanged);
+    on<MapCameraMoved>(_onCameraMoved);
 
     add(LoadPropertiesMapEvent(position: initialPosition));
   }
 
   final PositionModel? initialPosition;
+  Timer? _searchDebounce;
+  PositionModel? _cameraPosition;
 
   /// Fallback position used when no initial/user position is available yet.
   static final PositionModel _defaultPosition = PositionModel(
@@ -43,7 +49,13 @@ class PropertiesMapBloc extends Bloc<PropertiesMapEvent, PropertiesMapState> {
   );
 
   PositionModel get targetPosition =>
-      state.mapCenter ?? initialPosition ?? _firstPropertyPosition ?? _defaultPosition;
+      state.mapCenter ??
+      initialPosition ??
+      _firstPropertyPosition ??
+      _defaultPosition;
+
+  PositionModel get queryPosition =>
+      _cameraPosition ?? targetPosition;
 
   PositionModel? get _firstPropertyPosition {
     for (final property in state.properties) {
@@ -238,7 +250,7 @@ class PropertiesMapBloc extends Bloc<PropertiesMapEvent, PropertiesMapState> {
         ),
       );
 
-      final position = event.position ?? initialPosition;
+      final position = event.position ?? queryPosition;
       final List<PropertyDetailsModel> allProperties = [];
 
       int page = 1;
@@ -246,13 +258,10 @@ class PropertiesMapBloc extends Bloc<PropertiesMapEvent, PropertiesMapState> {
       String? errorMsg;
 
       while (hasNext && page <= 20) {
+        final query = _mapQuery(position, page);
         final response = await sl.get<ApiConsumer>().get(
           EndPoints.propertiesMap,
-          queryParameters: {
-            if (position != null) 'latitude': position.position.latitude,
-            if (position != null) 'longitude': position.position.longitude,
-            'page': page,
-          },
+          queryParameters: query,
         );
 
         hasNext = false;
@@ -265,8 +274,12 @@ class PropertiesMapBloc extends Bloc<PropertiesMapEvent, PropertiesMapState> {
               successResponse.response,
             );
             allProperties.addAll(result.properties);
-            hasNext = result.pagination?.hasNext ?? false;
-            page = (result.pagination?.page ?? page) + 1;
+            final pagination = result.pagination;
+            final currentPage = pagination?.page ?? page;
+            hasNext =
+                pagination?.hasNext == true ||
+                ((pagination?.totalPages ?? currentPage) > currentPage);
+            page = currentPage + 1;
           },
         );
 
@@ -361,6 +374,60 @@ class PropertiesMapBloc extends Bloc<PropertiesMapEvent, PropertiesMapState> {
     Emitter<PropertiesMapState> emit,
   ) {
     emit(state.copyWith(selectedIndex: -1));
+  }
+
+  void _onFilterApplied(
+    MapFilterApplied event,
+    Emitter<PropertiesMapState> emit,
+  ) {
+    emit(state.copyWith(filter: event.filter, selectedIndex: -1));
+    add(LoadPropertiesMapEvent(position: queryPosition));
+  }
+
+  void _onSearchChanged(
+    MapSearchChanged event,
+    Emitter<PropertiesMapState> emit,
+  ) {
+    emit(state.copyWith(search: event.search));
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(const Duration(milliseconds: 400), () {
+      add(LoadPropertiesMapEvent(position: queryPosition));
+    });
+  }
+
+  void _onCameraMoved(
+    MapCameraMoved event,
+    Emitter<PropertiesMapState> emit,
+  ) {
+    _cameraPosition = PositionModel(
+      latitude: event.latitude,
+      longitude: event.longitude,
+    );
+  }
+
+  Map<String, dynamic> _mapQuery(PositionModel position, int page) {
+    final lat = position.position.latitude;
+    final lng = position.position.longitude;
+    if (state.filter != null) {
+      return state.filter!.toMapQuery(
+        latitude: lat,
+        longitude: lng,
+        page: page,
+        title: state.search,
+      );
+    }
+    return {
+      'latitude': lat,
+      'longitude': lng,
+      'page': page,
+      if (state.search.trim().isNotEmpty) 'title': state.search.trim(),
+    };
+  }
+
+  @override
+  Future<void> close() {
+    _searchDebounce?.cancel();
+    return super.close();
   }
 }
 

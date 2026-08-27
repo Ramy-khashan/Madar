@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../core/components/image_item.dart';
+import '../../../../../core/repository/apis/auth_apis.dart';
 import '../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../core/utils/constants/app_images.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
@@ -9,19 +10,30 @@ import '../../../../../core/utils/constants/storage_keys.dart';
 import '../../../../../core/utils/functions/preference_utils.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 
-class ChangeAccountItem extends StatelessWidget {
+class ChangeAccountItem extends StatefulWidget {
   const ChangeAccountItem({super.key});
+
+  @override
+  State<ChangeAccountItem> createState() => _ChangeAccountItemState();
+}
+
+class _ChangeAccountItemState extends State<ChangeAccountItem> {
+  bool _isLoading = false;
+
+  Future<void> _changeAccount() async {
+    if (_isLoading) return;
+    setState(() => _isLoading = true);
+    await AuthApis.logoutAndGoToChooseAccount(context);
+    if (mounted) setState(() => _isLoading = false);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.width),
       child: InkWell(
-        onTap: () {
-          // Handle tap
-        },
+        onTap: _isLoading ? null : _changeAccount,
         borderRadius: BorderRadius.circular(16),
-
         child: Container(
           padding: EdgeInsets.symmetric(
             horizontal: 12.width,
@@ -79,11 +91,20 @@ class ChangeAccountItem extends StatelessWidget {
                   ],
                 ),
               ),
-              Icon(
-                Icons.arrow_forward_ios,
-                color: AppThemeColors.of(context).onPrimary,
-                size: 16.width,
-              ),
+              _isLoading
+                  ? SizedBox(
+                      width: 16.width,
+                      height: 16.width,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppThemeColors.of(context).onPrimary,
+                      ),
+                    )
+                  : Icon(
+                      Icons.arrow_forward_ios,
+                      color: AppThemeColors.of(context).onPrimary,
+                      size: 16.width,
+                    ),
             ],
           ),
         ),

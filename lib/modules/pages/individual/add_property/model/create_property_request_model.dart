@@ -33,6 +33,7 @@ class CreatePropertyRequestModel extends Equatable {
     this.rentPeriod,
     this.projectName,
     this.propertyParentId,
+    this.adLicenseNumber,
     this.propertyNo,
     this.propertyAge,
     this.facadeDirection,
@@ -72,6 +73,7 @@ class CreatePropertyRequestModel extends Equatable {
 
   /// Set when the listing belongs to an existing parent property/portfolio.
   final String? propertyParentId;
+  final String? adLicenseNumber;
   final String? propertyNo;
 
   /// One of [PropertyApiEnums.ageNew] and friends.
@@ -116,6 +118,9 @@ class CreatePropertyRequestModel extends Equatable {
     }
     if (propertyParentId != null && propertyParentId!.isNotEmpty) {
       fields['propertyParentId'] = propertyParentId!;
+    }
+    if (adLicenseNumber != null && adLicenseNumber!.isNotEmpty) {
+      fields['adLicenseNumber'] = adLicenseNumber!;
     }
     if (propertyNo != null && propertyNo!.isNotEmpty) {
       fields['propertyNo'] = propertyNo!;
@@ -199,6 +204,7 @@ class CreatePropertyRequestModel extends Equatable {
     String? rentPeriod,
     String? projectName,
     String? propertyParentId,
+    String? adLicenseNumber,
     String? propertyNo,
     String? propertyAge,
     String? facadeDirection,
@@ -224,6 +230,7 @@ class CreatePropertyRequestModel extends Equatable {
       rentPeriod: rentPeriod ?? this.rentPeriod,
       projectName: projectName ?? this.projectName,
       propertyParentId: propertyParentId ?? this.propertyParentId,
+      adLicenseNumber: adLicenseNumber ?? this.adLicenseNumber,
       propertyNo: propertyNo ?? this.propertyNo,
       propertyAge: propertyAge ?? this.propertyAge,
       facadeDirection: facadeDirection ?? this.facadeDirection,
@@ -252,6 +259,7 @@ class CreatePropertyRequestModel extends Equatable {
     rentPeriod,
     projectName,
     propertyParentId,
+    adLicenseNumber,
     propertyNo,
     propertyAge,
     facadeDirection,
@@ -278,6 +286,7 @@ class CreatePropertyRequestModel extends Equatable {
       if (rentPeriod != null) 'rentPeriod': rentPeriod,
       if (projectName != null) 'projectName': projectName,
       if (propertyParentId != null) 'propertyParentId': propertyParentId,
+      if (adLicenseNumber != null) 'adLicenseNumber': adLicenseNumber,
       if (propertyNo != null) 'propertyNo': propertyNo,
       if (propertyAge != null) 'propertyAge': propertyAge,
       if (facadeDirection != null) 'facadeDirection': facadeDirection,

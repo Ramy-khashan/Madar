@@ -10,7 +10,9 @@ import '../../modules/common/contract_details/controller/contract_details_bloc.d
 import '../../modules/common/contract_details/view/contract_details_screen.dart';
 import '../../modules/common/my_wishlist/controller/my_wishlist_bloc.dart';
 import '../../modules/common/my_wishlist/view/my_wishlist_screen.dart';
-import '../../modules/common/settings/view/widgets/delete_account_screen.dart';
+import '../../modules/common/settings/view/delete_account_screen.dart';
+import '../../modules/common/settings/view/support_and_help_screen.dart';
+import '../../modules/common/settings/view/terms_and_conditions_screen.dart';
 import '../../modules/pages/business/business_properties/controller/business_properties_bloc.dart';
 import '../../modules/pages/business/business_properties/view/business_properties_screen.dart';
 import '../../modules/pages/business/construction_reports/controller/construction_reports_bloc.dart';
@@ -49,6 +51,7 @@ import '../../modules/auth/business_sign_up_scenario/subscription_plans/view/sub
 import '../../modules/auth/business_sign_up_scenario/summary_subscription/view/summary_subscription_screen.dart';
 import '../../modules/auth/forget_password/controller/forget_password_bloc.dart';
 import '../../modules/auth/forget_password/view/forget_password_screen.dart';
+import '../../modules/auth/forget_password/view/reset_password_screen.dart';
 import '../../modules/auth/otp_verification/controller/otp_verification_bloc.dart';
 import '../../modules/auth/otp_verification/view/otp_verification_screen.dart';
 import '../../modules/auth/sign_in/controller/sign_in_bloc.dart';
@@ -94,14 +97,13 @@ import '../../modules/pages/individual/insurance_options/controller/insurance_op
 import '../../modules/pages/individual/insurance_options/view/insurance_options_screen.dart';
 import '../../modules/pages/individual/my_properties/controller/my_properties_bloc.dart';
 import '../../modules/pages/individual/my_properties/view/my_properties_screen.dart';
-import '../../modules/pages/individual/my_property_details/controller/my_property_details_bloc.dart';
-import '../../modules/pages/individual/my_property_details/view/my_property_details_screen.dart';
-import '../../modules/pages/individual/owner_properties/controller/owner_properties_bloc.dart';
-import '../../modules/pages/individual/owner_properties/view/owner_properties_screen.dart';
+import '../../modules/pages/individual/my_requests/controller/my_requests_bloc.dart';
+import '../../modules/pages/individual/my_requests/view/my_requests_screen.dart';
 import '../../modules/pages/individual/properties/controller/properties_bloc.dart';
 import '../../modules/pages/individual/properties/view/properties_listing_screen.dart';
 import '../../modules/pages/individual/properties_map/view/properties_map_screen.dart';
 import '../../core/model/google_map_model.dart';
+import '../../core/model/property_filter_model.dart';
 import '../../modules/pages/individual/property_details/controller/property_details_bloc.dart';
 import '../../modules/pages/individual/property_details/model/property_details_route_args.dart';
 import '../../modules/pages/individual/property_details/view/property_details_screen.dart';
@@ -221,13 +223,22 @@ final GoRouter appRouter = GoRouter(
         child: const AddPropertyScreen(),
       ),
     ),
-    getRouteInstance(
-      AppRouterKeys.propertiesListing,
-      (state) => BlocProvider(
-        create: (_) => PropertiesBloc()..add(const PropertiesLoad()),
+    getRouteInstance(AppRouterKeys.propertiesListing, (state) {
+      PropertyFilterModel? filter;
+      var search = '';
+      final extra = state.extra;
+      if (extra is Map) {
+        filter = extra['filter'] as PropertyFilterModel?;
+        search = (extra['search'] as String?)?.trim() ?? '';
+      }
+      return BlocProvider(
+        create: (_) => PropertiesBloc(
+          initialFilter: filter,
+          initialSearch: search,
+        )..add(const PropertiesLoad()),
         child: const PropertiesListingScreen(),
-      ),
-    ),
+      );
+    }),
     getRouteInstance(
       AppRouterKeys.myProperties,
       (state) => BlocProvider(
@@ -255,10 +266,9 @@ final GoRouter appRouter = GoRouter(
     getRouteInstance(
       AppRouterKeys.myPropertyDetails,
       (state) => BlocProvider(
-        create: (context) =>
-            MyPropertyDetailsBloc()
-              ..add(MyPropertyDetailsLoad(state.extra as String? ?? '1')),
-        child: const MyPropertyDetailsScreen(),
+        create: (_) => PropertyFileBloc()
+          ..add(PropertyFileLoad(propertyId: state.extra as String? ?? '')),
+        child: const PropertyFileScreen(),
       ),
     ),
     getRouteInstance(AppRouterKeys.propertyDetails, (state) {
@@ -452,23 +462,30 @@ final GoRouter appRouter = GoRouter(
         ),
       ),
     ),
-    getRouteInstance(
-      AppRouterKeys.ownerProperties,
-      (state) => BlocProvider(
-        create: (_) => OwnerPropertiesBloc()..add(const OwnerPropertiesLoad()),
-        child: const OwnerPropertiesScreen(),
-      ),
-    ),
+    // getRouteInstance(
+    //   AppRouterKeys.ownerProperties,
+    //   (state) => BlocProvider(
+    //     create: (_) => OwnerPropertiesBloc()..add(const OwnerPropertiesLoad()),
+    //     child: const OwnerPropertiesScreen(),
+    //   ),
+    // ),
     getRouteInstance(
       AppRouterKeys.propertyLocationMap,
       (state) =>
           PropertiesMapScreen(initialPosition: state.extra as PositionModel?),
     ),
+    getRouteInstance(AppRouterKeys.otpVerification, (state) {
+      final phone = state.extra as String? ?? '';
+      return BlocProvider(
+        create: (_) => OtpVerificationBloc(phone: phone),
+        child: OtpVerificationScreen(phoneNumber: phone),
+      );
+    }),
     getRouteInstance(
-      AppRouterKeys.otpVerification,
+      AppRouterKeys.resetPassword,
       (state) => BlocProvider(
-        create: (_) => OtpVerificationBloc(),
-        child: OtpVerificationScreen(phoneNumber: state.extra as String? ?? ''),
+        create: (_) => ForgetPasswordBloc(phone: state.extra as String? ?? ''),
+        child: const ResetPasswordScreen(),
       ),
     ),
     getRouteInstance(
@@ -587,12 +604,27 @@ final GoRouter appRouter = GoRouter(
       ),
     ),
     getRouteInstance(
+      AppRouterKeys.myRequests,
+      (state) => BlocProvider(
+        create: (_) => MyRequestsBloc()..add(const MyRequestsLoad()),
+        child: const MyRequestsScreen(),
+      ),
+    ),
+    getRouteInstance(
       AppRouterKeys.brokerProperties,
       (state) => BlocProvider(
         create: (_) => BrokerPropertiesBloc()
           ..add(BrokerPropertiesLoad(brokerId: state.extra as String? ?? '')),
         child: const BrokerPropertiesScreen(),
       ),
+    ),
+    getRouteInstance(
+      AppRouterKeys.termsAndConditionScreen,
+      (state) => const TermsAndConditionsScreen(),
+    ),
+    getRouteInstance(
+      AppRouterKeys.supportAndHelpScreen,
+      (state) => const SupportAndHelpScreen(),
     ),
   ],
 );

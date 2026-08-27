@@ -253,7 +253,7 @@ class PropertyCardWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (footer != null) footer!,
+                  ?footer,
                   SizedBox(height: 10.height),
                 ],
               ),

@@ -4,7 +4,7 @@ sealed class BusinessPropertiesEvent extends Equatable {
   const BusinessPropertiesEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 final class BusinessPropertiesLoad extends BusinessPropertiesEvent {
@@ -24,13 +24,26 @@ final class BusinessPropertiesAccept extends BusinessPropertiesEvent {
     this.id, {
     this.adLicenseNumber = '',
     this.isIncoming = false,
+    this.contractId = '',
+    this.durationInYears = '',
+    this.finalPrice,
   });
   final String id;
   final String adLicenseNumber;
   final bool isIncoming;
+  final String contractId;
+  final String durationInYears;
+  final num? finalPrice;
 
   @override
-  List<Object> get props => [id, adLicenseNumber, isIncoming];
+  List<Object?> get props => [
+    id,
+    adLicenseNumber,
+    isIncoming,
+    contractId,
+    durationInYears,
+    finalPrice,
+  ];
 }
 
 final class BusinessPropertiesReject extends BusinessPropertiesEvent {
@@ -38,11 +51,13 @@ final class BusinessPropertiesReject extends BusinessPropertiesEvent {
     this.id, {
     required this.rejectReason,
     this.isIncoming = false,
+    this.contractId = '',
   });
   final String id;
   final String rejectReason;
   final bool isIncoming;
+  final String contractId;
 
   @override
-  List<Object> get props => [id, rejectReason, isIncoming];
+  List<Object> get props => [id, rejectReason, isIncoming, contractId];
 }

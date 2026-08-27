@@ -28,6 +28,8 @@ class ConstructionReportsBloc
     emit(state.copyWith(status: RequestStatus.loading, errorMessage: ''));
     final result = await DashboardApis.performance(
       period: state.selectedPeriod,
+      scope: state.selectedScope,
+      propertyTypes: state.selectedPropertyTypeIds,
     );
     result.fold(
       (err) =>
@@ -58,6 +60,7 @@ class ConstructionReportsBloc
     Emitter<ConstructionReportsState> emit,
   ) {
     emit(state.copyWith(selectedScope: event.scope));
+    add(const ConstructionReportsLoad());
   }
 
   void _onPropertyTypeToggled(
@@ -71,5 +74,6 @@ class ConstructionReportsBloc
       updated.add(event.typeId);
     }
     emit(state.copyWith(selectedPropertyTypeIds: updated));
+    add(const ConstructionReportsLoad());
   }
 }

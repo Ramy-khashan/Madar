@@ -10,8 +10,10 @@ import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../../../../../core/utils/functions/translation.dart';
 import '../../../../../common/chats/chat_navigator.dart';
+import '../../../../../common/contract_details/view/widgets/approve_contract_dialog.dart';
 import '../../controller/business_properties_bloc.dart';
 import '../../model/business_property_request_model.dart';
 import 'request_action_dialogs.dart';
@@ -148,7 +150,11 @@ class BusinessPropertiesPublishedCardWidget extends StatelessWidget {
                       ),
                       SizedBox(height: 4.height),
                       Text(
-                        item.listingType.transIfExists,
+                        [
+                          item.listingType.transIfExists,
+                          if (item.paymentType.isNotEmpty)
+                            item.paymentType.transIfExists,
+                        ].join(' • '),
                         style: TextStyle(
                           fontSize: context.responsiveFontScale(13),
                           fontWeight: FontWeight.w600,
@@ -165,6 +171,18 @@ class BusinessPropertiesPublishedCardWidget extends StatelessWidget {
                           fontFamily: AppConstant.appFont,
                         ),
                       ),
+                      if (item.contractNo.isNotEmpty) ...[
+                        SizedBox(height: 4.height),
+                        Text(
+                          '${AppStrings.contractIdLabel}: ${item.contractNo}',
+                          style: TextStyle(
+                            fontSize: context.responsiveFontScale(12),
+                            fontWeight: FontWeight.w600,
+                            color: colors.textFieldTitle,
+                            fontFamily: AppConstant.appFont,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -336,28 +354,71 @@ class BusinessPropertiesPublishedCardWidget extends StatelessWidget {
 
   Future<void> _onAccept(BuildContext context) async {
     if (item.id.isEmpty) return;
-    final result = await showDialog<String>(
+    if (!item.hasContract) {
+      AppToast(AppStrings.somethingWentWrong, isError: true);
+      return;
+    }
+    final result = await showDialog<ApproveContractResult>(
       context: context,
-      builder: (_) => AcceptRequestDialog(
-        requireLicense: false,
-        message: AppStrings.acceptIncomingRequestMessage,
+      builder: (_) => ApproveContractDialog(
+        initialPrice: item.price,
+        showDuration: item.isRent,
       ),
     );
     if (result == null || !context.mounted) return;
     context.read<BusinessPropertiesBloc>().add(
-      BusinessPropertiesAccept(item.id, isIncoming: true),
+      BusinessPropertiesAccept(
+        item.id,
+        isIncoming: true,
+        contractId: item.contractId,
+        durationInYears: result.durationInYears,
+        finalPrice: result.finalPrice,
+      ),
     );
   }
 
   Future<void> _onReject(BuildContext context) async {
     if (item.id.isEmpty) return;
+    if (item.hasContract) {
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text(AppStrings.businessPropertiesReject),
+          content: Text(AppStrings.contractRejectConfirmation),
+          actions: [
+            TextButton(
+              onPressed: () =>RouterHandler.pop(context,[false]),
+              child: Text(AppStrings.cancel),
+            ),
+            TextButton(
+              onPressed: () => RouterHandler.pop(context, [true]),
+              child: Text(AppStrings.confirm),
+            ),
+          ],
+        ),
+      );
+      if (confirmed != true || !context.mounted) return;
+      context.read<BusinessPropertiesBloc>().add(
+        BusinessPropertiesReject(
+          item.id,
+          rejectReason: '',
+          isIncoming: true,
+          contractId: item.contractId,
+        ),
+      );
+      return;
+    }
     final reason = await showDialog<String>(
       context: context,
       builder: (_) => const RejectRequestDialog(),
     );
     if (reason == null || reason.isEmpty || !context.mounted) return;
     context.read<BusinessPropertiesBloc>().add(
-      BusinessPropertiesReject(item.id, rejectReason: reason, isIncoming: true),
+      BusinessPropertiesReject(
+        item.id,
+        rejectReason: reason,
+        isIncoming: true,
+      ),
     );
   }
 }

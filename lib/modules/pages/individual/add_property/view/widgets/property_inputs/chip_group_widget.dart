@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../../../config/theme/app_theme_colors.dart';
+import '../../../../../../../core/utils/functions/responsive.dart';
 
 class ChipGroupWidget extends StatelessWidget {
   const ChipGroupWidget({
@@ -80,14 +81,4 @@ class ChipGroupWidget extends StatelessWidget {
       ],
     );
   }
-}
-
-extension on num {
-  SizedBox get toSizedBox => SizedBox(height: toDouble(), width: toDouble());
-
-  double get fontSize => toDouble();
-
-  double get width => toDouble();
-
-  double get height => toDouble();
 }

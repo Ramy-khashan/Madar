@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
+ 
 import '../../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../../core/components/app_button.dart';
 import '../../../../../../../core/components/app_textfield.dart';
 import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
-import '../../controller/business_project_details_bloc.dart';
-
+import '../../../../../../../core/utils/functions/router_handler.dart';
+ 
 class AddTimelineDialog extends StatefulWidget {
   const AddTimelineDialog({super.key});
 
@@ -39,7 +38,7 @@ class _AddTimelineDialogState extends State<AddTimelineDialog> {
     //         description: _descController.text.trim(),
     //       ),
     //     );
-    Navigator.of(context).pop();
+    RouterHandler.pop(context);
   }
 
   @override

@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/model/property_filter_model.dart';
-import '../../../../core/repository/apis/wishList_apis.dart';
+import '../../../../core/repository/apis/wish_list_apis.dart';
 import '../../../../core/utils/constants/app_enums.dart';
-import '../../../pages/individual/individual_home/model/portfolio_property_model.dart';
+import '../../../../core/utils/functions/guest_mode.dart';
 import '../../../pages/individual/individual_home/model/properties_item_model.dart';
-import '../model/wishlist_model.dart';
 
 part 'my_wishlist_event.dart';
 part 'my_wishlist_state.dart';
@@ -25,6 +24,15 @@ class MyWishlistBloc extends Bloc<MyWishlistEvent, MyWishlistState> {
   ) async {
     if (event.isReset) {
       emit(state.copyWith(savedProperties: []));
+    }
+    if (GuestMode.isGuest) {
+      emit(
+        state.copyWith(
+          propertiesStatus: RequestStatus.success,
+          savedProperties: [],
+        ),
+      );
+      return;
     }
     emit(state.copyWith(propertiesStatus: RequestStatus.loading));
     final response = await WishlistApis.getWishlist();

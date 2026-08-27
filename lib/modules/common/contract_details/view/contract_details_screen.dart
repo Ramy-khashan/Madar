@@ -6,6 +6,8 @@ import '../../../../core/components/app_appbar.dart';
 import '../../../../core/components/loading_process.dart';
 import '../../../../core/utils/constants/app_enums.dart';
 import '../../../../core/utils/constants/app_strings.dart';
+import '../../../../core/utils/functions/common_fun.dart';
+import '../../../../core/utils/functions/router_handler.dart';
 import '../controller/contract_details_bloc.dart';
 import 'widgets/contract_actions_part.dart';
 import 'widgets/contract_details_content_widget.dart';
@@ -17,7 +19,24 @@ class ContractDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ContractDetailsBloc, ContractDetailsState>(
+    return BlocConsumer<ContractDetailsBloc, ContractDetailsState>(
+      listenWhen: (prev, curr) => prev.actionStatus != curr.actionStatus,
+      listener: (context, state) {
+        if (state.actionStatus == RequestStatus.failed &&
+            state.actionMessage.isNotEmpty) {
+          AppToast(state.actionMessage, isError: true);
+        } else if (state.actionStatus == RequestStatus.success &&
+            state.actionMessage.isNotEmpty) {
+          AppToast(state.actionMessage);
+          if (state.shouldPop) {
+            RouterHandler.pop(context, true);
+          } else {
+            context.read<ContractDetailsBloc>().add(
+              ContractDetailsLoad(contractId),
+            );
+          }
+        }
+      },
       builder: (context, state) {
         final colors = AppThemeColors.of(context);
         return Scaffold(

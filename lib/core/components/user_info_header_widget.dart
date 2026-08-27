@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../config/theme/app_theme_colors.dart';
-import '../utils/constants/app_colors.dart';
-import '../utils/constants/app_constant.dart';
+ import '../utils/constants/app_constant.dart';
 import '../utils/constants/app_images.dart';
 import '../utils/constants/app_strings.dart';
 import '../utils/functions/responsive.dart';

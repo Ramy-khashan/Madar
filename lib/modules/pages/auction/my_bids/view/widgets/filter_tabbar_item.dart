@@ -22,7 +22,7 @@ class FilterTabBar extends StatelessWidget {
           vertical: 6.height,
         ),
         itemCount: MyBidsBloc.tabs.length,
-        separatorBuilder: (_, __) => SizedBox(width: 8.width),
+        separatorBuilder: (_, _) => SizedBox(width: 8.width),
         itemBuilder: (context, i) {
           final isActive = MyBidsBloc.tabs[i].id == activeFilter;
           final colors = AppThemeColors.of(context);

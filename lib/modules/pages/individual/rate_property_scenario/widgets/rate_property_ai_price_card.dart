@@ -82,11 +82,7 @@ class RatePropertyAiPriceCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  formatPrice(minValue).toString() +
-                      " - " +
-                      formatPrice(maxValue).toString() +
-                      " " +
-                      AppStrings.currency,
+                  '${formatPrice(minValue)} - ${formatPrice(maxValue)} ${AppStrings.currency}',
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(22),
                     color: Colors.white,
@@ -95,7 +91,7 @@ class RatePropertyAiPriceCard extends StatelessWidget {
                 ),
                 SizedBox(height: 4.height),
                 Text(
-                  "بناء على $dealsCount صفقة في النرجس اخر $periodDays يوم",
+                  'بناء على $dealsCount صفقة في النرجس اخر $periodDays يوم',
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(11),
                     color: Colors.white70,

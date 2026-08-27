@@ -14,6 +14,7 @@ import '../../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../../core/utils/functions/image_picker_helper.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../../core/utils/functions/router_handler.dart';
 import '../../../../../../../core/utils/functions/validate.dart';
 import '../../shared/project_form_helpers.dart';
 import '../../shared/widgets/file_upload_widget.dart';
@@ -61,7 +62,7 @@ class AddCommercialProjectScreen extends StatelessWidget {
         listenWhen: (prev, curr) => prev.submitStatus != curr.submitStatus,
         listener: (context, state) {
           if (state.submitStatus == RequestStatus.success) {
-            Navigator.of(context).pop();
+            RouterHandler.pop(context);
           } else if (state.submitStatus == RequestStatus.failed &&
               (state.submitErrorMessage ?? '').isNotEmpty) {
             AppToast(state.submitErrorMessage!, isError: true);

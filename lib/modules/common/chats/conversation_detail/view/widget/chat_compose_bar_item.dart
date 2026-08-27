@@ -69,12 +69,6 @@ class ChatComposeBar extends StatelessWidget {
                   ).messageController,
                 ),
               ),
-              // SizedBox(width: 8.width),
-
-              // IconButton(
-              //   onPressed: () {},
-              //   icon: ImageItem(AppImages.cameraIcon, width: 25.width),
-              // ),
             ],
           );
         },

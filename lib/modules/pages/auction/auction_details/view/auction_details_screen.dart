@@ -7,6 +7,7 @@ import '../../../../../core/components/app_button.dart';
 import '../../../../../core/components/loading_process.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../core/utils/functions/guest_mode.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 import '../../../../../core/utils/functions/router_handler.dart';
 import '../controller/auction_details_bloc.dart';
@@ -61,6 +62,12 @@ class AuctionDetailsScreen extends StatelessWidget {
                       AppButton(
                         width: 560.width,
                         onTap: () {
+                          if (!GuestMode.requireAuth(
+                            context,
+                            subtitle: AppStrings.guestCompleteProcess,
+                          )) {
+                            return;
+                          }
                           if (hasDeposit) {
                             context.read<AuctionDetailsBloc>().add(
                               const AuctionDetailsPlaceBid(),

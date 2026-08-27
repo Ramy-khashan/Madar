@@ -53,7 +53,7 @@ class AuctionListBloc extends Bloc<AuctionListEvent, AuctionListState> {
       final queryParams = <String, dynamic>{
         'page': event.page,
         'limit': pageSize,
-        if (statusParam != null) 'status': statusParam,
+        'status': ?statusParam,
       };
 
       final response = await sl.get<ApiConsumer>().get(

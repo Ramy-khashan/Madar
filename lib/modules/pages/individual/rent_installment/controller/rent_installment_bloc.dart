@@ -62,7 +62,7 @@ class RentInstallmentBloc
       name: AppStrings.providerTabby,
       subtitle: 'خطط مرنة - موافقة سريعة',
     ),
-    InstallmentProviderInfoModel(
+    const InstallmentProviderInfoModel(
       name: 'سبوتي',
       subtitle: 'خطط مرنة - موافقة سريعة',
     ),

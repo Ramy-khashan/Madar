@@ -8,12 +8,12 @@ abstract class OwnerPropertiesEvent extends Equatable {
 }
 
 class OwnerPropertiesLoad extends OwnerPropertiesEvent {
-  const OwnerPropertiesLoad();
-}
-
-class OwnerPropertiesFilterApplied extends OwnerPropertiesEvent {
-  const OwnerPropertiesFilterApplied(this.filter);
-  final PropertyFilterModel filter;
-  @override
-  List<Object?> get props => [filter];
+  final String brokerId;
+  final int page;
+  final bool isLoadMore;
+  const OwnerPropertiesLoad({
+    required this.brokerId,
+      this.page = 1,
+    this.isLoadMore = false,
+  });
 }

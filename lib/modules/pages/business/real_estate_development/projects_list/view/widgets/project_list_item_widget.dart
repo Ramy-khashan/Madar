@@ -10,7 +10,7 @@ import '../../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../../core/utils/functions/router_handler.dart';
 import '../../../../../../../core/utils/functions/translation.dart';
-import '../../../../business_properties/view/widgets/business_portflio_property_item.dart';
+import '../../../../business_properties/view/widgets/property_info.dart';
 import '../../model/realstate_projects_model.dart';
 
 part 'property_development_status.dart';

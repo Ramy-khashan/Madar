@@ -46,7 +46,8 @@ class _SplashScreenState extends State<SplashScreen>
         listener: (context, state) {
           if (state.isDoneSplash) {
             if (state.isOnboardingCompleted) {
-              if (state.isHaveToken) {
+              if (state.isHaveToken ||
+                  (state.isGuest && state.role == AppConstant.individual)) {
                 RouterHandler.navigate(
                   context,
                   state.role == AppConstant.developer

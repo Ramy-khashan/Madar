@@ -8,14 +8,17 @@ import '../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../core/components/chatbot_item.dart';
 import '../../../../../core/components/portfolio_card_widget.dart';
 import '../../../../../core/components/property_card_widget.dart';
+import '../../../../../core/components/search_item.dart';
 import '../../../../../core/components/section_header_widget.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 import '../../../../../core/utils/functions/router_handler.dart';
+import '../../../../common/filter/view/filter_sheet_view.dart';
 import '../../../individual/individual_home/view/widgets/home_header_widget.dart';
+import '../../../individual/properties/view/properties_listing_screen.dart';
 import '../../business_properties/view/widgets/business_properties_request_card_widget.dart';
 import '../controller/business_home_bloc.dart';
-import 'widget/performace_summary_item.dart';
+import 'widget/performance_summary_item.dart';
 import 'widget/smart_services_part.dart';
 
 class BusinessHomeScreen extends StatelessWidget {
@@ -34,10 +37,28 @@ class BusinessHomeScreen extends StatelessWidget {
                     SliverToBoxAdapter(
                       child: HomeHeaderWidget(userLocation: state.location),
                     ),
-                    if(state.performanceSummary.isNotEmpty)
-                      PerformaceSummaryItem(
-                      performanceSummary: state.performanceSummary,
+                    SliverToBoxAdapter(
+                      child: SearchItem(
+                        onSubmitted: (value) {
+                          PropertiesListingScreen.open(context, search: value);
+                        },
+                        onFilterTap: () {
+                          showFilterSheet(
+                            context,
+                            onApply: (result) {
+                              PropertiesListingScreen.open(
+                                context,
+                                filter: result,
+                              );
+                            },
+                          );
+                        },
+                      ),
                     ),
+                    if (state.performanceSummary.isNotEmpty)
+                      PerformanceSummaryItem(
+                        performanceSummary: state.performanceSummary,
+                      ),
 
                     SliverToBoxAdapter(
                       child: Padding(
@@ -87,9 +108,9 @@ class BusinessHomeScreen extends StatelessWidget {
                               height: ResponsiveUtils.types(
                                 context,
                                 mobilePortrait: 365.height,
-                                mobileLandscape: 360.height,
-                                tabletPortrait: 310.height,
-                                tabletLandscape: 350.height,
+                                mobileLandscape: 370.height,
+                                tabletPortrait: 330.height,
+                                tabletLandscape: 370.height,
                               ),
                               child: LoadingProcess(
                                 status: state.businessPropertiesLoadStatus,
@@ -155,7 +176,7 @@ class BusinessHomeScreen extends StatelessWidget {
                                 mobilePortrait: 165.height,
                                 mobileLandscape: 190.height,
                                 tabletPortrait: 150.height,
-                                tabletLandscape: 270.height,
+                                tabletLandscape: 190.height,
                               ),
                               child: LoadingProcess(
                                 status: state.portfolioLoadStatus,

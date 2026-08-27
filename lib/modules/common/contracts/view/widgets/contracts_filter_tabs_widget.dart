@@ -9,12 +9,19 @@ class ContractsFilterTabsWidget extends StatelessWidget {
     super.key,
     required this.selectedFilter,
     required this.totalCount,
+    required this.counts,
     required this.onFilterChanged,
   });
 
   final String selectedFilter;
   final int totalCount;
+  final Map<String, int> counts;
   final void Function(String) onFilterChanged;
+
+  int _countFor(String id) {
+    if (id == 'ALL') return counts['all'] ?? totalCount;
+    return counts[id] ?? 0;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,9 +60,7 @@ class ContractsFilterTabsWidget extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  isSelected
-                      ? '${entry.title} ($totalCount)'
-                      : entry.title,
+                  '${entry.title} (${_countFor(entry.id)})',
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(13),
                     fontWeight: FontWeight.w600,

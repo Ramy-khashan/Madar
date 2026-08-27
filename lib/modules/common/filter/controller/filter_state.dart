@@ -17,6 +17,7 @@ final class FilterUpdated extends FilterState {
     required this.maxPrice,
     required this.paymentSystem,
     required this.duration,
+    this.city,
   });
 
   final bool isForSale;
@@ -25,6 +26,7 @@ final class FilterUpdated extends FilterState {
   final double maxPrice;
   final String? paymentSystem;
   final String? duration;
+  final String? city;
 
   PropertyFilterModel get asModel => PropertyFilterModel(
         isForSale: isForSale,
@@ -32,7 +34,8 @@ final class FilterUpdated extends FilterState {
         minPrice: minPrice,
         maxPrice: maxPrice,
         paymentSystem: paymentSystem,
-        duration: duration,
+        duration: isForSale ? null : duration,
+        city: city,
       );
 
   FilterUpdated copyWith({
@@ -42,6 +45,7 @@ final class FilterUpdated extends FilterState {
     double? maxPrice,
     Object? paymentSystem = _sentinel,
     Object? duration = _sentinel,
+    Object? city = _sentinel,
   }) {
     return FilterUpdated(
       isForSale: isForSale ?? this.isForSale,
@@ -52,12 +56,13 @@ final class FilterUpdated extends FilterState {
           ? this.paymentSystem
           : paymentSystem as String?,
       duration: duration == _sentinel ? this.duration : duration as String?,
+      city: city == _sentinel ? this.city : city as String?,
     );
   }
 
   @override
   List<Object?> get props =>
-      [isForSale, typeId, minPrice, maxPrice, paymentSystem, duration];
+      [isForSale, typeId, minPrice, maxPrice, paymentSystem, duration, city];
 }
 
 const Object _sentinel = Object();
