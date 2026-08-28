@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import '../../config/theme/app_theme_colors.dart';
 import '../utils/constants/app_constant.dart';
 import '../utils/constants/app_strings.dart';
+import '../utils/functions/guest_mode.dart';
 import '../utils/functions/responsive.dart';
 import 'app_button.dart';
-import 'guest_auth_sheet.dart';
 
 class GuestLockedView extends StatelessWidget {
   const GuestLockedView({
@@ -34,11 +34,7 @@ class GuestLockedView extends StatelessWidget {
           color: colors.primaryBrand.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(16.radius),
           child: InkWell(
-            onTap: () => showGuestAuthSheet(
-              context,
-              title: heading,
-              subtitle: body,
-            ),
+            onTap: () => GuestMode.exitToChooseRole(context),
             borderRadius: BorderRadius.circular(16.radius),
             child: Padding(
               padding: EdgeInsets.symmetric(
@@ -148,11 +144,7 @@ class GuestLockedView extends StatelessWidget {
             SizedBox(height: 24.height),
             AppButton(
               text: AppStrings.signIn,
-              onTap: () => showGuestAuthSheet(
-                context,
-                title: heading,
-                subtitle: body,
-              ),
+              onTap: () => GuestMode.exitToChooseRole(context),
             ),
           ],
         ),

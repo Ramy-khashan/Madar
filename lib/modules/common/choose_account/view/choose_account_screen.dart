@@ -110,7 +110,7 @@ class ChooseAccountScreen extends StatelessWidget {
                     RouterHandler.navigate(
                       context,
                       AppRouterKeys.navbar,
-                      routerType: RouterType.pushReplacementNamed,
+                      routerType: RouterType.goName,
                     );
                   },
                 ),

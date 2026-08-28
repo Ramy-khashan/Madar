@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/utils/constants/app_enums.dart';
 import '../../../../core/utils/constants/storage_keys.dart';
+import '../../../../core/utils/functions/app_permissions.dart';
 import '../../../../core/utils/functions/handle_multi_callback.dart';
 import '../../../../core/utils/functions/preference_utils.dart';
 import '../../../../core/utils/functions/service_locator.dart';
@@ -76,13 +77,16 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   Future<void> _initApp(InitAppEvent event, Emitter<SplashState> emit) async {
     _controller.forward();
     bool isHaveToken = false;
-    await Future.delayed(const Duration(seconds: 2), () async {
-      isHaveToken =
-          await sl.get<HandleMultiCallLocal>().getLocalData(
-            keyType: LocalEnumKey.accessToken,
-          ) !=
-          null;
-    });
+    await Future.wait([
+      AppPermissions.requestStartupPermissions(),
+      Future.delayed(const Duration(seconds: 2), () async {
+        isHaveToken =
+            await sl.get<HandleMultiCallLocal>().getLocalData(
+              keyType: LocalEnumKey.accessToken,
+            ) !=
+            null;
+      }),
+    ]);
     final bool isOnboardingCompleted = PreferenceUtils().getBool(
       StorageKeys.onboardingCompleted,
     );

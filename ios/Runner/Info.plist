@@ -4,9 +4,14 @@
 <dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app needs access to your location to show nearby properties.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app needs access to your location to show nearby properties.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app needs access to your location to show nearby properties.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	
 	<string>This app needs access to your photos to upload property images, videos, and 360 tours.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>This app needs access to save property images to your photo library.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This app needs camera access to capture property photos and videos.</string>
 	<key>NSMicrophoneUsageDescription</key>
