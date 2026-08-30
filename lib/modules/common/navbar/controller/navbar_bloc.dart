@@ -21,16 +21,34 @@ part 'navbar_state.dart';
 
 class NavbarBloc extends Bloc<NavbarEvent, NavbarState> {
   NavbarBloc() : super(const NavbarState()) {
-    on<NavBarInitList>((event, emit) {
-      final List<NavbarModel> items = AccountRole.isIndividual
-          ? NavbarBloc.navbarIndividualItems
-          : NavbarBloc.navbarBusinessItems;
-      emit(state.copyWith(navbarItems: items));
-    });
+    on<NavBarInitList>(_onInitOrReload);
+    on<NavbarReload>(_onInitOrReload);
     on<NavbarItemSelected>(_onChangePage);
   }
+
   static NavbarBloc get(BuildContext context) =>
       BlocProvider.of<NavbarBloc>(context);
+
+  Future<void> reload({bool resetToHome = false}) {
+    final nextId = state.refreshId + 1;
+    final done = stream.firstWhere((s) => s.refreshId >= nextId);
+    add(NavbarReload(resetToHome: resetToHome));
+    return done.timeout(const Duration(seconds: 8), onTimeout: () => state);
+  }
+
+  void _onInitOrReload(NavbarEvent event, Emitter<NavbarState> emit) {
+    final resetToHome = event is NavbarReload && event.resetToHome;
+    emit(
+      state.copyWith(
+        navbarItems: AccountRole.isIndividual
+            ? buildIndividualItems()
+            : buildBusinessItems(),
+        selectedItem: resetToHome ? 0 : state.selectedItem,
+        refreshId: state.refreshId + 1,
+      ),
+    );
+  }
+
   Future<void> _onChangePage(
     NavbarItemSelected event,
     Emitter<NavbarState> emit,
@@ -38,7 +56,7 @@ class NavbarBloc extends Bloc<NavbarEvent, NavbarState> {
     emit(state.copyWith(selectedItem: event.selectedItem));
   }
 
-  static List<NavbarModel> navbarIndividualItems = [
+  static List<NavbarModel> buildIndividualItems() => [
     NavbarModel(
       title: 'home',
       icon: AppImages.homeIcon,
@@ -75,7 +93,7 @@ class NavbarBloc extends Bloc<NavbarEvent, NavbarState> {
       ),
     ),
   ];
-  static List<NavbarModel> navbarBusinessItems = [
+  static List<NavbarModel> buildBusinessItems() => [
     NavbarModel(
       title: 'home',
       icon: AppImages.homeIcon,

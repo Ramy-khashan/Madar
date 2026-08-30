@@ -13,6 +13,7 @@ import '../../../../../core/utils/constants/app_images.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 import '../../../../../core/utils/functions/router_handler.dart';
+import '../../../navbar/controller/navbar_bloc.dart';
 import '../../conversation_detail/model/conversation_info.dart';
 import '../controller/conversations_bloc.dart';
 import '../model/conversation_model.dart';
@@ -60,7 +61,12 @@ class ConversationsScreen extends StatelessWidget {
                     childIsLoader: true,
                     emptyMsg: AppStrings.noConversations,
                     isEmptyList: state.filteredConversations.isEmpty,
-                    child: ListView.separated(
+                    child: RefreshIndicator(
+                      color: Theme.of(context).colorScheme.primary,
+                      notificationPredicate: (_) => true,
+                      onRefresh: () => NavbarBloc.get(context).reload(),
+                      child: ListView.separated(
+                      physics: const AlwaysScrollableScrollPhysics(),
                       padding: EdgeInsets.symmetric(vertical: 8.height),
                       itemCount:
                           state.loadingConversationsStatus ==
@@ -86,6 +92,7 @@ class ConversationsScreen extends StatelessWidget {
                           participantAvatarUrl: state.filteredConversations[i].imageUrl,
                         ));},
                       ),
+                    ),
                     ),
                   );
                 },

@@ -20,6 +20,7 @@ import '../../../../core/utils/functions/preference_utils.dart';
 import '../../../../core/components/guest_locked_view.dart';
 import '../../../../core/utils/functions/guest_mode.dart';
 import '../../../../core/utils/functions/router_handler.dart';
+import '../../navbar/controller/navbar_bloc.dart';
 import '../../../../core/utils/functions/service_locator.dart';
 import '../controller/settings_bloc.dart';
 import 'widgets/business_subscription_item.dart';
@@ -48,7 +49,11 @@ class SettingsScreen extends StatelessWidget {
             Expanded(
               child: BlocBuilder<SettingsBloc, SettingsState>(
                 builder: (context, state) {
-                  return IsScrollableWidget(
+                  return RefreshIndicator(
+                    color: Theme.of(context).colorScheme.primary,
+                    notificationPredicate: (_) => true,
+                    onRefresh: () => NavbarBloc.get(context).reload(),
+                    child: IsScrollableWidget(
                     isScroll: !isTablet,
                     padding: EdgeInsets.only(bottom: 24.height),
                     child: ResponsiveRowColumn(
@@ -403,6 +408,7 @@ class SettingsScreen extends StatelessWidget {
                           ),
                         ),
                       ],
+                    ),
                     ),
                   );
                 },

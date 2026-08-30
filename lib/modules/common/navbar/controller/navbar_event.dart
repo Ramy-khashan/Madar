@@ -19,3 +19,12 @@ class NavbarItemSelected extends NavbarEvent {
 class NavBarInitList extends NavbarEvent {
   const NavBarInitList();
 }
+
+class NavbarReload extends NavbarEvent {
+  const NavbarReload({this.resetToHome = false});
+
+  final bool resetToHome;
+
+  @override
+  List<Object> get props => [resetToHome];
+}

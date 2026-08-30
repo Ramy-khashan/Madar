@@ -123,9 +123,11 @@ import '../../modules/pages/individual/rent_installment/view/rent_installment_sc
 import '../../modules/pages/individual/rent_options/controller/rent_options_bloc.dart';
 import '../../modules/pages/individual/rent_options/view/rent_options_screen.dart';
 import 'app_router_keys.dart';
+import 'app_route_observer.dart';
 
 final GoRouter appRouter = GoRouter(
   navigatorKey: MadarApp.navigatorKey,
+  observers: [appRouteObserver],
   initialLocation: AppRouterKeys.splash,
   debugLogDiagnostics: true,
   routes: <RouteBase>[

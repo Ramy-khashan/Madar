@@ -34,11 +34,15 @@ class RouterHandler {
     }
     switch (routerType) {
       case RouterType.goName:
+        final query = Map<String, String>.from(queryParameters);
+        if (routerName == AppRouterKeys.navbar) {
+          query['refresh'] = DateTime.now().millisecondsSinceEpoch.toString();
+        }
         context.goNamed(
           routerName,
           extra: extra,
           pathParameters: pathParameters,
-          queryParameters: queryParameters,
+          queryParameters: query,
         );
         return null;
       case RouterType.pushName:

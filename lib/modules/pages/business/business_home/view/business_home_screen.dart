@@ -15,6 +15,7 @@ import '../../../../../core/utils/functions/account_role.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 import '../../../../../core/utils/functions/router_handler.dart';
 import '../../../../common/filter/view/filter_sheet_view.dart';
+import '../../../../common/navbar/controller/navbar_bloc.dart';
 import '../../../individual/individual_home/view/widgets/home_header_widget.dart';
 import '../../../individual/properties/view/properties_listing_screen.dart';
 import '../../business_properties/view/widgets/business_properties_request_card_widget.dart';
@@ -33,8 +34,13 @@ class BusinessHomeScreen extends StatelessWidget {
           children: [
             BlocBuilder<BusinessHomeBloc, BusinessHomeState>(
               builder: (context, state) {
-                return CustomScrollView(
-                  slivers: [
+                return RefreshIndicator(
+                  color: Theme.of(context).colorScheme.primary,
+                  notificationPredicate: (_) => true,
+                  onRefresh: () => NavbarBloc.get(context).reload(),
+                  child: CustomScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    slivers: [
                     SliverToBoxAdapter(
                       child: HomeHeaderWidget(userLocation: state.location),
                     ),
@@ -297,6 +303,7 @@ class BusinessHomeScreen extends StatelessWidget {
                     ),
                     const SmartServicesPart(),
                   ],
+                  ),
                 );
               },
             ),

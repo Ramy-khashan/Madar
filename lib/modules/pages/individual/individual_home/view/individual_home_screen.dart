@@ -7,6 +7,7 @@ import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 import '../../../../../core/utils/functions/router_handler.dart';
 import '../../../../common/filter/view/filter_sheet_view.dart';
+import '../../../../common/navbar/controller/navbar_bloc.dart';
 import '../../properties/view/properties_listing_screen.dart';
 import '../controller/individual_home_bloc.dart';
 import 'widgets/home_banner_widget.dart';
@@ -28,12 +29,11 @@ class IndividualHomeView extends StatelessWidget {
             BlocBuilder<IndividualHomeBloc, IndividualHomeState>(
               builder: (context, state) {
                 return RefreshIndicator(
-                  onRefresh: () async {
-                    IndividualHomeBloc.get(
-                      context,
-                    ).add(const IndividualHomeLoad());
-                  },
+                  color: Theme.of(context).colorScheme.primary,
+                  notificationPredicate: (_) => true,
+                  onRefresh: () => NavbarBloc.get(context).reload(),
                   child: CustomScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
                     slivers: [
                       SliverToBoxAdapter(
                         child: HomeHeaderWidget(

@@ -44,7 +44,12 @@ class NavbarBottomBar extends StatelessWidget {
                         )) {
                       return;
                     }
-                    NavbarBloc.get(context).add(NavbarItemSelected(index));
+                    final bloc = NavbarBloc.get(context);
+                    if (isSelected) {
+                      bloc.add(const NavbarReload());
+                    } else {
+                      bloc.add(NavbarItemSelected(index));
+                    }
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
