@@ -34,6 +34,7 @@ class PropertiesMapBloc extends Bloc<PropertiesMapEvent, PropertiesMapState> {
     on<MapFilterApplied>(_onFilterApplied);
     on<MapSearchChanged>(_onSearchChanged);
     on<MapCameraMoved>(_onCameraMoved);
+    on<MapTappedEvent>(_onMapTapped);
 
     add(LoadPropertiesMapEvent(position: initialPosition));
   }
@@ -293,11 +294,21 @@ class PropertiesMapBloc extends Bloc<PropertiesMapEvent, PropertiesMapState> {
         return;
       }
 
+      final picked = state.pickedPosition;
+      final nearPropertyIndex = picked == null
+          ? null
+          : _propertyIndexNear(
+              picked.position.latitude,
+              picked.position.longitude,
+              properties: allProperties,
+            );
       emit(
         state.copyWith(
           status: RequestStatus.success,
           properties: allProperties,
           mapCenter: position,
+          selectedIndex: nearPropertyIndex ?? -1,
+          clearPickedPosition: nearPropertyIndex != null,
         ),
       );
     } catch (e) {
@@ -317,6 +328,7 @@ class PropertiesMapBloc extends Bloc<PropertiesMapEvent, PropertiesMapState> {
     emit(state.copyWith(isNearestToMe: event.value));
 
     if (!event.value) {
+      emit(state.copyWith(clearPickedPosition: true));
       add(LoadPropertiesMapEvent(position: initialPosition));
       return;
     }
@@ -346,14 +358,12 @@ class PropertiesMapBloc extends Bloc<PropertiesMapEvent, PropertiesMapState> {
         ),
       );
 
-      add(
-        LoadPropertiesMapEvent(
-          position: PositionModel(
-            latitude: position.latitude,
-            longitude: position.longitude,
-          ),
-        ),
+      final userPosition = PositionModel(
+        latitude: position.latitude,
+        longitude: position.longitude,
       );
+      emit(state.copyWith(pickedPosition: userPosition, selectedIndex: -1));
+      add(LoadPropertiesMapEvent(position: userPosition));
     } catch (e) {
       emit(state.copyWith(isNearestToMe: false));
       AppToast(AppStrings.somethingWentWrong, isError: true);
@@ -365,8 +375,64 @@ class PropertiesMapBloc extends Bloc<PropertiesMapEvent, PropertiesMapState> {
     Emitter<PropertiesMapState> emit,
   ) {
     if (event.index < state.properties.length) {
-      emit(state.copyWith(selectedIndex: event.index));
+      emit(
+        state.copyWith(
+          selectedIndex: event.index,
+          clearPickedPosition: true,
+        ),
+      );
     }
+  }
+
+  void _onMapTapped(
+    MapTappedEvent event,
+    Emitter<PropertiesMapState> emit,
+  ) {
+    final propertyIndex = _propertyIndexNear(event.latitude, event.longitude);
+    if (propertyIndex != null) {
+      emit(
+        state.copyWith(
+          selectedIndex: propertyIndex,
+          clearPickedPosition: true,
+        ),
+      );
+      return;
+    }
+    final tapped = PositionModel(
+      latitude: event.latitude,
+      longitude: event.longitude,
+    );
+    _cameraPosition = tapped;
+    emit(
+      state.copyWith(
+        selectedIndex: -1,
+        pickedPosition: tapped,
+      ),
+    );
+    add(LoadPropertiesMapEvent(position: tapped));
+  }
+
+  int? _propertyIndexNear(
+    double latitude,
+    double longitude, {
+    List<PropertyDetailsModel>? properties,
+  }) {
+    const thresholdMeters = 30.0;
+    final items = properties ?? state.properties;
+    for (var i = 0; i < items.length; i++) {
+      final loc = items[i].location;
+      final lat = loc?.latitude;
+      final lng = loc?.longitude;
+      if (lat == null || lng == null) continue;
+      final distance = Geolocator.distanceBetween(
+        latitude,
+        longitude,
+        lat,
+        lng,
+      );
+      if (distance <= thresholdMeters) return i;
+    }
+    return null;
   }
 
   void _onCloseMarker(
@@ -420,6 +486,7 @@ class PropertiesMapBloc extends Bloc<PropertiesMapEvent, PropertiesMapState> {
       'latitude': lat,
       'longitude': lng,
       'page': page,
+      'limit':50,
       if (state.search.trim().isNotEmpty) 'title': state.search.trim(),
     };
   }

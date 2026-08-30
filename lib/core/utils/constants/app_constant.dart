@@ -76,6 +76,7 @@ class AppConstant {
     'SHOP',
     'WAREHOUSE',
     'FARM',
+
   ];
   static List<String> get basicServices => [
     'INTERNET',

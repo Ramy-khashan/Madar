@@ -54,32 +54,47 @@ class PropertiesMapView extends StatelessWidget {
                         ? propertyMarkers[selectedIndex]
                         : bloc.targetPosition;
 
-                    final markers = propertyMarkers.asMap().entries.map((e) {
-                      BitmapDescriptor? icon;
-                      if (icons != null) {
-                        icon = e.key == selectedIndex
-                            ? icons.selected
-                            : icons.normal;
-                      }
-                      return Marker(
-                        markerId: MarkerId('property_${e.key}'),
-                        position: e.value.position,
-                        icon: icon ?? BitmapDescriptor.defaultMarker,
-                        anchor: const Offset(0.5, 1.0),
-                        onTap: () => bloc.add(SelectMarkerEvent(e.key)),
+                    final markers = <Marker>{};
+                    if (icons != null) {
+                      markers.addAll(
+                        propertyMarkers.asMap().entries.map((e) {
+                          return Marker(
+                            markerId: MarkerId('property_${e.key}'),
+                            position: e.value.position,
+                            icon: e.key == selectedIndex
+                                ? icons.selected
+                                : icons.normal,
+                            anchor: const Offset(0.5, 1.0),
+                            onTap: () =>
+                                bloc.add(SelectMarkerEvent(e.key)),
+                          );
+                        }),
                       );
-                    }).toSet();
+                    }
+                    final picked = state.pickedPosition;
+                    if (picked != null) {
+                      markers.add(
+                        Marker(
+                          markerId: const MarkerId('picked_location'),
+                          position: picked.position,
+                          icon: BitmapDescriptor.defaultMarker,
+                          anchor: const Offset(0.5, 1.0),
+                          zIndexInt: 2,
+                        ),
+                      );
+                    }
 
                     return Stack(
                       children: [
                         PropertiesMapWidget(
                           cameraTarget: cameraTarget,
                           markers: markers,
-                          onTap: (_) {
-                            if (selectedIndex != null) {
-                              bloc.add(const CloseMarkerEvent());
-                            }
-                          },
+                          onTap: (latLng) => bloc.add(
+                            MapTappedEvent(
+                              latLng.latitude,
+                              latLng.longitude,
+                            ),
+                          ),
                           onCameraMove: (latLng) {
                             bloc.add(
                               MapCameraMoved(

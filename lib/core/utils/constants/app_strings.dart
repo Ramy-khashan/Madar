@@ -6,6 +6,7 @@ class AppStrings {
   static String get view => 'view'.trans;
   static String get searchProperty => 'search_property'.trans;
   static String get cooling => 'cooling'.trans;
+  static String get streetCount => 'streets_count'.trans;
   static String get brokerRequestSentSuccessfully =>
       'broker_request_sent_successfully'.trans;
   static String get flooring => 'flooring'.trans;

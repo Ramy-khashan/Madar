@@ -37,24 +37,24 @@ class BusinessHomeScreen extends StatelessWidget {
                     SliverToBoxAdapter(
                       child: HomeHeaderWidget(userLocation: state.location),
                     ),
-                    SliverToBoxAdapter(
-                      child: SearchItem(
-                        onSubmitted: (value) {
-                          PropertiesListingScreen.open(context, search: value);
-                        },
-                        onFilterTap: () {
-                          showFilterSheet(
-                            context,
-                            onApply: (result) {
-                              PropertiesListingScreen.open(
-                                context,
-                                filter: result,
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
+                    // SliverToBoxAdapter(
+                    //   child: SearchItem(
+                    //     onSubmitted: (value) {
+                    //       PropertiesListingScreen.open(context, search: value);
+                    //     },
+                    //     onFilterTap: () {
+                    //       showFilterSheet(
+                    //         context,
+                    //         onApply: (result) {
+                    //           PropertiesListingScreen.open(
+                    //             context,
+                    //             filter: result,
+                    //           );
+                    //         },
+                    //       );
+                    //     },
+                    //   ),
+                    // ),
                     if (state.performanceSummary.isNotEmpty)
                       PerformanceSummaryItem(
                         performanceSummary: state.performanceSummary,

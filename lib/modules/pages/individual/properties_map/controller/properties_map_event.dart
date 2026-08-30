@@ -65,3 +65,13 @@ final class MapCameraMoved extends PropertiesMapEvent {
   @override
   List<Object?> get props => [latitude, longitude];
 }
+
+/// Drops a red pin on an empty map tap. Ignored when the tap is a property.
+final class MapTappedEvent extends PropertiesMapEvent {
+  const MapTappedEvent(this.latitude, this.longitude);
+  final double latitude;
+  final double longitude;
+
+  @override
+  List<Object?> get props => [latitude, longitude];
+}

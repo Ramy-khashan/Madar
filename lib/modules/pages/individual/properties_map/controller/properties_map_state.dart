@@ -9,6 +9,7 @@ class PropertiesMapState extends Equatable {
   final PositionModel? mapCenter;
   final PropertyFilterModel? filter;
   final String search;
+  final PositionModel? pickedPosition;
 
   const PropertiesMapState({
     this.status = RequestStatus.init,
@@ -19,6 +20,7 @@ class PropertiesMapState extends Equatable {
     this.mapCenter,
     this.filter,
     this.search = '',
+    this.pickedPosition,
   });
 
   PropertyDetailsModel? get selectedProperty =>
@@ -35,6 +37,8 @@ class PropertiesMapState extends Equatable {
     PositionModel? mapCenter,
     PropertyFilterModel? filter,
     String? search,
+    PositionModel? pickedPosition,
+    bool clearPickedPosition = false,
   }) {
     return PropertiesMapState(
       status: status ?? this.status,
@@ -45,6 +49,9 @@ class PropertiesMapState extends Equatable {
       mapCenter: mapCenter ?? this.mapCenter,
       filter: filter ?? this.filter,
       search: search ?? this.search,
+      pickedPosition: clearPickedPosition
+          ? null
+          : (pickedPosition ?? this.pickedPosition),
     );
   }
 
@@ -58,5 +65,6 @@ class PropertiesMapState extends Equatable {
     mapCenter,
     filter,
     search,
+    pickedPosition,
   ];
 }

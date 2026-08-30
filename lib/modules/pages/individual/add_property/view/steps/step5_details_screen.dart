@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madar_app/modules/pages/individual/add_property/view/widgets/title_section.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_textfield.dart';
@@ -69,7 +70,7 @@ class AddPropertyStep5Screen extends StatelessWidget {
                     );
                   },
                 ),
-                12.height.toSizedBox,
+                8.height.toSizedBox,
                 BlocBuilder<AddPropertyBloc, AddPropertyState>(
                   buildWhen: (prev, curr) =>
                       prev.model.facade != curr.model.facade ||
@@ -93,6 +94,16 @@ class AddPropertyStep5Screen extends StatelessWidget {
                   },
                 ),
                 12.height.toSizedBox,
+                Text(
+                  AppStrings.streetCount,
+                  style: TextStyle(
+                    fontSize: context.responsiveFontScale(14),
+                    fontWeight: FontWeight.w600,
+                    color: tc.textFieldTitle,
+                  ),
+                ),
+                8.height.toSizedBox,
+
                 CounterRow(
                   image: AppImages.street,
                   label: '',
@@ -101,8 +112,6 @@ class AddPropertyStep5Screen extends StatelessWidget {
                   onIncrement: const IncrementStreetCountEvent(),
                   onDecrement: const DecrementStreetCountEvent(),
                 ),
-                12.height.toSizedBox,
-                8.height.toSizedBox,
                 BlocBuilder<AddPropertyBloc, AddPropertyState>(
                   buildWhen: (prev, curr) =>
                       prev.fieldErrors[AddPropertyField.streetWidth] !=

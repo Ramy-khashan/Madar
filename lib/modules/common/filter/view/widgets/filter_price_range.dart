@@ -47,9 +47,9 @@ class FilterPriceRange extends StatelessWidget {
         SizedBox(height: 8.height),
         SliderTheme(
           data: SliderTheme.of(context).copyWith(
-            activeTrackColor: AppColors.secondBrand,
-            thumbColor: AppColors.secondBrand,
-            inactiveTrackColor: AppColors.secondBrand.withValues(alpha: 0.2),
+            activeTrackColor: AppThemeColors.of(context).primaryBrand,
+            thumbColor: AppThemeColors.of(context).primaryBrand,
+            inactiveTrackColor: AppThemeColors.of(context).primaryBrand.withValues(alpha: 0.2),
             trackHeight: 4,
             rangeThumbShape: const RoundRangeSliderThumbShape(
               enabledThumbRadius: 10,

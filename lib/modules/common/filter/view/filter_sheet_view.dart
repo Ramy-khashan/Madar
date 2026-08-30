@@ -200,8 +200,7 @@ class FilterSheetView extends StatelessWidget {
                     onTap: () =>
                         context.read<FilterBloc>().add(const FilterApplied()),
                     width: double.infinity,
-                    colorBG: AppColors.secondBrand,
-                    textColor: Colors.white,
+                     textColor: Colors.white,
                   ),
                 ),
               ],
