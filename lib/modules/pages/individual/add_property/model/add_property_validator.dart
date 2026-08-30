@@ -13,6 +13,8 @@ class AddPropertyField {
   static const String deedType = 'deedType';
   static const String deedNumber = 'deedNumber';
   static const String deedDate = 'deedDate';
+  static const String customTypeName = 'customTypeName';
+  static const String ownershipDocument = 'ownershipDocument';
   static const String images = 'images';
   static const String area = 'area';
   static const String facade = 'facade';
@@ -78,16 +80,30 @@ class AddPropertyValidator {
       errors[AddPropertyField.deedType] = AppStrings.pleaseCompleteField(
         AppStrings.deed,
       );
+      return errors;
     }
-    if (model.deedNumber.isEmpty) {
-      errors[AddPropertyField.deedNumber] = AppStrings.pleaseCompleteField(
-        AppStrings.deedNumber,
+    if (model.needsDeedNumberAndDate) {
+      if (model.deedNumber.isEmpty) {
+        errors[AddPropertyField.deedNumber] = AppStrings.pleaseCompleteField(
+          AppStrings.deedNumber,
+        );
+      }
+      if (model.date.isEmpty) {
+        errors[AddPropertyField.deedDate] = AppStrings.pleaseCompleteField(
+          AppStrings.deedDate,
+        );
+      }
+    }
+    if (model.needsCustomTypeName && model.customTypeName.trim().isEmpty) {
+      errors[AddPropertyField.customTypeName] = AppStrings.pleaseCompleteField(
+        AppStrings.customDeedTypeName,
       );
     }
-    if (model.date.isEmpty) {
-      errors[AddPropertyField.deedDate] = AppStrings.pleaseCompleteField(
-        AppStrings.deedDate,
-      );
+    if (model.needsOwnershipDocument &&
+        (model.ownershipDocumentPath == null ||
+            model.ownershipDocumentPath!.isEmpty)) {
+      errors[AddPropertyField.ownershipDocument] =
+          AppStrings.pleaseCompleteField(AppStrings.ownershipDocument);
     }
     return errors;
   }

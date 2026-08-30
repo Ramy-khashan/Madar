@@ -2,6 +2,8 @@ class EndPoints {
   static const String baseUrl = 'https://api.madar.support/';
   static const String register = 'auth/register';
   static const String login = 'auth/login';
+  static const String loginBroker = 'auth/login/broker';
+  static const String loginOwner = 'auth/login';
   static const String fcmToken = 'auth/save-fcm-token';
   static const String logout = 'auth/logout';
   static const String refreshToken = 'auth/refresh-token';

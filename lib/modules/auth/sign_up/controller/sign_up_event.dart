@@ -23,3 +23,12 @@ class SignUpLicenseFilePicked extends SignUpEvent {
 class SignUpLicenseFileCleared extends SignUpEvent {
   const SignUpLicenseFileCleared();
 }
+
+class SignUpSelectRoleEvent extends SignUpEvent {
+  const SignUpSelectRoleEvent(this.role);
+
+  final String role;
+
+  @override
+  List<Object> get props => [role];
+}

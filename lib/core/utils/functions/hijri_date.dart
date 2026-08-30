@@ -7,12 +7,39 @@ class HijriDate {
       return _pad(date.year, date.month, date.day);
     }
     final converted = fromGregorian(date);
-    return _pad(converted.year, converted.month, converted.day);
+    return formatParts(converted.year, converted.month, converted.day);
   }
+
+  static String formatParts(int year, int month, int day) =>
+      _pad(year, month, day);
+
+  static ({int year, int month, int day}) today() =>
+      fromGregorian(DateTime.now());
 
   static ({int year, int month, int day}) fromGregorian(DateTime date) {
     final jd = _julianDay(date.year, date.month, date.day);
     return _julianToHijri(jd);
+  }
+
+  static DateTime toGregorian(int year, int month, int day) {
+    final jd = _hijriToJulian(year, month, day);
+    return _julianToGregorian(jd);
+  }
+
+  static int daysInMonth(int year, int month) {
+    final start = _hijriToJulian(year, month, 1);
+    final nextMonth = month == 12 ? 1 : month + 1;
+    final nextYear = month == 12 ? year + 1 : year;
+    return _hijriToJulian(nextYear, nextMonth, 1) - start;
+  }
+
+  static int compare(
+    ({int year, int month, int day}) a,
+    ({int year, int month, int day}) b,
+  ) {
+    if (a.year != b.year) return a.year.compareTo(b.year);
+    if (a.month != b.month) return a.month.compareTo(b.month);
+    return a.day.compareTo(b.day);
   }
 
   static String _pad(int year, int month, int day) {
@@ -55,5 +82,29 @@ class HijriDate {
     final day = l - (709 * month) ~/ 24;
     final year = 30 * n + j - 30;
     return (year: year, month: month, day: day);
+  }
+
+  static int _hijriToJulian(int year, int month, int day) {
+    return ((11 * year + 3) ~/ 30) +
+        354 * year +
+        30 * month -
+        ((month - 1) ~/ 2) +
+        day +
+        1948440 -
+        385;
+  }
+
+  static DateTime _julianToGregorian(int jd) {
+    var l = jd + 68569;
+    final n = (4 * l) ~/ 146097;
+    l = l - (146097 * n + 3) ~/ 4;
+    final i = (4000 * (l + 1)) ~/ 1461001;
+    l = l - (1461 * i) ~/ 4 + 31;
+    final j = (80 * l) ~/ 2447;
+    final day = l - (2447 * j) ~/ 80;
+    l = j ~/ 11;
+    final month = j + 2 - 12 * l;
+    final year = 100 * (n - 49) + i + l;
+    return DateTime(year, month, day);
   }
 }

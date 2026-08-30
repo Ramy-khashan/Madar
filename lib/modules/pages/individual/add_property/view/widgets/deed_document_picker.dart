@@ -6,6 +6,7 @@ import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/image_picker_helper.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../controller/add_property_bloc.dart';
+import '../../model/add_property_validator.dart';
 
 class DeedDocumentPicker extends StatelessWidget {
   const DeedDocumentPicker({super.key});
@@ -15,18 +16,21 @@ class DeedDocumentPicker extends StatelessWidget {
     final tc = AppThemeColors.of(context);
     return BlocBuilder<AddPropertyBloc, AddPropertyState>(
       buildWhen: (prev, curr) =>
-          prev.model.ownershipDocumentPath != curr.model.ownershipDocumentPath,
+          prev.model.ownershipDocumentPath != curr.model.ownershipDocumentPath ||
+          prev.fieldErrors[AddPropertyField.ownershipDocument] !=
+              curr.fieldErrors[AddPropertyField.ownershipDocument],
       builder: (context, state) {
         final path = state.model.ownershipDocumentPath;
         final hasFile = path != null && path.isNotEmpty;
         final fileName = hasFile
             ? path.split(RegExp(r'[/\\]')).last
             : AppStrings.tapToAddDeedDocument;
+        final error = state.fieldErrors[AddPropertyField.ownershipDocument];
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              AppStrings.ownershipDocumentOptional,
+              AppStrings.ownershipDocument,
               style: TextStyle(
                 fontSize: context.responsiveFontScale(13),
                 fontWeight: FontWeight.w600,
@@ -50,7 +54,9 @@ class DeedDocumentPicker extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: tc.cardBackground,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: tc.borderColor),
+                  border: Border.all(
+                    color: error != null ? Colors.red : tc.borderColor,
+                  ),
                 ),
                 child: Row(
                   children: [
@@ -89,6 +95,16 @@ class DeedDocumentPicker extends StatelessWidget {
                 ),
               ),
             ),
+            if (error != null) ...[
+              6.height.toSizedBox,
+              Text(
+                error,
+                style: TextStyle(
+                  fontSize: context.responsiveFontScale(11),
+                  color: Colors.red,
+                ),
+              ),
+            ],
           ],
         );
       },

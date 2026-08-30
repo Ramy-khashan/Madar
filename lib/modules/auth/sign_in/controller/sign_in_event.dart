@@ -9,6 +9,13 @@ sealed class SignInEvent extends Equatable {
 
 class SignInActionEvent extends SignInEvent {
   const SignInActionEvent();
+}
+
+class SelectBusinessRoleEvent extends SignInEvent {
+  const SelectBusinessRoleEvent(this.role);
+
+  final String role;
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [role];
 }

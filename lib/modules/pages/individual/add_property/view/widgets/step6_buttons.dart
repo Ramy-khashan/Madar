@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_button.dart';
-import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
-import '../../../../../../core/utils/constants/storage_keys.dart';
+import '../../../../../../core/utils/functions/account_role.dart';
 import '../../../../../../core/utils/functions/guest_mode.dart';
-import '../../../../../../core/utils/functions/preference_utils.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../controller/add_property_bloc.dart';
 import 'broker_step6_buttons.dart';
@@ -15,9 +13,7 @@ class Step6Buttons extends StatelessWidget {
   const Step6Buttons({super.key, required this.tc});
   final AppThemeColors tc;
 
-  bool get _isBroker =>
-      PreferenceUtils().getString(StorageKeys.accountType) ==
-      AppConstant.business;
+  bool get _isBroker => AccountRole.isBroker;
 
   @override
   Widget build(BuildContext context) {

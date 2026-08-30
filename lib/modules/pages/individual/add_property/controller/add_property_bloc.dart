@@ -78,6 +78,8 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
   final TextEditingController streetWidthController = TextEditingController();
   final TextEditingController streetController = TextEditingController();
   final TextEditingController deedNumberController = TextEditingController();
+  final TextEditingController customTypeNameController =
+      TextEditingController();
   final TextEditingController dateController = TextEditingController();
   DateTime? deedPickedAt;
   final TextEditingController areaController = TextEditingController();
@@ -386,6 +388,8 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
       case AddPropertyField.deedType:
       case AddPropertyField.deedNumber:
       case AddPropertyField.deedDate:
+      case AddPropertyField.customTypeName:
+      case AddPropertyField.ownershipDocument:
         return AddPropertyStep.location;
       case AddPropertyField.images:
         return AddPropertyStep.images;
@@ -515,20 +519,35 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     SelectDeedTypeEvent event,
     Emitter<AddPropertyState> emit,
   ) {
-    emit(state.copyWith(model: state.model.copyWith(deedType: event.deedType)));
+    final errors = Map<String, String>.from(state.fieldErrors)
+      ..remove(AddPropertyField.deedType)
+      ..remove(AddPropertyField.deedNumber)
+      ..remove(AddPropertyField.deedDate)
+      ..remove(AddPropertyField.customTypeName)
+      ..remove(AddPropertyField.ownershipDocument);
+    emit(
+      state.copyWith(
+        model: state.model.copyWith(deedType: event.deedType),
+        fieldErrors: errors,
+      ),
+    );
   }
 
   void _onSelectDateType(
     SelectDateTypeEvent event,
     Emitter<AddPropertyState> emit,
   ) {
-    emit(state.copyWith(model: state.model.copyWith(dateType: event.dateType)));
+    final formatted = deedPickedAt == null
+        ? state.model.date
+        : HijriDate.format(deedPickedAt!, hijri: event.dateType == 'hijri');
     if (deedPickedAt != null) {
-      dateController.text = HijriDate.format(
-        deedPickedAt!,
-        hijri: event.dateType == 'hijri',
-      );
+      dateController.text = formatted;
     }
+    emit(
+      state.copyWith(
+        model: state.model.copyWith(dateType: event.dateType, date: formatted),
+      ),
+    );
   }
 
   void _onDeedDatePicked(
@@ -536,9 +555,18 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     Emitter<AddPropertyState> emit,
   ) {
     deedPickedAt = event.date;
-    dateController.text = HijriDate.format(
+    final formatted = HijriDate.format(
       event.date,
       hijri: state.model.dateType == 'hijri',
+    );
+    dateController.text = formatted;
+    final errors = Map<String, String>.from(state.fieldErrors)
+      ..remove(AddPropertyField.deedDate);
+    emit(
+      state.copyWith(
+        model: state.model.copyWith(date: formatted),
+        fieldErrors: errors,
+      ),
     );
   }
 
@@ -624,9 +652,12 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     SetDeedDocumentEvent event,
     Emitter<AddPropertyState> emit,
   ) {
+    final errors = Map<String, String>.from(state.fieldErrors)
+      ..remove(AddPropertyField.ownershipDocument);
     emit(
       state.copyWith(
         model: state.model.copyWith(ownershipDocumentPath: event.path),
+        fieldErrors: errors,
       ),
     );
   }
@@ -980,6 +1011,7 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
       buildingNumber: buildingNumberController.text.trim(),
       street: streetController.text.trim(),
       deedNumber: deedNumberController.text.trim(),
+      customTypeName: customTypeNameController.text.trim(),
       date: dateController.text.trim(),
       area: areaController.text.trim(),
       streetWidth: streetWidthController.text.trim(),
@@ -1200,6 +1232,7 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState> {
     buildingNumberController.dispose();
     streetController.dispose();
     deedNumberController.dispose();
+    customTypeNameController.dispose();
     dateController.dispose();
     areaController.dispose();
     apartmentNumberController.dispose();

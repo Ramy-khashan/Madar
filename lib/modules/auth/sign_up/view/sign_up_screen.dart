@@ -18,6 +18,7 @@ import '../../../../core/utils/functions/preference_utils.dart';
 import '../../../../core/utils/functions/responsive.dart';
 import '../../../../core/utils/functions/router_handler.dart';
 import '../../../../core/utils/functions/validate.dart';
+import '../../common/business_role_toggle.dart';
 import '../../common/header_part.dart';
 import '../../common/password_item.dart';
 import '../controller/sign_up_bloc.dart';
@@ -113,10 +114,17 @@ class SignUpScreen extends StatelessWidget {
                                           value.completeNumber;
                                     },
                                   ),
-                                  if (PreferenceUtils().getString(
-                                        StorageKeys.accountType,
-                                      ) ==
-                                      AppConstant.business)
+                                  if (SignUpBloc.get(context).isBusinessPath) ...[
+                                    SizedBox(height: 8.height),
+                                    BusinessRoleRadios(
+                                      selectedRole: state.selectedRole,
+                                      onChanged: (role) => SignUpBloc.get(
+                                        context,
+                                      ).add(SignUpSelectRoleEvent(role)),
+                                    ),
+                                    SizedBox(height: 8.height),
+                                  ],
+                                  if (SignUpBloc.get(context).isBroker)
                                     const BusinessValPart(),
                                   PasswordItem(
                                     title: AppStrings.password,

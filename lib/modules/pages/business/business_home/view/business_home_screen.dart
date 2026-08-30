@@ -11,6 +11,7 @@ import '../../../../../core/components/property_card_widget.dart';
 import '../../../../../core/components/search_item.dart';
 import '../../../../../core/components/section_header_widget.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../core/utils/functions/account_role.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 import '../../../../../core/utils/functions/router_handler.dart';
 import '../../../../common/filter/view/filter_sheet_view.dart';
@@ -222,6 +223,7 @@ class BusinessHomeScreen extends StatelessWidget {
                       ),
                     ),
 
+                    if (AccountRole.isBroker)
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: EdgeInsets.only(bottom: 20.height),

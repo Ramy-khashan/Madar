@@ -10,6 +10,7 @@ import '../../../../core/utils/constants/app_constant.dart';
 import '../../../../core/utils/constants/app_enums.dart';
 import '../../../../core/utils/constants/app_strings.dart';
 import '../../../../core/utils/constants/storage_keys.dart';
+import '../../../../core/utils/functions/account_role.dart';
 import '../../../../core/utils/functions/fcm_token_service.dart';
 import '../../../../core/utils/functions/handle_multi_callback.dart';
 import '../../../../core/utils/functions/preference_utils.dart';
@@ -19,10 +20,18 @@ part 'sign_up_event.dart';
 part 'sign_up_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
-  SignUpBloc() : super(const SignUpState()) {
+  SignUpBloc()
+    : super(
+        SignUpState(
+          selectedRole: AccountRole.isOwner
+              ? AppConstant.owner
+              : AppConstant.business,
+        ),
+      ) {
     on<SignUpActionEvent>(_signUp);
     on<SignUpLicenseFilePicked>(_onLicenseFilePicked);
     on<SignUpLicenseFileCleared>(_onLicenseFileCleared);
+    on<SignUpSelectRoleEvent>(_onSelectRole);
   }
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -35,10 +44,19 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController falLicenseController = TextEditingController();
 
+  bool get isBusinessPath => AccountRole.isBusiness;
+
   bool get isBroker =>
-      PreferenceUtils().getString(StorageKeys.accountType) ==
-      AppConstant.business;
+      isBusinessPath && state.selectedRole == AppConstant.business;
  
+  Future<void> _onSelectRole(
+    SignUpSelectRoleEvent event,
+    Emitter<SignUpState> emit,
+  ) async {
+    await AccountRole.set(event.role);
+    emit(state.copyWith(selectedRole: event.role));
+  }
+
   void _onLicenseFilePicked(
     SignUpLicenseFilePicked event,
     Emitter<SignUpState> emit,
@@ -68,7 +86,9 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       }
 
       emit(state.copyWith(signUpStatus: RequestStatus.loading, errorMsg: ''));
-      final role = PreferenceUtils().getString(StorageKeys.accountType);
+      final role = isBusinessPath
+          ? state.selectedRole
+          : PreferenceUtils().getString(StorageKeys.accountType);
       final response = isBroker
           ? await sl.get<ApiConsumer>().postFormData(
               EndPoints.register,
@@ -179,6 +199,14 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         sl.get<PreferenceUtils>().setString(
           StorageKeys.userID,
           userId.toString(),
+        ),
+      );
+    }
+    if (user['role'] != null) {
+      saves.add(
+        sl.get<PreferenceUtils>().setString(
+          StorageKeys.accountType,
+          user['role'].toString(),
         ),
       );
     }

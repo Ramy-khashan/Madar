@@ -85,6 +85,10 @@ class AppStrings {
   static String get forgetPasswordTitle => 'forget_password_title'.trans;
   static String get signInTitle => 'sign_in_title'.trans;
   static String get signInSubtitle => 'sign_in_subtitle'.trans;
+  static String get chooseSuitableRole => 'choose_suitable_role'.trans;
+  static String get chooseRole => 'choose_role'.trans;
+  static String get brokerRoleShort => 'broker_role_short'.trans;
+  static String get ownerRoleShort => 'owner_role_short'.trans;
   static String get beds => 'beds'.trans;
   static String get baths => 'baths'.trans;
   static String get renewalContract => 'renewal_contract'.trans;
@@ -1495,7 +1499,19 @@ class AppStrings {
   static String get titleMinLength => 'title_min_length'.trans;
   static String get ownershipDocumentOptional =>
       'ownership_document_optional'.trans;
+  static String get ownershipDocument => 'ownership_document'.trans;
+  static String get customDeedTypeName => 'custom_deed_type_name'.trans;
+  static String get enterCustomDeedTypeName =>
+      'enter_custom_deed_type_name'.trans;
   static String get tapToAddDeedDocument => 'tap_to_add_deed_document'.trans;
+  static String hijriMonth(int month) => 'hijri_month_$month'.trans;
+  static String get hijriWeekdaySat => 'hijri_weekday_sat'.trans;
+  static String get hijriWeekdaySun => 'hijri_weekday_sun'.trans;
+  static String get hijriWeekdayMon => 'hijri_weekday_mon'.trans;
+  static String get hijriWeekdayTue => 'hijri_weekday_tue'.trans;
+  static String get hijriWeekdayWed => 'hijri_weekday_wed'.trans;
+  static String get hijriWeekdayThu => 'hijri_weekday_thu'.trans;
+  static String get hijriWeekdayFri => 'hijri_weekday_fri'.trans;
 
   // ── Per-type property detail labels ──────────────────────────────────────
   static String get landDimensions => 'land_dimensions'.trans;

@@ -12,11 +12,14 @@ import '../../../../core/utils/constants/app_constant.dart';
 import '../../../../core/utils/constants/app_enums.dart';
 import '../../../../core/utils/constants/app_strings.dart';
 import '../../../../core/utils/constants/storage_keys.dart';
+import '../../../../core/utils/functions/account_role.dart';
 import '../../../../core/utils/functions/common_fun.dart';
 import '../../../../core/utils/functions/preference_utils.dart';
 import '../../../../core/utils/functions/responsive.dart';
 import '../../../../core/utils/functions/router_handler.dart';
 import '../../../../core/utils/functions/validate.dart';
+import '../../../../core/components/app_textfield.dart';
+import '../../common/business_role_toggle.dart';
 import '../../common/header_part.dart';
 import '../../common/password_item.dart';
 import '../controller/sign_in_bloc.dart';
@@ -41,7 +44,7 @@ class SignInScreen extends StatelessWidget {
                   routerType: RouterType.goName,
                 );
               } else if (state.role == AppConstant.individual ||
-                  state.role == AppConstant.business) {
+                  AccountRole.isBusinessRole(state.role)) {
                 RouterHandler.navigate(
                   context,
                   AppRouterKeys.navbar,
@@ -89,7 +92,9 @@ class SignInScreen extends StatelessWidget {
                                 ),
                                 SizedBox(height: 8.height),
                                 Text(
-                                  AppStrings.signInSubtitle,
+                                  SignInBloc.get(context).isBusinessPath
+                                      ? AppStrings.chooseSuitableRole
+                                      : AppStrings.signInSubtitle,
                                   style: TextStyle(
                                     fontSize: context.responsiveFontScale(14),
                                     fontWeight: FontWeight.w500,
@@ -98,16 +103,39 @@ class SignInScreen extends StatelessWidget {
                                     ).textSecondary,
                                   ),
                                 ),
-                                PhoneNumberField(
-                                  initialCountryCode: 'SA',
-                                  title: AppStrings.phoneNumber,
-                                  hint: AppStrings.enterPhoneNumber,
-                                  onChanged: (val) {
-                                    SignInBloc.get(
+                                if (SignInBloc.get(context).isBusinessPath) ...[
+                                  SizedBox(height: 16.height),
+                                  BusinessRoleToggle(
+                                    selectedRole: state.selectedRole,
+                                    onChanged: (role) => SignInBloc.get(
                                       context,
-                                    ).phoneController.text = val.completeNumber;
-                                  },
-                                ),
+                                    ).add(SelectBusinessRoleEvent(role)),
+                                  ),
+                                  SizedBox(height: 8.height),
+                                ],
+                                if (SignInBloc.get(context).isBrokerLogin)
+                                  AppTextField(
+                                    title: AppStrings.valLicenseNumber,
+                                    hint: AppStrings.enterValLicenseNumber,
+                                    isWithTitle: true,
+                                    controller: SignInBloc.get(
+                                      context,
+                                    ).falLicenseController,
+                                    validator: (val) =>
+                                        Validate.notEmpty(val ?? ''),
+                                  )
+                                else
+                                  PhoneNumberField(
+                                    initialCountryCode: 'SA',
+                                    title: AppStrings.phoneNumber,
+                                    hint: AppStrings.enterPhoneNumber,
+                                    onChanged: (val) {
+                                      SignInBloc.get(
+                                        context,
+                                      ).phoneController.text =
+                                          val.completeNumber;
+                                    },
+                                  ),
 
                                 PasswordItem(
                                   title: AppStrings.password,

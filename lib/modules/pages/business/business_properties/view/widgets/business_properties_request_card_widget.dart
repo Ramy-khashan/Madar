@@ -157,6 +157,8 @@ class BusinessPropertiesRequestCardWidget extends StatelessWidget {
                                 child: Text(
                                   ' ${item?.owner ?? 'Unknown'}',
                                   textAlign: TextAlign.start,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontSize: context.responsiveFontScale(14),
                                     color: colors.textSecondary,

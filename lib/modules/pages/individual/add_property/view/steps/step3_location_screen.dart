@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_textfield.dart';
+import '../../../../../../core/components/hijri_date_picker.dart';
 import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
@@ -132,58 +133,85 @@ class AddPropertyStep3Screen extends StatelessWidget {
                 12.height.toSizedBox,
                 const DeedTypeSelector(),
                 const FieldErrorText(AddPropertyField.deedType),
-                12.height.toSizedBox,
                 BlocBuilder<AddPropertyBloc, AddPropertyState>(
                   buildWhen: (prev, curr) =>
+                      prev.model.deedType != curr.model.deedType ||
+                      prev.model.dateType != curr.model.dateType ||
                       prev.fieldErrors[AddPropertyField.deedNumber] !=
-                      curr.fieldErrors[AddPropertyField.deedNumber],
-                  builder: (context, state) {
-                    return AppTextField(
-                      controller: bloc.deedNumberController,
-                      hint: AppStrings.enterDeedNumber,
-                      prefixImage: AppImages.instrument,
-                      title: AppStrings.deedNumber,
-                      textInputType: TextInputType.number,
-                      errorText:
-                          state.fieldErrors[AddPropertyField.deedNumber],
-                    );
-                  },
-                ),
-                12.height.toSizedBox,
-                AddPropertySectionLabel(label: AppStrings.deedDate),
-                8.height.toSizedBox,
-                const DateTypeToggle(),
-                12.height.toSizedBox,
-                BlocBuilder<AddPropertyBloc, AddPropertyState>(
-                  buildWhen: (prev, curr) =>
+                          curr.fieldErrors[AddPropertyField.deedNumber] ||
                       prev.fieldErrors[AddPropertyField.deedDate] !=
                           curr.fieldErrors[AddPropertyField.deedDate] ||
-                      prev.model.dateType != curr.model.dateType,
+                      prev.fieldErrors[AddPropertyField.customTypeName] !=
+                          curr.fieldErrors[AddPropertyField.customTypeName],
                   builder: (context, state) {
-                    return AppTextField(
-                      controller: bloc.dateController,
-                      hint: state.model.dateType == 'hijri'
-                          ? AppStrings.enterHijriDateHint
-                          : AppStrings.deedDate,
-                      prefixIcon: Icons.calendar_today_rounded,
-                      isReadOnly: true,
-                      errorText: state.fieldErrors[AddPropertyField.deedDate],
-                      onTapField: () async {
-                        final now = DateTime.now();
-                        final picked = await showDatePicker(
-                          context: context,
-                          initialDate: bloc.deedPickedAt ?? now,
-                          firstDate: DateTime(1950),
-                          lastDate: now,
-                        );
-                        if (picked == null) return;
-                        bloc.add(DeedDatePickedEvent(picked));
-                      },
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (state.model.needsDeedNumberAndDate) ...[
+                          12.height.toSizedBox,
+                          AppTextField(
+                            controller: bloc.deedNumberController,
+                            hint: AppStrings.enterDeedNumber,
+                            prefixImage: AppImages.instrument,
+                            title: AppStrings.deedNumber,
+                            textInputType: TextInputType.number,
+                            errorText:
+                                state.fieldErrors[AddPropertyField.deedNumber],
+                          ),
+                          12.height.toSizedBox,
+                          AddPropertySectionLabel(label: AppStrings.deedDate),
+                          8.height.toSizedBox,
+                          const DateTypeToggle(),
+                          12.height.toSizedBox,
+                          AppTextField(
+                            controller: bloc.dateController,
+                            hint: state.model.dateType == 'hijri'
+                                ? AppStrings.enterHijriDateHint
+                                : AppStrings.deedDate,
+                            prefixIcon: Icons.calendar_today_rounded,
+                            isReadOnly: true,
+                            errorText:
+                                state.fieldErrors[AddPropertyField.deedDate],
+                            onTapField: () async {
+                              final now = DateTime.now();
+                              final isHijri = state.model.dateType == 'hijri';
+                              final picked = isHijri
+                                  ? await showHijriDatePicker(
+                                      context: context,
+                                      initialDate: bloc.deedPickedAt ?? now,
+                                      firstDate: DateTime(1950),
+                                      lastDate: now,
+                                    )
+                                  : await showDatePicker(
+                                      context: context,
+                                      initialDate: bloc.deedPickedAt ?? now,
+                                      firstDate: DateTime(1950),
+                                      lastDate: now,
+                                    );
+                              if (picked == null) return;
+                              bloc.add(DeedDatePickedEvent(picked));
+                            },
+                          ),
+                        ],
+                        if (state.model.needsCustomTypeName) ...[
+                          12.height.toSizedBox,
+                          AppTextField(
+                            controller: bloc.customTypeNameController,
+                            hint: AppStrings.enterCustomDeedTypeName,
+                            prefixImage: AppImages.instrument,
+                            title: AppStrings.customDeedTypeName,
+                            errorText: state
+                                .fieldErrors[AddPropertyField.customTypeName],
+                          ),
+                        ],
+                        if (state.model.needsOwnershipDocument) ...[
+                          12.height.toSizedBox,
+                          const DeedDocumentPicker(),
+                        ],
+                      ],
                     );
                   },
                 ),
-                12.height.toSizedBox,
-                const DeedDocumentPicker(),
                 20.height.toSizedBox,
               ],
             ),

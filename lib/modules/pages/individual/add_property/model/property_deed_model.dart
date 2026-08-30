@@ -11,6 +11,7 @@ class PropertyDeedModel extends Equatable {
     this.deedNumber,
     this.calendarType,
     this.deedDate,
+    this.customTypeName,
     this.ownershipDocumentPath,
   });
 
@@ -18,8 +19,9 @@ class PropertyDeedModel extends Equatable {
   final String? deedNumber;
   final String? calendarType;
 
-  /// ISO date string, e.g. `2025-06-01`.
+  /// Date string matching [calendarType], e.g. `2025-06-01` or `1446-12-03`.
   final String? deedDate;
+  final String? customTypeName;
   final String? ownershipDocumentPath;
 
   bool get hasOwnershipDocument =>
@@ -36,6 +38,8 @@ class PropertyDeedModel extends Equatable {
         '$prefix[calendarType]': calendarType!,
       if (deedDate != null && deedDate!.isNotEmpty)
         '$prefix[deedDate]': deedDate!,
+      if (customTypeName != null && customTypeName!.isNotEmpty)
+        '$prefix[customTypeName]': customTypeName!,
     };
   }
 
@@ -47,6 +51,7 @@ class PropertyDeedModel extends Equatable {
     String? deedNumber,
     String? calendarType,
     String? deedDate,
+    String? customTypeName,
     String? ownershipDocumentPath,
   }) {
     return PropertyDeedModel(
@@ -54,6 +59,7 @@ class PropertyDeedModel extends Equatable {
       deedNumber: deedNumber ?? this.deedNumber,
       calendarType: calendarType ?? this.calendarType,
       deedDate: deedDate ?? this.deedDate,
+      customTypeName: customTypeName ?? this.customTypeName,
       ownershipDocumentPath:
           ownershipDocumentPath ?? this.ownershipDocumentPath,
     );
@@ -65,6 +71,7 @@ class PropertyDeedModel extends Equatable {
     deedNumber,
     calendarType,
     deedDate,
+    customTypeName,
     ownershipDocumentPath,
   ];
   Map<String, String> toJson() {
@@ -73,6 +80,7 @@ class PropertyDeedModel extends Equatable {
       'deedNumber': ?deedNumber,
       'calendarType': ?calendarType,
       'deedDate': ?deedDate,
+      'customTypeName': ?customTypeName,
     };
   }
 }

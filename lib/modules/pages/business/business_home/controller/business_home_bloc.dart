@@ -8,6 +8,7 @@ import '../../../../../core/connection/interfaces/api_consumer.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_images.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../core/utils/functions/account_role.dart';
 import '../../../../../core/utils/functions/service_locator.dart';
 import '../../../individual/individual_home/model/properties_item_model.dart';
 import '../../../individual/individual_home/model/smart_service_model.dart';
@@ -23,7 +24,9 @@ class BusinessHomeBloc extends Bloc<BusinessHomeEvent, BusinessHomeState> {
     on<BusinessHomeItemsEvent>((event, emit) {
       add(const BusinessPropertiesLoad());
       add(const PortfolioLoad());
-      add(const RequestsLoad());
+      if (AccountRole.isBroker) {
+        add(const RequestsLoad());
+      }
       add(const IndividualHomeLoadUserLocation());
     });
     on<BusinessPropertiesLoad>(_loadBusinessProperties);

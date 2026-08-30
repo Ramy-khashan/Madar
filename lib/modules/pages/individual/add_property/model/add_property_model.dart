@@ -16,6 +16,7 @@ class AddPropertyModel extends Equatable {
     this.street = '',
     this.deedType,
     this.deedNumber = '',
+    this.customTypeName = '',
     this.dateType = 'gregorian',
     this.date = '',
     this.imagePaths = const [],
@@ -67,8 +68,27 @@ class AddPropertyModel extends Equatable {
   final String street;
   final String? deedType;
   final String deedNumber;
+  final String customTypeName;
   final String dateType; // 'hijri' | 'gregorian'
   final String date;
+
+  String? get apiDeedType => (deedType == null || deedType!.isEmpty)
+      ? null
+      : PropertyApiEnums.deedTypeFromUi(deedType);
+
+  bool get needsDeedNumberAndDate {
+    final type = apiDeedType;
+    return type == PropertyApiEnums.deedElectronic ||
+        type == PropertyApiEnums.deedRealEstateDeed;
+  }
+
+  bool get needsOwnershipDocument {
+    final type = apiDeedType;
+    return type == PropertyApiEnums.deedSaleContract ||
+        type == PropertyApiEnums.deedOther;
+  }
+
+  bool get needsCustomTypeName => apiDeedType == PropertyApiEnums.deedOther;
 
   // Step 4 — Images
   final List<String> imagePaths;
@@ -141,6 +161,7 @@ class AddPropertyModel extends Equatable {
     String? street,
     String? deedType,
     String? deedNumber,
+    String? customTypeName,
     String? dateType,
     String? date,
     List<String>? imagePaths,
@@ -194,6 +215,7 @@ class AddPropertyModel extends Equatable {
       street: street ?? this.street,
       deedType: deedType ?? this.deedType,
       deedNumber: deedNumber ?? this.deedNumber,
+      customTypeName: customTypeName ?? this.customTypeName,
       dateType: dateType ?? this.dateType,
       date: date ?? this.date,
       imagePaths: imagePaths ?? this.imagePaths,
@@ -254,6 +276,7 @@ class AddPropertyModel extends Equatable {
     street,
     deedType,
     deedNumber,
+    customTypeName,
     dateType,
     date,
     imagePaths,

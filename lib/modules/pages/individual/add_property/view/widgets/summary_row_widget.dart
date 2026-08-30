@@ -30,12 +30,14 @@ class SummaryRowWidget extends StatelessWidget {
               color: tc.textSecondary,
             ),
           ),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: context.responsiveFontScale(13),
-              fontWeight: FontWeight.w600,
-              color: tc.textPrimary,
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: context.responsiveFontScale(13),
+                fontWeight: FontWeight.w600,
+                color: tc.textPrimary,
+              ),
             ),
           ),
         ],

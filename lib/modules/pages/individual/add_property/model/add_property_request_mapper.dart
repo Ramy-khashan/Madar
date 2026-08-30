@@ -166,13 +166,34 @@ extension AddPropertyRequestMapper on AddPropertyModel {
   }
 
   List<PropertyDeedModel> _buildDeeds() {
-    if (deedType == null || deedType!.isEmpty) return const [];
+    final type = apiDeedType;
+    if (type == null) return const [];
+
+    if (type == PropertyApiEnums.deedElectronic ||
+        type == PropertyApiEnums.deedRealEstateDeed) {
+      return [
+        PropertyDeedModel(
+          deedType: type,
+          deedNumber: deedNumber.isNotEmpty ? deedNumber : null,
+          calendarType: PropertyApiEnums.calendarTypeFromUi(dateType),
+          deedDate: date.isNotEmpty ? date : null,
+        ),
+      ];
+    }
+
+    if (type == PropertyApiEnums.deedSaleContract) {
+      return [
+        PropertyDeedModel(
+          deedType: type,
+          ownershipDocumentPath: ownershipDocumentPath,
+        ),
+      ];
+    }
+
     return [
       PropertyDeedModel(
-        deedType: PropertyApiEnums.deedTypeFromUi(deedType),
-        deedNumber: deedNumber.isNotEmpty ? deedNumber : null,
-        calendarType: PropertyApiEnums.calendarTypeFromUi(dateType),
-        deedDate: date.isNotEmpty ? date : null,
+        deedType: type,
+        customTypeName: customTypeName.isNotEmpty ? customTypeName : null,
         ownershipDocumentPath: ownershipDocumentPath,
       ),
     ];
