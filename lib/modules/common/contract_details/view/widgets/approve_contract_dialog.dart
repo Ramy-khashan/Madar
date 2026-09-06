@@ -43,7 +43,7 @@ class _ApproveContractDialogState extends State<ApproveContractDialog> {
     _durationController = TextEditingController(text: '1');
     final price = widget.initialPrice;
     _priceController = TextEditingController(
-      text: price == null || price == 0 ? '' : price.toString(),
+      text: price == null || price == 0 ? '' : formatPrice(price.toDouble()),
     );
   }
 
@@ -58,7 +58,7 @@ class _ApproveContractDialogState extends State<ApproveContractDialog> {
     final duration = widget.showDuration
         ? _durationController.text.trim()
         : '';
-    final price = num.tryParse(_priceController.text.trim().replaceAll(',', ''));
+    final price = parsePrice(_priceController.text);
     if (widget.showDuration && duration.isEmpty) {
       AppToast(AppStrings.pleaseEnterContractDuration, isError: true);
       return;
@@ -116,7 +116,7 @@ class _ApproveContractDialogState extends State<ApproveContractDialog> {
               hint: AppStrings.contractFinalPrice,
               controller: _priceController,
               textInputType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              isPrice: true,
             ),
             SizedBox(height: 16.height),
             AppButton(

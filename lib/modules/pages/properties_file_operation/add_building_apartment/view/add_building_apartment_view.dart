@@ -121,6 +121,7 @@ class AddBuildingApartmentView extends StatelessWidget {
                       title: AppStrings.monthlyRent,
                       hint: AppStrings.monthlyRent,
                       textInputType: TextInputType.number,
+                      isPrice: true,
                     ),
                     SizedBox(height: 8.height),
                     ApartmentCalendarToggle(

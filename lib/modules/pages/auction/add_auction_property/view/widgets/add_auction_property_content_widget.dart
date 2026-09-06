@@ -11,6 +11,7 @@ import '../../../../../../core/components/responsive_row_column.dart';
 import '../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../controller/add_auction_property_bloc.dart';
 import 'auction_date_time_item.dart';
@@ -65,11 +66,13 @@ class AddAuctionPropertyContentWidget extends StatelessWidget {
                     title: AppStrings.startingPriceLabel,
                     hint: AppStrings.startingPriceHint,
                     textInputType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    isPrice: true,
                     suffixImage: AppImages.rentIcon,
                     suffixIconColor: colors.textSecondary,
                     onChanged: (v) => context.read<AddAuctionPropertyBloc>().add(
-                      AddAuctionPropertyFieldChanged(startingPrice: v),
+                      AddAuctionPropertyFieldChanged(
+                        startingPrice: digitsOnly(v),
+                      ),
                     ),
                   ),
                   SizedBox(height: 8.height),

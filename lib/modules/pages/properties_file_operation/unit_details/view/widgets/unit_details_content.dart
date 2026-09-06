@@ -260,9 +260,9 @@ class UnitDetailsContent extends StatelessWidget {
                             final desc = bloc.expenseDescController.text
                                 .trim();
                             final amt =
-                                double.tryParse(
-                                  bloc.expenseAmountController.text.trim(),
-                                ) ??
+                                parsePrice(
+                                  bloc.expenseAmountController.text,
+                                )?.toDouble() ??
                                 0;
                             if (desc.isEmpty || amt <= 0) return;
                             bloc.add(

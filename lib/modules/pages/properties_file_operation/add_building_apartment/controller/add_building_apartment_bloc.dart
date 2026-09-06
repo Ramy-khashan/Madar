@@ -104,7 +104,7 @@ class AddBuildingApartmentBloc
       'status': state.status,
     };
     if (state.isRented) {
-      final rent = num.tryParse(rentController.text.trim());
+      final rent = parsePrice(rentController.text);
       final start = startDateController.text.trim();
       final end = endDateController.text.trim();
       if (tenantNameController.text.trim().isEmpty ||

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../config/theme/app_theme_colors.dart';
 import '../utils/constants/app_constant.dart';
+import '../utils/functions/common_fun.dart';
 import '../utils/functions/responsive.dart';
 import 'image_item.dart';
 
@@ -57,6 +58,7 @@ class AppTextField extends StatefulWidget {
   final String? errorText;
   final TextStyle? errorStyle;
   final AutovalidateMode? autovalidateMode;
+  final bool isPrice;
 
   const AppTextField({
     super.key,
@@ -110,6 +112,7 @@ class AppTextField extends StatefulWidget {
     this.errorText,
     this.errorStyle,
     this.autovalidateMode,
+    this.isPrice = false,
   }) : assert(
           !(obscureText && maxLines > 1),
           'obscureText cannot be used with multiline',
@@ -207,7 +210,10 @@ class _AppTextFieldState extends State<AppTextField> {
           textAlign: widget.textAlign,
           textInputAction: widget.textInputAction,
           keyboardType: widget.textInputType,
-          inputFormatters: widget.inputFormatters,
+          inputFormatters: [
+            if (widget.isPrice) ThousandsSeparatorInputFormatter(),
+            ...widget.inputFormatters,
+          ],
           validator: widget.validator,
           onChanged: widget.onChanged,
           onTap: widget.onTapField,

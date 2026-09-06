@@ -22,6 +22,12 @@ String digitsOnly(String value) {
   return buffer.toString();
 }
 
+num? parsePrice(String? value) {
+  final digits = digitsOnly(value ?? '');
+  if (digits.isEmpty) return null;
+  return num.tryParse(digits);
+}
+
 class ThousandsSeparatorInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(

@@ -47,7 +47,7 @@ class _AddOtherIncomeDialogState extends State<_AddOtherIncomeDialog> {
 
   void _submit() {
     final title = _titleController.text.trim();
-    final amount = num.tryParse(_amountController.text.trim());
+    final amount = parsePrice(_amountController.text);
     if (title.isEmpty || amount == null || amount <= 0) {
       AppToast(AppStrings.pleaseCompleteRequiredFields, isError: true);
       return;
@@ -74,9 +74,8 @@ class _AddOtherIncomeDialogState extends State<_AddOtherIncomeDialog> {
               controller: _amountController,
               title: AppStrings.otherIncomeAmount,
               hint: AppStrings.otherIncomeAmount,
-              textInputType: const TextInputType.numberWithOptions(
-                decimal: true,
-              ),
+              textInputType: TextInputType.number,
+              isPrice: true,
             ),
           ],
         ),

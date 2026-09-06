@@ -144,6 +144,7 @@ class AddCommercialProjectScreen extends StatelessWidget {
                         hint: AppStrings.priceFieldHint,
                         controller: bloc.budgetController,
                         textInputType: TextInputType.number,
+                        isPrice: true,
                         validator: (value) => Validate.notEmpty(value ?? ''),
                         suffixIconWidget: Padding(
                           padding: EdgeInsets.only (top:8),

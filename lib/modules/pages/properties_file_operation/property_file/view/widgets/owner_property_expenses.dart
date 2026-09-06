@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_button.dart';
@@ -112,7 +111,7 @@ class OwnerPropertyExpenses extends StatelessWidget {
                   hint: AppStrings.enterAmount,
                   controller: amountController,
                   textInputType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  isPrice: true,
                 ),
                 SizedBox(height: 10.height),
                 GestureDetector(

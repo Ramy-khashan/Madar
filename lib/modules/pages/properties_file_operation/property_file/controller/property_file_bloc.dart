@@ -156,7 +156,7 @@ class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState> {
     Emitter<PropertyFileState> emit,
   ) {
     final desc = expenseDescController.text.trim();
-    final amt = double.tryParse(expenseAmountController.text.trim()) ?? 0;
+    final amt = parsePrice(expenseAmountController.text)?.toDouble() ?? 0;
     if (desc.isEmpty || amt <= 0) return;
     emit(
       state.copyWith(
