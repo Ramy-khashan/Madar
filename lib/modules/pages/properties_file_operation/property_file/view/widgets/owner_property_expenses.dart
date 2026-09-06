@@ -24,6 +24,8 @@ class OwnerPropertyExpenses extends StatelessWidget {
     required this.onRemove,
     required this.onPickFiles,
     this.canEdit = true,
+    this.onConfirm,
+    this.isConfirming = false,
   });
 
   final List<UnitExpenseModel> expenses;
@@ -35,6 +37,8 @@ class OwnerPropertyExpenses extends StatelessWidget {
   final ValueChanged<int> onRemove;
   final VoidCallback onPickFiles;
   final bool canEdit;
+  final VoidCallback? onConfirm;
+  final bool isConfirming;
 
   @override
   Widget build(BuildContext context) {
@@ -152,6 +156,14 @@ class OwnerPropertyExpenses extends StatelessWidget {
                   childText: AppStrings.addExpenseBtn,
                   childIcon: Icons.add,
                 ),
+                if (onConfirm != null) ...[
+                  SizedBox(height: 10.height),
+                  AppButton(
+                    onTap: onConfirm,
+                    text: AppStrings.confirmAddExpenses,
+                    isLoading: isConfirming,
+                  ),
+                ],
               ],
             ),
           ),

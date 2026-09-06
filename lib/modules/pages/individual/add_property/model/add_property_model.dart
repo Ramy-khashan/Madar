@@ -85,10 +85,13 @@ class AddPropertyModel extends Equatable {
   bool get needsOwnershipDocument {
     final type = apiDeedType;
     return type == PropertyApiEnums.deedSaleContract ||
+        type == PropertyApiEnums.deedElectronic ||
         type == PropertyApiEnums.deedOther;
   }
 
   bool get needsCustomTypeName => apiDeedType == PropertyApiEnums.deedOther;
+  bool get needsDeedElectronic =>
+      apiDeedType == PropertyApiEnums.deedElectronic;
 
   // Step 4 — Images
   final List<String> imagePaths;

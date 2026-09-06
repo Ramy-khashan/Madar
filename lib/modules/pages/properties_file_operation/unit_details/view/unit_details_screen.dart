@@ -10,15 +10,18 @@ class UnitDetailsScreen extends StatelessWidget {
     super.key,
     required this.unit,
     required this.propertyName,
+    this.buildingId = '',
   });
 
   final UnitModel unit;
   final String propertyName;
+  final String buildingId;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => UnitDetailsBloc()..add(UnitDetailsInit(unit)),
+      create: (_) => UnitDetailsBloc()
+        ..add(UnitDetailsInit(unit, buildingId: buildingId)),
       child: UnitDetailsContent(propertyName: propertyName),
     );
   }

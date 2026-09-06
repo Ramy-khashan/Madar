@@ -145,12 +145,12 @@ class AddCommercialProjectScreen extends StatelessWidget {
                         controller: bloc.budgetController,
                         textInputType: TextInputType.number,
                         validator: (value) => Validate.notEmpty(value ?? ''),
-                        prefixIconWidget: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 12.width),
+                        suffixIconWidget: Padding(
+                          padding: EdgeInsets.only (top:8),
                           child: Text(
                             AppStrings.currency,
                             style: TextStyle(
-                              fontSize: context.responsiveFontScale(14),
+                              fontSize: context.responsiveFontScale(22),
                               color: colors.textSecondary,
                               fontFamily: AppConstant.appFont,
                             ),
@@ -191,6 +191,8 @@ class AddCommercialProjectScreen extends StatelessWidget {
                           customSubStages: state.customSubStages,
                           onStageToggled: (stageId) =>
                               bloc.add(AddCommercialStageToggled(stageId)),
+                          onStageSelectAll: (stageId) =>
+                              bloc.add(AddCommercialStageSelectAll(stageId)),
                           onSubStageToggled: (stageId, subStageId) => bloc.add(
                             AddCommercialSubStageToggled(stageId, subStageId),
                           ),
@@ -268,6 +270,9 @@ class AddCommercialProjectScreen extends StatelessWidget {
                         ),
                       ],
                       SizedBox(height: 20.height),
+                      Text(AppStrings.chooseProjectManager,style: TextStyle(
+                            fontSize: context.responsiveFontScale(20)
+                          ),),
                       ProjectManagerFields(
                         nameController: bloc.usernameController,
                         passwordController: bloc.passwordController,

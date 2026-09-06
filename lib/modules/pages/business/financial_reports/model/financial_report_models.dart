@@ -353,7 +353,8 @@ class DashboardRevenueItem extends Equatable {
   factory DashboardRevenueItem.fromJson(Map<String, dynamic> json) {
     return DashboardRevenueItem(
       contractId: (json['contractId'] ?? json['id'] ?? '').toString(),
-      property: (json['property'] ?? json['propertyTitle'] ?? '').toString(),
+      property: (json['property'] ?? json['propertyTitle'] ?? json['title'] ?? '')
+          .toString(),
       type: (json['type'] ?? '').toString(),
       amount: _asDouble(json['amount']),
       date: DateTime.tryParse((json['date'] ?? '').toString()),
@@ -370,28 +371,37 @@ class DashboardRevenuesResponse extends Equatable {
     this.totalIncome = 0,
     this.rentalsTotal = 0,
     this.otherTotal = 0,
+    this.otherIncomeTotal = 0,
     this.rentals = const [],
     this.otherTransactions = const [],
+    this.otherIncome = const [],
   });
 
   final double totalIncome;
   final double rentalsTotal;
   final double otherTotal;
+  final double otherIncomeTotal;
   final List<DashboardRevenueItem> rentals;
   final List<DashboardRevenueItem> otherTransactions;
+  final List<DashboardRevenueItem> otherIncome;
 
   factory DashboardRevenuesResponse.fromJson(Map<String, dynamic> json) {
     final rentals = _asMap(json['rentals']);
     final others = _asMap(json['otherTransactions']);
+    final otherIncome = _asMap(json['otherIncome']);
     return DashboardRevenuesResponse(
       totalIncome: _asDouble(json['totalIncome']),
       rentalsTotal: _asDouble(rentals['total']),
       otherTotal: _asDouble(others['total']),
+      otherIncomeTotal: _asDouble(otherIncome['total']),
       rentals: _asMapList(
         rentals['items'],
       ).map(DashboardRevenueItem.fromJson).toList(),
       otherTransactions: _asMapList(
         others['items'],
+      ).map(DashboardRevenueItem.fromJson).toList(),
+      otherIncome: _asMapList(
+        otherIncome['items'],
       ).map(DashboardRevenueItem.fromJson).toList(),
     );
   }
@@ -401,8 +411,10 @@ class DashboardRevenuesResponse extends Equatable {
     totalIncome,
     rentalsTotal,
     otherTotal,
+    otherIncomeTotal,
     rentals,
     otherTransactions,
+    otherIncome,
   ];
 }
 

@@ -25,6 +25,7 @@ class FinancialReportsState extends Equatable {
     this.settlements = const [],
     this.incomeSections = const [],
     this.expensesSections = const [],
+    this.isSubmittingOtherIncome = false,
   });
 
   /// 0 = نظرة عامة, 1 = الايرادات, 2 = المصروفات
@@ -51,6 +52,7 @@ class FinancialReportsState extends Equatable {
   final List<FinancialSettlement> settlements;
   final List<StatisticCircleModel> incomeSections;
   final List<StatisticCircleModel> expensesSections;
+  final bool isSubmittingOtherIncome;
 
   FinancialReportsState copyWith({
     int? selectedTab,
@@ -74,6 +76,7 @@ class FinancialReportsState extends Equatable {
     List<FinancialSettlement>? settlements,
     List<StatisticCircleModel>? incomeSections,
     List<StatisticCircleModel>? expensesSections,
+    bool? isSubmittingOtherIncome,
   }) => FinancialReportsState(
     selectedTab: selectedTab ?? this.selectedTab,
     selectedPeriod: selectedPeriod ?? this.selectedPeriod,
@@ -98,6 +101,8 @@ class FinancialReportsState extends Equatable {
     settlements: settlements ?? this.settlements,
     incomeSections: incomeSections ?? this.incomeSections,
     expensesSections: expensesSections ?? this.expensesSections,
+    isSubmittingOtherIncome:
+        isSubmittingOtherIncome ?? this.isSubmittingOtherIncome,
   );
 
   @override
@@ -123,5 +128,6 @@ class FinancialReportsState extends Equatable {
     settlements,
     incomeSections,
     expensesSections,
+    isSubmittingOtherIncome,
   ];
 }

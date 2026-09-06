@@ -28,6 +28,7 @@ class AddResidentialProjectBloc
     on<AddResidentialReset>(_onReset);
     on<AddResidentialFetchStages>(_onFetchStages);
     on<AddResidentialStageToggled>(_onStageToggled);
+    on<AddResidentialStageSelectAll>(_onStageSelectAll);
     on<AddResidentialSubStageToggled>(_onSubStageToggled);
     on<AddResidentialImagesSelected>(_onImagesSelected);
     on<AddResidentialImageRemoved>(_onImageRemoved);
@@ -271,6 +272,24 @@ class AddResidentialProjectBloc
         selectedStageIds: selectedStageIds,
         selectedSubStageIds: selectedSubStageIds,
         customSubStages: customSubStages,
+      ),
+    );
+  }
+
+  void _onStageSelectAll(
+    AddResidentialStageSelectAll event,
+    Emitter<AddResidentialProjectState> emit,
+  ) {
+    final result = ProjectFormHelpers.selectAllExceptOther(
+      stages: state.stages,
+      stageId: event.stageId,
+      selectedStageIds: state.selectedStageIds,
+      selectedSubStageIds: state.selectedSubStageIds,
+    );
+    emit(
+      state.copyWith(
+        selectedStageIds: result.selectedStageIds,
+        selectedSubStageIds: result.selectedSubStageIds,
       ),
     );
   }

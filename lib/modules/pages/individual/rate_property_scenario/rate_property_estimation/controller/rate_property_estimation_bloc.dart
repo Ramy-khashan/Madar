@@ -48,7 +48,7 @@ class RatePropertyEstimationBloc
         location: event.location ?? state.location,
         area: event.area ?? state.area,
         propertyAge: event.propertyAge ?? state.propertyAge,
-        finishingLevel: event.finishingLevel ?? state.finishingLevel,
+        // finishingLevel: event.finishingLevel ?? state.finishingLevel,
         purpose: event.purpose ?? state.purpose,
       ),
     );
@@ -63,7 +63,7 @@ class RatePropertyEstimationBloc
           locationController.text.isEmpty ||
           areaController.text.isEmpty ||
           state.propertyAge.isEmpty ||
-          state.finishingLevel == null ||
+          // state.finishingLevel == null ||
           state.purpose == null) {
         AppToast(AppStrings.pleaseFillForm);
         return;
@@ -76,7 +76,7 @@ class RatePropertyEstimationBloc
           'location': locationController.text,
           'area': int.parse(areaController.text),
           'propertyAge': state.propertyAge,
-          'finishing': state.finishingLevel,
+          // 'finishing': state.finishingLevel,
           'purpose': state.purpose,
         },
       );
@@ -171,7 +171,7 @@ class RatePropertyEstimationBloc
           'location': locationController.text,
           'area': int.parse(areaController.text),
           'propertyAge': state.propertyAge,
-          'finishing': state.finishingLevel,
+          // 'finishing': state.finishingLevel,
           'purpose': state.purpose,
         },
       );

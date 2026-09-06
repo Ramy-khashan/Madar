@@ -41,9 +41,7 @@ class PropertyFileScreen extends StatelessWidget {
               onSend: () => RouterHandler.navigate(
                 context,
                 AppRouterKeys.chooseBroker,
-                extra:
-                    bloc.state.details?.propertyId ??
-                    bloc.state.property?.id,
+                extra: bloc.state.details?.propertyId ?? bloc.state.property?.id,
               ),
               onDelete: () => showConfirmDeleteDialog(
                 context: context,

@@ -46,12 +46,7 @@ class AppConstant {
     'payment_installment'.trans,
   ];
 
-  static List<String> get durations => [
-    'duration_3_months'.trans,
-    'duration_6_months'.trans,
-    'duration_1_year'.trans,
-    'duration_2_years'.trans,
-  ];
+  static List<String> get durations => ['MONTHLY', 'HALF_YEARLY', 'YEARLY'];
 
   static Color getStatusColor(String status) {
     final color = switch (status) {
@@ -76,7 +71,6 @@ class AppConstant {
     'SHOP',
     'WAREHOUSE',
     'FARM',
-
   ];
   static List<String> get basicServices => [
     'INTERNET',
@@ -106,10 +100,6 @@ class AppConstant {
     'HEALTH_CLUB',
     'MOSQUE_IN_COMPOUND',
   ];
-  static List<String> get furnishingOptions=>[
-    'FURNISHED', 'UNFURNISHED'
-  ];  static List<String> get availabilityOptions=>[
-    'EXIST', 'NOT_EXIST'
-  ];
-
+  static List<String> get furnishingOptions => ['FURNISHED', 'UNFURNISHED'];
+  static List<String> get availabilityOptions => ['EXIST', 'NOT_EXIST'];
 }

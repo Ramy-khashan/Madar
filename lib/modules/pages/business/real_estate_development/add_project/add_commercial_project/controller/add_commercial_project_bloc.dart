@@ -27,6 +27,7 @@ class AddCommercialProjectBloc
     on<AddCommercialReset>(_onReset);
     on<AddCommercialFetchStages>(_onFetchStages);
     on<AddCommercialStageToggled>(_onStageToggled);
+    on<AddCommercialStageSelectAll>(_onStageSelectAll);
     on<AddCommercialSubStageToggled>(_onSubStageToggled);
     on<AddCommercialImagesSelected>(_onImagesSelected);
     on<AddCommercialImageRemoved>(_onImageRemoved);
@@ -264,6 +265,24 @@ class AddCommercialProjectBloc
         selectedStageIds: selectedStageIds,
         selectedSubStageIds: selectedSubStageIds,
         customSubStages: customSubStages,
+      ),
+    );
+  }
+
+  void _onStageSelectAll(
+    AddCommercialStageSelectAll event,
+    Emitter<AddCommercialProjectState> emit,
+  ) {
+    final result = ProjectFormHelpers.selectAllExceptOther(
+      stages: state.stages,
+      stageId: event.stageId,
+      selectedStageIds: state.selectedStageIds,
+      selectedSubStageIds: state.selectedSubStageIds,
+    );
+    emit(
+      state.copyWith(
+        selectedStageIds: result.selectedStageIds,
+        selectedSubStageIds: result.selectedSubStageIds,
       ),
     );
   }

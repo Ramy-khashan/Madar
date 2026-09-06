@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:madar_app/modules/pages/individual/add_property/view/widgets/title_section.dart';
-
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_textfield.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';

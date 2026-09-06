@@ -133,9 +133,7 @@ class BusinessPropertiesRequestCardWidget extends StatelessWidget {
                               SizedBox(width: 4.width),
 
                               Text(
-                                item?.locationLabel.isNotEmpty == true
-                                    ? item!.locationLabel
-                                    : '',
+                                item?.location ?? 'Unknown Location',
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontSize: context.responsiveFontScale(14),

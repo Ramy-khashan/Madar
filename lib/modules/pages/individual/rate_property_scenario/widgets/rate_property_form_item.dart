@@ -120,13 +120,13 @@ class RatePropertyFormItem extends StatelessWidget {
           items: AppConstant.propertyAges,
           onChanged: onPropertyAgeChanged,
         ),
-        AppDropDownItem(
-          title: AppStrings.ratePropertyFinishingLabel,
-          hintText: AppStrings.ratePropertyFinishingHint,
-          value: finishingLevel,
-          items: AppConstant.finishingLevels,
-          onChanged: onFinishingLevelChanged,
-        ),
+        // AppDropDownItem(
+        //   title: AppStrings.ratePropertyFinishingLabel,
+        //   hintText: AppStrings.ratePropertyFinishingHint,
+        //   value: finishingLevel,
+        //   items: AppConstant.finishingLevels,
+        //   onChanged: onFinishingLevelChanged,
+        // ),
         AppDropDownItem(
           title: AppStrings.ratePropertyPurposeLabel,
           hintText: AppStrings.ratePropertyPurposeHint,

@@ -10,6 +10,7 @@ class UnitDetailsState extends Equatable {
     this.isSentToBroker = false,
     this.expenseFiles = const [],
     this.errorMsg = '',
+    this.buildingId = '',
   });
 
   final UnitModel? unit;
@@ -20,6 +21,7 @@ class UnitDetailsState extends Equatable {
   final bool isSentToBroker;
   final List<String> expenseFiles;
   final String errorMsg;
+  final String buildingId;
 
   UnitDetailsState copyWith({
     UnitModel? unit,
@@ -30,6 +32,7 @@ class UnitDetailsState extends Equatable {
     bool? isSentToBroker,
     List<String>? expenseFiles,
     String? errorMsg,
+    String? buildingId,
   }) => UnitDetailsState(
     unit: unit ?? this.unit,
     details: details ?? this.details,
@@ -39,6 +42,7 @@ class UnitDetailsState extends Equatable {
     isSentToBroker: isSentToBroker ?? this.isSentToBroker,
     expenseFiles: expenseFiles ?? this.expenseFiles,
     errorMsg: errorMsg ?? this.errorMsg,
+    buildingId: buildingId ?? this.buildingId,
   );
 
   @override
@@ -51,5 +55,6 @@ class UnitDetailsState extends Equatable {
     isSentToBroker,
     expenseFiles,
     errorMsg,
+    buildingId,
   ];
 }

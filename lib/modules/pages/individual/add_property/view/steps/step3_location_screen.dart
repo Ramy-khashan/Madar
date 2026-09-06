@@ -193,7 +193,8 @@ class AddPropertyStep3Screen extends StatelessWidget {
                             },
                           ),
                         ],
-                        if (state.model.needsCustomTypeName) ...[
+                        if (state.model.needsCustomTypeName ||
+                            state.model.needsDeedElectronic) ...[
                           12.height.toSizedBox,
                           AppTextField(
                             controller: bloc.customTypeNameController,

@@ -27,6 +27,11 @@ class PropertyFileModel extends Equatable {
     required this.units,
     this.isBookmarked = false,
     this.rawType = '',
+    this.declaredTotalUnits = 0,
+    this.floorsCount = 0,
+    this.shopsCount = 0,
+    this.parkingSpots = 0,
+    this.buildingArea = 0,
   });
 
   final String id;
@@ -39,6 +44,11 @@ class PropertyFileModel extends Equatable {
   final List<UnitModel> units;
   final bool isBookmarked;
   final String rawType;
+  final int declaredTotalUnits;
+  final int floorsCount;
+  final int shopsCount;
+  final int parkingSpots;
+  final double buildingArea;
 
   bool get isMultiUnit => isMultiUnitType(rawType);
 
@@ -79,7 +89,10 @@ class PropertyFileModel extends Equatable {
     }
   }
 
-  int get totalUnits => units.length;
+  int get totalUnits {
+    if (declaredTotalUnits > units.length) return declaredTotalUnits;
+    return units.length;
+  }
   int get rentedCount =>
       units.where((u) => u.status == UnitStatus.rented).length;
   int get vacantCount =>
@@ -100,6 +113,10 @@ class PropertyFileModel extends Equatable {
     final occupied = units.where((u) => u.status != UnitStatus.vacant).length;
     final apiRate =
         p.financialPerformance?.occupancyRate ?? p.details?.occupancyRate;
+    final declared =
+        p.details?.totalApartments ??
+        p.financialPerformance?.totalChildUnits ??
+        0;
     return PropertyFileModel(
       id: p.propertyId ?? '',
       name: p.title ?? '',
@@ -115,6 +132,11 @@ class PropertyFileModel extends Equatable {
           .toDouble(),
       units: units,
       rawType: p.type ?? '',
+      declaredTotalUnits: declared,
+      floorsCount: p.details?.floorsCount ?? 0,
+      shopsCount: p.details?.shopsCount ?? 0,
+      parkingSpots: p.details?.parkingSpots ?? p.details?.totalParking ?? 0,
+      buildingArea: (p.totalArea ?? p.details?.totalArea ?? 0).toDouble(),
     );
   }
 
@@ -133,6 +155,11 @@ class PropertyFileModel extends Equatable {
     units: units ?? this.units,
     isBookmarked: isBookmarked ?? this.isBookmarked,
     rawType: rawType,
+    declaredTotalUnits: declaredTotalUnits,
+    floorsCount: floorsCount,
+    shopsCount: shopsCount,
+    parkingSpots: parkingSpots,
+    buildingArea: buildingArea,
   );
 
   @override
@@ -147,6 +174,11 @@ class PropertyFileModel extends Equatable {
     units,
     isBookmarked,
     rawType,
+    declaredTotalUnits,
+    floorsCount,
+    shopsCount,
+    parkingSpots,
+    buildingArea,
   ];
 }
 
@@ -171,6 +203,7 @@ class UnitModel extends Equatable {
     this.imageUrl = '',
     this.listingType = '',
     this.rawStatus = '',
+    this.buildingId = '',
   });
 
   final String id;
@@ -192,22 +225,52 @@ class UnitModel extends Equatable {
   final String imageUrl;
   final String listingType;
   final String rawStatus;
+  final String buildingId;
 
   factory UnitModel.fromChild(ChildProperty child, int index) {
-    final title = child.title ?? '';
+    final title = (child.title ?? '').trim();
+    final unitNumber = (child.unitNumber ?? '').trim();
+    final unitId = unitNumber.isNotEmpty
+        ? unitNumber
+        : (title.isNotEmpty ? title : '${index + 1}');
+    final tenancy = (child.tenancyStatus ?? '').trim();
+    final statusRaw = tenancy.isNotEmpty ? tenancy : (child.status ?? '');
     return UnitModel(
       id: child.propertyId ?? '',
-      number: '${index + 1}',
-      label: title.isNotEmpty ? title : '${index + 1}',
-      status: unitStatusFrom(child.status),
-      area: 0,
-      rooms: 0,
-      bathrooms: 0,
-      monthlyRent: (child.price ?? 0).toDouble(),
+      number: unitId,
+      label: title.isNotEmpty ? title : unitId,
+      status: unitStatusFrom(statusRaw),
+      area: (child.totalArea ?? 0).toDouble(),
+      rooms: child.rooms ?? 0,
+      bathrooms: child.bathrooms ?? 0,
+      monthlyRent: (child.monthlyRent ?? child.price ?? 0).toDouble(),
       floor: 0,
       imageUrl: child.mainImage ?? '',
       listingType: child.listingType ?? '',
-      rawStatus: child.status ?? '',
+      rawStatus: statusRaw,
+    );
+  }
+
+  factory UnitModel.fromBuildingApartment(BuildingApartmentModel apartment) {
+    final t = apartment.tenancy;
+    return UnitModel(
+      id: apartment.propertyId,
+      number: apartment.unitNumber,
+      label: apartment.unitNumber,
+      status: unitStatusFrom(t.status),
+      area: apartment.totalArea,
+      rooms: apartment.rooms,
+      bathrooms: apartment.bathrooms,
+      monthlyRent: t.monthlyRent,
+      floor: 0,
+      tenantName: t.tenantName,
+      tenantPhone: t.tenantPhone,
+      rentStartDate: t.startDate,
+      rentEndDate: t.endDate,
+      isHijriDate: t.calendarType.toUpperCase() == 'HIJRI',
+      expenses: apartment.expenses,
+      rawStatus: t.status,
+      buildingId: apartment.buildingId,
     );
   }
 
@@ -246,6 +309,7 @@ class UnitModel extends Equatable {
           : (base?.imageUrl ?? ''),
       listingType: p.listingType ?? base?.listingType ?? '',
       rawStatus: p.status ?? base?.rawStatus ?? '',
+      buildingId: base?.buildingId ?? '',
     );
   }
 
@@ -268,6 +332,7 @@ class UnitModel extends Equatable {
     String? imageUrl,
     String? listingType,
     String? rawStatus,
+    String? buildingId,
   }) => UnitModel(
     id: id,
     number: number ?? this.number,
@@ -288,6 +353,7 @@ class UnitModel extends Equatable {
     imageUrl: imageUrl ?? this.imageUrl,
     listingType: listingType ?? this.listingType,
     rawStatus: rawStatus ?? this.rawStatus,
+    buildingId: buildingId ?? this.buildingId,
   );
 
   @override
@@ -311,6 +377,7 @@ class UnitModel extends Equatable {
     imageUrl,
     listingType,
     rawStatus,
+    buildingId,
   ];
 }
 
@@ -331,6 +398,143 @@ class UnitExpenseModel extends Equatable {
 
   bool get isRemote => (id ?? '').isNotEmpty;
 
+  factory UnitExpenseModel.fromJson(Map<String, dynamic> json) {
+    final file = json['file'] ?? json['fileUrl'];
+    final fileText = file?.toString().trim() ?? '';
+    return UnitExpenseModel(
+      id: json['id']?.toString(),
+      description: (json['expenseType'] ?? json['title'] ?? json['type'] ?? '')
+          .toString(),
+      amount: _asNum(json['amount']),
+      fileUrl: fileText.isEmpty || fileText == 'null' ? null : fileText,
+      createdAt: json['createdAt']?.toString(),
+    );
+  }
+
   @override
   List<Object?> get props => [id, description, amount, fileUrl, createdAt];
 }
+
+class BuildingApartmentTenancy extends Equatable {
+  const BuildingApartmentTenancy({
+    this.status = 'VACANT',
+    this.tenantName = '',
+    this.tenantPhone = '',
+    this.monthlyRent = 0,
+    this.startDate = '',
+    this.endDate = '',
+    this.calendarType = 'GREGORIAN',
+  });
+
+  final String status;
+  final String tenantName;
+  final String tenantPhone;
+  final double monthlyRent;
+  final String startDate;
+  final String endDate;
+  final String calendarType;
+
+  bool get isRented => status.toUpperCase() == 'RENTED';
+
+  factory BuildingApartmentTenancy.fromJson(Map<String, dynamic> json) {
+    return BuildingApartmentTenancy(
+      status: (json['status'] ?? 'VACANT').toString(),
+      tenantName: (json['tenantName'] ?? '').toString(),
+      tenantPhone: (json['tenantPhone'] ?? '').toString(),
+      monthlyRent: _asNum(json['monthlyRent']),
+      startDate: _dateOnly(json['startDate']),
+      endDate: _dateOnly(json['endDate']),
+      calendarType: (json['calendarType'] ?? 'GREGORIAN').toString(),
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+    status,
+    tenantName,
+    tenantPhone,
+    monthlyRent,
+    startDate,
+    endDate,
+    calendarType,
+  ];
+}
+
+class BuildingApartmentModel extends Equatable {
+  const BuildingApartmentModel({
+    required this.propertyId,
+    required this.unitNumber,
+    required this.buildingId,
+    this.buildingName = '',
+    this.totalArea = 0,
+    this.rooms = 0,
+    this.bathrooms = 0,
+    this.tenancy = const BuildingApartmentTenancy(),
+    this.expenses = const [],
+  });
+
+  final String propertyId;
+  final String unitNumber;
+  final String buildingId;
+  final String buildingName;
+  final double totalArea;
+  final int rooms;
+  final int bathrooms;
+  final BuildingApartmentTenancy tenancy;
+  final List<UnitExpenseModel> expenses;
+
+  factory BuildingApartmentModel.fromJson(Map<String, dynamic> json) {
+    final tenancyRaw = json['tenancy'];
+    return BuildingApartmentModel(
+      propertyId: (json['property_id'] ?? json['propertyId'] ?? '').toString(),
+      unitNumber: (json['unitNumber'] ?? '').toString(),
+      buildingId: (json['buildingId'] ?? '').toString(),
+      buildingName: (json['buildingName'] ?? '').toString(),
+      totalArea: _asNum(json['totalArea']),
+      rooms: _asNum(json['rooms']).toInt(),
+      bathrooms: _asNum(json['bathrooms']).toInt(),
+      tenancy: tenancyRaw is Map
+          ? BuildingApartmentTenancy.fromJson(
+              Map<String, dynamic>.from(tenancyRaw),
+            )
+          : BuildingApartmentTenancy(
+              status: (json['status'] ?? 'VACANT').toString(),
+            ),
+      expenses: (json['expenses'] is List)
+          ? (json['expenses'] as List)
+                .whereType<Map>()
+                .map(
+                  (e) => UnitExpenseModel.fromJson(
+                    Map<String, dynamic>.from(e),
+                  ),
+                )
+                .toList()
+          : const [],
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+    propertyId,
+    unitNumber,
+    buildingId,
+    buildingName,
+    totalArea,
+    rooms,
+    bathrooms,
+    tenancy,
+    expenses,
+  ];
+}
+
+double _asNum(dynamic value) {
+  if (value is num) return value.toDouble();
+  return double.tryParse(value?.toString() ?? '') ?? 0;
+}
+
+String _dateOnly(dynamic value) {
+  final text = value?.toString() ?? '';
+  if (text.isEmpty || text == 'null') return '';
+  return text.split('T').first;
+}
+

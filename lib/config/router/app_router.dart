@@ -43,6 +43,7 @@ import '../../modules/pages/properties_file_operation/property_file/controller/p
 import '../../modules/pages/properties_file_operation/property_file/model/property_file_model.dart';
 import '../../modules/pages/properties_file_operation/property_file/view/property_file_screen.dart';
 import '../../modules/pages/properties_file_operation/unit_details/view/unit_details_screen.dart';
+import '../../modules/pages/properties_file_operation/add_building_apartment/view/add_building_apartment_screen.dart';
 import '../../madar_app.dart';
 import '../../modules/auth/business_sign_up_scenario/loading_pay/view/loading_pay_screen.dart';
 import '../../modules/auth/business_sign_up_scenario/payment_type/view/payment_type_screen.dart';
@@ -262,7 +263,15 @@ final GoRouter appRouter = GoRouter(
       final extra = state.extra as Map<String, dynamic>;
       return UnitDetailsScreen(
         unit: extra['unit'] as UnitModel,
-        propertyName: extra['propertyName'] as String,
+        propertyName: extra['propertyName'] as String? ?? '',
+        buildingId: extra['buildingId'] as String? ?? '',
+      );
+    }),
+    getRouteInstance(AppRouterKeys.addBuildingApartment, (state) {
+      final extra = state.extra as Map<String, dynamic>? ?? const {};
+      return AddBuildingApartmentScreen(
+        buildingId: extra['buildingId'] as String? ?? '',
+        buildingName: extra['buildingName'] as String? ?? '',
       );
     }),
     getRouteInstance(

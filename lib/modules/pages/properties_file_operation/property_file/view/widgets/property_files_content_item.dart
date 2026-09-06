@@ -43,6 +43,9 @@ class PropertyFileContentItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final units = state.property?.units ?? [];
     final hasSold = units.any((u) => u.status == UnitStatus.sold);
+    final isBuilding = (property?.rawType ?? '').toUpperCase() == 'BUILDING';
+    final remaining = ((property?.totalUnits ?? 0) - units.length).clamp(0, 9999);
+    final showAddCard = isBuilding && remaining > 0;
 
     return CustomScrollView(
       slivers: [
@@ -69,6 +72,7 @@ class PropertyFileContentItem extends StatelessWidget {
                     color: colors.textFieldTitle,
                   ),
                 ),
+                SizedBox(width: 6.width),
                 Text(
                   AppStrings.rentedFromTotal(
                     property?.rentedCount??0,
@@ -135,27 +139,55 @@ class PropertyFileContentItem extends StatelessWidget {
           padding: EdgeInsets.fromLTRB(16.width, 0, 16.width, 16.height),
           sliver: SliverGrid(
             delegate: SliverChildBuilderDelegate((context, index) {
+              if (showAddCard && index == units.length) {
+                return AddApartmentCard(
+                  remaining: remaining,
+                  colors: colors,
+                  onTap: () async {
+                    final added = await RouterHandler.navigate(
+                      context,
+                      AppRouterKeys.addBuildingApartment,
+                      extra: {
+                        'buildingId': property?.id ?? '',
+                        'buildingName': property?.name ?? '',
+                      },
+                    );
+                    if (added == true) {
+                      bloc.add(const PropertyFileLoad());
+                    }
+                  },
+                );
+              }
               final unit = units[index];
               return UnitCard(
                 unit: unit,
                 colors: colors,
-                onTap: () => RouterHandler.navigate(
-                  context,
-                  AppRouterKeys.unitDetailsScreen,
-                  extra: {'unit': unit, 'propertyName': property?.name??''},
-                ),
+                onTap: () async {
+                  final changed = await RouterHandler.navigate(
+                    context,
+                    AppRouterKeys.unitDetailsScreen,
+                    extra: {
+                      'unit': unit,
+                      'propertyName': property?.name ?? '',
+                      'buildingId': isBuilding ? (property?.id ?? '') : '',
+                    },
+                  );
+                  if (changed == true) {
+                    bloc.add(const PropertyFileLoad());
+                  }
+                },
               );
-            }, childCount: units.length),
+            }, childCount: units.length + (showAddCard ? 1 : 0)),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
               crossAxisSpacing: 8,
               mainAxisSpacing: 8,
               mainAxisExtent: ResponsiveUtils.types(
                 context,
-                mobilePortrait: 150.height,
-                mobileLandscape: 150.height,
-                tabletPortrait: 180.height,
-                tabletLandscape: 200.height,
+                mobilePortrait: 108.height,
+                mobileLandscape: 108.height,
+                tabletPortrait: 130.height,
+                tabletLandscape: 140.height,
               ),
             ),
           ),

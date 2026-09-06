@@ -2,21 +2,27 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../core/components/hijri_date_picker.dart';
 import '../../../../../core/repository/apis/property_file_apis.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/common_fun.dart';
+import '../../../../../core/utils/functions/hijri_date.dart';
 import '../../../individual/property_details/model/property_details_model.dart';
 import '../../property_file/model/property_file_model.dart';
 
 part 'unit_details_event.dart';
 part 'unit_details_state.dart';
 
-class UnitDetailsBloc extends Bloc<UnitDetailsEvent, UnitDetailsState> {
+part 'mixins/unit_details_save_mixin.dart';
+
+class UnitDetailsBloc extends Bloc<UnitDetailsEvent, UnitDetailsState>
+    with UnitDetailsSaveMixin {
   UnitDetailsBloc() : super(const UnitDetailsState()) {
     on<UnitDetailsInit>(_onInit);
     on<UnitDetailsStatusToggled>(_onStatusToggled);
     on<UnitDetailsDateTypeToggled>(_onDateTypeToggled);
+    on<UnitDetailsDatePicked>(_onDatePicked);
     on<UnitDetailsExpenseAdded>(_onExpenseAdded);
     on<UnitDetailsExpenseRemoved>(_onExpenseRemoved);
     on<UnitDetailsExpenseFilesPicked>(_onExpenseFilesPicked);
@@ -25,14 +31,22 @@ class UnitDetailsBloc extends Bloc<UnitDetailsEvent, UnitDetailsState> {
     on<UnitDetailsSentToBroker>(_onSentToBroker);
   }
 
+  @override
   final TextEditingController tenantNameController = TextEditingController();
+  @override
   final TextEditingController tenantPhoneController = TextEditingController();
+  @override
   final TextEditingController rentStartController = TextEditingController();
+  @override
   final TextEditingController rentEndController = TextEditingController();
   final TextEditingController expenseDescController = TextEditingController();
   final TextEditingController expenseAmountController = TextEditingController();
+  @override
   final TextEditingController titleController = TextEditingController();
+  @override
   final TextEditingController projectNameController = TextEditingController();
+  @override
+  final TextEditingController monthlyRentController = TextEditingController();
 
   static UnitDetailsBloc get(BuildContext context) =>
       context.read<UnitDetailsBloc>();
@@ -41,12 +55,41 @@ class UnitDetailsBloc extends Bloc<UnitDetailsEvent, UnitDetailsState> {
     UnitDetailsInit event,
     Emitter<UnitDetailsState> emit,
   ) async {
-    _syncControllers(event.unit);
+    syncControllers(event.unit);
     emit(
-      state.copyWith(unit: event.unit, loadStatus: RequestStatus.loading),
+      state.copyWith(
+        unit: event.unit.copyWith(buildingId: event.buildingId),
+        buildingId: event.buildingId,
+        loadStatus: RequestStatus.loading,
+      ),
     );
     if (event.unit.id.isEmpty) {
       emit(state.copyWith(loadStatus: RequestStatus.success));
+      return;
+    }
+    if (event.buildingId.isNotEmpty) {
+      final result = await PropertyFileApis.getBuildingApartment(event.unit.id);
+      if (isClosed) return;
+      result.fold(
+        (error) {
+          emit(
+            state.copyWith(
+              loadStatus: RequestStatus.success,
+              errorMsg: error,
+            ),
+          );
+        },
+        (apartment) {
+          final merged = UnitModel.fromBuildingApartment(apartment);
+          syncControllers(merged);
+          emit(
+            state.copyWith(
+              unit: merged,
+              loadStatus: RequestStatus.success,
+            ),
+          );
+        },
+      );
       return;
     }
     final result = await PropertyFileApis.getProperty(event.unit.id);
@@ -62,7 +105,7 @@ class UnitDetailsBloc extends Bloc<UnitDetailsEvent, UnitDetailsState> {
       },
       (details) {
         final merged = UnitModel.fromDetails(details, base: event.unit);
-        _syncControllers(merged);
+        syncControllers(merged);
         emit(
           state.copyWith(
             unit: merged,
@@ -74,14 +117,21 @@ class UnitDetailsBloc extends Bloc<UnitDetailsEvent, UnitDetailsState> {
     );
   }
 
-  void _syncControllers(UnitModel unit) {
+  @override
+  void syncControllers(UnitModel unit) {
     tenantNameController.text = unit.tenantName;
     tenantPhoneController.text = unit.tenantPhone;
     rentStartController.text = unit.rentStartDate;
     rentEndController.text = unit.rentEndDate;
     titleController.text = unit.label;
     projectNameController.text = unit.projectName;
+    monthlyRentController.text = unit.monthlyRent > 0
+        ? formatPrice(unit.monthlyRent)
+        : '';
   }
+
+  String formatPickedDate(DateTime date) =>
+      HijriDate.format(date, hijri: state.unit?.isHijriDate ?? false);
 
   void _onStatusToggled(
     UnitDetailsStatusToggled event,
@@ -99,6 +149,41 @@ class UnitDetailsBloc extends Bloc<UnitDetailsEvent, UnitDetailsState> {
     final u = state.unit;
     if (u == null) return;
     emit(state.copyWith(unit: u.copyWith(isHijriDate: event.isHijri)));
+  }
+
+  void _onDatePicked(
+    UnitDetailsDatePicked event,
+    Emitter<UnitDetailsState> emit,
+  ) {
+    final formatted = formatPickedDate(event.date);
+    if (event.isStart) {
+      rentStartController.text = formatted;
+    } else {
+      rentEndController.text = formatted;
+    }
+  }
+
+  Future<void> requestDate(BuildContext context, {required bool isStart}) async {
+    final now = DateTime.now();
+    final useHijri = state.unit?.isHijriDate ?? false;
+    final DateTime? picked;
+    if (useHijri) {
+      picked = await showHijriDatePicker(
+        context: context,
+        initialDate: now,
+        firstDate: DateTime(1950),
+        lastDate: DateTime(now.year + 20),
+      );
+    } else {
+      picked = await showDatePicker(
+        context: context,
+        initialDate: now,
+        firstDate: DateTime(1950),
+        lastDate: DateTime(now.year + 20),
+      );
+    }
+    if (picked == null) return;
+    add(UnitDetailsDatePicked(isStart: isStart, date: picked));
   }
 
   void _onExpenseAdded(
@@ -137,83 +222,6 @@ class UnitDetailsBloc extends Bloc<UnitDetailsEvent, UnitDetailsState> {
     emit(state.copyWith(expenseFiles: [...state.expenseFiles, ...event.paths]));
   }
 
-  Future<void> _onSaved(
-    UnitDetailsSaved event,
-    Emitter<UnitDetailsState> emit,
-  ) async {
-    final u = state.unit;
-    if (u == null || u.id.isEmpty) {
-      emit(state.copyWith(saveStatus: RequestStatus.failed));
-      return;
-    }
-    emit(state.copyWith(saveStatus: RequestStatus.loading));
-    final updatedUnit = u.copyWith(
-      tenantName: tenantNameController.text,
-      tenantPhone: tenantPhoneController.text,
-      rentStartDate: rentStartController.text,
-      rentEndDate: rentEndController.text,
-      label: titleController.text.trim().isEmpty
-          ? u.label
-          : titleController.text.trim(),
-      projectName: projectNameController.text.trim(),
-    );
-
-    final result = await PropertyFileApis.updateProperty(
-      propertyId: u.id,
-      title: updatedUnit.label,
-      projectName: updatedUnit.projectName,
-    );
-    if (isClosed) return;
-
-    await result.fold(
-      (error) async {
-        AppToast(error, isError: true);
-        emit(state.copyWith(saveStatus: RequestStatus.failed));
-      },
-      (_) async {
-        if (updatedUnit.expenses.any((e) => !e.isRemote) ||
-            state.expenseFiles.isNotEmpty) {
-          final expenseResult = await PropertyFileApis.saveExpenses(
-            propertyId: u.id,
-            expenses: updatedUnit.expenses.where((e) => !e.isRemote).toList(),
-            filePaths: state.expenseFiles,
-          );
-          expenseResult.fold(
-            (error) => AppToast(error, isError: true),
-            (_) {},
-          );
-        }
-        emit(
-          state.copyWith(
-            unit: updatedUnit,
-            saveStatus: RequestStatus.success,
-            expenseFiles: const [],
-          ),
-        );
-        AppToast(AppStrings.propertyUpdated);
-      },
-    );
-  }
-
-  Future<void> _onDeleted(
-    UnitDetailsDeleted event,
-    Emitter<UnitDetailsState> emit,
-  ) async {
-    final id = state.unit?.id ?? '';
-    if (id.isEmpty) return;
-    final result = await PropertyFileApis.deleteProperty(id);
-    result.fold(
-      (error) => AppToast(error, isError: true),
-      (_) => emit(state.copyWith(isDeleted: true)),
-    );
-  }
-
-  void _onSentToBroker(
-    UnitDetailsSentToBroker event,
-    Emitter<UnitDetailsState> emit,
-  ) {
-    emit(state.copyWith(isSentToBroker: true));
-  }
 
   @override
   Future<void> close() {
@@ -225,6 +233,7 @@ class UnitDetailsBloc extends Bloc<UnitDetailsEvent, UnitDetailsState> {
     expenseAmountController.dispose();
     titleController.dispose();
     projectNameController.dispose();
+    monthlyRentController.dispose();
     return super.close();
   }
 }

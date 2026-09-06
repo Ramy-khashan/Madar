@@ -10,10 +10,9 @@ import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
-import '../../../../../../core/utils/constants/storage_keys.dart';
+import '../../../../../../core/utils/functions/account_role.dart';
 import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../core/utils/functions/image_picker_helper.dart';
-import '../../../../../../core/utils/functions/preference_utils.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../../../individual/my_property_details/view/widgets/contracts_section_widget.dart';
@@ -21,6 +20,7 @@ import '../../../property_file/view/widgets/owner_financial_section.dart';
 import '../../../property_file/view/widgets/owner_property_expenses.dart';
 import '../../../property_file/view/widgets/property_file_overflow_menu.dart';
 import '../../controller/unit_details_bloc.dart';
+import 'building_apartment_details.dart';
 import 'unit_info_row.dart';
 
 class UnitDetailsContent extends StatelessWidget {
@@ -28,9 +28,9 @@ class UnitDetailsContent extends StatelessWidget {
 
   final String propertyName;
 
-  bool get _canEdit =>
-      PreferenceUtils().getString(StorageKeys.accountType) ==
-      AppConstant.business;
+  bool get _canEdit => AccountRole.isBroker;
+
+  bool get _canManageUnit => AccountRole.isBroker || AccountRole.isOwner;
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +38,17 @@ class UnitDetailsContent extends StatelessWidget {
     final colors = AppThemeColors.of(context);
 
     return BlocListener<UnitDetailsBloc, UnitDetailsState>(
-      listenWhen: (prev, curr) => curr.isDeleted && !prev.isDeleted,
-      listener: (context, state) => RouterHandler.pop(context),
+      listenWhen: (prev, curr) =>
+          (curr.isDeleted && !prev.isDeleted) ||
+          (curr.saveStatus == RequestStatus.success &&
+              prev.saveStatus != RequestStatus.success &&
+              curr.buildingId.isNotEmpty),
+      listener: (context, state) => RouterHandler.pop(context, true),
       child: BlocBuilder<UnitDetailsBloc, UnitDetailsState>(
         builder: (context, state) {
           final unit = state.unit;
+          final isBuildingUnit = state.buildingId.isNotEmpty;
+          final canManageBuilding = isBuildingUnit && _canManageUnit;
           final parentTitle =
               state.details?.parentProperty?.title ?? propertyName;
           return Scaffold(
@@ -79,126 +85,136 @@ class UnitDetailsContent extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          unit.label,
-                          style: TextStyle(
-                            fontSize: context.responsiveFontScale(22),
-                            fontWeight: FontWeight.w700,
-                            color: colors.textFieldTitle,
-                            fontFamily: AppConstant.appHeaderFont,
-                          ),
-                        ),
-                        if (parentTitle.isNotEmpty)
+                        if (isBuildingUnit)
+                          BuildingApartmentDetails(
+                            unit: unit,
+                            parentTitle: parentTitle,
+                            canEdit: canManageBuilding,
+                            colors: colors,
+                          )
+                        else ...[
                           Text(
-                            parentTitle,
+                            unit.label,
                             style: TextStyle(
-                              fontSize: context.responsiveFontScale(13),
-                              color: colors.textSecondary,
-                              fontFamily: AppConstant.appFont,
+                              fontSize: context.responsiveFontScale(22),
+                              fontWeight: FontWeight.w700,
+                              color: colors.textFieldTitle,
+                              fontFamily: AppConstant.appHeaderFont,
                             ),
                           ),
-                        SizedBox(height: 16.height),
-                        Container(
-                          padding: EdgeInsets.all(16.width),
-                          decoration: BoxDecoration(
-                            color: colors.cardBackground,
-                            borderRadius: BorderRadius.circular(20.radius),
-                            border: Border.all(color: colors.borderColor),
-                          ),
-                          child: Column(
-                            children: [
-                              UnitInfoRow(
-                                label: AppStrings.apartmentNumber,
-                                value: unit.number,
-                                leadingImage: '',
-                                showLeadingImage: false,
-                                colors: colors,
-                                isEditable: _canEdit,
-                                controller: _canEdit
-                                    ? bloc.titleController
-                                    : null,
+                          if (parentTitle.isNotEmpty)
+                            Text(
+                              parentTitle,
+                              style: TextStyle(
+                                fontSize: context.responsiveFontScale(13),
+                                color: colors.textSecondary,
+                                fontFamily: AppConstant.appFont,
                               ),
-                              if (unit.projectName.isNotEmpty || _canEdit) ...[
-                                SizedBox(height: 10.height),
+                            ),
+                          SizedBox(height: 16.height),
+                          Container(
+                            padding: EdgeInsets.all(16.width),
+                            decoration: BoxDecoration(
+                              color: colors.cardBackground,
+                              borderRadius: BorderRadius.circular(20.radius),
+                              border: Border.all(color: colors.borderColor),
+                            ),
+                            child: Column(
+                              children: [
                                 UnitInfoRow(
-                                  label: AppStrings.projectName,
-                                  value: unit.projectName,
-                                  leadingImage: AppImages.propertyShapeIcon,
-                                  colors: colors,
-                                  isEditable: _canEdit,
-                                  controller: _canEdit
-                                      ? bloc.projectNameController
-                                      : null,
-                                ),
-                              ],
-                              if (unit.area > 0) ...[
-                                SizedBox(height: 10.height),
-                                UnitInfoRow(
-                                  label: AppStrings.areaLabel,
-                                  value: AppStrings.areaWithUnit(unit.area),
-                                  leadingImage: AppImages.totalSpaceIcon,
+                                  label: AppStrings.apartmentNumber,
+                                  value: unit.number,
+                                  leadingImage: '',
+                                  showLeadingImage: false,
                                   colors: colors,
                                   isEditable: false,
+                                  controller: null,
                                 ),
-                              ],
-                              if (unit.floor > 0) ...[
-                                SizedBox(height: 10.height),
-                                UnitInfoRow(
-                                  label: AppStrings.floor,
-                                  value: '${unit.floor}',
-                                  leadingImage: AppImages.floorIcon,
-                                  colors: colors,
-                                  isEditable: false,
-                                ),
-                              ],
-                              if (unit.rooms > 0 || unit.bathrooms > 0) ...[
-                                SizedBox(height: 10.height),
-                                Row(
-                                  children: [
-                                    if (unit.rooms > 0)
-                                      Expanded(
-                                        child: UnitInfoRow(
-                                          label: AppStrings.beds,
-                                          value: '${unit.rooms}',
-                                          leadingImage: AppImages.bedroomIcon,
-                                          colors: colors,
-                                          isEditable: false,
+                                if (unit.projectName.isNotEmpty ||
+                                    _canEdit) ...[
+                                  SizedBox(height: 10.height),
+                                  UnitInfoRow(
+                                    label: AppStrings.projectName,
+                                    value: unit.projectName,
+                                    leadingImage: AppImages.propertyShapeIcon,
+                                    colors: colors,
+                                    isEditable: false,
+                                    controller: null,
+                                  ),
+                                ],
+                                if (unit.area > 0) ...[
+                                  SizedBox(height: 10.height),
+                                  UnitInfoRow(
+                                    label: AppStrings.areaLabel,
+                                    value: AppStrings.areaWithUnit(unit.area),
+                                    leadingImage: AppImages.totalSpaceIcon,
+                                    colors: colors,
+                                    isEditable: false,
+                                  ),
+                                ],
+                                if (unit.floor > 0) ...[
+                                  SizedBox(height: 10.height),
+                                  UnitInfoRow(
+                                    label: AppStrings.floor,
+                                    value: '${unit.floor}',
+                                    leadingImage: AppImages.floorIcon,
+                                    colors: colors,
+                                    isEditable: false,
+                                  ),
+                                ],
+                                if (unit.rooms > 0 || unit.bathrooms > 0) ...[
+                                  SizedBox(height: 10.height),
+                                  Row(
+                                    children: [
+                                      if (unit.rooms > 0)
+                                        Expanded(
+                                          child: UnitInfoRow(
+                                            label: AppStrings.beds,
+                                            value: '${unit.rooms}',
+                                            leadingImage:
+                                                AppImages.bedroomIcon,
+                                            colors: colors,
+                                            isEditable: false,
+                                          ),
                                         ),
-                                      ),
-                                    if (unit.rooms > 0 && unit.bathrooms > 0)
-                                      SizedBox(width: 10.width),
-                                    if (unit.bathrooms > 0)
-                                      Expanded(
-                                        child: UnitInfoRow(
-                                          label: AppStrings.baths,
-                                          value: '${unit.bathrooms}',
-                                          leadingImage: AppImages.bathroomIcon,
-                                          colors: colors,
-                                          isEditable: false,
+                                      if (unit.rooms > 0 &&
+                                          unit.bathrooms > 0)
+                                        SizedBox(width: 10.width),
+                                      if (unit.bathrooms > 0)
+                                        Expanded(
+                                          child: UnitInfoRow(
+                                            label: AppStrings.baths,
+                                            value: '${unit.bathrooms}',
+                                            leadingImage:
+                                                AppImages.bathroomIcon,
+                                            colors: colors,
+                                            isEditable: false,
+                                          ),
                                         ),
-                                      ),
-                                  ],
-                                ),
+                                    ],
+                                  ),
+                                ],
+                                if (unit.monthlyRent > 0) ...[
+                                  SizedBox(height: 10.height),
+                                  UnitInfoRow(
+                                    label:
+                                        unit.listingType.toUpperCase() ==
+                                            'RENT'
+                                        ? AppStrings.monthlyRent
+                                        : AppStrings.listingPrice,
+                                    value:
+                                        '${formatPrice(unit.monthlyRent)} ${AppStrings.currency}',
+                                    leadingImage: AppImages.monthlyRentIcon,
+                                    colors: colors,
+                                    isEditable: false,
+                                  ),
+                                ],
                               ],
-                              if (unit.monthlyRent > 0) ...[
-                                SizedBox(height: 10.height),
-                                UnitInfoRow(
-                                  label:
-                                      unit.listingType.toUpperCase() == 'RENT'
-                                      ? AppStrings.monthlyRent
-                                      : AppStrings.listingPrice,
-                                  value:
-                                      '${formatPrice(unit.monthlyRent)} ${AppStrings.currency}',
-                                  leadingImage: AppImages.monthlyRentIcon,
-                                  colors: colors,
-                                  isEditable: false,
-                                ),
-                              ],
-                            ],
+                            ),
                           ),
-                        ),
+                        ],
                         SizedBox(height: 20.height),
-                        if (_canEdit)
+                        if (canManageBuilding)
                           AppButton(
                             onTap: () =>
                                 bloc.add(const UnitDetailsSaved()),
@@ -206,7 +222,7 @@ class UnitDetailsContent extends StatelessWidget {
                             isLoading:
                                 state.saveStatus == RequestStatus.loading,
                           )
-                        else
+                        else if (!_canEdit && !isBuildingUnit)
                           AppButton(
                             onTap: () => RouterHandler.navigate(
                               context,
@@ -214,6 +230,14 @@ class UnitDetailsContent extends StatelessWidget {
                               extra: unit.id,
                             ),
                             text: AppStrings.sendToBrokerProperty,
+                          )
+                        else if (_canEdit)
+                          AppButton(
+                            onTap: () =>
+                                bloc.add(const UnitDetailsSaved()),
+                            text: AppStrings.saveChanges,
+                            isLoading:
+                                state.saveStatus == RequestStatus.loading,
                           ),
                         SizedBox(height: 24.height),
                         ContractsSectionWidget(
@@ -223,7 +247,13 @@ class UnitDetailsContent extends StatelessWidget {
                           expenses: unit.expenses,
                           fileCount: state.expenseFiles.length,
                           colors: colors,
-                          canEdit: _canEdit,
+                          canEdit: isBuildingUnit ? canManageBuilding : _canEdit,
+                          onConfirm: canManageBuilding
+                              ? () => bloc.add(const UnitDetailsSaved())
+                              : null,
+                          isConfirming:
+                              canManageBuilding &&
+                              state.saveStatus == RequestStatus.loading,
                           descController: bloc.expenseDescController,
                           amountController: bloc.expenseAmountController,
                           onAdd: () {

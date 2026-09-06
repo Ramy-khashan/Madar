@@ -31,9 +31,10 @@ class UpdatePhoneDialog extends StatelessWidget {
             Text(AppStrings.updatePhoneNumber,style: TextStyle(fontSize: context.responsiveFontScale(16),fontWeight: FontWeight.w800),),
             SizedBox(height: 16.height),
             PhoneNumberField(
-              hint: AppStrings.phoneNumber,
+              initialCountryCode: 'SA',
+              title: AppStrings.phoneNumber,
+              hint: AppStrings.enterPhoneNumber,
               onChanged: (val) => onChanged(val.completeNumber),
-              // Add any necessary properties for the text field
             ),
             SizedBox(height: 16.height),
             Row(

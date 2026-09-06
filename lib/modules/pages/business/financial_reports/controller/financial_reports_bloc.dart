@@ -20,6 +20,7 @@ class FinancialReportsBloc
     on<FinancialReportsTabChanged>(_onTabChanged);
     on<FinancialReportsPeriodChanged>(_onPeriodChanged);
     on<FinancialReportsScopeChanged>(_onScopeChanged);
+    on<FinancialReportsAddOtherIncome>(_onAddOtherIncome);
   }
 
   static FinancialReportsBloc get(BuildContext context) =>
@@ -59,7 +60,7 @@ class FinancialReportsBloc
   Future<void> _loadOverview(Emitter<FinancialReportsState> emit) async {
     final result = await DashboardApis.overview(
       period: state.selectedPeriod,
-      scope: state.selectedScope,
+      // scope: state.selectedScope,
     );
     result.fold(
       (err) =>
@@ -86,7 +87,7 @@ class FinancialReportsBloc
   Future<void> _loadRevenues(Emitter<FinancialReportsState> emit) async {
     final result = await DashboardApis.revenues(
       period: state.selectedPeriod,
-      scope: state.selectedScope,
+      // scope: state.selectedScope,
     );
     result.fold(
       (err) =>
@@ -99,10 +100,10 @@ class FinancialReportsBloc
             errorMessage: null,
             totalIncome: report.totalIncome,
             rentalTotal: report.rentalsTotal,
-            otherIncomeTotal: report.otherTotal,
+            otherIncomeTotal: report.otherIncomeTotal,
             rentItems: report.rentals.map(_rentItemFromRevenue).toList(),
-            otherIncomeItems: report.otherTransactions
-                .map(_rentItemFromRevenue)
+            otherIncomeItems: report.otherIncome
+                .map(_otherIncomeFromRevenue)
                 .toList(),
           ),
         );
@@ -113,7 +114,7 @@ class FinancialReportsBloc
   Future<void> _loadExpenses(Emitter<FinancialReportsState> emit) async {
     final result = await DashboardApis.expenses(
       period: state.selectedPeriod,
-      scope: state.selectedScope,
+      // scope: state.selectedScope,
     );
     result.fold(
       (err) =>
@@ -152,6 +153,39 @@ class FinancialReportsBloc
           ? item.type.transIfExists
           : item.status.transIfExists,
       paid: item.isActive,
+    );
+  }
+
+  FinancialRentItem _otherIncomeFromRevenue(DashboardRevenueItem item) {
+    return FinancialRentItem(
+      name: item.property,
+      amount: formatPrice(item.amount),
+      date: item.date,
+      status: item.type.isNotEmpty ? item.type.transIfExists : null,
+      paid: true,
+    );
+  }
+
+  Future<void> _onAddOtherIncome(
+    FinancialReportsAddOtherIncome event,
+    Emitter<FinancialReportsState> emit,
+  ) async {
+    emit(state.copyWith(isSubmittingOtherIncome: true));
+    final result = await DashboardApis.addOtherIncome(
+      title: event.title,
+      amount: event.amount,
+    );
+    if (isClosed) return;
+    await result.fold(
+      (err) async {
+        AppToast(err, isError: true);
+        emit(state.copyWith(isSubmittingOtherIncome: false));
+      },
+      (_) async {
+        AppToast(AppStrings.otherIncomeAdded);
+        emit(state.copyWith(isSubmittingOtherIncome: false));
+        await _loadRevenues(emit);
+      },
     );
   }
 

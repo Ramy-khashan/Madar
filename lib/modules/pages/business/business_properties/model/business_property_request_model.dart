@@ -9,8 +9,8 @@ class BusinessPropertyRequestModel {
     this.status,
     this.createdAt,
     this.image,
-    this.city,
-    this.district,
+    this.location,
+ 
     this.adLicenseNumber,
   });
 
@@ -21,8 +21,8 @@ class BusinessPropertyRequestModel {
   String? status;
   String? createdAt;
   String? image;
-  String? city;
-  String? district;
+  String? location;
+ 
   String? adLicenseNumber;
 
   bool get isPending {
@@ -33,13 +33,7 @@ class BusinessPropertyRequestModel {
         value == 'NEW';
   }
 
-  String get locationLabel {
-    final parts = [
-      district,
-      city,
-    ].whereType<String>().map((e) => e.trim()).where((e) => e.isNotEmpty);
-    return parts.join(' - ');
-  }
+ 
 
   String get createdAtLabel {
     final parsed = DateTime.tryParse(createdAt ?? '');
@@ -101,17 +95,11 @@ class BusinessPropertyRequestModel {
           property['mainImage'],
         ]),
       ),
-      city: _firstNonEmpty([
-        json['city'],
-        property['city'],
-        _asMap(json['location'])['city'],
-        _asMap(property['location'])['city'],
-      ]),
-      district: _firstNonEmpty([
-        json['district'],
-        property['district'],
-        _asMap(json['location'])['district'],
-        _asMap(property['location'])['district'],
+      location: _firstNonEmpty([
+        json['location'],
+        property['location'],
+        _asMap(json['location'])['address'],
+        _asMap(property['location'])['address'],
       ]),
       adLicenseNumber: _firstNonEmpty([
         json['adLicenseNumber'],
@@ -130,8 +118,7 @@ class BusinessPropertyRequestModel {
       'status': status,
       'createdAt': createdAt,
       'image': image,
-      'city': city,
-      'district': district,
+      'location': location,
       'adLicenseNumber': adLicenseNumber,
     };
   }

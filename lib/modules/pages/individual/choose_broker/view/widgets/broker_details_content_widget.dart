@@ -8,9 +8,7 @@ import '../../../../../../core/components/outline_section.dart';
 import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
-import '../../../../../../core/utils/constants/app_strings.dart';
-import '../../../../../../core/utils/constants/storage_keys.dart';
-import '../../../../../../core/utils/functions/preference_utils.dart';
+import '../../../../../../core/utils/constants/app_strings.dart'; 
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../controller/choose_broker_bloc.dart';
 import '../../model/broker_model.dart';
@@ -56,7 +54,7 @@ class BrokerDetailsContentWidget extends StatelessWidget {
                           bottom: 0,
                           left: 0,
                           right: 0,
-                          child: _IndividualCommission(),
+                          child: CommissionFeeItem(),
                         ),
                       ],
                     ),
@@ -148,16 +146,4 @@ class BrokerDetailsContentWidget extends StatelessWidget {
     );
   }
 }
-
-class _IndividualCommission extends StatelessWidget {
-  const _IndividualCommission();
-
-  @override
-  Widget build(BuildContext context) {
-    final isIndividual =
-        PreferenceUtils().getString(StorageKeys.accountType) ==
-        AppConstant.individual;
-    if (!isIndividual) return const SizedBox.shrink();
-    return const CommissionFeeItem();
-  }
-}
+ 

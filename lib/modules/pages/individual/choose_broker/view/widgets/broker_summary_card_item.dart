@@ -12,8 +12,9 @@ class BrokerSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+  
     return Container(
-      margin: EdgeInsets.only(bottom: 210.height),
+      margin: EdgeInsets.only(bottom: 210.height ),
       padding: EdgeInsets.all(16.width),
       decoration: BoxDecoration(
         color: colors.cardBackground,

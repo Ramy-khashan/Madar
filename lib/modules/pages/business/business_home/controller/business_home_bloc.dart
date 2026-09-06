@@ -1,7 +1,9 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:madar_app/core/utils/functions/common_fun.dart';
 import '../../../../../config/router/app_router_keys.dart';
 import '../../../../../core/connection/concept/end_points.dart';
 import '../../../../../core/connection/interfaces/api_consumer.dart';
@@ -34,6 +36,7 @@ class BusinessHomeBloc extends Bloc<BusinessHomeEvent, BusinessHomeState> {
     on<RequestsLoad>(_getRequests);
     on<IndividualHomeLoadUserLocation>(_getUserLocation);
   }
+  static BusinessHomeBloc get(BuildContext context) => BlocProvider.of(context);
 
   Future<void> _loadBusinessProperties(
     BusinessPropertiesLoad? event,
@@ -121,8 +124,12 @@ class BusinessHomeBloc extends Bloc<BusinessHomeEvent, BusinessHomeState> {
               successResponse.response['summary']['totalProperties'] ?? 0;
           final int occupancyRate =
               successResponse.response['summary']['occupancyRate'] ?? 0;
-          final int monthlyIncome =
-              successResponse.response['summary']['monthlyIncome'] ?? 0;
+          final String monthlyIncome = formatPrice(
+            double.parse(
+              (successResponse.response['summary']['monthlyIncome'] ?? 0)
+                  .toString(),
+            ),
+          ).toString();
           emit(
             state.copyWith(
               portfolioLoadStatus: RequestStatus.success,

@@ -5,11 +5,8 @@ import 'package:madar_app/core/utils/functions/common_fun.dart';
 
 import '../../../../../core/connection/concept/end_points.dart';
 import '../../../../../core/connection/interfaces/api_consumer.dart';
-import '../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
-import '../../../../../core/utils/constants/storage_keys.dart';
-import '../../../../../core/utils/functions/preference_utils.dart';
 import '../../../../../core/utils/functions/print_state.dart';
 import '../../../../../core/utils/functions/service_locator.dart';
 import '../model/broker_model.dart';
@@ -65,13 +62,13 @@ class ChooseBrokerBloc extends Bloc<ChooseBrokerEvent, ChooseBrokerState> {
           );
         },
         (successResponse) async {
-       
           final List<BrokerModel> items = [];
-          for (var item in List.from(successResponse.response['data']  ?? [])) {
+          for (var item in List.from(successResponse.response['data'] ?? [])) {
             items.add(BrokerModel.fromJson(item));
           }
           final pagination =
-              successResponse.response['pagination'] as Map<String, dynamic>? ?? {};
+              successResponse.response['pagination'] as Map<String, dynamic>? ??
+              {};
           final total = pagination['total'] ?? 0;
 
           emit(
@@ -123,15 +120,11 @@ class ChooseBrokerBloc extends Bloc<ChooseBrokerEvent, ChooseBrokerState> {
         return;
       }
       emit(state.copyWith(confirmStatus: RequestStatus.loading));
-      final isIndividual =
-          PreferenceUtils().getString(StorageKeys.accountType) ==
-          AppConstant.individual;
+
       final body = <String, dynamic>{
         'brokerId': state.selectedBrokerId,
-        if (isIndividual) ...{
-          'commissionRate': state.commissionRate,
-          'commissionPayer': state.commissionPayer,
-        },
+        'commissionRate': state.commissionRate,
+        'commissionPayer': state.commissionPayer,
       };
       final response = await sl.get<ApiConsumer>().post(
         EndPoints.sendToBrokers + state.propertyId,

@@ -821,8 +821,8 @@ class AppStrings {
       'rate_property_location_hint'.trans;
   static String get ratePropertyAreaLabel => 'rate_property_area_label'.trans;
   static String get ratePropertyAreaHint => 'rate_property_area_hint'.trans;
-  static String get ratePropertyFinishingLabel =>
-      'rate_property_finishing_label'.trans;
+  // static String get ratePropertyFinishingLabel =>
+  //     'rate_property_finishing_label'.trans;
   static String get ratePropertyFinishingHint =>
       'rate_property_finishing_hint'.trans;
   static String get ratePropertyPurposeLabel =>
@@ -1228,6 +1228,7 @@ class AppStrings {
   static String get addExpenseBtn => 'add_expense_btn'.trans;
   static String get rentedStatus => 'rented_status'.trans;
   static String get vacantStatus => 'vacant_status'.trans;
+  static String get shops => 'shops'.trans;
   static String get soldStatus => 'sold_status'.trans;
   static String get attachExpenseFileHint => 'attach_expense_file_hint'.trans;
   static String get enterAmount => 'enter_amount'.trans;
@@ -1805,4 +1806,22 @@ class AppStrings {
       'subscription_feature_view_statistics'.trans;
   static String get subscriptionFeatureTechnicalSupport =>
       'subscription_feature_technical_support'.trans;
+
+  static String get addApartmentToBuilding => 'add_apartment_to_building'.trans;
+  static String get addApartment => 'add_apartment'.trans;
+  static String get unitStatus => 'unit_status'.trans;
+  static String get tenantPhone => 'tenant_phone'.trans;
+  static String get pleaseCompleteApartmentData =>
+      'please_complete_apartment_data'.trans;
+  static String get pleaseCompleteTenantData =>
+      'please_complete_tenant_data'.trans;
+  static String get apartmentAddedSuccessfully =>
+      'apartment_added_successfully'.trans;
+  static String get addOtherIncome => 'add_other_income'.trans;
+  static String get otherIncomeTitle => 'other_income_title'.trans;
+  static String get otherIncomeAmount => 'other_income_amount'.trans;
+  static String get otherIncomeAdded => 'other_income_added'.trans;
+  static String remainingApartments(int count) =>
+      'remaining_apartments'.transNamed({'count': '$count'});
+  static String get confirmAddExpenses => 'confirm_add_expenses'.trans;
 }

@@ -49,7 +49,7 @@ class MyBidsBloc extends Bloc<MyBidsEvent, MyBidsState> {
     ),
     MyBidItemModel(
       id: '3',
-      title: 'فيلا في حي النرجس',
+      title: 'فلة في حي النرجس',
       location: 'الرياض - حي النرجس',
       startingBid: 500000,
       imageUrl: AppImages.propertyImage,
@@ -57,7 +57,7 @@ class MyBidsBloc extends Bloc<MyBidsEvent, MyBidsState> {
       rooms: 4,
       bathrooms: 3,
       area: 300,
-      tag: 'فيلا',
+      tag: 'فلة',
       status: 'completed',
     ),
     MyBidItemModel(

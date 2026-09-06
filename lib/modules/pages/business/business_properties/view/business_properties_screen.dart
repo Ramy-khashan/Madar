@@ -70,8 +70,8 @@ class BusinessPropertiesScreen extends StatelessWidget {
                                         title: 'Property title',
                                         owner: 'Owner',
                                         status: 'PENDING',
-                                        city: 'City',
-                                        district: 'District',
+                                        location: 'Unknown Location',
+                                     
                                       ),
                                     )
                                   : state.requests,

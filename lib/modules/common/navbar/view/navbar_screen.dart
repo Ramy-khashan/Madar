@@ -34,8 +34,10 @@ class _NavbarScreenState extends State<NavbarScreen> with RouteAware {
 
   @override
   void didPopNext() {
-    if (!mounted) return;
-    NavbarBloc.get(context).add(const NavbarReload());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      NavbarBloc.get(context).add(const NavbarReload());
+    });
   }
 
   @override
@@ -47,12 +49,7 @@ class _NavbarScreenState extends State<NavbarScreen> with RouteAware {
           return const Scaffold();
         }
         return Scaffold(
-          body: RefreshIndicator(
-            color: tc.primaryBrand,
-            notificationPredicate: (_) => true,
-            onRefresh: () => NavbarBloc.get(context).reload(),
-            child: state.navbarItems[state.selectedItem].screen,
-          ),
+          body: state.navbarItems[state.selectedItem].screen,
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: FloatingActionButton(

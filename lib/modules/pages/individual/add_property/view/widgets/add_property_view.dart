@@ -85,7 +85,7 @@ class AddPropertyView extends StatelessWidget {
                       routerType: RouterType.pushReplacementNamed,
                     );
                   } else {
-                    RouterHandler.pop(context);
+                    RouterHandler.goToNavbar(context);
                   }
                 case SubmitStatus.failure:
                   AppToast(

@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../config/router/app_router_keys.dart';
+import '../../../modules/common/navbar/controller/navbar_refresh.dart';
 import '../constants/app_enums.dart';
 import '../constants/app_strings.dart';
 import 'common_fun.dart';
 
 class RouterHandler {
   RouterHandler._();
+
+  static bool _navbarRestoreScheduled = false;
 
   static const _comingSoonRoutes = {
     AppRouterKeys.auctionNavbar,
@@ -34,15 +37,15 @@ class RouterHandler {
     }
     switch (routerType) {
       case RouterType.goName:
-        final query = Map<String, String>.from(queryParameters);
         if (routerName == AppRouterKeys.navbar) {
-          query['refresh'] = DateTime.now().millisecondsSinceEpoch.toString();
+          goToNavbar(context);
+          return null;
         }
         context.goNamed(
           routerName,
           extra: extra,
           pathParameters: pathParameters,
-          queryParameters: query,
+          queryParameters: queryParameters,
         );
         return null;
       case RouterType.pushName:
@@ -72,5 +75,22 @@ class RouterHandler {
   static bool canPop(BuildContext context) => context.canPop();
   static void pop<T extends Object?>(BuildContext context, [T? result]) {
     context.pop<T>(result);
+  }
+
+  /// Clears the stack like `goNamed` / pushAndRemoveUntil, then refreshes
+  /// navbar tabs after the route settles so mid-flow navigation is not interrupted.
+  static void goToNavbar(BuildContext context, {bool resetToHome = true}) {
+    if (!context.mounted || _navbarRestoreScheduled) return;
+    _navbarRestoreScheduled = true;
+    try {
+      context.goNamed(AppRouterKeys.navbar);
+    } catch (_) {
+      _navbarRestoreScheduled = false;
+      return;
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _navbarRestoreScheduled = false;
+      NavbarRefresh.reload(resetToHome: resetToHome);
+    });
   }
 }

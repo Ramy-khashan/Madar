@@ -7,6 +7,7 @@ import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../property_file/model/property_file_model.dart';
 import 'property_status_card.dart';
@@ -137,6 +138,36 @@ class PropertyFileHeaderWidget extends StatelessWidget {
             ),
           ],
         ),
+        if (_buildingSpecs(context).isNotEmpty) ...[
+          SizedBox(height: 10.height),
+          Wrap(
+            spacing: 8.width,
+            runSpacing: 8.height,
+            children: _buildingSpecs(context)
+                .map(
+                  (item) => Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.width,
+                      vertical: 6.height,
+                    ),
+                    decoration: BoxDecoration(
+                      color: colors.cardBackground,
+                      borderRadius: BorderRadius.circular(20.radius),
+                      border: Border.all(color: colors.borderColor),
+                    ),
+                    child: Text(
+                      item,
+                      style: TextStyle(
+                        fontSize: context.responsiveFontScale(12),
+                        color: colors.textSecondary,
+                        fontFamily: AppConstant.appFont,
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+        ],
         SizedBox(height: 16.height),
         // Stats row
         PreferenceUtils().getString(StorageKeys.accountType) ==
@@ -165,7 +196,7 @@ class PropertyFileHeaderWidget extends StatelessWidget {
                   Expanded(
                     child: PropertyStatusCard(
                       icon: Icons.description_outlined,
-                      value: '${property?.monthlyRevenue ?? 0}',
+                      value: formatPrice(property?.monthlyRevenue ?? 0),
                       label: AppStrings.monthlyRevenue,
                       colors: colors,
                     ),
@@ -224,5 +255,16 @@ class PropertyFileHeaderWidget extends StatelessWidget {
               ),
       ],
     );
+  }
+
+  List<String> _buildingSpecs(BuildContext context) {
+    final p = property;
+    if (p == null || !p.isMultiUnit) return const [];
+    return [
+      if (p.buildingArea > 0) AppStrings.areaWithUnit(p.buildingArea),
+      if (p.floorsCount > 0) '${p.floorsCount} ${AppStrings.numberOfFloors}',
+      if (p.shopsCount > 0) '${p.shopsCount} ${AppStrings.shops}',
+      if (p.parkingSpots > 0) '${p.parkingSpots} ${AppStrings.parkingLabel}',
+    ];
   }
 }

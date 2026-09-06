@@ -112,7 +112,7 @@ class ProjectManagerHomeScreen extends StatelessWidget {
                               ).toInt(),
                               mainAxisExtent: ResponsiveUtils.types(
                                 context,
-                                mobilePortrait: 215.height,
+                                mobilePortrait: 225.height,
                                 mobileLandscape: 230.height,
                                 tabletPortrait: 160.height,
                                 tabletLandscape: 220.height,

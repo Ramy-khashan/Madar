@@ -28,7 +28,7 @@ class ConstructionReportsBloc
     emit(state.copyWith(status: RequestStatus.loading, errorMessage: ''));
     final result = await DashboardApis.performance(
       period: state.selectedPeriod,
-      scope: state.selectedScope,
+      // scope: state.selectedScope,
       propertyTypes: state.selectedPropertyTypeIds,
     );
     result.fold(

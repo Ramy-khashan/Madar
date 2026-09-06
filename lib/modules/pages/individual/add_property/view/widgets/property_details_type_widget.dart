@@ -565,10 +565,10 @@ class _VillaDetails extends StatelessWidget {
             ),
           ],
         ),
-        _DetailTextField(
-          label: AppStrings.developerNameOptional,
-          detailKey: DetailKeys.developerName,
-        ),
+        // _DetailTextField(
+        //   label: AppStrings.developerNameOptional,
+        //   detailKey: DetailKeys.developerName,
+        // ),
         const _FurnishingAndCondition(),
       ],
     );
@@ -667,10 +667,10 @@ class _TownhouseDetails extends StatelessWidget {
           detailKey: DetailKeys.serviceFee,
           isNumeric: true,
         ),
-        _DetailTextField(
-          label: AppStrings.developerNameOptional,
-          detailKey: DetailKeys.developerName,
-        ),
+        // _DetailTextField(
+        //   label: AppStrings.developerNameOptional,
+        //   detailKey: DetailKeys.developerName,
+        // ),
         const _FurnishingAndCondition(),
       ],
     );
@@ -711,10 +711,10 @@ class _BuildingDetails extends StatelessWidget {
           detailKey: DetailKeys.classification,
           options: AddPropertyBloc.classificationOptions,
         ),
-        _DetailTextField(
-          label: AppStrings.developerNameOptional,
-          detailKey: DetailKeys.developerName,
-        ),
+        // _DetailTextField(
+        //   label: AppStrings.developerNameOptional,
+        //   detailKey: DetailKeys.developerName,
+        // ),
         const _FurnishingAndCondition(includeFurnishing: false),
       ],
     );
@@ -914,10 +914,10 @@ class _TowerDetails extends StatelessWidget {
           detailKey: DetailKeys.yearBuilt,
           isNumeric: true,
         ),
-        _DetailTextField(
-          label: AppStrings.developerNameOptional,
-          detailKey: DetailKeys.developerName,
-        ),
+        // _DetailTextField(
+        //   label: AppStrings.developerNameOptional,
+        //   detailKey: DetailKeys.developerName,
+        // ),
         const _FurnishingAndCondition(includeFurnishing: false),
       ],
     );

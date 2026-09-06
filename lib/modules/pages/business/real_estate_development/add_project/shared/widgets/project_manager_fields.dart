@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../../core/components/app_textfield.dart';
+import '../../../../../../../core/components/phone_number_field.dart';
 import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
@@ -41,13 +42,13 @@ class ProjectManagerFields extends StatelessWidget {
           validator: (value) => Validate.notEmpty(value ?? ''),
         ),
         SizedBox(height: 10.height),
-        AppTextField(
-          isWithTitle: true,
+        PhoneNumberField(
+          initialCountryCode: 'SA',
           title: AppStrings.managerPhoneLabel,
-          hint: AppStrings.enterPhoneHint,
-          controller: phoneController,
-          textInputType: TextInputType.phone,
-          validator: (value) => Validate.notEmpty(value ?? ''),
+          hint: AppStrings.enterPhoneNumber,
+          onChanged: (val) {
+            phoneController.text = val.completeNumber;
+          },
         ),
         SizedBox(height: 4.height),
         Text(

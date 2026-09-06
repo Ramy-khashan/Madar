@@ -115,4 +115,74 @@ class PropertyFileApis {
       return Left(AppStrings.somethingWentWrong);
     }
   }
+
+  static Future<Either<String, BuildingApartmentModel>> createBuildingApartment({
+    required String buildingId,
+    required Map<String, dynamic> body,
+  }) async {
+    try {
+      final response = await sl.get<ApiConsumer>().post(
+        EndPoints.buildingApartments(buildingId),
+        body: body,
+      );
+      return response.fold(Left.new, (success) {
+        final data = success.response['data'];
+        if (data is! Map) return Left(AppStrings.somethingWentWrong);
+        return Right(
+          BuildingApartmentModel.fromJson(Map<String, dynamic>.from(data)),
+        );
+      });
+    } catch (e) {
+      printState('createBuildingApartment error: $e');
+      return Left(AppStrings.somethingWentWrong);
+    }
+  }
+
+  static Future<Either<String, BuildingApartmentModel>> getBuildingApartment(
+    String propertyId,
+  ) async {
+    try {
+      final response = await sl.get<ApiConsumer>().get(
+        EndPoints.buildingApartmentById(propertyId),
+      );
+      return response.fold(Left.new, (success) {
+        final data = success.response['data'];
+        if (data is! Map) return Left(AppStrings.somethingWentWrong);
+        return Right(
+          BuildingApartmentModel.fromJson(Map<String, dynamic>.from(data)),
+        );
+      });
+    } catch (e) {
+      printState('getBuildingApartment error: $e');
+      return Left(AppStrings.somethingWentWrong);
+    }
+  }
+
+  /// TODO: switch [EndPoints.updateBuildingApartment] when the backend
+  /// tenancy update URL is ready. This is the single update for status + tenant.
+  static Future<Either<String, BuildingApartmentModel>> updateBuildingApartment({
+    required String propertyId,
+    required Map<String, dynamic> body,
+  }) async {
+    try {
+      final response = await sl.get<ApiConsumer>().put(
+        EndPoints.updateBuildingApartment(propertyId),
+        body: body,
+      );
+      return response.fold(Left.new, (success) {
+        final data = success.response['data'];
+        if (data is Map) {
+          return Right(
+            BuildingApartmentModel.fromJson(Map<String, dynamic>.from(data)),
+          );
+        }
+        return Right(
+          BuildingApartmentModel(propertyId: propertyId, unitNumber: '', buildingId: ''),
+        );
+      });
+    } catch (e) {
+      printState('updateBuildingApartment error: $e');
+      return Left(AppStrings.somethingWentWrong);
+    }
+  }
 }

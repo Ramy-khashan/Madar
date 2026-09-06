@@ -7,10 +7,11 @@ abstract class UnitDetailsEvent extends Equatable {
 }
 
 class UnitDetailsInit extends UnitDetailsEvent {
-  const UnitDetailsInit(this.unit);
+  const UnitDetailsInit(this.unit, {this.buildingId = ''});
   final UnitModel unit;
+  final String buildingId;
   @override
-  List<Object?> get props => [unit];
+  List<Object?> get props => [unit, buildingId];
 }
 
 class UnitDetailsStatusToggled extends UnitDetailsEvent {
@@ -50,6 +51,14 @@ class UnitDetailsExpenseFilesPicked extends UnitDetailsEvent {
   final List<String> paths;
   @override
   List<Object?> get props => [paths];
+}
+
+class UnitDetailsDatePicked extends UnitDetailsEvent {
+  const UnitDetailsDatePicked({required this.isStart, required this.date});
+  final bool isStart;
+  final DateTime date;
+  @override
+  List<Object?> get props => [isStart, date];
 }
 
 class UnitDetailsSaved extends UnitDetailsEvent {

@@ -10,6 +10,7 @@ class PhoneNumberField extends StatefulWidget {
   final String? title;
   final String? hint;
   final String initialCountryCode;
+  final String? initialValue;
   final ValueChanged<PhoneNumber>? onChanged;
   final String? Function(PhoneNumber?)? validator;
   final TextInputAction textInputAction;
@@ -21,6 +22,7 @@ class PhoneNumberField extends StatefulWidget {
     this.title,
     this.hint,
     this.initialCountryCode = 'SA',
+    this.initialValue,
     this.onChanged,
     this.validator,
     this.textInputAction = TextInputAction.next,
@@ -35,6 +37,30 @@ class PhoneNumberField extends StatefulWidget {
 class _PhoneNumberFieldState extends State<PhoneNumberField> {
   final FocusNode _focusNode = FocusNode();
   bool _isFocused = false;
+
+  PhoneNumber? get _parsedInitial {
+    final raw = widget.initialValue?.trim() ?? '';
+    if (raw.isEmpty || !raw.startsWith('+')) return null;
+    try {
+      final parsed = PhoneNumber.fromCompleteNumber(completeNumber: raw);
+      if (parsed.countryISOCode.isEmpty) return null;
+      return parsed;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  String get _resolvedCountryCode =>
+      _parsedInitial?.countryISOCode.isNotEmpty == true
+      ? _parsedInitial!.countryISOCode
+      : widget.initialCountryCode;
+
+  String? get _resolvedNationalNumber {
+    final parsed = _parsedInitial;
+    if (parsed != null) return parsed.number;
+    final raw = widget.initialValue?.trim() ?? '';
+    return raw.isEmpty ? null : raw;
+  }
 
   @override
   void initState() {
@@ -102,7 +128,8 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
           child: IntlPhoneField(
             focusNode: _focusNode,
             enabled: widget.enabled,
-            initialCountryCode: widget.initialCountryCode,
+            initialCountryCode: _resolvedCountryCode,
+            initialValue: _resolvedNationalNumber,
             textInputAction: widget.textInputAction,
             autovalidateMode: widget.autovalidateMode ??
                 (widget.validator != null

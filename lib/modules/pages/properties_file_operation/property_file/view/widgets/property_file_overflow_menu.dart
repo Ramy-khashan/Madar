@@ -14,12 +14,16 @@ class PropertyFileOverflowMenu extends StatelessWidget {
     required this.showSend,
     required this.onSend,
     required this.onDelete,
+    this.showAddApartment = false,
+    this.onAddApartment,
     this.deleteLabel,
   });
 
   final bool showSend;
   final VoidCallback onSend;
   final VoidCallback onDelete;
+  final bool showAddApartment;
+  final VoidCallback? onAddApartment;
   final String? deleteLabel;
 
   @override
@@ -28,13 +32,38 @@ class PropertyFileOverflowMenu extends StatelessWidget {
     return PopupMenuButton<String>(
       icon: const Icon(Icons.more_vert),
       onSelected: (value) {
-        if (value == 'send') {
+        if (value == 'add') {
+          onAddApartment?.call();
+        } else if (value == 'send') {
           onSend();
         } else if (value == 'delete') {
           onDelete();
         }
       },
       itemBuilder: (_) => [
+        if (showAddApartment)
+          PopupMenuItem(
+            value: 'add',
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  AppStrings.addApartment,
+                  style: TextStyle(
+                    color: colors.textFieldTitle,
+                    fontFamily: AppConstant.appFont,
+                    fontSize: context.responsiveFontScale(14),
+                  ),
+                ),
+                SizedBox(width: 10.width),
+                Icon(
+                  Icons.add,
+                  size: 18.width,
+                  color: colors.primaryBrand,
+                ),
+              ],
+            ),
+          ),
         if (showSend)
           PopupMenuItem(
             value: 'send',

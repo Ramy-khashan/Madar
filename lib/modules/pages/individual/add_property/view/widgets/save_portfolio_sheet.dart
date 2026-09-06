@@ -9,7 +9,6 @@ import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../controller/add_property_bloc.dart';
 import 'portfolio_content.dart';
-import 'portfolio_mode_toggle.dart';
 
 class SavePortfolioSheet extends StatelessWidget {
   const SavePortfolioSheet({super.key});
@@ -33,9 +32,7 @@ class SavePortfolioSheet extends StatelessWidget {
               prev.model.propertyParentId != curr.model.propertyParentId ||
               prev.model.propertyType != curr.model.propertyType,
           builder: (context, state) {
-            final canSave =
-                state.hasPortfolioMode &&
-                (state.isNewFolder || state.model.hasParentProperty);
+            final canSave = state.hasPortfolioMode;
             return Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -73,24 +70,15 @@ class SavePortfolioSheet extends StatelessWidget {
                   ],
                 ),
                 20.height.toSizedBox,
-                if (state.model.isApartment) ...[
-                  const PortfolioModeToggle(),
-                  16.height.toSizedBox,
-                ],
                 const PortfolioContent(),
                 20.height.toSizedBox,
                 AppButton(
-                  text: state.hasPortfolioMode && state.isNewFolder
-                      ? AppStrings.createAndSave
-                      : AppStrings.confirmSave,
+                  text: AppStrings.createAndSave,
                   colorBG: canSave ? null : tc.borderColor,
                   textColor: canSave ? null : tc.textSecondary,
                   onTap: canSave
                       ? () {
-                          if (state.isNewFolder &&
-                              bloc.portfolioNameController.text
-                                  .trim()
-                                  .isEmpty) {
+                          if (bloc.portfolioNameController.text.trim().isEmpty) {
                             AppToast(
                               AppStrings.pleaseEnterFileName,
                               isError: true,

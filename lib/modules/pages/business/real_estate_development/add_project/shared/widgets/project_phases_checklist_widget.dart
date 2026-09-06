@@ -16,6 +16,7 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
     required this.subtitle,
     required this.stages,
     required this.onStageToggled,
+    this.onStageSelectAll,
     required this.onSubStageToggled,
     required this.selectedStageIds,
     required this.selectedSubStageIds,
@@ -29,6 +30,7 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
   final String subtitle;
   final List<ProjectStageModel> stages;
   final void Function(String stageId) onStageToggled;
+  final void Function(String stageId)? onStageSelectAll;
   final void Function(String stageId, String subStageId) onSubStageToggled;
   final List<String> selectedStageIds;
   final Map<String, List<String>> selectedSubStageIds;
@@ -94,6 +96,14 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
           final isExpanded = selectedStageIds.contains(stage.id);
           final selectedSubs = selectedSubStageIds[stage.id] ?? [];
           final customForStage = customSubStages[stage.id] ?? [];
+          final selectableSubs = stage.subStages
+              .where((s) => !s.isOther)
+              .toList();
+          final allSelectableSelected = selectableSubs.isNotEmpty &&
+              selectableSubs.every((s) => selectedSubs.contains(s.id));
+          final isOtherSelected = stage.subStages.any(
+            (s) => s.isOther && selectedSubs.contains(s.id),
+          );
 
           return Container(
             margin: EdgeInsets.only(bottom: 8.height),
@@ -151,25 +161,32 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
                               color: colors.textSecondary,
                             ),
                             SizedBox(width: 4.width),
-                            Container(
-                              width: 18.width,
-                              height: 18.width,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: isExpanded
-                                    ? AppColors.successColor
-                                    : Colors.transparent,
+                            InkWell(
+                              onTap: () =>
+                                  (onStageSelectAll ?? onStageToggled)(
+                                    stage.id,
+                                  ),
+                              customBorder: const CircleBorder(),
+                              child: Container(
+                                width: 22.width,
+                                height: 22.width,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: allSelectableSelected && isExpanded
+                                      ? AppColors.successColor
+                                      : Colors.transparent,
+                                ),
+                                child: allSelectableSelected && isExpanded
+                                    ? Icon(
+                                        Icons.check_rounded,
+                                        size: 16.width,
+                                        color: Colors.white,
+                                      )
+                                    : ImageItem(
+                                        AppImages.trackRequestImage,
+                                        color: colors.primaryBrand,
+                                      ),
                               ),
-                              child: isExpanded
-                                  ? Icon(
-                                      Icons.check_rounded,
-                                      size: 16.width,
-                                      color: Colors.white,
-                                    )
-                                  : ImageItem(
-                                      AppImages.trackRequestImage,
-                                      color: colors.primaryBrand,
-                                    ),
                             ),
                           ],
                         ),
@@ -213,7 +230,8 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
                                 ),
                               );
                             }),
-                            if (onCustomSubStageAdded != null) ...[
+                            if (onCustomSubStageAdded != null &&
+                                isOtherSelected) ...[
                               ...customForStage.asMap().entries.map(
                                 (entry) => ListTile(
                                   dense: true,

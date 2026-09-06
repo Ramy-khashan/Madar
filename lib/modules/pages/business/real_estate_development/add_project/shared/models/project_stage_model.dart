@@ -63,6 +63,15 @@ class SubStageModel extends Equatable {
   final String stageId;
   final bool isCustom;
 
+  bool get isOther {
+    final n = name.trim().toLowerCase();
+    return isCustom ||
+        n == 'other' ||
+        n == 'أخرى' ||
+        n == 'اخري' ||
+        n == 'اخرى';
+  }
+
   factory SubStageModel.fromJson(Map<String, dynamic> json) {
     return SubStageModel(
       id: (json['id'] ?? json['subStageId'] ?? json['sub_stage_id'] ?? '')

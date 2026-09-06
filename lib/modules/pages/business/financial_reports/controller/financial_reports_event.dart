@@ -34,3 +34,16 @@ final class FinancialReportsScopeChanged extends FinancialReportsEvent {
   @override
   List<Object?> get props => [scope];
 }
+
+final class FinancialReportsAddOtherIncome extends FinancialReportsEvent {
+  const FinancialReportsAddOtherIncome({
+    required this.title,
+    required this.amount,
+  });
+
+  final String title;
+  final num amount;
+
+  @override
+  List<Object?> get props => [title, amount];
+}

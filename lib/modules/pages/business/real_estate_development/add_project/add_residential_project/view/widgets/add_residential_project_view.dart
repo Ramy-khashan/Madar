@@ -149,7 +149,10 @@ class AddResidentialProjectView extends StatelessWidget {
                             textInputType: TextInputType.number,
                             validator: (value) =>
                                 Validate.notEmpty(value ?? ''),
-                            suffixImage: AppImages.rentIcon,
+                            suffixIconWidget: Padding(
+                              padding:   EdgeInsets.only(top:8.height),
+                              child: Text(AppStrings.currency,style: TextStyle(fontSize: context.responsiveFontScale(22)),),
+                            ),
                             prefixIconConstraints: BoxConstraints(
                               minWidth: 40.width,
                               minHeight: 44.width,
@@ -193,6 +196,9 @@ class AddResidentialProjectView extends StatelessWidget {
                               customSubStages: state.customSubStages,
                               onStageToggled: (stageId) =>
                                   bloc.add(AddResidentialStageToggled(stageId)),
+                              onStageSelectAll: (stageId) => bloc.add(
+                                AddResidentialStageSelectAll(stageId),
+                              ),
                               onSubStageToggled: (stageId, subStageId) =>
                                   bloc.add(
                                     AddResidentialSubStageToggled(
@@ -286,6 +292,9 @@ class AddResidentialProjectView extends StatelessWidget {
                             ),
                           ],
                           SizedBox(height: 20.height),
+                          Text(AppStrings.chooseProjectManager,style: TextStyle(
+                            fontSize: context.responsiveFontScale(20)
+                          ),),
                           ProjectManagerFields(
                             nameController: bloc.usernameController,
                             passwordController: bloc.passwordController,

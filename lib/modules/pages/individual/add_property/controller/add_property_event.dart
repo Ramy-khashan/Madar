@@ -68,6 +68,19 @@ class UpdateCoordinatesEvent extends AddPropertyEvent {
   List<Object?> get props => [latitude, longitude, city, district];
 }
 
+class MapLocationSelectedEvent extends AddPropertyEvent {
+  const MapLocationSelectedEvent({
+    required this.latitude,
+    required this.longitude,
+  });
+
+  final double latitude;
+  final double longitude;
+
+  @override
+  List<Object?> get props => [latitude, longitude];
+}
+
 class SelectDeedTypeEvent extends AddPropertyEvent {
   const SelectDeedTypeEvent(this.deedType);
   final String deedType;
@@ -276,13 +289,6 @@ class HidePortfolioSheetEvent extends AddPropertyEvent {
   const HidePortfolioSheetEvent();
 }
 
-class SelectPortfolioModeEvent extends AddPropertyEvent {
-  const SelectPortfolioModeEvent(this.isNew);
-  final bool isNew;
-  @override
-  List<Object?> get props => [isNew];
-}
-
 class ConfirmSaveEvent extends AddPropertyEvent {
   const ConfirmSaveEvent({
     this.brokerId,
@@ -298,22 +304,6 @@ class ConfirmSaveEvent extends AddPropertyEvent {
     openChooseBrokerOnSuccess,
     adLicenseNumber,
   ];
-}
-
-class LoadParentCandidatesEvent extends AddPropertyEvent {
-  const LoadParentCandidatesEvent();
-}
-
-class SelectParentPropertyEvent extends AddPropertyEvent {
-  const SelectParentPropertyEvent({required this.id, required this.title});
-  final String id;
-  final String title;
-  @override
-  List<Object?> get props => [id, title];
-}
-
-class ClearParentPropertyEvent extends AddPropertyEvent {
-  const ClearParentPropertyEvent();
 }
 
 class SendToBrokerEvent extends AddPropertyEvent {

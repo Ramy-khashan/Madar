@@ -6,6 +6,7 @@ import '../../../../../../core/components/app_textfield.dart';
 import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../controller/add_property_bloc.dart';
 import '../../model/add_property_validator.dart';
@@ -34,6 +35,7 @@ class PriceInputSection extends StatelessWidget {
               title: AppStrings.listingPrice,
               hint: '0',
               textInputType: TextInputType.number,
+              inputFormatters: [ThousandsSeparatorInputFormatter()],
               errorText: state.fieldErrors[AddPropertyField.price],
               suffixIconWidget: Padding(
                 padding: EdgeInsetsDirectional.only(top: 12.height),

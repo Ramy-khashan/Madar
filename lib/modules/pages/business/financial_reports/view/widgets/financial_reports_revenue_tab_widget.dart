@@ -6,9 +6,11 @@ import '../../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../core/components/app_button.dart';
 import '../../../../../../core/components/outline_section.dart';
 import '../../controller/financial_reports_bloc.dart';
 import '../../model/financial_report_models.dart';
+import 'add_other_income_dialog.dart';
 import 'shared/financial_property_row.dart';
 
 class FinancialReportsRevenueTabWidget extends StatelessWidget {
@@ -23,7 +25,8 @@ class FinancialReportsRevenueTabWidget extends StatelessWidget {
           p.otherIncomeItems != c.otherIncomeItems ||
           p.rentalTotal != c.rentalTotal ||
           p.otherIncomeTotal != c.otherIncomeTotal ||
-          p.totalIncome != c.totalIncome,
+          p.totalIncome != c.totalIncome ||
+          p.isSubmittingOtherIncome != c.isSubmittingOtherIncome,
       builder: (context, state) {
         return Padding(
           padding: EdgeInsets.all(16.width),
@@ -61,6 +64,8 @@ class FinancialReportsRevenueTabWidget extends StatelessWidget {
                 colors: colors,
                 items: state.otherIncomeItems,
                 total: state.otherIncomeTotal,
+                isSubmitting: state.isSubmittingOtherIncome,
+                onAdd: () => showAddOtherIncomeDialog(context),
               ),
             ],
           ),
@@ -208,17 +213,18 @@ class _OtherIncomeCard extends StatelessWidget {
     required this.colors,
     required this.items,
     required this.total,
+    required this.isSubmitting,
+    required this.onAdd,
   });
 
   final AppThemeColors colors;
   final List<FinancialRentItem> items;
   final double total;
+  final bool isSubmitting;
+  final VoidCallback onAdd;
 
   @override
   Widget build(BuildContext context) {
-    if (items.isEmpty && total <= 0) {
-      return const SizedBox.shrink();
-    }
     return Container(
       padding: EdgeInsets.all(14.width),
       decoration: BoxDecoration(
@@ -261,6 +267,14 @@ class _OtherIncomeCard extends StatelessWidget {
               paid: item.paid,
               colors: colors,
             ),
+          ),
+          SizedBox(height: 8.height),
+          AppButton(
+            text: AppStrings.addOtherIncome,
+            textSize: 14,
+            height: 44,
+            isLoading: isSubmitting,
+            onTap: onAdd,
           ),
         ],
       ),

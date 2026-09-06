@@ -68,8 +68,12 @@ class FilterSheetView extends StatelessWidget {
                   alignment: AlignmentDirectional.centerEnd,
                   child: IconButton(
                     style: IconButton.styleFrom(
-                      padding: EdgeInsetsDirectional.only(end: 16.width,top: 16.height,),
-                     minimumSize: Size.zero,),
+                      padding: EdgeInsetsDirectional.only(
+                        end: 16.width,
+                        top: 16.height,
+                      ),
+                      minimumSize: Size.zero,
+                    ),
                     icon: Icon(
                       Icons.close,
                       color: colors.textFieldTitle,
@@ -79,7 +83,6 @@ class FilterSheetView extends StatelessWidget {
                   ),
                 ),
 
- 
                 Expanded(
                   child: BlocBuilder<FilterBloc, FilterState>(
                     builder: (context, state) {
@@ -134,10 +137,9 @@ class FilterSheetView extends StatelessWidget {
                               controller: context
                                   .read<FilterBloc>()
                                   .cityController,
-                              onChanged: (value) =>
-                                  context.read<FilterBloc>().add(
-                                    FilterCityChanged(city: value),
-                                  ),
+                              onChanged: (value) => context
+                                  .read<FilterBloc>()
+                                  .add(FilterCityChanged(city: value)),
                             ),
                             SizedBox(height: 20.height),
 
@@ -174,10 +176,9 @@ class FilterSheetView extends StatelessWidget {
                                 hint: AppStrings.filterAnyDuration,
                                 value: s.duration,
                                 items: AppConstant.durations,
-                                onChanged: (v) =>
-                                    context.read<FilterBloc>().add(
-                                      FilterDurationChanged(duration: v),
-                                    ),
+                                onChanged: (v) => context
+                                    .read<FilterBloc>()
+                                    .add(FilterDurationChanged(duration: v)),
                               ),
                             ],
                             SizedBox(height: 28.height),
@@ -200,7 +201,7 @@ class FilterSheetView extends StatelessWidget {
                     onTap: () =>
                         context.read<FilterBloc>().add(const FilterApplied()),
                     width: double.infinity,
-                     textColor: Colors.white,
+                    textColor: Colors.white,
                   ),
                 ),
               ],

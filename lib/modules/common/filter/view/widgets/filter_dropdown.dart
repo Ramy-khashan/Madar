@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:madar_app/core/utils/functions/translation.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
@@ -61,7 +62,7 @@ class FilterDropdown extends StatelessWidget {
               (item) => DropdownMenuItem<String>(
                 value: item,
                 child: Text(
-                  item,
+                  item.trans,
                   style: TextStyle(
                     color: colors.textFieldTitle,
                     fontSize: context.responsiveFontScale(14),

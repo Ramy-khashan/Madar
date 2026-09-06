@@ -65,5 +65,6 @@ class AppRouterKeys {
   static const String phaseDetails = '/phaseDetails';
   static const String propertyFileDetails = '/propertyFileDetails';
   static const String unitDetailsScreen = '/unitDetailsScreen';
+  static const String addBuildingApartment = '/addBuildingApartment';
 }
 

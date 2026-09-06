@@ -100,6 +100,15 @@ final class AddResidentialSubStageToggled extends AddResidentialProjectEvent {
   List<Object?> get props => [stageId, subStageId];
 }
 
+final class AddResidentialStageSelectAll extends AddResidentialProjectEvent {
+  const AddResidentialStageSelectAll(this.stageId);
+
+  final String stageId;
+
+  @override
+  List<Object?> get props => [stageId];
+}
+
 final class AddResidentialImagesSelected extends AddResidentialProjectEvent {
   const AddResidentialImagesSelected(this.paths);
 

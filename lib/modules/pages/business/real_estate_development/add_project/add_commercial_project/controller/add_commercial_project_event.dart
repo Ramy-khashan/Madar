@@ -105,6 +105,15 @@ final class AddCommercialSubStageToggled extends AddCommercialProjectEvent {
   List<Object?> get props => [stageId, subStageId];
 }
 
+final class AddCommercialStageSelectAll extends AddCommercialProjectEvent {
+  const AddCommercialStageSelectAll(this.stageId);
+
+  final String stageId;
+
+  @override
+  List<Object?> get props => [stageId];
+}
+
 final class AddCommercialImagesSelected extends AddCommercialProjectEvent {
   const AddCommercialImagesSelected(this.paths);
 

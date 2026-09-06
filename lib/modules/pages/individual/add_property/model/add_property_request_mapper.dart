@@ -151,10 +151,7 @@ extension AddPropertyRequestMapper on AddPropertyModel {
       description: description,
       rentPeriod: PropertyApiEnums.rentPeriodFromUi(rentalPeriod),
       projectName: developerName.isNotEmpty ? developerName : null,
-      propertyParentId:
-          (propertyParentId.isNotEmpty && type == PropertyApiEnums.typeApartment)
-          ? propertyParentId
-          : null,
+      propertyParentId: null,
       adLicenseNumber: (adLicenseNumber != null && adLicenseNumber.isNotEmpty)
           ? adLicenseNumber
           : null,

@@ -1130,9 +1130,15 @@ class ChildProperty {
   String? type;
   String? status;
   String? listingType;
+  String? unitNumber;
   int? price;
   bool? isActive;
   String? mainImage;
+  num? totalArea;
+  int? rooms;
+  int? bathrooms;
+  String? tenancyStatus;
+  num? monthlyRent;
 
   ChildProperty({
     this.propertyId,
@@ -1140,9 +1146,15 @@ class ChildProperty {
     this.type,
     this.status,
     this.listingType,
+    this.unitNumber,
     this.price,
     this.isActive,
     this.mainImage,
+    this.totalArea,
+    this.rooms,
+    this.bathrooms,
+    this.tenancyStatus,
+    this.monthlyRent,
   });
 
   factory ChildProperty.fromJson(Map<String, dynamic> json) {
@@ -1156,9 +1168,15 @@ class ChildProperty {
       type: json['type'],
       status: json['status'],
       listingType: json['listingType'],
+      unitNumber: json['unitNumber']?.toString(),
       price: _jsonInt(json['price']),
       isActive: json['isActive'],
       mainImage: image,
+      totalArea: _jsonDouble(json['totalArea']),
+      rooms: _jsonInt(json['rooms']),
+      bathrooms: _jsonInt(json['bathrooms']),
+      tenancyStatus: json['tenancyStatus']?.toString(),
+      monthlyRent: _jsonDouble(json['monthlyRent']),
     );
   }
 
@@ -1169,9 +1187,15 @@ class ChildProperty {
     data['type'] = type;
     data['status'] = status;
     data['listingType'] = listingType;
+    data['unitNumber'] = unitNumber;
     data['price'] = price;
     data['isActive'] = isActive;
     data['mainImage'] = mainImage;
+    data['totalArea'] = totalArea;
+    data['rooms'] = rooms;
+    data['bathrooms'] = bathrooms;
+    data['tenancyStatus'] = tenancyStatus;
+    data['monthlyRent'] = monthlyRent;
     return data;
   }
 }

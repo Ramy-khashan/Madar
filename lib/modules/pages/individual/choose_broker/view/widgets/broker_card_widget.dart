@@ -75,6 +75,8 @@ class BrokerCardWidget extends StatelessWidget {
                     SizedBox(height: 2.height),
                     Text(
                       '${AppStrings.licensePrefix}: ${broker?.licenseNumber ?? 'License Number'}',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: context.responsiveFontScale(14),
                         fontFamily: AppConstant.appHeaderFont,
