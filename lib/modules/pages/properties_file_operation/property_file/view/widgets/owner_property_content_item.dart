@@ -8,9 +8,8 @@ import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
-import '../../../../../../core/utils/constants/storage_keys.dart';
+import '../../../../../../core/utils/functions/account_role.dart';
 import '../../../../../../core/utils/functions/image_picker_helper.dart';
-import '../../../../../../core/utils/functions/preference_utils.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../individual/my_property_details/view/widgets/contracts_section_widget.dart';
 import '../../../../individual/my_property_details/view/widgets/related_services_section_widget.dart';
@@ -24,6 +23,7 @@ import '../../../unit_details/view/widgets/unit_info_row.dart';
 import 'owner_financial_section.dart';
 import 'owner_property_expenses.dart';
 import 'owner_property_images.dart';
+import 'owner_property_tenancy_section.dart';
 
 class OwnerPropertyContentItem extends StatelessWidget {
   const OwnerPropertyContentItem({
@@ -37,9 +37,7 @@ class OwnerPropertyContentItem extends StatelessWidget {
   final PropertyFileState state;
   final AppThemeColors colors;
 
-  bool get _canEdit =>
-      PreferenceUtils().getString(StorageKeys.accountType) ==
-      AppConstant.business;
+  bool get _canEdit => AccountRole.isBusiness;
 
   @override
   Widget build(BuildContext context) {
@@ -127,6 +125,14 @@ class OwnerPropertyContentItem extends StatelessWidget {
                   ContractsSectionWidget(
                     contracts: property?.contracts ?? [],
                   ),
+                  if (_canEdit && (property?.isForRent ?? false)) ...[
+                    SizedBox(height: 16.height),
+                    OwnerPropertyTenancySection(
+                      bloc: bloc,
+                      state: state,
+                      colors: colors,
+                    ),
+                  ],
                   SizedBox(height: 16.height),
                   OwnerPropertyExpenses(
                     expenses: state.expenses,

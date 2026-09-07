@@ -227,6 +227,8 @@ class UnitModel extends Equatable {
   final String rawStatus;
   final String buildingId;
 
+  bool get isForRent => listingType.toUpperCase() == 'RENT';
+
   factory UnitModel.fromChild(ChildProperty child, int index) {
     final title = (child.title ?? '').trim();
     final unitNumber = (child.unitNumber ?? '').trim();
@@ -291,17 +293,20 @@ class UnitModel extends Equatable {
       id: p.propertyId ?? base?.id ?? '',
       number: base?.number ?? p.title ?? '',
       label: p.title ?? base?.label ?? '',
-      status: unitStatusFrom(p.status ?? base?.rawStatus),
+      status: unitStatusFrom(p.tenancyStatus ?? p.status ?? base?.rawStatus),
       area: (d?.area ?? d?.totalArea ?? p.totalArea ?? 0).toDouble(),
       rooms: d?.bedrooms ?? d?.roomsCount ?? 0,
       bathrooms: d?.bathrooms ?? 0,
-      monthlyRent: (p.price ?? base?.monthlyRent ?? 0).toDouble(),
+      monthlyRent: (p.monthlyRent ?? p.price ?? base?.monthlyRent ?? 0)
+          .toDouble(),
       floor: d?.floor ?? 0,
-      tenantName: base?.tenantName ?? '',
-      tenantPhone: base?.tenantPhone ?? '',
-      rentStartDate: base?.rentStartDate ?? '',
-      rentEndDate: base?.rentEndDate ?? '',
-      isHijriDate: base?.isHijriDate ?? true,
+      tenantName: (p.tenantName ?? base?.tenantName ?? '').trim(),
+      tenantPhone: (p.tenantPhone ?? base?.tenantPhone ?? '').trim(),
+      rentStartDate: (p.tenancyStartDate ?? base?.rentStartDate ?? '').trim(),
+      rentEndDate: (p.tenancyEndDate ?? base?.rentEndDate ?? '').trim(),
+      isHijriDate: p.tenancyCalendarType != null
+          ? p.tenancyCalendarType!.toUpperCase() == 'HIJRI'
+          : (base?.isHijriDate ?? false),
       expenses: expenses,
       projectName: p.projectName ?? base?.projectName ?? '',
       imageUrl: (p.media ?? []).coverUrl.isNotEmpty

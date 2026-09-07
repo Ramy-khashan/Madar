@@ -28,9 +28,9 @@ class UnitDetailsContent extends StatelessWidget {
 
   final String propertyName;
 
-  bool get _canEdit => AccountRole.isBroker;
+  bool get _canEdit => AccountRole.isBusiness;
 
-  bool get _canManageUnit => AccountRole.isBroker || AccountRole.isOwner;
+  bool get _canManageUnit => AccountRole.isBusiness;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +57,8 @@ class UnitDetailsContent extends StatelessWidget {
               title: unit?.label ?? '',
               actions: [
                 PropertyFileOverflowMenu(
-                  showSend: !_canEdit,
+                  showSend: !AccountRole.isBroker,
+                  showDelete: _canEdit,
                   onSend: () => RouterHandler.navigate(
                     context,
                     AppRouterKeys.chooseBroker,

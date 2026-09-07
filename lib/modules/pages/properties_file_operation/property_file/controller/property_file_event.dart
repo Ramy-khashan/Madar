@@ -25,6 +25,28 @@ class PropertyFileSaveChanges extends PropertyFileEvent {
   const PropertyFileSaveChanges();
 }
 
+class PropertyFileStatusToggled extends PropertyFileEvent {
+  const PropertyFileStatusToggled(this.status);
+  final UnitStatus status;
+  @override
+  List<Object?> get props => [status];
+}
+
+class PropertyFileDateTypeToggled extends PropertyFileEvent {
+  const PropertyFileDateTypeToggled(this.isHijri);
+  final bool isHijri;
+  @override
+  List<Object?> get props => [isHijri];
+}
+
+class PropertyFileDatePicked extends PropertyFileEvent {
+  const PropertyFileDatePicked({required this.isStart, required this.date});
+  final bool isStart;
+  final DateTime date;
+  @override
+  List<Object?> get props => [isStart, date];
+}
+
 class PropertyFileExpenseAdded extends PropertyFileEvent {
   const PropertyFileExpenseAdded();
 }

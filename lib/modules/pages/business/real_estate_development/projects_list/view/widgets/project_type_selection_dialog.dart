@@ -54,7 +54,7 @@ class _ProjectTypeSelectionDialogState
               colors: colors,
               onChanged: (v) => setState(() => _selected = v!),
             ),
-            SizedBox(height: 12.height),
+            SizedBox(height: 22.height),
             _TypeRadioTile(
               value: AppConstant.commercialProjectType,
               groupValue: _selected,
@@ -118,14 +118,14 @@ class _TypeRadioTile extends StatelessWidget {
             color: colors.textFieldTitle,
           ),
         ),
-        subtitle: Text(
-          subtitle,
-          style: TextStyle(
-            fontSize: context.responsiveFontScale(12),
-            color: colors.textSecondary,
-            fontFamily: AppConstant.appFont,
-          ),
-        ),
+        // subtitle: Text(
+        //   subtitle,
+        //   style: TextStyle(
+        //     fontSize: context.responsiveFontScale(12),
+        //     color: colors.textSecondary,
+        //     fontFamily: AppConstant.appFont,
+        //   ),
+        // ),
       ),
     );
   }

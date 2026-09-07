@@ -119,6 +119,7 @@ class BuildingApartmentDetails extends StatelessWidget {
             ),
           ],
         ),
+        if (unit.isForRent) ...[
         SizedBox(height: 20.height),
         Text(
           AppStrings.rentStatus,
@@ -133,34 +134,48 @@ class BuildingApartmentDetails extends StatelessWidget {
         BuildingSectionCard(
           colors: colors,
           children: [
-            BuildingLabeledToggle(
-              label: AppStrings.statusLabel,
-              leftLabel: AppStrings.rentedStatus,
-              rightLabel: AppStrings.vacantStatus,
-              leftSelected: unit.status == UnitStatus.rented,
-              enabled: canEdit,
-              colors: colors,
-              onLeft: () => bloc.add(
-                const UnitDetailsStatusToggled(UnitStatus.rented),
-              ),
-              onRight: () => bloc.add(
-                const UnitDetailsStatusToggled(UnitStatus.vacant),
-              ),
-            ),
-            if (unit.status == UnitStatus.rented) ...[
-              SizedBox(height: 14.height),
+            if (canEdit)
               BuildingLabeledToggle(
-                label: AppStrings.dateType,
-                leftLabel: AppStrings.hijri,
-                rightLabel: AppStrings.gregorian,
-                leftSelected: unit.isHijriDate,
-                enabled: canEdit,
+                label: AppStrings.statusLabel,
+                leftLabel: AppStrings.rentedStatus,
+                rightLabel: AppStrings.vacantStatus,
+                leftSelected: unit.status == UnitStatus.rented,
+                enabled: true,
                 colors: colors,
-                onLeft: () =>
-                    bloc.add(const UnitDetailsDateTypeToggled(true)),
-                onRight: () =>
-                    bloc.add(const UnitDetailsDateTypeToggled(false)),
+                onLeft: () => bloc.add(
+                  const UnitDetailsStatusToggled(UnitStatus.rented),
+                ),
+                onRight: () => bloc.add(
+                  const UnitDetailsStatusToggled(UnitStatus.vacant),
+                ),
+              )
+            else
+              UnitInfoRow(
+                label: AppStrings.statusLabel,
+                value: unit.status == UnitStatus.rented
+                    ? AppStrings.rentedStatus
+                    : AppStrings.vacantStatus,
+                leadingImage: AppImages.monthlyRentIcon,
+                colors: colors,
+                isEditable: false,
+                embedded: true,
               ),
+            if (unit.status == UnitStatus.rented) ...[
+              if (canEdit) ...[
+                SizedBox(height: 14.height),
+                BuildingLabeledToggle(
+                  label: AppStrings.dateType,
+                  leftLabel: AppStrings.hijri,
+                  rightLabel: AppStrings.gregorian,
+                  leftSelected: unit.isHijriDate,
+                  enabled: true,
+                  colors: colors,
+                  onLeft: () =>
+                      bloc.add(const UnitDetailsDateTypeToggled(true)),
+                  onRight: () =>
+                      bloc.add(const UnitDetailsDateTypeToggled(false)),
+                ),
+              ],
               SizedBox(height: 8.height),
               BuildingRowDivider(colors: colors),
               UnitInfoRow(
@@ -214,6 +229,7 @@ class BuildingApartmentDetails extends StatelessWidget {
             ],
           ],
         ),
+        ],
       ],
     );
   }

@@ -12,6 +12,8 @@ class PropertyFileState extends Equatable {
     this.isDeleted = false,
     this.expenses = const [],
     this.expenseFiles = const [],
+    this.tenancyStatus = UnitStatus.vacant,
+    this.isHijriDate = false,
   });
 
   final PropertyFileModel? property;
@@ -24,6 +26,10 @@ class PropertyFileState extends Equatable {
   final bool isDeleted;
   final List<UnitExpenseModel> expenses;
   final List<String> expenseFiles;
+  final UnitStatus tenancyStatus;
+  final bool isHijriDate;
+
+  bool get isRented => tenancyStatus == UnitStatus.rented;
 
   bool get isMultiUnit =>
       property?.isMultiUnit ?? PropertyFileModel.isMultiUnitType(details?.type);
@@ -45,6 +51,8 @@ class PropertyFileState extends Equatable {
     bool? isDeleted,
     List<UnitExpenseModel>? expenses,
     List<String>? expenseFiles,
+    UnitStatus? tenancyStatus,
+    bool? isHijriDate,
   }) => PropertyFileState(
     property: property ?? this.property,
     details: details ?? this.details,
@@ -56,6 +64,8 @@ class PropertyFileState extends Equatable {
     isDeleted: isDeleted ?? this.isDeleted,
     expenses: expenses ?? this.expenses,
     expenseFiles: expenseFiles ?? this.expenseFiles,
+    tenancyStatus: tenancyStatus ?? this.tenancyStatus,
+    isHijriDate: isHijriDate ?? this.isHijriDate,
   );
 
   @override
@@ -70,5 +80,7 @@ class PropertyFileState extends Equatable {
     isDeleted,
     expenses,
     expenseFiles,
+    tenancyStatus,
+    isHijriDate,
   ];
 }

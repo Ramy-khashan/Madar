@@ -8,6 +8,7 @@ import '../../../../../core/components/app_textfield.dart';
 import '../../../../../core/components/phone_number_field.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../core/utils/functions/account_role.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 import '../../../../../core/utils/functions/router_handler.dart';
 import '../controller/add_building_apartment_bloc.dart';
@@ -72,6 +73,7 @@ class AddBuildingApartmentView extends StatelessWidget {
                     hint: AppStrings.numberOfBathrooms,
                     textInputType: TextInputType.number,
                   ),
+                  if (AccountRole.isBusiness) ...[
                   SizedBox(height: 8.height),
                   Text(
                     AppStrings.unitStatus,
@@ -152,6 +154,7 @@ class AddBuildingApartmentView extends StatelessWidget {
                       onTapField: () =>
                           bloc.requestDate(context, isStart: false),
                     ),
+                  ],
                   ],
                   if (state.errorMessage != null &&
                       state.errorMessage!.isNotEmpty) ...[

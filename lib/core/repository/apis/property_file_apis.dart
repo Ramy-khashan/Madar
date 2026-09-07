@@ -38,10 +38,12 @@ class PropertyFileApis {
     required String propertyId,
     required String title,
     String? projectName,
+    Map<String, dynamic>? extra,
   }) async {
     try {
       final body = <String, dynamic>{'title': title};
       if (projectName != null) body['projectName'] = projectName;
+      if (extra != null) body.addAll(extra);
       final response = await sl.get<ApiConsumer>().put(
         EndPoints.propertyById(propertyId),
         body: body,

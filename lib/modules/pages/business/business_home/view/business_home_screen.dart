@@ -82,32 +82,33 @@ class BusinessHomeScreen extends StatelessWidget {
                                   AppRouterKeys.propertiesListing,
                                 );
                               },
-                              trailing: Padding(
-                                padding: EdgeInsetsDirectional.only(
-                                  start: 12.width,
-                                ),
-                                child: InkWell(
-                                  onTap: () {
-                                    RouterHandler.navigate(
-                                      context,
-                                      AppRouterKeys.propertyLocationMap,
-                                    );
-                                  },
-                                  child: CircleAvatar(
-                                    radius: 16.width,
-                                    backgroundColor: AppThemeColors.of(
-                                      context,
-                                    ).primaryBrand,
-                                    child: Icon(
-                                      Icons.map_outlined,
-                                      size: 20.width,
-                                      color: AppThemeColors.of(
-                                        context,
-                                      ).onPrimary,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              // trailing: Padding(
+                              //   padding: EdgeInsetsDirectional.only(
+                              //     start: 12.width,
+                              //   ),
+                              //   child: InkWell(
+                              //     onTap: () {
+                              //       RouterHandler.navigate(
+                              //         context,
+                              //         AppRouterKeys.propertyLocationMap,
+                              //       );
+                              //     },
+                              //     child: CircleAvatar(
+                              //       radius: 16.width,
+                              //       backgroundColor: AppThemeColors.of(
+                              //         context,
+                              //       ).primaryBrand,
+                              //       child: Icon(
+                              //         Icons.map_outlined,
+                              //         size: 20.width,
+                              //         color: AppThemeColors.of(
+                              //           context,
+                              //         ).onPrimary,
+                              //       ),
+                              //     ),
+                              //   ),
+                              // ),
+                           
                             ),
                             SizedBox(
                               height: ResponsiveUtils.types(

@@ -6,10 +6,8 @@ import '../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../core/components/app_appbar.dart';
 import '../../../../../core/components/confirm_delete_dialog.dart';
 import '../../../../../core/components/loading_process.dart';
-import '../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
-import '../../../../../core/utils/constants/storage_keys.dart';
-import '../../../../../core/utils/functions/preference_utils.dart';
+import '../../../../../core/utils/functions/account_role.dart';
 import '../../../../../core/utils/functions/router_handler.dart';
 import '../controller/property_file_bloc.dart';
 import 'widgets/owner_property_content_item.dart';
@@ -18,10 +16,6 @@ import 'widgets/property_files_content_item.dart';
 
 class PropertyFileScreen extends StatelessWidget {
   const PropertyFileScreen({super.key});
-
-  bool get _isBroker =>
-      PreferenceUtils().getString(StorageKeys.accountType) ==
-      AppConstant.business;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +31,8 @@ class PropertyFileScreen extends StatelessWidget {
           title: AppStrings.propertyFileTitle,
           actions: [
             PropertyFileOverflowMenu(
-              showSend: !_isBroker,
+              showSend: !AccountRole.isBroker,
+              showDelete: AccountRole.isBusiness,
               onSend: () => RouterHandler.navigate(
                 context,
                 AppRouterKeys.chooseBroker,

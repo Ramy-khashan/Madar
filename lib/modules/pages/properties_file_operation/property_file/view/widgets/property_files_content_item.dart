@@ -4,12 +4,10 @@ import '../../../../../../config/router/app_router_keys.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/app_button.dart';
 import '../../../../../../core/utils/constants/app_colors.dart';
-import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
-import '../../../../../../core/utils/constants/storage_keys.dart';
+import '../../../../../../core/utils/functions/account_role.dart';
 import '../../../../../../core/utils/functions/image_picker_helper.dart';
-import '../../../../../../core/utils/functions/preference_utils.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../../../individual/my_property_details/view/widgets/contracts_section_widget.dart';
@@ -17,6 +15,7 @@ import '../../../../individual/my_property_details/view/widgets/related_services
 import '../../controller/property_file_bloc.dart';
 import '../../model/property_file_model.dart';
 import 'owner_financial_section.dart';
+import 'add_apartment_card.dart';
 import 'owner_property_expenses.dart';
 import 'property_file_header_widget.dart';
 import 'unit_card.dart';
@@ -35,9 +34,7 @@ class PropertyFileContentItem extends StatelessWidget {
   final PropertyFileState state;
   final PropertyFileBloc bloc;
 
-  bool get _canEdit =>
-      PreferenceUtils().getString(StorageKeys.accountType) ==
-      AppConstant.business;
+  bool get _canEdit => AccountRole.isBusiness;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +42,7 @@ class PropertyFileContentItem extends StatelessWidget {
     final hasSold = units.any((u) => u.status == UnitStatus.sold);
     final isBuilding = (property?.rawType ?? '').toUpperCase() == 'BUILDING';
     final remaining = ((property?.totalUnits ?? 0) - units.length).clamp(0, 9999);
-    final showAddCard = isBuilding && remaining > 0;
+    final addCount = isBuilding && _canEdit ? remaining : 0;
 
     return CustomScrollView(
       slivers: [
@@ -139,9 +136,8 @@ class PropertyFileContentItem extends StatelessWidget {
           padding: EdgeInsets.fromLTRB(16.width, 0, 16.width, 16.height),
           sliver: SliverGrid(
             delegate: SliverChildBuilderDelegate((context, index) {
-              if (showAddCard && index == units.length) {
+              if (index >= units.length) {
                 return AddApartmentCard(
-                  remaining: remaining,
                   colors: colors,
                   onTap: () async {
                     final added = await RouterHandler.navigate(
@@ -177,7 +173,7 @@ class PropertyFileContentItem extends StatelessWidget {
                   }
                 },
               );
-            }, childCount: units.length + (showAddCard ? 1 : 0)),
+            }, childCount: units.length + addCount),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
               crossAxisSpacing: 8,

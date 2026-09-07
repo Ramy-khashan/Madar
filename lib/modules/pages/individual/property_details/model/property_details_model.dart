@@ -32,6 +32,15 @@ class PropertyDetailsModel {
   List<PropertyContract>? contracts;
   List<PropertyExpense>? expenses;
   FinancialPerformance? financialPerformance;
+  String? tenancyStatus;
+  String? tenantName;
+  String? tenantPhone;
+  num? monthlyRent;
+  String? tenancyStartDate;
+  String? tenancyEndDate;
+  String? tenancyCalendarType;
+
+  bool get isForRent => (listingType ?? '').toUpperCase() == 'RENT';
 
   PropertyDetailsModel({
     this.propertyId,
@@ -65,6 +74,13 @@ class PropertyDetailsModel {
     this.contracts,
     this.expenses,
     this.financialPerformance,
+    this.tenancyStatus,
+    this.tenantName,
+    this.tenantPhone,
+    this.monthlyRent,
+    this.tenancyStartDate,
+    this.tenancyEndDate,
+    this.tenancyCalendarType,
   });
 
   factory PropertyDetailsModel.fromJson(Map<String, dynamic> json) {
@@ -72,6 +88,10 @@ class PropertyDetailsModel {
     if (json.containsKey('success') && json.containsKey('data')) {
       json = json['data'] ?? {};
     }
+
+    final tenancy = json['tenancy'] is Map
+        ? Map<String, dynamic>.from(json['tenancy'] as Map)
+        : const <String, dynamic>{};
 
     return PropertyDetailsModel(
       propertyId: json['propertyId'] ?? json['property_id'] ?? json['id'],
@@ -153,6 +173,19 @@ class PropertyDetailsModel {
       financialPerformance: json['financialPerformance'] != null
           ? FinancialPerformance.fromJson(json['financialPerformance'])
           : null,
+      tenancyStatus: (tenancy['status'] ?? json['tenancyStatus'])?.toString(),
+      tenantName: (tenancy['tenantName'] ?? json['tenantName'])?.toString(),
+      tenantPhone: (tenancy['tenantPhone'] ?? json['tenantPhone'])?.toString(),
+      monthlyRent: _jsonDouble(tenancy['monthlyRent'] ?? json['monthlyRent']),
+      tenancyStartDate: _tenancyDate(
+        tenancy['startDate'] ?? json['tenancyStartDate'],
+      ),
+      tenancyEndDate: _tenancyDate(
+        tenancy['endDate'] ?? json['tenancyEndDate'],
+      ),
+      tenancyCalendarType:
+          (tenancy['calendarType'] ?? json['tenancyCalendarType'])
+              ?.toString(),
     );
   }
 
@@ -1363,6 +1396,12 @@ int? _jsonInt(dynamic value) {
   if (value is int) return value;
   if (value is num) return value.toInt();
   return int.tryParse(value.toString());
+}
+
+String? _tenancyDate(dynamic value) {
+  final text = value?.toString().trim() ?? '';
+  if (text.isEmpty || text == 'null') return null;
+  return text.split('T').first;
 }
 
 double? _jsonDouble(dynamic value) {

@@ -2,17 +2,21 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../core/components/hijri_date_picker.dart';
 import '../../../../../core/repository/apis/property_file_apis.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/common_fun.dart';
+import '../../../../../core/utils/functions/hijri_date.dart';
 import '../../../individual/property_details/model/property_details_model.dart';
 import '../model/property_file_model.dart';
 
 part 'property_file_event.dart';
 part 'property_file_state.dart';
+part 'mixins/property_file_tenancy_mixin.dart';
 
-class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState> {
+class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState>
+    with PropertyFileTenancyMixin {
   PropertyFileBloc() : super(const PropertyFileState()) {
     on<PropertyFileLoad>(_onLoad);
     on<PropertyFileToggleBookmark>(_onToggleBookmark);
@@ -21,6 +25,9 @@ class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState> {
     on<PropertyFileExpenseAdded>(_onExpenseAdded);
     on<PropertyFileExpenseRemoved>(_onExpenseRemoved);
     on<PropertyFileExpenseFilesPicked>(_onExpenseFilesPicked);
+    on<PropertyFileStatusToggled>(_onStatusToggled);
+    on<PropertyFileDateTypeToggled>(_onDateTypeToggled);
+    on<PropertyFileDatePicked>(_onDatePicked);
   }
 
   String _propertyId = '';
@@ -28,6 +35,16 @@ class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState> {
   final TextEditingController projectNameController = TextEditingController();
   final TextEditingController expenseDescController = TextEditingController();
   final TextEditingController expenseAmountController = TextEditingController();
+  @override
+  final TextEditingController tenantNameController = TextEditingController();
+  @override
+  final TextEditingController tenantPhoneController = TextEditingController();
+  @override
+  final TextEditingController monthlyRentController = TextEditingController();
+  @override
+  final TextEditingController rentStartController = TextEditingController();
+  @override
+  final TextEditingController rentEndController = TextEditingController();
 
   static PropertyFileBloc get(BuildContext context) =>
       context.read<PropertyFileBloc>();
@@ -59,6 +76,7 @@ class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState> {
       (details) {
         titleController.text = details.title ?? '';
         projectNameController.text = details.projectName ?? '';
+        syncTenancy(details);
         final mapped = PropertyFileModel.fromDetails(details);
         emit(
           state.copyWith(
@@ -66,6 +84,9 @@ class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState> {
             property: mapped,
             expenses: UnitModel.fromDetails(details).expenses,
             status: RequestStatus.success,
+            tenancyStatus: unitStatusFrom(details.tenancyStatus),
+            isHijriDate:
+                (details.tenancyCalendarType ?? '').toUpperCase() == 'HIJRI',
           ),
         );
       },
@@ -98,11 +119,17 @@ class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState> {
     Emitter<PropertyFileState> emit,
   ) async {
     if (_propertyId.isEmpty) return;
+    final extra = state.details?.isForRent == true ? tenancyBody() : null;
+    if (state.details?.isForRent == true && state.isRented && extra == null) {
+      AppToast(AppStrings.pleaseCompleteTenantData, isError: true);
+      return;
+    }
     emit(state.copyWith(saveStatus: RequestStatus.loading));
     final result = await PropertyFileApis.updateProperty(
       propertyId: _propertyId,
       title: titleController.text.trim(),
       projectName: projectNameController.text.trim(),
+      extra: extra,
     );
     if (isClosed) return;
 
@@ -136,6 +163,16 @@ class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState> {
         }
         nextDetails.title = titleController.text.trim();
         nextDetails.projectName = projectNameController.text.trim();
+        if (extra != null) {
+          nextDetails.tenancyStatus = extra['status']?.toString();
+          nextDetails.tenantName = extra['tenantName']?.toString();
+          nextDetails.tenantPhone = extra['tenantPhone']?.toString();
+          nextDetails.monthlyRent = extra['monthlyRent'] as num?;
+          nextDetails.tenancyStartDate = extra['startDate']?.toString();
+          nextDetails.tenancyEndDate = extra['endDate']?.toString();
+          nextDetails.tenancyCalendarType = extra['calendarType']?.toString();
+        }
+        syncTenancy(nextDetails);
         final mapped = PropertyFileModel.fromDetails(nextDetails);
         emit(
           state.copyWith(
@@ -144,6 +181,10 @@ class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState> {
             expenses: UnitModel.fromDetails(nextDetails).expenses,
             saveStatus: RequestStatus.success,
             expenseFiles: const [],
+            tenancyStatus: unitStatusFrom(nextDetails.tenancyStatus),
+            isHijriDate:
+                (nextDetails.tenancyCalendarType ?? '').toUpperCase() ==
+                'HIJRI',
           ),
         );
         AppToast(AppStrings.propertyUpdated);
@@ -192,6 +233,11 @@ class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState> {
     projectNameController.dispose();
     expenseDescController.dispose();
     expenseAmountController.dispose();
+    tenantNameController.dispose();
+    tenantPhoneController.dispose();
+    monthlyRentController.dispose();
+    rentStartController.dispose();
+    rentEndController.dispose();
     return super.close();
   }
 }

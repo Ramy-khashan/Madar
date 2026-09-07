@@ -17,6 +17,7 @@ class PropertyFileOverflowMenu extends StatelessWidget {
     this.showAddApartment = false,
     this.onAddApartment,
     this.deleteLabel,
+    this.showDelete = true,
   });
 
   final bool showSend;
@@ -25,10 +26,14 @@ class PropertyFileOverflowMenu extends StatelessWidget {
   final bool showAddApartment;
   final VoidCallback? onAddApartment;
   final String? deleteLabel;
+  final bool showDelete;
 
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
+    if (!showSend && !showDelete && !showAddApartment) {
+      return const SizedBox.shrink();
+    }
     return PopupMenuButton<String>(
       icon: const Icon(Icons.more_vert),
       onSelected: (value) {
@@ -87,24 +92,28 @@ class PropertyFileOverflowMenu extends StatelessWidget {
               ],
             ),
           ),
-        PopupMenuItem(
-          value: 'delete',
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                deleteLabel ?? AppStrings.deleteProperty,
-                style: TextStyle(
-                  color: AppColors.errorColor,
-                  fontFamily: AppConstant.appFont,
-                  fontSize: context.responsiveFontScale(13),
+        if (showDelete)
+          PopupMenuItem(
+            value: 'delete',
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  deleteLabel ?? AppStrings.deleteProperty,
+                  style: TextStyle(
+                    color: AppColors.errorColor,
+                    fontFamily: AppConstant.appFont,
+                    fontSize: context.responsiveFontScale(13),
+                  ),
                 ),
-              ),
-              SizedBox(width: 8.width),
-              const ImageItem(AppImages.deleteIcon, color: AppColors.errorColor),
-            ],
+                SizedBox(width: 8.width),
+                const ImageItem(
+                  AppImages.deleteIcon,
+                  color: AppColors.errorColor,
+                ),
+              ],
+            ),
           ),
-        ),
       ],
     );
   }
