@@ -4,6 +4,7 @@ import 'package:madar_app/core/utils/functions/preference_utils.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/image_item.dart';
+import '../../../../../../core/components/image_preview_screen.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
@@ -32,13 +33,20 @@ class PropertyFileHeaderWidget extends StatelessWidget {
         // Hero image with overlay badges
         Stack(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(20.radius),
-              child: ImageItem(
-                property?.imageUrl ?? '',
-                width: double.infinity,
-                height: 200.height,
-                fit: BoxFit.cover,
+            GestureDetector(
+              onTap: () {
+                final url = property?.imageUrl ?? '';
+                if (url.isEmpty) return;
+                ImagePreviewScreen.open(context, imageUrl: url);
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20.radius),
+                child: ImageItem(
+                  property?.imageUrl ?? '',
+                  width: double.infinity,
+                  height: 200.height,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             // Bookmark

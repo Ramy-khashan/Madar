@@ -5,6 +5,7 @@ import '../../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../../core/components/app_button.dart';
 import '../../../../../../../core/components/image_item.dart';
+import '../../../../../../../core/components/image_preview_screen.dart';
 import '../../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
@@ -34,14 +35,24 @@ class ProjectAttachmentsSectionWidget extends StatelessWidget {
             (item) => Wrap(
               children: [
                 ...List.generate(item.length, (i) {
+                  final url = item[i];
                   return Padding(
                     padding: EdgeInsets.only(right: 8.width, bottom: 8.height),
-                    child: ImageItem(
-                      item[i].isNotEmpty ? item[i] : AppImages.attachmentIcon,
-                      width: 80.width,
-                      height: 80.width,
-                      borderRadius: BorderRadius.circular(12.radius),
-                      fit: BoxFit.cover,
+                    child: GestureDetector(
+                      onTap: url.isEmpty
+                          ? null
+                          : () => ImagePreviewScreen.open(
+                              context,
+                              imageUrl: url,
+                              images: ImagePreviewScreen.previewable(item),
+                            ),
+                      child: ImageItem(
+                        url.isNotEmpty ? url : AppImages.attachmentIcon,
+                        width: 80.width,
+                        height: 80.width,
+                        borderRadius: BorderRadius.circular(12.radius),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   );
                 }),

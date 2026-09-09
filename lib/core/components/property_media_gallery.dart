@@ -6,6 +6,7 @@ import '../../modules/pages/individual/property_details/model/property_details_m
 import '../utils/constants/app_strings.dart';
 import '../utils/functions/responsive.dart';
 import 'image_item.dart';
+import 'image_preview_screen.dart';
 
 class PropertyMediaGallery extends StatefulWidget {
   const PropertyMediaGallery({
@@ -84,11 +85,25 @@ class _PropertyMediaGalleryState extends State<PropertyMediaGallery> {
                           isActive: index == _currentPage,
                         );
                       }
-                      return ImageItem(
-                        item.url ?? '',
-                        fit: BoxFit.cover,
-                        height: widget.height,
-                        width: double.infinity,
+                      return GestureDetector(
+                        onTap: () {
+                          final images = items
+                              .where((m) => m.isImage)
+                              .map((m) => m.url ?? '')
+                              .where((url) => url.isNotEmpty)
+                              .toList();
+                          ImagePreviewScreen.open(
+                            context,
+                            imageUrl: item.url ?? '',
+                            images: images,
+                          );
+                        },
+                        child: ImageItem(
+                          item.url ?? '',
+                          fit: BoxFit.cover,
+                          height: widget.height,
+                          width: double.infinity,
+                        ),
                       );
                     },
                   ),

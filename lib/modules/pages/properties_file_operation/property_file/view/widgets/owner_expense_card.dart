@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/image_item.dart';
+import '../../../../../../core/components/image_preview_screen.dart';
 import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
@@ -36,13 +37,19 @@ class OwnerExpenseCard extends StatelessWidget {
       child: Row(
         children: [
           if ((expense.fileUrl ?? '').isNotEmpty) ...[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8.radius),
-              child: ImageItem(
-                expense.fileUrl!,
-                width: 48.width,
-                height: 48.width,
-                fit: BoxFit.cover,
+            GestureDetector(
+              onTap: () => ImagePreviewScreen.open(
+                context,
+                imageUrl: expense.fileUrl!,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.radius),
+                child: ImageItem(
+                  expense.fileUrl!,
+                  width: 48.width,
+                  height: 48.width,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             SizedBox(width: 10.width),

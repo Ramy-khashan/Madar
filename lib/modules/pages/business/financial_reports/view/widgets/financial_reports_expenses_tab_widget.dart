@@ -5,6 +5,8 @@ import '../../../../../../core/components/outline_section.dart';
 import '../../../../../../../config/router/app_router_keys.dart';
 import '../../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../../core/components/app_button.dart';
+import '../../../../../../../core/components/image_item.dart';
+import '../../../../../../../core/components/image_preview_screen.dart';
 import '../../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
@@ -126,14 +128,37 @@ class FinancialReportsExpensesTabWidget extends StatelessWidget {
                                     ),
                                   ),
                                   if (t.hasFile)
-                                    Text(
-                                      AppStrings.attachmentsSection,
-                                      textAlign: TextAlign.right,
-                                      style: TextStyle(
-                                        fontSize: context.responsiveFontScale(
-                                          11,
+                                    GestureDetector(
+                                      onTap: () => ImagePreviewScreen.open(
+                                        context,
+                                        imageUrl: t.fileUrl,
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsets.only(top: 6.height),
+                                        child: Row(
+                                          children: [
+                                            ImageItem(
+                                              t.fileUrl,
+                                              width: 36.width,
+                                              height: 36.width,
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                    8.radius,
+                                                  ),
+                                              fit: BoxFit.cover,
+                                            ),
+                                            SizedBox(width: 6.width),
+                                            Text(
+                                              AppStrings.attachmentsSection,
+                                              textAlign: TextAlign.right,
+                                              style: TextStyle(
+                                                fontSize: context
+                                                    .responsiveFontScale(11),
+                                                color: colors.primaryBrand,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        color: colors.primaryBrand,
                                       ),
                                     ),
                                 ],

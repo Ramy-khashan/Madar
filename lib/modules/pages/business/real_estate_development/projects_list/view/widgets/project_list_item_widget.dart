@@ -4,6 +4,7 @@ import '../../../../../../../config/router/app_router_keys.dart';
 import '../../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../../core/components/app_button.dart';
 import '../../../../../../../core/components/image_item.dart';
+import '../../../../../../../core/components/image_preview_screen.dart';
 import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../../core/utils/constants/app_strings.dart';
@@ -37,15 +38,28 @@ class ProjectListItemWidget extends StatelessWidget {
         children: [
           Row(
             children: [
-              ImageItem(
-                project?.attachments == null || project == null
-                    ? ''
-                    : project!.attachments!.isEmpty
-                    ? ''
-                    : project?.attachments?.first ?? '',
-                width: 66.width,
-                height: 58.height,
-                borderRadius: BorderRadius.circular(24.radius),
+              GestureDetector(
+                onTap: () {
+                  final images = ImagePreviewScreen.previewable(
+                    project?.attachments ?? const [],
+                  );
+                  if (images.isEmpty) return;
+                  ImagePreviewScreen.open(
+                    context,
+                    imageUrl: images.first,
+                    images: images,
+                  );
+                },
+                child: ImageItem(
+                  project?.attachments == null || project == null
+                      ? ''
+                      : project!.attachments!.isEmpty
+                      ? ''
+                      : project?.attachments?.first ?? '',
+                  width: 66.width,
+                  height: 58.height,
+                  borderRadius: BorderRadius.circular(24.radius),
+                ),
               ),
               SizedBox(width: 12.width),
               Expanded(
