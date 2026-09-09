@@ -22,6 +22,7 @@ class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState>
     on<PropertyFileToggleBookmark>(_onToggleBookmark);
     on<PropertyFileDeleteProperty>(_onDeleteProperty);
     on<PropertyFileSaveChanges>(_onSaveChanges);
+    on<PropertyFilePublishRequested>(_onPublish);
     on<PropertyFileExpenseAdded>(_onExpenseAdded);
     on<PropertyFileExpenseRemoved>(_onExpenseRemoved);
     on<PropertyFileExpenseFilesPicked>(_onExpenseFilesPicked);
@@ -119,17 +120,32 @@ class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState>
     Emitter<PropertyFileState> emit,
   ) async {
     if (_propertyId.isEmpty) return;
-    final extra = state.details?.isForRent == true ? tenancyBody() : null;
-    if (state.details?.isForRent == true && state.isRented && extra == null) {
+    final shouldSaveTenancy = state.details?.isForRent == true;
+    final tenancy = shouldSaveTenancy ? tenancyBody() : null;
+    if (shouldSaveTenancy && state.isRented && tenancy == null) {
       AppToast(AppStrings.pleaseCompleteTenantData, isError: true);
       return;
     }
     emit(state.copyWith(saveStatus: RequestStatus.loading));
+    if (tenancy != null) {
+      final tenancyResult = await PropertyFileApis.updateBuildingApartment(
+        propertyId: _propertyId,
+        body: tenancy,
+      );
+      if (isClosed) return;
+      final tenancyFailed = tenancyResult.fold((error) {
+        AppToast(error, isError: true);
+        return true;
+      }, (_) => false);
+      if (tenancyFailed) {
+        emit(state.copyWith(saveStatus: RequestStatus.failed));
+        return;
+      }
+    }
     final result = await PropertyFileApis.updateProperty(
       propertyId: _propertyId,
       title: titleController.text.trim(),
       projectName: projectNameController.text.trim(),
-      extra: extra,
     );
     if (isClosed) return;
 
@@ -163,14 +179,14 @@ class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState>
         }
         nextDetails.title = titleController.text.trim();
         nextDetails.projectName = projectNameController.text.trim();
-        if (extra != null) {
-          nextDetails.tenancyStatus = extra['status']?.toString();
-          nextDetails.tenantName = extra['tenantName']?.toString();
-          nextDetails.tenantPhone = extra['tenantPhone']?.toString();
-          nextDetails.monthlyRent = extra['monthlyRent'] as num?;
-          nextDetails.tenancyStartDate = extra['startDate']?.toString();
-          nextDetails.tenancyEndDate = extra['endDate']?.toString();
-          nextDetails.tenancyCalendarType = extra['calendarType']?.toString();
+        if (tenancy != null) {
+          nextDetails.tenancyStatus = tenancy['status']?.toString();
+          nextDetails.tenantName = tenancy['tenantName']?.toString();
+          nextDetails.tenantPhone = tenancy['tenantPhone']?.toString();
+          nextDetails.monthlyRent = tenancy['monthlyRent'] as num?;
+          nextDetails.tenancyStartDate = tenancy['startDate']?.toString();
+          nextDetails.tenancyEndDate = tenancy['endDate']?.toString();
+          nextDetails.tenancyCalendarType = tenancy['calendarType']?.toString();
         }
         syncTenancy(nextDetails);
         final mapped = PropertyFileModel.fromDetails(nextDetails);
@@ -225,6 +241,31 @@ class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState>
     Emitter<PropertyFileState> emit,
   ) {
     emit(state.copyWith(expenseFiles: [...state.expenseFiles, ...event.paths]));
+  }
+
+  Future<void> _onPublish(
+    PropertyFilePublishRequested event,
+    Emitter<PropertyFileState> emit,
+  ) async {
+    if (_propertyId.isEmpty) return;
+    emit(state.copyWith(publishStatus: RequestStatus.loading));
+    final result = await PropertyFileApis.publishProperty(
+      propertyId: _propertyId,
+      adLicenseNumber: event.adLicenseNumber,
+      falLicenseNumber: event.falLicenseNumber,
+    );
+    if (isClosed) return;
+    result.fold(
+      (error) {
+        AppToast(error, isError: true);
+        emit(state.copyWith(publishStatus: RequestStatus.failed));
+      },
+      (_) {
+        state.details?.publicationStatus = 'PUBLISHED';
+        AppToast(AppStrings.propertyPublished);
+        emit(state.copyWith(publishStatus: RequestStatus.success));
+      },
+    );
   }
 
   @override

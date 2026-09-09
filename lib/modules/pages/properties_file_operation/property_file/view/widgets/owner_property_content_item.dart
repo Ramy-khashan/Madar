@@ -24,6 +24,7 @@ import 'owner_financial_section.dart';
 import 'owner_property_expenses.dart';
 import 'owner_property_images.dart';
 import 'owner_property_tenancy_section.dart';
+import 'owner_publish_button.dart';
 
 class OwnerPropertyContentItem extends StatelessWidget {
   const OwnerPropertyContentItem({
@@ -153,6 +154,7 @@ class OwnerPropertyContentItem extends StatelessWidget {
                   OwnerFinancialSection(property: property),
                   SizedBox(height: 16.height),
                   const RelatedServicesSectionWidget(),
+                  OwnerPublishButton(bloc: bloc, state: state),
                   if (_canEdit) ...[
                     SizedBox(height: 16.height),
                     AppButton(

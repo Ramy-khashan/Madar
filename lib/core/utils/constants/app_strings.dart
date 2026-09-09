@@ -1321,6 +1321,9 @@ class AppStrings {
   static String get publishAd => 'publish_ad'.trans;
   static String get saveAndPublish => 'save_and_publish'.trans;
   static String get adLicenseHint => 'ad_license_hint'.trans;
+  static String get falLicenseHint => 'fal_license_hint'.trans;
+  static String get pleaseEnterFalLicense => 'please_enter_fal_license'.trans;
+  static String get propertyPublished => 'property_published'.trans;
   static String get selectParentBuilding => 'select_parent_building'.trans;
   static String get selectParentBuildingHint =>
       'select_parent_building_hint'.trans;

@@ -8,6 +8,7 @@ import '../../../../../../core/utils/functions/guest_mode.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../controller/add_property_bloc.dart';
 import 'broker_step6_buttons.dart';
+import 'owner_step6_buttons.dart';
 
 class Step6Buttons extends StatelessWidget {
   const Step6Buttons({super.key, required this.tc});
@@ -18,6 +19,7 @@ class Step6Buttons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (_isBroker) return const BrokerStep6Buttons();
+    if (AccountRole.isOwner) return const OwnerStep6Buttons();
     return Padding(
       padding: EdgeInsets.fromLTRB(16.width, 8.height, 16.width, 24.height),
       child: Column(

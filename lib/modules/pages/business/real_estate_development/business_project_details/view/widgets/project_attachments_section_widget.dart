@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../../../../../core/components/outline_section.dart';
 import '../../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../../core/utils/constants/app_strings.dart';
-
 import '../../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../../core/components/app_button.dart';
 import '../../../../../../../core/components/image_item.dart';
@@ -19,7 +17,7 @@ class ProjectAttachmentsSectionWidget extends StatelessWidget {
   });
 
   final List<String> smartNotes;
-  final List<String>? attachmentUrl;
+  final List<List<String>>? attachmentUrl;
 
   static const List<bool> _noteHasPdf = [false, false, false, true];
 
@@ -32,33 +30,53 @@ class ProjectAttachmentsSectionWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Wrap(
-            children: [
-              ...List.generate(attachmentUrl?.length ?? 0, (i) {
-                return ListTile(
-                  tileColor: colors.borderColor.withValues(alpha: 0.2),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24.radius),
-                    side: BorderSide(color: colors.borderColor),
-                  ),
-                  title: Text(
-                    AppStrings.chooseAttachmentLabel,
-                    style: TextStyle(
-                      fontSize: context.responsiveFontScale(16),
-                      color: colors.textFieldTitle,
-                      fontFamily: AppConstant.appFont,
+          ...(attachmentUrl ?? []).map(
+            (item) => Wrap(
+              children: [
+                ...List.generate(item.length, (i) {
+                  return Padding(
+                    padding: EdgeInsets.only(right: 8.width, bottom: 8.height),
+                    child: ImageItem(
+                      item[i].isNotEmpty ? item[i] : AppImages.attachmentIcon,
+                      width: 80.width,
+                      height: 80.width,
+                      borderRadius: BorderRadius.circular(12.radius),
+                      fit: BoxFit.cover,
                     ),
-                  ),
-                  trailing: InkWell(
-                    onTap: () {
-                      launchUrl(Uri.parse(attachmentUrl?[i] ?? ''));
-                    },
-                    child: const ImageItem(AppImages.chooseDocumentIcon),
-                  ),
-                );
-              }),
-            ],
+                  );
+                }),
+              ],
+            ),
           ),
+          // Wrap(
+          //   children: [
+          //     ...List.generate(attachmentUrl?.length ?? 0, (i) {
+          //       return ImageItem(attachmentUrl?[i].first ?? AppImages.attachmentIcon);
+          //     }),
+          //    ListTile(
+          //     tileColor: colors.borderColor.withValues(alpha: 0.2),
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(24.radius),
+          //       side: BorderSide(color: colors.borderColor),
+          //     ),
+          //     title: Text(
+          //       AppStrings.chooseAttachmentLabel,
+          //       style: TextStyle(
+          //         fontSize: context.responsiveFontScale(16),
+          //         color: colors.textFieldTitle,
+          //         fontFamily: AppConstant.appFont,
+          //       ),
+          //     ),
+          //     trailing: InkWell(
+          //       onTap: () {
+          //         launchUrl(Uri.parse(attachmentUrl?[i] ?? ''));
+          //       },
+          //       child: const ImageItem(AppImages.chooseDocumentIcon),
+          //     ),
+          //   );
+          // }),
+          // ],
+          // ),
           if (smartNotes.isNotEmpty) ...[
             SizedBox(height: 16.height),
             Text(

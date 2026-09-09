@@ -17,6 +17,7 @@ import '../../model/property_file_model.dart';
 import 'owner_financial_section.dart';
 import 'add_apartment_card.dart';
 import 'owner_property_expenses.dart';
+import 'owner_publish_button.dart';
 import 'property_file_header_widget.dart';
 import 'unit_card.dart';
 
@@ -215,6 +216,7 @@ class PropertyFileContentItem extends StatelessWidget {
                 OwnerFinancialSection(property: state.details),
                 SizedBox(height: 16.height),
                 const RelatedServicesSectionWidget(),
+                OwnerPublishButton(bloc: bloc, state: state),
                 if (_canEdit) ...[
                   SizedBox(height: 16.height),
                   AppButton(

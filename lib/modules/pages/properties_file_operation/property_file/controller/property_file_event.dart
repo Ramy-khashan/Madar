@@ -25,6 +25,19 @@ class PropertyFileSaveChanges extends PropertyFileEvent {
   const PropertyFileSaveChanges();
 }
 
+class PropertyFilePublishRequested extends PropertyFileEvent {
+  const PropertyFilePublishRequested({
+    required this.adLicenseNumber,
+    required this.falLicenseNumber,
+  });
+
+  final String adLicenseNumber;
+  final String falLicenseNumber;
+
+  @override
+  List<Object?> get props => [adLicenseNumber, falLicenseNumber];
+}
+
 class PropertyFileStatusToggled extends PropertyFileEvent {
   const PropertyFileStatusToggled(this.status);
   final UnitStatus status;

@@ -42,6 +42,11 @@ class PropertyDetailsModel {
 
   bool get isForRent => (listingType ?? '').toUpperCase() == 'RENT';
 
+  bool get isPublished {
+    final value = (publicationStatus ?? '').toUpperCase();
+    return value.contains('PUBLISH');
+  }
+
   PropertyDetailsModel({
     this.propertyId,
     this.title,

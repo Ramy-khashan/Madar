@@ -63,6 +63,26 @@ class PropertyFileApis {
     }
   }
 
+  static Future<Either<String, Unit>> publishProperty({
+    required String propertyId,
+    required String adLicenseNumber,
+    required String falLicenseNumber,
+  }) async {
+    try {
+      final response = await sl.get<ApiConsumer>().put(
+        EndPoints.publishProperty(propertyId),
+        body: {
+          'adLicenseNumber': adLicenseNumber,
+          'falLicenseNumber': falLicenseNumber,
+        },
+      );
+      return response.fold(Left.new, (_) => const Right(unit));
+    } catch (e) {
+      printState('publishProperty error: $e');
+      return Left(AppStrings.somethingWentWrong);
+    }
+  }
+
   static Future<Either<String, Unit>> deleteProperty(String propertyId) async {
     try {
       final response = await sl.get<ApiConsumer>().delete(

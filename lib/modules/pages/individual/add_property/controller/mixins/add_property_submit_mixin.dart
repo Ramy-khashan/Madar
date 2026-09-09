@@ -130,8 +130,8 @@ mixin AddPropertySubmitMixin on AddPropertyControllersMixin {
 
     final result = await CreatePropertyApis.createProperty(request);
 
-    result.fold(
-      (failure) => emit(
+    await result.fold(
+      (failure) async => emit(
         state.copyWith(
           isLoading: false,
           submitStatus: SubmitStatus.failure,
@@ -139,14 +139,44 @@ mixin AddPropertySubmitMixin on AddPropertyControllersMixin {
           openChooseBrokerOnSuccess: false,
         ),
       ),
-      (data) => emit(
-        state.copyWith(
-          isLoading: false,
-          submitStatus: SubmitStatus.success,
-          createdPropertyId: _extractCreatedPropertyId(data),
-          openChooseBrokerOnSuccess: event.openChooseBrokerOnSuccess,
-        ),
-      ),
+      (data) async {
+        final createdId = _extractCreatedPropertyId(data);
+        final adLicense = event.adLicenseNumber?.trim() ?? '';
+        final falLicense = event.falLicenseNumber?.trim() ?? '';
+        if (createdId != null &&
+            createdId.isNotEmpty &&
+            adLicense.isNotEmpty &&
+            falLicense.isNotEmpty) {
+          final published = await PropertyFileApis.publishProperty(
+            propertyId: createdId,
+            adLicenseNumber: adLicense,
+            falLicenseNumber: falLicense,
+          );
+          if (isClosed) return;
+          final publishFailed = published.fold((error) {
+            emit(
+              state.copyWith(
+                isLoading: false,
+                submitStatus: SubmitStatus.failure,
+                errorMessage: error,
+                createdPropertyId: createdId,
+                openChooseBrokerOnSuccess: false,
+              ),
+            );
+            return true;
+          }, (_) => false);
+          if (publishFailed) return;
+        }
+        if (isClosed) return;
+        emit(
+          state.copyWith(
+            isLoading: false,
+            submitStatus: SubmitStatus.success,
+            createdPropertyId: createdId,
+            openChooseBrokerOnSuccess: event.openChooseBrokerOnSuccess,
+          ),
+        );
+      },
     );
   }
 

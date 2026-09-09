@@ -294,15 +294,18 @@ class ConfirmSaveEvent extends AddPropertyEvent {
     this.brokerId,
     this.openChooseBrokerOnSuccess = false,
     this.adLicenseNumber,
+    this.falLicenseNumber,
   });
   final String? brokerId;
   final bool openChooseBrokerOnSuccess;
   final String? adLicenseNumber;
+  final String? falLicenseNumber;
   @override
   List<Object?> get props => [
     brokerId,
     openChooseBrokerOnSuccess,
     adLicenseNumber,
+    falLicenseNumber,
   ];
 }
 

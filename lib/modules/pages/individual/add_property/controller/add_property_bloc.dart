@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/utils/functions/service_locator.dart';
 
 import '../../../../../core/repository/apis/create_property_apis.dart';
+import '../../../../../core/repository/apis/property_file_apis.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_images.dart';
 import '../../../../../core/utils/constants/app_strings.dart';

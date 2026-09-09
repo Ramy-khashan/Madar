@@ -97,10 +97,10 @@ class PhaseDetailsBloc extends Bloc<PhaseDetailsEvent, PhaseDetailsState> {
       final formData = FormData.fromMap({
         'projectStageId': state.phase.id,
         'content': noteController.text,
-        'progress': (state.phase.subStages?.length ?? 0) > 0
-            ? (state.selectedSubPhases.length / state.phase.subStages!.length) *
-                  100
-            : 100,
+        // 'progress': (state.phase.subStages?.length ?? 0) > 0
+        //     ? (state.selectedSubPhases.length / state.phase.subStages!.length) *
+        //           100
+        //     : 100,
         'subStageIds': state.selectedSubPhases,
         // 'subStageIds': jsonEncode([
         //   {

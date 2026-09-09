@@ -6,6 +6,7 @@ class PropertyFileState extends Equatable {
     this.details,
     this.status = RequestStatus.init,
     this.saveStatus = RequestStatus.init,
+    this.publishStatus = RequestStatus.init,
     this.expenseStatus = RequestStatus.init,
     this.errorMsg = '',
     this.unitFilter,
@@ -20,6 +21,7 @@ class PropertyFileState extends Equatable {
   final PropertyDetailsModel? details;
   final RequestStatus status;
   final RequestStatus saveStatus;
+  final RequestStatus publishStatus;
   final RequestStatus expenseStatus;
   final String errorMsg;
   final UnitStatus? unitFilter;
@@ -45,6 +47,7 @@ class PropertyFileState extends Equatable {
     PropertyDetailsModel? details,
     RequestStatus? status,
     RequestStatus? saveStatus,
+    RequestStatus? publishStatus,
     RequestStatus? expenseStatus,
     String? errorMsg,
     UnitStatus? Function()? unitFilter,
@@ -58,6 +61,7 @@ class PropertyFileState extends Equatable {
     details: details ?? this.details,
     status: status ?? this.status,
     saveStatus: saveStatus ?? this.saveStatus,
+    publishStatus: publishStatus ?? this.publishStatus,
     expenseStatus: expenseStatus ?? this.expenseStatus,
     errorMsg: errorMsg ?? this.errorMsg,
     unitFilter: unitFilter != null ? unitFilter() : this.unitFilter,
@@ -74,6 +78,7 @@ class PropertyFileState extends Equatable {
     details,
     status,
     saveStatus,
+    publishStatus,
     expenseStatus,
     errorMsg,
     unitFilter,
