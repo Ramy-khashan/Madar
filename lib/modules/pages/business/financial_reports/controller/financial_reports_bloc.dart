@@ -7,7 +7,6 @@ import '../../../../../core/repository/apis/dashboard_apis.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/common_fun.dart';
-import '../../../../../core/utils/functions/translation.dart';
 import '../model/financial_report_models.dart';
 
 part 'financial_reports_event.dart';
@@ -78,6 +77,9 @@ class FinancialReportsBloc
             incomeVsExpense: report.incomeVsExpense,
             incomeSections: _buildIncomeSections(report.incomeDistribution),
             expensesSections: _buildExpenseSections(report.expenseDistribution),
+            transactions: report.transactionHistory
+                .map(_transactionFromApi)
+                .toList(),
           ),
         );
       },
@@ -100,11 +102,12 @@ class FinancialReportsBloc
             errorMessage: null,
             totalIncome: report.totalIncome,
             rentalTotal: report.rentalsTotal,
-            otherIncomeTotal: report.otherIncomeTotal,
+            otherIncomeTotal: report.otherIncomeTotal + report.otherTotal,
             rentItems: report.rentals.map(_rentItemFromRevenue).toList(),
-            otherIncomeItems: report.otherIncome
-                .map(_otherIncomeFromRevenue)
-                .toList(),
+            otherIncomeItems: [
+              ...report.otherTransactions.map(_otherIncomeFromRevenue),
+              ...report.otherIncome.map(_otherIncomeFromRevenue),
+            ],
           ),
         );
       },
@@ -129,7 +132,7 @@ class FinancialReportsBloc
             categoryItems: report.distribution
                 .map(
                   (item) => FinancialPropertyItem(
-                    name: item.type.transIfExists,
+                    name: AppStrings.dashboardTypeLabel(item.type),
                     amount: formatPrice(item.amount),
                     paid: true,
                     status: '${item.percentage.toStringAsFixed(2)}%',
@@ -150,8 +153,8 @@ class FinancialReportsBloc
       amount: formatPrice(item.amount),
       date: item.date,
       status: item.type.isNotEmpty
-          ? item.type.transIfExists
-          : item.status.transIfExists,
+          ? AppStrings.dashboardTypeLabel(item.type)
+          : AppStrings.dashboardTypeLabel(item.status),
       paid: item.isActive,
     );
   }
@@ -161,7 +164,9 @@ class FinancialReportsBloc
       name: item.property,
       amount: formatPrice(item.amount),
       date: item.date,
-      status: item.type.isNotEmpty ? item.type.transIfExists : null,
+      status: item.type.isNotEmpty
+          ? AppStrings.dashboardTypeLabel(item.type)
+          : null,
       paid: true,
     );
   }
@@ -192,7 +197,7 @@ class FinancialReportsBloc
   FinancialTransaction _transactionFromApi(TransactionHistoryItem item) {
     final isIncome = item.amount >= 0;
     return FinancialTransaction(
-      name: item.type.transIfExists,
+      name: AppStrings.dashboardTypeLabel(item.type),
       date: item.date,
       desc: item.property.isNotEmpty
           ? item.property
@@ -240,7 +245,7 @@ class FinancialReportsBloc
                   : entry.value.percentage)
               .clamp(0.0, 1.0);
       return StatisticCircleModel(
-        label: entry.value.source.transIfExists,
+        label: AppStrings.dashboardTypeLabel(entry.value.source),
         value: value.toDouble(),
         color: _incomePalette[entry.key % _incomePalette.length],
       );
@@ -257,7 +262,7 @@ class FinancialReportsBloc
                   : entry.value.percentage)
               .clamp(0.0, 1.0);
       return StatisticCircleModel(
-        label: entry.value.type.transIfExists,
+        label: AppStrings.dashboardTypeLabel(entry.value.type),
         value: value.toDouble(),
         color: _expensePalette[entry.key % _expensePalette.length],
       );

@@ -19,35 +19,41 @@ class ConstructionReportsStatusWidget extends StatelessWidget {
       builder: (context, state) {
         final report = state.report;
         final contractSections = [
-          if (report.contractActive.percent > 0)
+          if (report.contractActive.count > 0 ||
+              report.contractActive.percent > 0)
             StatisticCircleModel(
-              label: AppStrings.activeTab,
+              label:
+                  '${AppStrings.activeTab} (${report.contractActive.count})',
               value: report.contractActive.ratio,
               color: const Color(0xFF6C63FF),
             ),
-          if (report.contractCompleted.percent > 0)
+          if (report.contractCompleted.count > 0 ||
+              report.contractCompleted.percent > 0)
             StatisticCircleModel(
-              label: AppStrings.endedLabel,
+              label:
+                  '${AppStrings.endedLabel} (${report.contractCompleted.count})',
               value: report.contractCompleted.ratio,
               color: const Color(0xFFFF6B9D),
             ),
-          if (report.contractRenewing.percent > 0)
+          if (report.contractRenewing.count > 0 ||
+              report.contractRenewing.percent > 0)
             StatisticCircleModel(
-              label: AppStrings.renewalPendingStatus,
+              label:
+                  '${AppStrings.renewalPendingStatus} (${report.contractRenewing.count})',
               value: report.contractRenewing.ratio,
               color: const Color(0xFFB39DDB),
             ),
         ];
         final propertySections = [
-          if (report.rented.percent > 0)
+          if (report.rented.count > 0 || report.rented.percent > 0)
             StatisticCircleModel(
-              label: AppStrings.rented,
+              label: '${AppStrings.rented} (${report.rented.count})',
               value: report.rented.ratio,
               color: const Color(0xFF6C63FF),
             ),
-          if (report.vacant.percent > 0)
+          if (report.vacant.count > 0 || report.vacant.percent > 0)
             StatisticCircleModel(
-              label: AppStrings.vacant,
+              label: '${AppStrings.vacant} (${report.vacant.count})',
               value: report.vacant.ratio,
               color: const Color(0xFFFF6B9D),
             ),

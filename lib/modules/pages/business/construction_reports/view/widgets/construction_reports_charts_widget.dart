@@ -23,7 +23,9 @@ class ConstructionReportsLineChartWidget extends StatelessWidget {
         final values = points.map((e) => e.occupancyRate).toList();
         final maxVal = values.fold<double>(0, (a, b) => a > b ? a : b);
         const minY = 0.0;
-        final maxY = maxVal <= 0 ? 10.0 : (maxVal < 10 ? 10.0 : maxVal);
+        final maxY = maxVal <= 0
+            ? 100.0
+            : (maxVal <= 100 ? 100.0 : maxVal);
         return OutlinedSection(
           title: AppStrings.occupancyOverTime,
           child: SizedBox(
@@ -46,10 +48,10 @@ class ConstructionReportsLineChartWidget extends StatelessWidget {
                   rightTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
-                      reservedSize: 28,
+                      reservedSize: 36,
                       getTitlesWidget: (value, meta) {
                         return Text(
-                          value.toStringAsFixed(0),
+                          '${value.toStringAsFixed(0)}%',
                           style: TextStyle(
                             fontSize: context.responsiveFontScale(10),
                             color: colors.textSecondary,

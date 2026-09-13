@@ -58,7 +58,7 @@ class EndPoints {
       'requests/property/$propertyId';
   static const String financialReports = 'dashboard/financial-reports';
   static const String financialReportsOverview =
-      'dashboard/financial-reports/overview';
+      'dashboard/overview'; 
   static const String dashboardRevenues = 'dashboard/revenues';
   static const String dashboardExpenses = 'dashboard/expenses';
   static const String performanceReports = 'dashboard/performance-reports';

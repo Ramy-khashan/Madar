@@ -135,22 +135,22 @@ class FinancialReportsResponse extends Equatable {
   factory FinancialReportsResponse.fromJson(Map<String, dynamic> json) {
     return FinancialReportsResponse(
       financialSummary: FinancialSummary.fromJson(
-        Map<String, dynamic>.from(json['financialSummary'] ?? const {}),
+        _asMap(json['financialSummary']),
       ),
-      expenseDistribution: List<Map<String, dynamic>>.from(
-        json['expenseDistribution'] ?? const [],
+      expenseDistribution: _asMapList(
+        json['expenseDistribution'],
       ).map(ExpenseDistributionItem.fromJson).toList(),
-      incomeDistribution: List<Map<String, dynamic>>.from(
-        json['incomeDistribution'] ?? const [],
+      incomeDistribution: _asMapList(
+        json['incomeDistribution'],
       ).map(IncomeDistributionItem.fromJson).toList(),
-      incomeVsExpense: List<Map<String, dynamic>>.from(
-        json['incomeVsExpense'] ?? const [],
+      incomeVsExpense: _asMapList(
+        json['incomeVsExpense'],
       ).map(IncomeVsExpenseItem.fromJson).toList(),
-      transactionHistory: List<Map<String, dynamic>>.from(
-        json['transactionHistory'] ?? const [],
+      transactionHistory: _asMapList(
+        json['transactionHistory'],
       ).map(TransactionHistoryItem.fromJson).toList(),
-      topProperties: List<Map<String, dynamic>>.from(
-        json['topProperties'] ?? const [],
+      topProperties: _asMapList(
+        json['topProperties'],
       ).map(TopPropertyIncomeItem.fromJson).toList(),
     );
   }
@@ -430,8 +430,11 @@ class DashboardExpensesResponse extends Equatable {
   final List<TransactionHistoryItem> transactions;
 
   factory DashboardExpensesResponse.fromJson(Map<String, dynamic> json) {
+    final summary = _asMap(json['financialSummary']);
     return DashboardExpensesResponse(
-      totalExpenses: _asDouble(json['totalExpenses']),
+      totalExpenses: _asDouble(
+        json['totalExpenses'] ?? summary['totalExpenses'],
+      ),
       distribution: _asMapList(
         json['expenseDistribution'],
       ).map(ExpenseDistributionItem.fromJson).toList(),

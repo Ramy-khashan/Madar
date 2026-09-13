@@ -44,13 +44,16 @@ class DashboardApis {
     required String period,
     // String? scope,
   }) async {
-    final overview = await fetch(
-      EndPoints.financialReportsOverview,
+    final reports = await fetch(
+      EndPoints.financialReports,
       period: period,
       // scope: scope,
     );
-    if (overview.isRight()) return overview;
-    return fetch(EndPoints.financialReports, period: period /* , scope: scope */);
+    if (reports.isRight()) return reports;
+    return fetch(
+      EndPoints.financialReportsOverview,
+      period: period /* , scope: scope */,
+    );
   }
 
   static Future<Either<String, Map<String, dynamic>>> revenues({

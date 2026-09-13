@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../../core/utils/constants/app_colors.dart';
@@ -28,7 +29,8 @@ class FinancialReportsOverviewTabWidget extends StatelessWidget {
           p.lateTenants != c.lateTenants ||
           p.incomeVsExpense != c.incomeVsExpense ||
           p.incomeSections != c.incomeSections ||
-          p.expensesSections != c.expensesSections,
+          p.expensesSections != c.expensesSections ||
+          p.transactions != c.transactions,
       builder: (context, state) {
         return Padding(
           padding: EdgeInsets.all(16.width),
@@ -136,6 +138,10 @@ class FinancialReportsOverviewTabWidget extends StatelessWidget {
                   ),
                 ],
               ),
+              if (state.transactions.isNotEmpty) ...[
+                SizedBox(height: 16.height),
+                _OverviewTransactions(colors: colors, items: state.transactions),
+              ],
             ],
           ),
         );
@@ -293,13 +299,9 @@ class _IncomeVsExpensesChart extends StatelessWidget {
             SizedBox(height: 8.height),
             Row(
               children: List.generate(points.length, (i) {
-                final month = AppStrings.dashboardMonthLabel(points[i].month);
-                final shortMonth = month.length > 3
-                    ? month.substring(0, 3)
-                    : month;
                 return Expanded(
                   child: Text(
-                    shortMonth,
+                    AppStrings.dashboardMonthShortLabel(points[i].month),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: context.responsiveFontScale(10),
@@ -311,6 +313,62 @@ class _IncomeVsExpensesChart extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _OverviewTransactions extends StatelessWidget {
+  const _OverviewTransactions({required this.colors, required this.items});
+
+  final AppThemeColors colors;
+  final List<FinancialTransaction> items;
+
+  @override
+  Widget build(BuildContext context) {
+    final visible = items.length > 12 ? items.take(12).toList() : items;
+    return OutlinedSection(
+      title: AppStrings.transactionDetails,
+      child: Column(
+        children: [
+          for (final item in visible)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.height),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.name,
+                          style: TextStyle(
+                            fontSize: context.responsiveFontScale(13),
+                            color: colors.textPrimary,
+                          ),
+                        ),
+                        Text(
+                          DateFormat('dd-MM-yyyy').format(item.date),
+                          style: TextStyle(
+                            fontSize: context.responsiveFontScale(11),
+                            color: colors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    '${item.amount} ${AppStrings.currency}',
+                    style: TextStyle(
+                      fontSize: context.responsiveFontScale(13),
+                      fontWeight: FontWeight.w600,
+                      color: colors.textPrimary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
       ),
     );
   }

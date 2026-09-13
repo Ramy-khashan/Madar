@@ -15,6 +15,7 @@ import '../../model/api_model.dart';
 import '../../model/error_handler_model.dart';
 import '../../repository/error_tracking/crashlytics_collector.dart';
 import '../../utils/constants/app_enums.dart';
+import '../../utils/constants/app_strings.dart';
 import '../../utils/constants/storage_keys.dart';
 import '../../utils/functions/camil_case.dart';
 import '../../utils/functions/common_fun.dart';
@@ -497,11 +498,14 @@ class DioConsumer implements ApiConsumer {
     if (status < 200 || status >= 300 || body['success'] == false) {
       if (response.data is Map<String, dynamic> || body.isNotEmpty) {
         return left(
-          ErrorHandlerModel.fromJson(
-            response.data is Map<String, dynamic>
-                ? response.data as Map<String, dynamic>
-                : body,
-          ).firstErrorMessage.toCamelCase,
+          _errorMessage(
+            ErrorHandlerModel.fromJson(
+              response.data is Map<String, dynamic>
+                  ? response.data as Map<String, dynamic>
+                  : body,
+            ),
+            response,
+          ),
         );
       }
       return left(handleError(response));
@@ -558,7 +562,26 @@ class DioConsumer implements ApiConsumer {
     } else {
       model = ErrorHandlerModel.fromJson(handleResponseAsJson(response));
     }
-    return model.firstErrorMessage.toCamelCase;
+    return _errorMessage(model, response);
+  }
+
+  String _errorMessage(ErrorHandlerModel model, Response response) {
+    if (_isCreatePropertyRequest(response) && model.hasFieldErrors) {
+      return model.createPropertyMessage;
+    }
+    final message = model.firstErrorMessage;
+    if (message == AppStrings.invalidFieldValue) return message;
+    return message.toCamelCase;
+  }
+
+  bool _isCreatePropertyRequest(Response response) {
+    if (response.requestOptions.method.toUpperCase() != 'POST') return false;
+    var path = response.requestOptions.path.split('?').first;
+    while (path.endsWith('/')) {
+      path = path.substring(0, path.length - 1);
+    }
+    return path == EndPoints.properties ||
+        path.endsWith('/${EndPoints.properties}');
   }
 
   // ---------------------------------------------------------------------------

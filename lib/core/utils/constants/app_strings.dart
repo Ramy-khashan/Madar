@@ -430,33 +430,79 @@ class AppStrings {
   static String dashboardMonthLabel(String month) {
     switch (month.trim().toLowerCase()) {
       case 'january':
+      case 'jan':
         return jan;
       case 'february':
+      case 'feb':
         return feb;
       case 'march':
+      case 'mar':
         return mar;
       case 'april':
+      case 'apr':
         return apr;
       case 'may':
         return may;
       case 'june':
+      case 'jun':
         return jun;
       case 'july':
+      case 'jul':
         return jul;
       case 'august':
+      case 'aug':
         return aug;
       case 'september':
+      case 'sep':
+      case 'sept':
         return sep;
       case 'october':
+      case 'oct':
         return oct;
       case 'november':
+      case 'nov':
         return nov;
       case 'december':
+      case 'dec':
         return dec;
       default:
         return month;
     }
   }
+
+  static String dashboardMonthShortLabel(String month) {
+    return dashboardMonthLabel(month);
+  }
+
+  static String dashboardTypeLabel(String type) {
+    final raw = type.trim();
+    if (raw.isEmpty) return raw;
+    switch (raw.toLowerCase()) {
+      case 'property_expenses':
+      case 'property expenses':
+        return propertyExpensesLabel;
+      case 'income':
+        return transactionTypeIncome;
+      case 'expense':
+      case 'expenses':
+        return transactionTypeExpense;
+      case 'commission':
+      case 'commissions':
+        return commissionsLabel;
+      case 'electricity':
+      case 'elec':
+        return 'Electricity'.transIfExists;
+      case 'water':
+        return 'Water'.transIfExists;
+      default:
+        if (raw.hasTrans) return raw.trans;
+        final lower = raw.toLowerCase();
+        if (lower.hasTrans) return lower.trans;
+        return raw;
+    }
+  }
+
+  static String get propertyExpensesLabel => 'property_expenses'.trans;
 
   static String get propertyDescriptionSection =>
       'property_description_section'.trans;
@@ -942,6 +988,7 @@ class AppStrings {
   static String get conversationsTitle => 'conversations_title'.trans;
   static String get searchConversation => 'search_conversation'.trans;
   static String get somethingWentWrong => 'something_went_wrong'.trans;
+  static String get invalidFieldValue => 'invalid_field_value'.trans;
   static String get retry => 'retry'.trans;
   static String get noConversations => 'no_conversations'.trans;
   // Filter
