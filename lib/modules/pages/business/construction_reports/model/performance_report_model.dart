@@ -96,7 +96,7 @@ class PerformanceReportModel extends Equatable {
             : {'count': json['activeContracts']},
       ),
       occupancyRate: _asDouble(json['occupancyRate']),
-      monthlyIncome: _asDouble(json['monthlyIncome']),
+      monthlyIncome: _asDouble(json['income'] ?? json['monthlyIncome']),
       occupancyOverTime: _asMapList(
         json['occupancyOverTime'],
       ).map(OccupancyPoint.fromJson).toList(),

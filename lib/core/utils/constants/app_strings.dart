@@ -485,6 +485,10 @@ class AppStrings {
       case 'property_expenses':
       case 'property expenses':
         return propertyExpensesLabel;
+      case 'rented':
+        return rentedStatus;
+      case 'vacant':
+        return vacantStatus;
       case 'income':
         return transactionTypeIncome;
       case 'expense':

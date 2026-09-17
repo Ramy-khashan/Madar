@@ -142,7 +142,9 @@ class FinancialReportsBloc
                   ),
                 )
                 .toList(),
-            transactions: report.transactions.map(_transactionFromApi).toList(),
+            transactions: report.transactions
+                .map((item) => _transactionFromApi(item, isExpense: true))
+                .toList(),
             expensesSections: _buildExpenseSections(report.distribution),
           ),
         );
@@ -155,9 +157,11 @@ class FinancialReportsBloc
       name: item.property,
       amount: formatPrice(item.amount),
       date: item.date,
-      status: item.type.isNotEmpty
-          ? AppStrings.dashboardTypeLabel(item.type)
-          : AppStrings.dashboardTypeLabel(item.status),
+      status: item.status.isNotEmpty
+          ? AppStrings.dashboardTypeLabel(item.status)
+          : (item.type.isNotEmpty
+                ? AppStrings.dashboardTypeLabel(item.type)
+                : null),
       paid: item.isActive,
     );
   }
@@ -222,8 +226,11 @@ class FinancialReportsBloc
     );
   }
 
-  FinancialTransaction _transactionFromApi(TransactionHistoryItem item) {
-    final isIncome = item.amount >= 0;
+  FinancialTransaction _transactionFromApi(
+    TransactionHistoryItem item, {
+    bool isExpense = false,
+  }) {
+    final isIncome = !isExpense && item.amount >= 0;
     return FinancialTransaction(
       name: AppStrings.dashboardTypeLabel(item.type),
       date: item.date,

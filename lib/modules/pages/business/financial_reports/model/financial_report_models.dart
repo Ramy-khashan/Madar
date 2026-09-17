@@ -252,7 +252,7 @@ class IncomeVsExpenseItem extends Equatable {
     return IncomeVsExpenseItem(
       month: (json['month'] ?? '').toString(),
       income: _asDouble(json['income']),
-      expense: _asDouble(json['expense']),
+      expense: _asDouble(json['expense'] ?? json['expenses']),
     );
   }
 
@@ -282,7 +282,7 @@ class TransactionHistoryItem extends Equatable {
       date:
           DateTime.tryParse((json['date'] ?? '').toString()) ?? DateTime.now(),
       property: (json['property'] ?? '').toString(),
-      fileUrl: (json['file'] ?? json['fileUrl'] ?? '').toString(),
+      fileUrl: _fileUrl(json['file'] ?? json['fileUrl']),
     );
   }
 
@@ -320,6 +320,13 @@ double _asDouble(dynamic value) {
   return double.tryParse(value?.toString() ?? '') ?? 0;
 }
 
+String _fileUrl(dynamic value) {
+  if (value == null) return '';
+  final text = value.toString().trim();
+  if (text.isEmpty || text == 'null') return '';
+  return text;
+}
+
 Map<String, dynamic> _asMap(dynamic value) {
   if (value is Map) return Map<String, dynamic>.from(value);
   return const {};
@@ -352,7 +359,13 @@ class DashboardRevenueItem extends Equatable {
   final DateTime? date;
   final String status;
 
-  bool get isActive => status.toUpperCase() == 'ACTIVE';
+  bool get isActive {
+    final value = status.toUpperCase();
+    return value == 'ACTIVE' ||
+        value == 'RENTED' ||
+        value == 'PAID' ||
+        value == 'COMPLETED';
+  }
 
   factory DashboardRevenueItem.fromJson(Map<String, dynamic> json) {
     return DashboardRevenueItem(

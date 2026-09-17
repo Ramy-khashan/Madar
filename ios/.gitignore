@@ -39,4 +39,4 @@ Runner/GeneratedPluginRegistrant.*
 
 
 
-/ios/Runner/Secrets.xcconfig
+Runner/Secrets.xcconfig
