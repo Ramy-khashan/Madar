@@ -5,7 +5,6 @@ import '../../../../config/theme/app_theme_colors.dart';
 import '../../../../core/components/app_button.dart';
 import '../../../../core/components/app_textfield.dart';
 import '../../../../core/model/property_filter_model.dart';
-import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../core/utils/constants/app_constant.dart';
 import '../../../../core/utils/constants/app_strings.dart';
 import '../../../../core/utils/functions/responsive.dart';

@@ -20,6 +20,7 @@ class FinancialReportsBloc
     on<FinancialReportsPeriodChanged>(_onPeriodChanged);
     on<FinancialReportsScopeChanged>(_onScopeChanged);
     on<FinancialReportsAddOtherIncome>(_onAddOtherIncome);
+    on<FinancialReportsDeleteOtherIncome>(_onDeleteOtherIncome);
   }
 
   static FinancialReportsBloc get(BuildContext context) =>
@@ -106,7 +107,9 @@ class FinancialReportsBloc
             rentItems: report.rentals.map(_rentItemFromRevenue).toList(),
             otherIncomeItems: [
               ...report.otherTransactions.map(_otherIncomeFromRevenue),
-              ...report.otherIncome.map(_otherIncomeFromRevenue),
+              ...report.otherIncome.map(
+                (item) => _otherIncomeFromRevenue(item, canDelete: true),
+              ),
             ],
           ),
         );
@@ -159,8 +162,12 @@ class FinancialReportsBloc
     );
   }
 
-  FinancialRentItem _otherIncomeFromRevenue(DashboardRevenueItem item) {
+  FinancialRentItem _otherIncomeFromRevenue(
+    DashboardRevenueItem item, {
+    bool canDelete = false,
+  }) {
     return FinancialRentItem(
+      id: canDelete ? item.id : '',
       name: item.property,
       amount: formatPrice(item.amount),
       date: item.date,
@@ -168,6 +175,27 @@ class FinancialReportsBloc
           ? AppStrings.dashboardTypeLabel(item.type)
           : null,
       paid: true,
+    );
+  }
+
+  Future<void> _onDeleteOtherIncome(
+    FinancialReportsDeleteOtherIncome event,
+    Emitter<FinancialReportsState> emit,
+  ) async {
+    if (event.id.isEmpty) return;
+    emit(state.copyWith(isSubmittingOtherIncome: true));
+    final result = await DashboardApis.deleteOtherIncome(event.id);
+    if (isClosed) return;
+    await result.fold(
+      (err) async {
+        AppToast(err, isError: true);
+        emit(state.copyWith(isSubmittingOtherIncome: false));
+      },
+      (_) async {
+        AppToast(AppStrings.otherIncomeDeleted);
+        emit(state.copyWith(isSubmittingOtherIncome: false));
+        await _loadRevenues(emit);
+      },
     );
   }
 

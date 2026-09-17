@@ -6,10 +6,16 @@ import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 
 class AddApartmentCard extends StatelessWidget {
-  const AddApartmentCard({super.key, required this.colors, required this.onTap});
+  const AddApartmentCard({
+    super.key,
+    required this.colors,
+    required this.onTap,
+    this.label,
+  });
 
   final AppThemeColors colors;
   final VoidCallback onTap;
+  final String? label;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +47,7 @@ class AddApartmentCard extends StatelessWidget {
             ),
             SizedBox(height: 8.height),
             Text(
-              AppStrings.addApartment,
+              label ?? AppStrings.addApartment,
               textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

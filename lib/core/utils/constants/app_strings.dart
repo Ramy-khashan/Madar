@@ -40,6 +40,8 @@ class AppStrings {
   static String get deleteAccountHint => 'delete_account_hint'.trans;
   static String get search => 'search'.trans;
   static String get pendingStatus => 'pending_status'.trans;
+  static String get publishedStatus => 'published_status'.trans;
+  static String get notPublishedStatus => 'not_published_status'.trans;
   static String get orDragImagesHere => 'or_drag_images_here'.trans;
   static String get propertyLicenseNumber => 'property_license_number'.trans;
   static String get propertyLicenseNumberHint =>
@@ -112,6 +114,7 @@ class AppStrings {
   static String get mesurement => 'mesurement'.trans;
   static String get language => 'language'.trans;
   static String get monthlyIncome => 'monthly_income'.trans;
+  static String get yearlyRent => 'yearly_rent'.trans;
   static String get propertyCount => 'property_count'.trans;
   static String get performanceSummary => 'performance_summary'.trans;
   static String get off => 'off'.trans;
@@ -165,8 +168,9 @@ class AppStrings {
   static String get chooseAccountTitle => 'choose_account_title'.trans;
   static String get selectRightOption => 'select_right_option'.trans;
   static String get accountTitle1 => 'account_title_1'.trans;
-  static String get monthlyRent => 'monthly_rent'.trans;
+  // static String get monthlyRent => 'monthly_rent'.trans;
   static String get accountTitle2 => 'account_title_2'.trans;
+  static String get yearlyIncome => 'yearly_income'.trans;
   static String get accountDescription1 => 'account_description_1'.trans;
   static String get accountDescription2 => 'account_description_2'.trans;
   static String get accountBadge1 => 'account_badge_1'.trans;
@@ -1276,6 +1280,7 @@ class AppStrings {
   static String get rentedStatus => 'rented_status'.trans;
   static String get vacantStatus => 'vacant_status'.trans;
   static String get shops => 'shops'.trans;
+  static String get shopUnit => 'shop_unit'.trans;
   static String get soldStatus => 'sold_status'.trans;
   static String get attachExpenseFileHint => 'attach_expense_file_hint'.trans;
   static String get enterAmount => 'enter_amount'.trans;
@@ -1859,6 +1864,11 @@ class AppStrings {
 
   static String get addApartmentToBuilding => 'add_apartment_to_building'.trans;
   static String get addApartment => 'add_apartment'.trans;
+  static String get addShop => 'add_shop'.trans;
+  static String get addShopToBuilding => 'add_shop_to_building'.trans;
+  static String get shopNumber => 'shop_number'.trans;
+  static String get enterShopNumber => 'enter_shop_number'.trans;
+  static String get otherIncomeDeleted => 'other_income_deleted'.trans;
   static String get unitStatus => 'unit_status'.trans;
   static String get tenantPhone => 'tenant_phone'.trans;
   static String get pleaseCompleteApartmentData =>
@@ -1867,6 +1877,9 @@ class AppStrings {
       'please_complete_tenant_data'.trans;
   static String get apartmentAddedSuccessfully =>
       'apartment_added_successfully'.trans;
+  static String get shopAddedSuccessfully => 'shop_added_successfully'.trans;
+  static String get deleteOtherIncomeConfirmation =>
+      'delete_other_income_confirmation'.trans;
   static String get addOtherIncome => 'add_other_income'.trans;
   static String get otherIncomeTitle => 'other_income_title'.trans;
   static String get otherIncomeAmount => 'other_income_amount'.trans;

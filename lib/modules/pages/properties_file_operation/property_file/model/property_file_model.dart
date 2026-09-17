@@ -204,6 +204,8 @@ class UnitModel extends Equatable {
     this.listingType = '',
     this.rawStatus = '',
     this.buildingId = '',
+    this.livingRooms = 0,
+    this.isShop = false,
   });
 
   final String id;
@@ -226,8 +228,11 @@ class UnitModel extends Equatable {
   final String listingType;
   final String rawStatus;
   final String buildingId;
+  final int livingRooms;
+  final bool isShop;
 
-  bool get isForRent => listingType.toUpperCase() == 'RENT';
+  bool get isForRent =>
+      listingType.toUpperCase() == 'RENT' || buildingId.isNotEmpty;
 
   factory UnitModel.fromChild(ChildProperty child, int index) {
     final title = (child.title ?? '').trim();
@@ -250,6 +255,8 @@ class UnitModel extends Equatable {
       imageUrl: child.mainImage ?? '',
       listingType: child.listingType ?? '',
       rawStatus: statusRaw,
+      livingRooms: child.livingRooms ?? 0,
+      isShop: (child.type ?? '').toUpperCase() == 'SHOP',
     );
   }
 
@@ -263,6 +270,8 @@ class UnitModel extends Equatable {
       area: apartment.totalArea,
       rooms: apartment.rooms,
       bathrooms: apartment.bathrooms,
+      livingRooms: apartment.livingRooms,
+      isShop: apartment.isShop,
       monthlyRent: t.monthlyRent,
       floor: 0,
       tenantName: t.tenantName,
@@ -272,6 +281,7 @@ class UnitModel extends Equatable {
       isHijriDate: t.calendarType.toUpperCase() == 'HIJRI',
       expenses: apartment.expenses,
       rawStatus: t.status,
+      listingType: 'RENT',
       buildingId: apartment.buildingId,
     );
   }
@@ -315,6 +325,9 @@ class UnitModel extends Equatable {
       listingType: p.listingType ?? base?.listingType ?? '',
       rawStatus: p.status ?? base?.rawStatus ?? '',
       buildingId: base?.buildingId ?? '',
+      livingRooms: d?.livingRooms ?? base?.livingRooms ?? 0,
+      isShop:
+          (p.type ?? '').toUpperCase() == 'SHOP' || (base?.isShop ?? false),
     );
   }
 
@@ -338,6 +351,8 @@ class UnitModel extends Equatable {
     String? listingType,
     String? rawStatus,
     String? buildingId,
+    int? livingRooms,
+    bool? isShop,
   }) => UnitModel(
     id: id,
     number: number ?? this.number,
@@ -359,6 +374,8 @@ class UnitModel extends Equatable {
     listingType: listingType ?? this.listingType,
     rawStatus: rawStatus ?? this.rawStatus,
     buildingId: buildingId ?? this.buildingId,
+    livingRooms: livingRooms ?? this.livingRooms,
+    isShop: isShop ?? this.isShop,
   );
 
   @override
@@ -383,6 +400,8 @@ class UnitModel extends Equatable {
     listingType,
     rawStatus,
     buildingId,
+    livingRooms,
+    isShop,
   ];
 }
 
@@ -474,6 +493,8 @@ class BuildingApartmentModel extends Equatable {
     this.totalArea = 0,
     this.rooms = 0,
     this.bathrooms = 0,
+    this.livingRooms = 0,
+    this.isShop = false,
     this.tenancy = const BuildingApartmentTenancy(),
     this.expenses = const [],
   });
@@ -485,11 +506,17 @@ class BuildingApartmentModel extends Equatable {
   final double totalArea;
   final int rooms;
   final int bathrooms;
+  final int livingRooms;
+  final bool isShop;
   final BuildingApartmentTenancy tenancy;
   final List<UnitExpenseModel> expenses;
 
-  factory BuildingApartmentModel.fromJson(Map<String, dynamic> json) {
+  factory BuildingApartmentModel.fromJson(
+    Map<String, dynamic> json, {
+    bool isShop = false,
+  }) {
     final tenancyRaw = json['tenancy'];
+    final type = (json['type'] ?? '').toString().toUpperCase();
     return BuildingApartmentModel(
       propertyId: (json['property_id'] ?? json['propertyId'] ?? '').toString(),
       unitNumber: (json['unitNumber'] ?? '').toString(),
@@ -498,6 +525,8 @@ class BuildingApartmentModel extends Equatable {
       totalArea: _asNum(json['totalArea']),
       rooms: _asNum(json['rooms']).toInt(),
       bathrooms: _asNum(json['bathrooms']).toInt(),
+      livingRooms: _asNum(json['livingRooms'] ?? json['councils']).toInt(),
+      isShop: isShop || type == 'SHOP' || json['isShop'] == true,
       tenancy: tenancyRaw is Map
           ? BuildingApartmentTenancy.fromJson(
               Map<String, dynamic>.from(tenancyRaw),
@@ -527,6 +556,8 @@ class BuildingApartmentModel extends Equatable {
     totalArea,
     rooms,
     bathrooms,
+    livingRooms,
+    isShop,
     tenancy,
     expenses,
   ];

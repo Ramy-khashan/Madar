@@ -80,12 +80,18 @@ class EndPoints {
       'properties/publish/$propertyId';
   static const String ownerPropertyExpense = 'owner/property-expense';
   static const String dashboardOtherIncome = 'dashboard/other-income';
+  static String deleteOtherIncome(String id) => 'dashboard/other-income/$id';
   static String buildingApartments(String buildingId) =>
       'building/$buildingId/apartments';
   static String buildingApartmentById(String propertyId) =>
       'building/apartments/$propertyId';
+  static String buildingShops(String buildingId) =>
+      'building/$buildingId/shops';
+  static String buildingShopById(String propertyId) =>
+      'building/shops/$propertyId';
 
-  // TODO: change this path when the apartment tenancy update endpoint is finalized.
   static String updateBuildingApartment(String propertyId) =>
       'building/apartments/$propertyId';
+  static String updateBuildingShop(String propertyId) =>
+      'building/shops/$propertyId';
 } 

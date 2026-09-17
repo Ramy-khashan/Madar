@@ -34,6 +34,30 @@ class PropertyFileApis {
     }
   }
 
+  static Future<Either<String, PropertyDetailsModel>> updatePropertyTenancy({
+    required String propertyId,
+    required Map<String, dynamic> tenancy,
+  }) async {
+    try {
+      final response = await sl.get<ApiConsumer>().put(
+        EndPoints.propertyById(propertyId),
+        body: {'tenancy': tenancy},
+      );
+      return response.fold(Left.new, (success) {
+        final data = success.response['data'];
+        if (data is Map) {
+          return Right(
+            PropertyDetailsModel.fromJson(Map<String, dynamic>.from(data)),
+          );
+        }
+        return Right(PropertyDetailsModel(propertyId: propertyId));
+      });
+    } catch (e) {
+      printState('updatePropertyTenancy error: $e');
+      return Left(AppStrings.somethingWentWrong);
+    }
+  }
+
   static Future<Either<String, PropertyDetailsModel>> updateProperty({
     required String propertyId,
     required String title,
@@ -69,7 +93,7 @@ class PropertyFileApis {
     required String falLicenseNumber,
   }) async {
     try {
-      final response = await sl.get<ApiConsumer>().put(
+      final response = await sl.get<ApiConsumer>().patch(
         EndPoints.publishProperty(propertyId),
         body: {
           'adLicenseNumber': adLicenseNumber,
@@ -138,73 +162,117 @@ class PropertyFileApis {
     }
   }
 
-  static Future<Either<String, BuildingApartmentModel>> createBuildingApartment({
+  static Future<Either<String, BuildingApartmentModel>> createBuildingUnit({
     required String buildingId,
     required Map<String, dynamic> body,
+    required bool isShop,
   }) async {
     try {
       final response = await sl.get<ApiConsumer>().post(
-        EndPoints.buildingApartments(buildingId),
+        isShop
+            ? EndPoints.buildingShops(buildingId)
+            : EndPoints.buildingApartments(buildingId),
         body: body,
       );
       return response.fold(Left.new, (success) {
         final data = success.response['data'];
         if (data is! Map) return Left(AppStrings.somethingWentWrong);
         return Right(
-          BuildingApartmentModel.fromJson(Map<String, dynamic>.from(data)),
+          BuildingApartmentModel.fromJson(
+            Map<String, dynamic>.from(data),
+            isShop: isShop,
+          ),
         );
       });
     } catch (e) {
-      printState('createBuildingApartment error: $e');
+      printState('createBuildingUnit error: $e');
+      return Left(AppStrings.somethingWentWrong);
+    }
+  }
+
+  static Future<Either<String, BuildingApartmentModel>> createBuildingApartment({
+    required String buildingId,
+    required Map<String, dynamic> body,
+  }) async {
+    return createBuildingUnit(
+      buildingId: buildingId,
+      body: body,
+      isShop: false,
+    );
+  }
+
+  static Future<Either<String, BuildingApartmentModel>> getBuildingUnit(
+    String propertyId, {
+    required bool isShop,
+  }) async {
+    try {
+      final response = await sl.get<ApiConsumer>().get(
+        isShop
+            ? EndPoints.buildingShopById(propertyId)
+            : EndPoints.buildingApartmentById(propertyId),
+      );
+      return response.fold(Left.new, (success) {
+        final data = success.response['data'];
+        if (data is! Map) return Left(AppStrings.somethingWentWrong);
+        return Right(
+          BuildingApartmentModel.fromJson(
+            Map<String, dynamic>.from(data),
+            isShop: isShop,
+          ),
+        );
+      });
+    } catch (e) {
+      printState('getBuildingUnit error: $e');
       return Left(AppStrings.somethingWentWrong);
     }
   }
 
   static Future<Either<String, BuildingApartmentModel>> getBuildingApartment(
     String propertyId,
-  ) async {
-    try {
-      final response = await sl.get<ApiConsumer>().get(
-        EndPoints.buildingApartmentById(propertyId),
-      );
-      return response.fold(Left.new, (success) {
-        final data = success.response['data'];
-        if (data is! Map) return Left(AppStrings.somethingWentWrong);
-        return Right(
-          BuildingApartmentModel.fromJson(Map<String, dynamic>.from(data)),
-        );
-      });
-    } catch (e) {
-      printState('getBuildingApartment error: $e');
-      return Left(AppStrings.somethingWentWrong);
-    }
-  }
+  ) => getBuildingUnit(propertyId, isShop: false);
 
-  /// TODO: switch [EndPoints.updateBuildingApartment] when the backend
-  /// tenancy update URL is ready. This is the single update for status + tenant.
-  static Future<Either<String, BuildingApartmentModel>> updateBuildingApartment({
+  static Future<Either<String, BuildingApartmentModel>> updateBuildingUnit({
     required String propertyId,
     required Map<String, dynamic> body,
+    required bool isShop,
   }) async {
     try {
       final response = await sl.get<ApiConsumer>().put(
-        EndPoints.updateBuildingApartment(propertyId),
+        isShop
+            ? EndPoints.updateBuildingShop(propertyId)
+            : EndPoints.updateBuildingApartment(propertyId),
         body: body,
       );
       return response.fold(Left.new, (success) {
         final data = success.response['data'];
         if (data is Map) {
           return Right(
-            BuildingApartmentModel.fromJson(Map<String, dynamic>.from(data)),
+            BuildingApartmentModel.fromJson(
+              Map<String, dynamic>.from(data),
+              isShop: isShop,
+            ),
           );
         }
         return Right(
-          BuildingApartmentModel(propertyId: propertyId, unitNumber: '', buildingId: ''),
+          BuildingApartmentModel(
+            propertyId: propertyId,
+            unitNumber: '',
+            buildingId: '',
+          ),
         );
       });
     } catch (e) {
-      printState('updateBuildingApartment error: $e');
+      printState('updateBuildingUnit error: $e');
       return Left(AppStrings.somethingWentWrong);
     }
   }
+
+  static Future<Either<String, BuildingApartmentModel>> updateBuildingApartment({
+    required String propertyId,
+    required Map<String, dynamic> body,
+  }) => updateBuildingUnit(
+    propertyId: propertyId,
+    body: body,
+    isShop: false,
+  );
 }

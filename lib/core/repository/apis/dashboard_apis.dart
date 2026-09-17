@@ -104,4 +104,16 @@ class DashboardApis {
       return Left(AppStrings.somethingWentWrong);
     }
   }
+
+  static Future<Either<String, Unit>> deleteOtherIncome(String id) async {
+    try {
+      final response = await sl.get<ApiConsumer>().delete(
+        EndPoints.deleteOtherIncome(id),
+      );
+      return response.fold(Left.new, (_) => const Right(unit));
+    } catch (e) {
+      printState('deleteOtherIncome error: $e');
+      return Left(AppStrings.somethingWentWrong);
+    }
+  }
 }

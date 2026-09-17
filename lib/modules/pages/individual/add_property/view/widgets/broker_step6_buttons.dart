@@ -5,7 +5,7 @@ import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/guest_mode.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../controller/add_property_bloc.dart';
-import 'publish_ad_license_sheet.dart';
+import 'owner_publish_license_sheet.dart';
 
 class BrokerStep6Buttons extends StatelessWidget {
   const BrokerStep6Buttons({super.key});
@@ -17,9 +17,14 @@ class BrokerStep6Buttons extends StatelessWidget {
     )) {
       return;
     }
-    final license = await PublishAdLicenseSheet.show(context);
-    if (license == null || license.isEmpty || !context.mounted) return;
-    AddPropertyBloc.get(context).add(ConfirmSaveEvent(adLicenseNumber: license));
+    final licenses = await OwnerPublishLicenseSheet.show(context);
+    if (licenses == null || !context.mounted) return;
+    AddPropertyBloc.get(context).add(
+      ConfirmSaveEvent(
+        adLicenseNumber: licenses.adLicenseNumber,
+        falLicenseNumber: licenses.falLicenseNumber,
+      ),
+    );
   }
 
   @override

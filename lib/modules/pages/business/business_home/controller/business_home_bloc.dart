@@ -124,9 +124,9 @@ class BusinessHomeBloc extends Bloc<BusinessHomeEvent, BusinessHomeState> {
               successResponse.response['summary']['totalProperties'] ?? 0;
           final int occupancyRate =
               successResponse.response['summary']['occupancyRate'] ?? 0;
-          final String monthlyIncome = formatPrice(
+          final String annualIncome = formatPrice(
             double.parse(
-              (successResponse.response['summary']['monthlyIncome'] ?? 0)
+              (successResponse.response['summary']['annualIncome'] ?? 0)
                   .toString(),
             ),
           ).toString();
@@ -149,8 +149,8 @@ class BusinessHomeBloc extends Bloc<BusinessHomeEvent, BusinessHomeState> {
                 ),
                 SmartServiceModel(
                   id: '3',
-                  title: AppStrings.monthlyIncome,
-                  description: '$monthlyIncome ${AppStrings.currency}',
+                  title: AppStrings.yearlyIncome,
+                  description: '$annualIncome ${AppStrings.currency}',
                   icon: AppImages.monthlyIncomeIcon,
                 ),
               ],
@@ -328,13 +328,13 @@ class BusinessHomeBloc extends Bloc<BusinessHomeEvent, BusinessHomeState> {
       description: AppStrings.financialReportsDescription,
       icon: AppImages.financialReportsIcon,
     ),
-    SmartServiceModel(
-      id: '4',
-      title: AppStrings.auctionProperty,
-      description: AppStrings.auctionPropertyDescription,
-      icon: AppImages.auctionIcon,
-      route: AppRouterKeys.auctionNavbar,
-    ),
+    // SmartServiceModel(
+    //   id: '4',
+    //   title: AppStrings.auctionProperty,
+    //   description: AppStrings.auctionPropertyDescription,
+    //   icon: AppImages.auctionIcon,
+    //   route: AppRouterKeys.auctionNavbar,
+    // ),
     SmartServiceModel(
       route: AppRouterKeys.realEstateNews,
       id: '5',

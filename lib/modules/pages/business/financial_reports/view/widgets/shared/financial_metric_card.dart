@@ -15,11 +15,13 @@ class FinancialMetricCard extends StatelessWidget {
     required this.valueColor,
     required this.colors,
     this.isStartedTextVal = false,
+   required this.isWithCurrency ,
   });
 
   final String label;
   final String value;
   final String icon;
+  final bool isWithCurrency;
   final Color valueColor;
   final AppThemeColors colors;
   final bool isStartedTextVal;
@@ -75,7 +77,7 @@ class FinancialMetricCard extends StatelessWidget {
               start: isStartedTextVal ? 6.width : 0,
             ),
             child: Text(
-              AppStrings.amountVal(value),
+            isWithCurrency?  AppStrings.amountVal(value) : value,
               textAlign: isStartedTextVal ? TextAlign.start : TextAlign.center,
               style: TextStyle(
                 fontSize: context.responsiveFontScale(16),

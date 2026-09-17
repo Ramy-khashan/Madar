@@ -10,6 +10,7 @@ import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/account_role.dart';
 import '../../../../../../core/utils/functions/image_picker_helper.dart';
+import '../../../../../../core/utils/functions/print_state.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../individual/my_property_details/view/widgets/contracts_section_widget.dart';
 import '../../../../individual/my_property_details/view/widgets/related_services_section_widget.dart';
@@ -126,7 +127,7 @@ class OwnerPropertyContentItem extends StatelessWidget {
                   ContractsSectionWidget(
                     contracts: property?.contracts ?? [],
                   ),
-                  if (_canEdit && (property?.isForRent ?? false)) ...[
+                  if (_canEdit) ...[
                     SizedBox(height: 16.height),
                     OwnerPropertyTenancySection(
                       bloc: bloc,
@@ -142,7 +143,11 @@ class OwnerPropertyContentItem extends StatelessWidget {
                     canEdit: _canEdit,
                     descController: bloc.expenseDescController,
                     amountController: bloc.expenseAmountController,
-                    onAdd: () => bloc.add(const PropertyFileExpenseAdded()),
+                    onAddExpense: (description) {
+                      printState('Adding expense 11');
+                      printState(description);
+                      bloc.add(const PropertyFileExpenseAdded());
+                    },
                     onRemove: (i) => bloc.add(PropertyFileExpenseRemoved(i)),
                     onPickFiles: () async {
                       final files = await pickImages();

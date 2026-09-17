@@ -8,6 +8,7 @@ import '../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/account_role.dart';
 import '../../../../../../core/utils/functions/image_picker_helper.dart';
+import '../../../../../../core/utils/functions/print_state.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../../../individual/my_property_details/view/widgets/contracts_section_widget.dart';
@@ -40,10 +41,20 @@ class PropertyFileContentItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final units = state.property?.units ?? [];
+    final apartments = units.where((u) => !u.isShop).toList();
+    final shops = units.where((u) => u.isShop).toList();
     final hasSold = units.any((u) => u.status == UnitStatus.sold);
     final isBuilding = (property?.rawType ?? '').toUpperCase() == 'BUILDING';
-    final remaining = ((property?.totalUnits ?? 0) - units.length).clamp(0, 9999);
-    final addCount = isBuilding && _canEdit ? remaining : 0;
+    final remainingApts =
+        ((property?.declaredTotalUnits ?? 0) - apartments.length).clamp(0, 9999);
+    final remainingShops =
+        ((property?.shopsCount ?? 0) - shops.length).clamp(0, 9999);
+    final addAptCount = isBuilding && _canEdit ? remainingApts : 0;
+    final addShopCount = isBuilding && _canEdit
+        ? (remainingShops > 0
+            ? remainingShops
+            : ((property?.shopsCount ?? 0) == 0 ? 1 : 0))
+        : 0;
 
     return CustomScrollView(
       slivers: [
@@ -73,8 +84,8 @@ class PropertyFileContentItem extends StatelessWidget {
                 SizedBox(width: 6.width),
                 Text(
                   AppStrings.rentedFromTotal(
-                    property?.rentedCount??0,
-                    property?.totalUnits??0,
+                    apartments.where((u) => u.status == UnitStatus.rented).length,
+                    (property?.declaredTotalUnits ?? apartments.length),
                   ),
                   style: TextStyle(
                     fontSize: context.responsiveFontScale(13),
@@ -137,7 +148,7 @@ class PropertyFileContentItem extends StatelessWidget {
           padding: EdgeInsets.fromLTRB(16.width, 0, 16.width, 16.height),
           sliver: SliverGrid(
             delegate: SliverChildBuilderDelegate((context, index) {
-              if (index >= units.length) {
+              if (index >= apartments.length) {
                 return AddApartmentCard(
                   colors: colors,
                   onTap: () async {
@@ -147,6 +158,7 @@ class PropertyFileContentItem extends StatelessWidget {
                       extra: {
                         'buildingId': property?.id ?? '',
                         'buildingName': property?.name ?? '',
+                        'isShop': false,
                       },
                     );
                     if (added == true) {
@@ -155,7 +167,7 @@ class PropertyFileContentItem extends StatelessWidget {
                   },
                 );
               }
-              final unit = units[index];
+              final unit = apartments[index];
               return UnitCard(
                 unit: unit,
                 colors: colors,
@@ -174,7 +186,7 @@ class PropertyFileContentItem extends StatelessWidget {
                   }
                 },
               );
-            }, childCount: units.length + addCount),
+            }, childCount: apartments.length + addAptCount),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
               crossAxisSpacing: 8,
@@ -189,6 +201,94 @@ class PropertyFileContentItem extends StatelessWidget {
             ),
           ),
         ),
+        if (isBuilding && (shops.isNotEmpty || addShopCount > 0)) ...[
+          SliverPadding(
+            padding: EdgeInsets.fromLTRB(16.width, 8.height, 16.width, 8.height),
+            sliver: SliverToBoxAdapter(
+              child: Row(
+                children: [
+                  Text(
+                    AppStrings.shops,
+                    style: TextStyle(
+                      fontSize: context.responsiveFontScale(16),
+                      fontWeight: FontWeight.w700,
+                      color: colors.textFieldTitle,
+                    ),
+                  ),
+                  SizedBox(width: 6.width),
+                  Text(
+                    AppStrings.rentedFromTotal(
+                      shops.where((u) => u.status == UnitStatus.rented).length,
+                      (property?.shopsCount ?? shops.length),
+                    ),
+                    style: TextStyle(
+                      fontSize: context.responsiveFontScale(13),
+                      color: colors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: EdgeInsets.fromLTRB(16.width, 0, 16.width, 16.height),
+            sliver: SliverGrid(
+              delegate: SliverChildBuilderDelegate((context, index) {
+                if (index >= shops.length) {
+                  return AddApartmentCard(
+                    colors: colors,
+                    label: AppStrings.addShop,
+                    onTap: () async {
+                      final added = await RouterHandler.navigate(
+                        context,
+                        AppRouterKeys.addBuildingApartment,
+                        extra: {
+                          'buildingId': property?.id ?? '',
+                          'buildingName': property?.name ?? '',
+                          'isShop': true,
+                        },
+                      );
+                      if (added == true) {
+                        bloc.add(const PropertyFileLoad());
+                      }
+                    },
+                  );
+                }
+                final unit = shops[index];
+                return UnitCard(
+                  unit: unit,
+                  colors: colors,
+                  onTap: () async {
+                    final changed = await RouterHandler.navigate(
+                      context,
+                      AppRouterKeys.unitDetailsScreen,
+                      extra: {
+                        'unit': unit,
+                        'propertyName': property?.name ?? '',
+                        'buildingId': property?.id ?? '',
+                      },
+                    );
+                    if (changed == true) {
+                      bloc.add(const PropertyFileLoad());
+                    }
+                  },
+                );
+              }, childCount: shops.length + addShopCount),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+                mainAxisExtent: ResponsiveUtils.types(
+                  context,
+                  mobilePortrait: 108.height,
+                  mobileLandscape: 108.height,
+                  tabletPortrait: 130.height,
+                  tabletLandscape: 140.height,
+                ),
+              ),
+            ),
+          ),
+        ],
         SliverPadding(
           padding: EdgeInsets.fromLTRB(16.width, 0, 16.width, 24.height),
           sliver: SliverToBoxAdapter(
@@ -204,7 +304,11 @@ class PropertyFileContentItem extends StatelessWidget {
                   canEdit: _canEdit,
                   descController: bloc.expenseDescController,
                   amountController: bloc.expenseAmountController,
-                  onAdd: () => bloc.add(const PropertyFileExpenseAdded()),
+                  onAddExpense: (description) {
+                    printState('Adding expense 11');
+                    printState(description);
+                    bloc.add(const PropertyFileExpenseAdded());
+                  },
                   onRemove: (i) => bloc.add(PropertyFileExpenseRemoved(i)),
                   onPickFiles: () async {
                     final files = await pickImages();

@@ -120,16 +120,26 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   }
 
   Map<String, dynamic> get _loginBody {
-    if (isBrokerLogin) {
-      return {
-        'falLicenseNumber': falLicenseController.text.trim(),
-        'password': passwordController.text,
-      };
-    }
-    return {
-      'phone': phoneController.text,
+    final body = <String, dynamic>{
+      'role': _loginRole,
       'password': passwordController.text,
     };
+    if (isBrokerLogin) {
+      body['falLicenseNumber'] = falLicenseController.text.trim();
+    } else {
+      body['phone'] = phoneController.text;
+    }
+    return body;
+  }
+
+  String get _loginRole {
+    if (AccountRole.isDeveloper) return AppConstant.developer;
+    if (isBusinessPath) {
+      return state.selectedRole == AppConstant.owner
+          ? AppConstant.owner
+          : AppConstant.business;
+    }
+    return AppConstant.individual;
   }
 
   Map<String, dynamic> _authPayload(dynamic response) {

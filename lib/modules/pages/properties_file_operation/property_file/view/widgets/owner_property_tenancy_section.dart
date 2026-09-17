@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
+import '../../../../../../core/components/app_button.dart';
 import '../../../../../../core/components/phone_number_field.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
+import '../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/common_fun.dart';
@@ -75,7 +77,7 @@ class OwnerPropertyTenancySection extends StatelessWidget {
               SizedBox(height: 8.height),
               BuildingRowDivider(colors: colors),
               UnitInfoRow(
-                label: AppStrings.monthlyRent,
+                label: AppStrings.yearlyRent,
                 value: bloc.monthlyRentController.text,
                 leadingImage: AppImages.monthlyRentIcon,
                 colors: colors,
@@ -121,16 +123,25 @@ class OwnerPropertyTenancySection extends StatelessWidget {
                 embedded: true,
               ),
               PhoneNumberField(
-                key: ValueKey(bloc.tenantPhoneController.text),
+                key: ValueKey(
+                  'property-tenant-phone-${state.tenancyStatus}-${bloc.tenantPhoneController.text}',
+                ),
                 initialCountryCode: 'SA',
                 initialValue: bloc.tenantPhoneController.text,
                 title: AppStrings.phoneNumber,
                 hint: AppStrings.enterPhoneNumber,
+                enabled: true,
                 onChanged: (val) {
                   bloc.tenantPhoneController.text = val.completeNumber;
                 },
               ),
             ],
+            SizedBox(height: 16.height),
+            AppButton(
+              onTap: () => bloc.add(const PropertyFileTenancySaved()),
+              text: AppStrings.confirm,
+              isLoading: state.tenancySaveStatus == RequestStatus.loading,
+            ),
           ],
         ),
       ],

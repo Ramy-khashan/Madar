@@ -75,13 +75,12 @@ class AddPropertyView extends StatelessWidget {
               switch (state.submitStatus) {
                 case SubmitStatus.success:
                   AppToast(AppStrings.propertyAddedSuccessfully);
-                  if (state.openChooseBrokerOnSuccess &&
-                      state.createdPropertyId != null &&
-                      state.createdPropertyId!.isNotEmpty) {
+                  final createdId = state.createdPropertyId ?? '';
+                  if (state.openChooseBrokerOnSuccess) {
                     RouterHandler.navigate(
                       context,
                       AppRouterKeys.chooseBroker,
-                      extra: state.createdPropertyId,
+                      extra: createdId,
                       routerType: RouterType.pushReplacementNamed,
                     );
                   } else {

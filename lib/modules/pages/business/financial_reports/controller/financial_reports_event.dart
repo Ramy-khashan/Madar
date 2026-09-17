@@ -47,3 +47,12 @@ final class FinancialReportsAddOtherIncome extends FinancialReportsEvent {
   @override
   List<Object?> get props => [title, amount];
 }
+
+final class FinancialReportsDeleteOtherIncome extends FinancialReportsEvent {
+  const FinancialReportsDeleteOtherIncome(this.id);
+
+  final String id;
+
+  @override
+  List<Object?> get props => [id];
+}

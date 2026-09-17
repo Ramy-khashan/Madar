@@ -86,12 +86,22 @@ mixin PropertyFileTenancyMixin on Bloc<PropertyFileEvent, PropertyFileState> {
         'status': 'RENTED',
         'tenantName': name,
         'tenantPhone': phone,
-        'monthlyRent': rent % 1 == 0 ? rent.toInt() : rent,
-        'startDate': start,
-        'endDate': end,
-        'calendarType': state.isHijriDate ? 'HIJRI' : 'GREGORIAN',
+        'monthlyRent': (rent % 1 == 0 ? rent.toInt() : rent).toString(),
+        'startDate': _toIsoDate(start),
+        'endDate': _toIsoDate(end),
       };
     }
     return {'status': 'VACANT'};
+  }
+
+  String _toIsoDate(String value) {
+    final trimmed = value.trim();
+    if (trimmed.contains('T')) return trimmed;
+    if (trimmed.length == 10 &&
+        trimmed[4] == '-' &&
+        trimmed[7] == '-') {
+      return '${trimmed}T00:00:00.000Z';
+    }
+    return trimmed;
   }
 }

@@ -13,14 +13,15 @@ import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/account_role.dart';
 import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../core/utils/functions/image_picker_helper.dart';
+import '../../../../../../core/utils/functions/print_state.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../../../individual/my_property_details/view/widgets/contracts_section_widget.dart';
-import '../../../property_file/model/property_file_model.dart';
 import '../../../property_file/view/widgets/owner_financial_section.dart';
 import '../../../property_file/view/widgets/owner_property_expenses.dart';
 import '../../../property_file/view/widgets/property_file_overflow_menu.dart';
 import '../../controller/unit_details_bloc.dart';
+import 'building_apartment_details.dart';
 import 'unit_info_row.dart';
 
 class UnitDetailsContent extends StatelessWidget {
@@ -85,158 +86,127 @@ class UnitDetailsContent extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          unit.label,
-                          style: TextStyle(
-                            fontSize: context.responsiveFontScale(22),
-                            fontWeight: FontWeight.w700,
-                            color: colors.textFieldTitle,
-                            fontFamily: AppConstant.appHeaderFont,
-                          ),
-                        ),
-                        if (parentTitle.isNotEmpty)
+                        if (isBuildingUnit)
+                          BuildingApartmentDetails(
+                            unit: unit,
+                            parentTitle: parentTitle,
+                            canEdit: canManageBuilding,
+                            colors: colors,
+                          )
+                        else ...[
                           Text(
-                            parentTitle,
+                            unit.label,
                             style: TextStyle(
-                              fontSize: context.responsiveFontScale(13),
-                              color: colors.textSecondary,
-                              fontFamily: AppConstant.appFont,
+                              fontSize: context.responsiveFontScale(22),
+                              fontWeight: FontWeight.w700,
+                              color: colors.textFieldTitle,
+                              fontFamily: AppConstant.appHeaderFont,
                             ),
                           ),
-                        SizedBox(height: 16.height),
-                        Container(
-                          padding: EdgeInsets.all(16.width),
-                          decoration: BoxDecoration(
-                            color: colors.cardBackground,
-                            borderRadius: BorderRadius.circular(20.radius),
-                            border: Border.all(color: colors.borderColor),
-                          ),
-                          child: Column(
-                            children: [
-                              UnitInfoRow(
-                                label: AppStrings.apartmentNumber,
-                                value: unit.number,
-                                leadingImage: '',
-                                showLeadingImage: false,
-                                colors: colors,
-                                isEditable: false,
-                                controller: null,
+                          if (parentTitle.isNotEmpty)
+                            Text(
+                              parentTitle,
+                              style: TextStyle(
+                                fontSize: context.responsiveFontScale(13),
+                                color: colors.textSecondary,
+                                fontFamily: AppConstant.appFont,
                               ),
-                              if (unit.projectName.isNotEmpty || _canEdit) ...[
-                                SizedBox(height: 10.height),
+                            ),
+                          SizedBox(height: 16.height),
+                          Container(
+                            padding: EdgeInsets.all(16.width),
+                            decoration: BoxDecoration(
+                              color: colors.cardBackground,
+                              borderRadius: BorderRadius.circular(20.radius),
+                              border: Border.all(color: colors.borderColor),
+                            ),
+                            child: Column(
+                              children: [
                                 UnitInfoRow(
-                                  label: AppStrings.projectName,
-                                  value: unit.projectName,
-                                  leadingImage: AppImages.propertyShapeIcon,
+                                  label: AppStrings.apartmentNumber,
+                                  value: unit.number,
+                                  leadingImage: '',
+                                  showLeadingImage: false,
                                   colors: colors,
                                   isEditable: false,
                                   controller: null,
                                 ),
-                              ],
-                              if (unit.area > 0) ...[
-                                SizedBox(height: 10.height),
-                                UnitInfoRow(
-                                  label: AppStrings.areaLabel,
-                                  value: AppStrings.areaWithUnit(unit.area),
-                                  leadingImage: AppImages.totalSpaceIcon,
-                                  colors: colors,
-                                  isEditable: false,
-                                ),
-                              ],
-                              if (unit.floor > 0) ...[
-                                SizedBox(height: 10.height),
-                                UnitInfoRow(
-                                  label: AppStrings.floor,
-                                  value: '${unit.floor}',
-                                  leadingImage: AppImages.floorIcon,
-                                  colors: colors,
-                                  isEditable: false,
-                                ),
-                              ],
-                              if (unit.rooms > 0 || unit.bathrooms > 0) ...[
-                                SizedBox(height: 10.height),
-                                Row(
-                                  children: [
-                                    if (unit.rooms > 0)
-                                      Expanded(
-                                        child: UnitInfoRow(
-                                          label: AppStrings.beds,
-                                          value: '${unit.rooms}',
-                                          leadingImage: AppImages.bedroomIcon,
-                                          colors: colors,
-                                          isEditable: false,
-                                        ),
-                                      ),
-                                    if (unit.rooms > 0 && unit.bathrooms > 0)
-                                      SizedBox(width: 10.width),
-                                    if (unit.bathrooms > 0)
-                                      Expanded(
-                                        child: UnitInfoRow(
-                                          label: AppStrings.baths,
-                                          value: '${unit.bathrooms}',
-                                          leadingImage: AppImages.bathroomIcon,
-                                          colors: colors,
-                                          isEditable: false,
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ],
-                              if (unit.monthlyRent > 0) ...[
-                                SizedBox(height: 10.height),
-                                UnitInfoRow(
-                                  label:
-                                      unit.listingType.toUpperCase() == 'RENT'
-                                      ? AppStrings.monthlyRent
-                                      : AppStrings.listingPrice,
-                                  value:
-                                      '${formatPrice(unit.monthlyRent)} ${AppStrings.currency}',
-                                  leadingImage: AppImages.monthlyRentIcon,
-                                  colors: colors,
-                                  isEditable: false,
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                        if (isBuildingUnit) ...[
-                          SizedBox(height: 16.height),
-                          Text(
-                            AppStrings.unitStatus,
-                            style: TextStyle(
-                              fontSize: context.responsiveFontScale(13),
-                              fontWeight: FontWeight.w600,
-                              color: colors.textFieldTitle,
-                            ),
-                          ),
-                          SizedBox(height: 8.height),
-                          IgnorePointer(
-                            ignoring: !canManageBuilding,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: AppButton(
-                                    text: AppStrings.vacantStatus,
-                                    isOutline: unit.status != UnitStatus.vacant,
-                                    onTap: () => bloc.add(
-                                      const UnitDetailsStatusToggled(
-                                        UnitStatus.vacant,
-                                      ),
-                                    ),
+                                if (unit.projectName.isNotEmpty ||
+                                    _canEdit) ...[
+                                  SizedBox(height: 10.height),
+                                  UnitInfoRow(
+                                    label: AppStrings.projectName,
+                                    value: unit.projectName,
+                                    leadingImage: AppImages.propertyShapeIcon,
+                                    colors: colors,
+                                    isEditable: false,
+                                    controller: null,
                                   ),
-                                ),
-                                SizedBox(width: 8.width),
-                                Expanded(
-                                  child: AppButton(
-                                    text: AppStrings.rentedStatus,
-                                    isOutline: unit.status != UnitStatus.rented,
-                                    onTap: () => bloc.add(
-                                      const UnitDetailsStatusToggled(
-                                        UnitStatus.rented,
-                                      ),
-                                    ),
+                                ],
+                                if (unit.area > 0) ...[
+                                  SizedBox(height: 10.height),
+                                  UnitInfoRow(
+                                    label: AppStrings.areaLabel,
+                                    value: AppStrings.areaWithUnit(unit.area),
+                                    leadingImage: AppImages.totalSpaceIcon,
+                                    colors: colors,
+                                    isEditable: false,
                                   ),
-                                ),
+                                ],
+                                if (unit.floor > 0) ...[
+                                  SizedBox(height: 10.height),
+                                  UnitInfoRow(
+                                    label: AppStrings.floor,
+                                    value: '${unit.floor}',
+                                    leadingImage: AppImages.floorIcon,
+                                    colors: colors,
+                                    isEditable: false,
+                                  ),
+                                ],
+                                if (unit.rooms > 0 || unit.bathrooms > 0) ...[
+                                  SizedBox(height: 10.height),
+                                  Row(
+                                    children: [
+                                      if (unit.rooms > 0)
+                                        Expanded(
+                                          child: UnitInfoRow(
+                                            label: AppStrings.beds,
+                                            value: '${unit.rooms}',
+                                            leadingImage: AppImages.bedroomIcon,
+                                            colors: colors,
+                                            isEditable: false,
+                                          ),
+                                        ),
+                                      if (unit.rooms > 0 && unit.bathrooms > 0)
+                                        SizedBox(width: 10.width),
+                                      if (unit.bathrooms > 0)
+                                        Expanded(
+                                          child: UnitInfoRow(
+                                            label: AppStrings.baths,
+                                            value: '${unit.bathrooms}',
+                                            leadingImage:
+                                                AppImages.bathroomIcon,
+                                            colors: colors,
+                                            isEditable: false,
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ],
+                                if (unit.monthlyRent > 0) ...[
+                                  SizedBox(height: 10.height),
+                                  UnitInfoRow(
+                                    label:
+                                        unit.listingType.toUpperCase() == 'RENT'
+                                        ? AppStrings.yearlyRent
+                                        : AppStrings.listingPrice,
+                                    value:
+                                        '${formatPrice(unit.monthlyRent)} ${AppStrings.currency}',
+                                    leadingImage: AppImages.monthlyRentIcon,
+                                    colors: colors,
+                                    isEditable: false,
+                                  ),
+                                ],
                               ],
                             ),
                           ),
@@ -244,8 +214,7 @@ class UnitDetailsContent extends StatelessWidget {
                         SizedBox(height: 20.height),
                         if (canManageBuilding)
                           AppButton(
-                            onTap: () =>
-                                bloc.add(const UnitDetailsSaved()),
+                            onTap: () => bloc.add(const UnitDetailsSaved()),
                             text: AppStrings.saveChanges,
                             isLoading:
                                 state.saveStatus == RequestStatus.loading,
@@ -261,8 +230,7 @@ class UnitDetailsContent extends StatelessWidget {
                           )
                         else if (_canEdit)
                           AppButton(
-                            onTap: () =>
-                                bloc.add(const UnitDetailsSaved()),
+                            onTap: () => bloc.add(const UnitDetailsSaved()),
                             text: AppStrings.saveChanges,
                             isLoading:
                                 state.saveStatus == RequestStatus.loading,
@@ -275,7 +243,9 @@ class UnitDetailsContent extends StatelessWidget {
                           expenses: unit.expenses,
                           fileCount: state.expenseFiles.length,
                           colors: colors,
-                          canEdit: isBuildingUnit ? canManageBuilding : _canEdit,
+                          canEdit: isBuildingUnit
+                              ? canManageBuilding
+                              : _canEdit,
                           onConfirm: canManageBuilding
                               ? () => bloc.add(const UnitDetailsSaved())
                               : null,
@@ -284,14 +254,16 @@ class UnitDetailsContent extends StatelessWidget {
                               state.saveStatus == RequestStatus.loading,
                           descController: bloc.expenseDescController,
                           amountController: bloc.expenseAmountController,
-                          onAdd: () {
-                            final desc = bloc.expenseDescController.text
-                                .trim();
-                            final amt =
-                                double.tryParse(
-                                  bloc.expenseAmountController.text.trim(),
-                                ) ??
-                                0;
+                          onAddExpense: (description) {
+                            printState('Adding expense 112222');
+                            printState(description);
+                            final desc = bloc.expenseDescController.text.trim();
+                            final amt = double.tryParse(
+                              bloc.expenseAmountController.text.trim().replaceAll(',', ''),
+                            )??0;
+                            printState(
+                              'desc: $desc, amt: $amt price ${bloc.expenseAmountController.text}',
+                            );
                             if (desc.isEmpty || amt <= 0) return;
                             bloc.add(
                               UnitDetailsExpenseAdded(

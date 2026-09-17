@@ -8,6 +8,7 @@ import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../core/utils/functions/hijri_date.dart';
+import '../../../../../core/utils/functions/print_state.dart';
 import '../../../individual/property_details/model/property_details_model.dart';
 import '../model/property_file_model.dart';
 
@@ -29,6 +30,7 @@ class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState>
     on<PropertyFileStatusToggled>(_onStatusToggled);
     on<PropertyFileDateTypeToggled>(_onDateTypeToggled);
     on<PropertyFileDatePicked>(_onDatePicked);
+    on<PropertyFileTenancySaved>(_onSaveTenancy);
   }
 
   String _propertyId = '';
@@ -120,28 +122,7 @@ class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState>
     Emitter<PropertyFileState> emit,
   ) async {
     if (_propertyId.isEmpty) return;
-    final shouldSaveTenancy = state.details?.isForRent == true;
-    final tenancy = shouldSaveTenancy ? tenancyBody() : null;
-    if (shouldSaveTenancy && state.isRented && tenancy == null) {
-      AppToast(AppStrings.pleaseCompleteTenantData, isError: true);
-      return;
-    }
     emit(state.copyWith(saveStatus: RequestStatus.loading));
-    if (tenancy != null) {
-      final tenancyResult = await PropertyFileApis.updateBuildingApartment(
-        propertyId: _propertyId,
-        body: tenancy,
-      );
-      if (isClosed) return;
-      final tenancyFailed = tenancyResult.fold((error) {
-        AppToast(error, isError: true);
-        return true;
-      }, (_) => false);
-      if (tenancyFailed) {
-        emit(state.copyWith(saveStatus: RequestStatus.failed));
-        return;
-      }
-    }
     final result = await PropertyFileApis.updateProperty(
       propertyId: _propertyId,
       title: titleController.text.trim(),
@@ -179,15 +160,6 @@ class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState>
         }
         nextDetails.title = titleController.text.trim();
         nextDetails.projectName = projectNameController.text.trim();
-        if (tenancy != null) {
-          nextDetails.tenancyStatus = tenancy['status']?.toString();
-          nextDetails.tenantName = tenancy['tenantName']?.toString();
-          nextDetails.tenantPhone = tenancy['tenantPhone']?.toString();
-          nextDetails.monthlyRent = tenancy['monthlyRent'] as num?;
-          nextDetails.tenancyStartDate = tenancy['startDate']?.toString();
-          nextDetails.tenancyEndDate = tenancy['endDate']?.toString();
-          nextDetails.tenancyCalendarType = tenancy['calendarType']?.toString();
-        }
         syncTenancy(nextDetails);
         final mapped = PropertyFileModel.fromDetails(nextDetails);
         emit(
@@ -208,10 +180,70 @@ class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState>
     );
   }
 
+  Future<void> _onSaveTenancy(
+    PropertyFileTenancySaved event,
+    Emitter<PropertyFileState> emit,
+  ) async {
+    if (_propertyId.isEmpty) return;
+    final tenancy = tenancyBody();
+    if (state.isRented && tenancy == null) {
+      AppToast(AppStrings.pleaseCompleteTenantData, isError: true);
+      return;
+    }
+    final body = tenancy ?? {'status': 'VACANT'};
+    emit(state.copyWith(tenancySaveStatus: RequestStatus.loading));
+    final result = await PropertyFileApis.updatePropertyTenancy(
+      propertyId: _propertyId,
+      tenancy: body,
+    );
+    if (isClosed) return;
+    await result.fold(
+      (error) async {
+        AppToast(error, isError: true);
+        emit(state.copyWith(tenancySaveStatus: RequestStatus.failed));
+      },
+      (details) async {
+        final nextDetails = details;
+        if ((nextDetails.tenancyStatus ?? '').isEmpty) {
+          nextDetails.tenancyStatus = body['status']?.toString();
+          nextDetails.tenantName = body['tenantName']?.toString();
+          nextDetails.tenantPhone = body['tenantPhone']?.toString();
+          nextDetails.monthlyRent = num.tryParse(
+            body['monthlyRent']?.toString() ?? '',
+          );
+          nextDetails.tenancyStartDate = body['startDate']?.toString();
+          nextDetails.tenancyEndDate = body['endDate']?.toString();
+        }
+        if ((nextDetails.media == null || nextDetails.media!.isEmpty) &&
+            state.details != null) {
+          nextDetails.media = state.details!.media;
+        }
+        if ((nextDetails.title ?? '').isEmpty) {
+          nextDetails.title = state.details?.title;
+        }
+        syncTenancy(nextDetails);
+        emit(
+          state.copyWith(
+            details: nextDetails,
+            property: PropertyFileModel.fromDetails(nextDetails),
+            expenses: UnitModel.fromDetails(nextDetails).expenses,
+            tenancySaveStatus: RequestStatus.success,
+            tenancyStatus: unitStatusFrom(nextDetails.tenancyStatus),
+            isHijriDate:
+                (nextDetails.tenancyCalendarType ?? '').toUpperCase() ==
+                'HIJRI',
+          ),
+        );
+        AppToast(AppStrings.propertyUpdated);
+      },
+    );
+  }
+
   void _onExpenseAdded(
     PropertyFileExpenseAdded event,
     Emitter<PropertyFileState> emit,
   ) {
+    printState('Adding expense');
     final desc = expenseDescController.text.trim();
     final amt = parsePrice(expenseAmountController.text)?.toDouble() ?? 0;
     if (desc.isEmpty || amt <= 0) return;

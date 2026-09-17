@@ -29,4 +29,4 @@ Future<void> main() async {
 
   runApp(localization(const MadarApp()));
 }
- 
+

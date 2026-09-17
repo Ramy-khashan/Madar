@@ -22,6 +22,7 @@ class FinancialPropertyItem extends Equatable {
 
 class FinancialRentItem extends Equatable {
   const FinancialRentItem({
+    this.id = '',
     required this.name,
     required this.amount,
     this.date,
@@ -29,6 +30,7 @@ class FinancialRentItem extends Equatable {
     required this.paid,
   });
 
+  final String id;
   final String name;
   final String amount;
   final DateTime? date;
@@ -36,7 +38,7 @@ class FinancialRentItem extends Equatable {
   final bool paid;
 
   @override
-  List<Object?> get props => [name, amount, date, status, paid];
+  List<Object?> get props => [id, name, amount, date, status, paid];
 }
 
 class FinancialTransaction extends Equatable {
@@ -333,6 +335,7 @@ List<Map<String, dynamic>> _asMapList(dynamic value) {
 
 class DashboardRevenueItem extends Equatable {
   const DashboardRevenueItem({
+    this.id = '',
     this.contractId = '',
     this.property = '',
     this.type = '',
@@ -341,6 +344,7 @@ class DashboardRevenueItem extends Equatable {
     this.status = '',
   });
 
+  final String id;
   final String contractId;
   final String property;
   final String type;
@@ -352,6 +356,7 @@ class DashboardRevenueItem extends Equatable {
 
   factory DashboardRevenueItem.fromJson(Map<String, dynamic> json) {
     return DashboardRevenueItem(
+      id: (json['id'] ?? json['otherIncomeId'] ?? '').toString(),
       contractId: (json['contractId'] ?? json['id'] ?? '').toString(),
       property: (json['property'] ?? json['propertyTitle'] ?? json['title'] ?? '')
           .toString(),
@@ -363,7 +368,7 @@ class DashboardRevenueItem extends Equatable {
   }
 
   @override
-  List<Object?> get props => [contractId, property, type, amount, date, status];
+  List<Object?> get props => [id, contractId, property, type, amount, date, status];
 }
 
 class DashboardRevenuesResponse extends Equatable {

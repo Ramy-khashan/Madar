@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../config/router/app_router_keys.dart';
 import '../../config/theme/app_theme_colors.dart';
 import '../../modules/pages/business/business_home/model/business_portfolio_property_model.dart';
+ import '../utils/constants/app_colors.dart';
  import '../utils/constants/app_strings.dart';
  import '../utils/functions/responsive.dart';
 import '../utils/functions/router_handler.dart';
@@ -47,6 +48,8 @@ class PortfolioCardWidget extends StatelessWidget {
             title: portfolio?.title ?? 'Property Title',
             location: portfolio?.location ?? 'Location',
             imageUrl: portfolio?.imageUrl ?? '',
+            publicationRequestStatus:
+                portfolio?.publicationRequestStatus ?? '',
             colors: colors,
           ),
           SizedBox(height: 10.height),
@@ -99,10 +102,12 @@ class PortfolioCardHeader extends StatelessWidget {
     required this.title,
     required this.location,
     required this.imageUrl,
+    this.publicationRequestStatus = '',
   });
   final String title;
   final String location;
   final String imageUrl;
+  final String publicationRequestStatus;
   final AppThemeColors colors;
 
   @override
@@ -161,7 +166,44 @@ class PortfolioCardHeader extends StatelessWidget {
           ),
         ),
         SizedBox(width: 8.width),
+        _PublicationStatusTag(status: publicationRequestStatus),
       ],
+    );
+  }
+}
+
+class _PublicationStatusTag extends StatelessWidget {
+  const _PublicationStatusTag({required this.status});
+
+  final String status;
+
+  @override
+  Widget build(BuildContext context) {
+    final value = status.trim().toUpperCase();
+    // if (value.isEmpty) return const SizedBox.shrink();
+    final isApproved = value == 'APPROVED';
+    
+    final color = isApproved
+        ? AppColors.successColor
+        :   AppColors.orangeColor
+        ;
+    final label = isApproved
+        ? AppStrings.publishedStatus
+        :   AppStrings.notPublishedStatus;
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8.width, vertical: 4.height),
+      decoration: BoxDecoration(
+        color: isApproved ? color.withValues(alpha: 0.12) : AppColors.rate.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(20.radius),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: context.responsiveFontScale(12),
+          fontWeight: FontWeight.w500,
+          color: color,
+        ),
+      ),
     );
   }
 }

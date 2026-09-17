@@ -6,6 +6,7 @@ class PropertyFileState extends Equatable {
     this.details,
     this.status = RequestStatus.init,
     this.saveStatus = RequestStatus.init,
+    this.tenancySaveStatus = RequestStatus.init,
     this.publishStatus = RequestStatus.init,
     this.expenseStatus = RequestStatus.init,
     this.errorMsg = '',
@@ -21,6 +22,7 @@ class PropertyFileState extends Equatable {
   final PropertyDetailsModel? details;
   final RequestStatus status;
   final RequestStatus saveStatus;
+  final RequestStatus tenancySaveStatus;
   final RequestStatus publishStatus;
   final RequestStatus expenseStatus;
   final String errorMsg;
@@ -47,6 +49,7 @@ class PropertyFileState extends Equatable {
     PropertyDetailsModel? details,
     RequestStatus? status,
     RequestStatus? saveStatus,
+    RequestStatus? tenancySaveStatus,
     RequestStatus? publishStatus,
     RequestStatus? expenseStatus,
     String? errorMsg,
@@ -61,6 +64,7 @@ class PropertyFileState extends Equatable {
     details: details ?? this.details,
     status: status ?? this.status,
     saveStatus: saveStatus ?? this.saveStatus,
+    tenancySaveStatus: tenancySaveStatus ?? this.tenancySaveStatus,
     publishStatus: publishStatus ?? this.publishStatus,
     expenseStatus: expenseStatus ?? this.expenseStatus,
     errorMsg: errorMsg ?? this.errorMsg,
@@ -78,6 +82,7 @@ class PropertyFileState extends Equatable {
     details,
     status,
     saveStatus,
+    tenancySaveStatus,
     publishStatus,
     expenseStatus,
     errorMsg,

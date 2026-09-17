@@ -269,13 +269,13 @@ class IndividualHomeBloc
       description: AppStrings.propertyEvaluationDescription,
       icon: AppImages.ratingIcon,
     ),
-    SmartServiceModel(
-      id: '4',
-      title: AppStrings.auctionProperty,
-      description: AppStrings.auctionPropertyDescription,
-      icon: AppImages.auctionIcon,
-      route: AppRouterKeys.auctionNavbar,
-    ),
+    // SmartServiceModel(
+    //   id: '4',
+    //   title: AppStrings.auctionProperty,
+    //   description: AppStrings.auctionPropertyDescription,
+    //   icon: AppImages.auctionIcon,
+    //   route: AppRouterKeys.auctionNavbar,
+    // ),
     SmartServiceModel(
       route: AppRouterKeys.realEstateNews,
       id: '5',

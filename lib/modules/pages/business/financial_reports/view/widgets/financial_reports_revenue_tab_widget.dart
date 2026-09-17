@@ -7,6 +7,7 @@ import '../../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/components/app_button.dart';
+import '../../../../../../core/components/confirm_delete_dialog.dart';
 import '../../../../../../core/components/outline_section.dart';
 import '../../controller/financial_reports_bloc.dart';
 import '../../model/financial_report_models.dart';
@@ -266,6 +267,16 @@ class _OtherIncomeCard extends StatelessWidget {
               amount: AppStrings.amountVal(item.amount),
               paid: item.paid,
               colors: colors,
+              onDelete: item.id.isEmpty
+                  ? null
+                  : () => showConfirmDeleteDialog(
+                      context: context,
+                      title: AppStrings.confirmDelete,
+                      content: AppStrings.deleteOtherIncomeConfirmation,
+                      onConfirm: () => FinancialReportsBloc.get(context).add(
+                        FinancialReportsDeleteOtherIncome(item.id),
+                      ),
+                    ),
             ),
           ),
           SizedBox(height: 8.height),

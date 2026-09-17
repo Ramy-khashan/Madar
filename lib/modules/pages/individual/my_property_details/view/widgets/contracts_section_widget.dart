@@ -69,7 +69,7 @@ class _OwnerContractCard extends StatelessWidget {
     final start = _date(contract.startDate);
     final end = _date(contract.endDate);
     final priceLabel = contract.isRent
-        ? AppStrings.monthlyRent
+        ? AppStrings.yearlyRent
         : AppStrings.listingPrice;
     return Container(
       padding: EdgeInsets.all(16.width),

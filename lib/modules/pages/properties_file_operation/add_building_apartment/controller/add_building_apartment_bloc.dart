@@ -14,8 +14,10 @@ part 'add_building_apartment_state.dart';
 
 class AddBuildingApartmentBloc
     extends Bloc<AddBuildingApartmentEvent, AddBuildingApartmentState> {
-  AddBuildingApartmentBloc({required this.buildingId})
-    : super(const AddBuildingApartmentState()) {
+  AddBuildingApartmentBloc({
+    required this.buildingId,
+    this.isShop = false,
+  }) : super(const AddBuildingApartmentState()) {
     on<AddApartmentStatusChanged>(_onStatusChanged);
     on<AddApartmentCalendarChanged>(_onCalendarChanged);
     on<AddApartmentDatePicked>(_onDatePicked);
@@ -23,10 +25,12 @@ class AddBuildingApartmentBloc
   }
 
   final String buildingId;
+  final bool isShop;
   final TextEditingController unitNumberController = TextEditingController();
   final TextEditingController areaController = TextEditingController();
   final TextEditingController roomsController = TextEditingController();
   final TextEditingController bathroomsController = TextEditingController();
+  final TextEditingController livingRoomsController = TextEditingController();
   final TextEditingController tenantNameController = TextEditingController();
   final TextEditingController tenantPhoneController = TextEditingController();
   final TextEditingController rentController = TextEditingController();
@@ -92,17 +96,26 @@ class AddBuildingApartmentBloc
     final area = num.tryParse(areaController.text.trim());
     final rooms = int.tryParse(roomsController.text.trim());
     final bathrooms = int.tryParse(bathroomsController.text.trim());
-    if (unitNumber.isEmpty || area == null || area <= 0) {
+    if (!isShop && (unitNumber.isEmpty || area == null || area <= 0)) {
+      emit(state.copyWith(errorMessage: AppStrings.pleaseCompleteApartmentData));
+      return;
+    }
+    if (isShop && unitNumber.isEmpty) {
       emit(state.copyWith(errorMessage: AppStrings.pleaseCompleteApartmentData));
       return;
     }
     final body = <String, dynamic>{
       'unitNumber': unitNumber,
-      'totalArea': area,
-      'rooms': rooms ?? 0,
-      'bathrooms': bathrooms ?? 0,
       'status': state.status,
     };
+    if (!isShop) {
+      body.addAll({
+        'totalArea': area,
+        'rooms': rooms ?? 0,
+        'bathrooms': bathrooms ?? 0,
+        'livingRooms': int.tryParse(livingRoomsController.text.trim()) ?? 0,
+      });
+    }
     if (state.isRented) {
       final rent = parsePrice(rentController.text);
       final start = startDateController.text.trim();
@@ -128,9 +141,10 @@ class AddBuildingApartmentBloc
       });
     }
     emit(state.copyWith(statusRequest: RequestStatus.loading, errorMessage: null));
-    final result = await PropertyFileApis.createBuildingApartment(
+    final result = await PropertyFileApis.createBuildingUnit(
       buildingId: buildingId,
       body: body,
+      isShop: isShop,
     );
     if (isClosed) return;
     result.fold(
@@ -144,7 +158,11 @@ class AddBuildingApartmentBloc
         );
       },
       (_) {
-        AppToast(AppStrings.apartmentAddedSuccessfully);
+        AppToast(
+          isShop
+              ? AppStrings.shopAddedSuccessfully
+              : AppStrings.apartmentAddedSuccessfully,
+        );
         emit(state.copyWith(statusRequest: RequestStatus.success));
       },
     );
@@ -159,6 +177,7 @@ class AddBuildingApartmentBloc
     areaController.dispose();
     roomsController.dispose();
     bathroomsController.dispose();
+    livingRoomsController.dispose();
     tenantNameController.dispose();
     tenantPhoneController.dispose();
     rentController.dispose();

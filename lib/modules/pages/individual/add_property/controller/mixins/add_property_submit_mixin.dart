@@ -188,16 +188,21 @@ mixin AddPropertySubmitMixin on AddPropertyControllersMixin {
   }
 
   String? _extractCreatedPropertyId(dynamic data) {
+    if (data is String && data.trim().isNotEmpty) return data.trim();
+    if (data is num) return data.toString();
     if (data is! Map) return null;
     final id =
         data['property_id'] ?? data['propertyId'] ?? data['id'] ?? data['_id'];
-    if (id != null) return id.toString();
-    final nested = data['property'];
+    if (id != null && id.toString().trim().isNotEmpty) return id.toString();
+    final nested = data['property'] ?? data['data'];
     if (nested is Map) {
       final nestedId =
           nested['property_id'] ?? nested['propertyId'] ?? nested['id'];
-      if (nestedId != null) return nestedId.toString();
+      if (nestedId != null && nestedId.toString().trim().isNotEmpty) {
+        return nestedId.toString();
+      }
     }
+    if (nested is String && nested.trim().isNotEmpty) return nested.trim();
     return null;
   }
 }

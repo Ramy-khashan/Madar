@@ -67,9 +67,10 @@ mixin UnitDetailsSaveMixin on Bloc<UnitDetailsEvent, UnitDetailsState> {
       }
       // TODO: this single PUT updates status + tenant. Change
       // EndPoints.updateBuildingApartment when the URL is finalized.
-      final statusResult = await PropertyFileApis.updateBuildingApartment(
+      final statusResult = await PropertyFileApis.updateBuildingUnit(
         propertyId: u.id,
         body: tenancyBody,
+        isShop: u.isShop,
       );
       if (isClosed) return;
       final statusFailed = statusResult.fold((error) {
@@ -99,7 +100,10 @@ mixin UnitDetailsSaveMixin on Bloc<UnitDetailsEvent, UnitDetailsState> {
         }
       }
 
-      final refreshed = await PropertyFileApis.getBuildingApartment(u.id);
+      final refreshed = await PropertyFileApis.getBuildingUnit(
+        u.id,
+        isShop: u.isShop,
+      );
       if (isClosed) return;
       refreshed.fold(
         (_) {
@@ -112,7 +116,10 @@ mixin UnitDetailsSaveMixin on Bloc<UnitDetailsEvent, UnitDetailsState> {
           );
         },
         (apartment) {
-          final merged = UnitModel.fromBuildingApartment(apartment);
+          final merged = UnitModel.fromBuildingApartment(apartment).copyWith(
+            isShop: u.isShop || apartment.isShop,
+            buildingId: state.buildingId,
+          );
           syncControllers(merged);
           emit(
             state.copyWith(

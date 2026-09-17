@@ -272,6 +272,7 @@ final GoRouter appRouter = GoRouter(
       return AddBuildingApartmentScreen(
         buildingId: extra['buildingId'] as String? ?? '',
         buildingName: extra['buildingName'] as String? ?? '',
+        isShop: extra['isShop'] == true,
       );
     }),
     getRouteInstance(

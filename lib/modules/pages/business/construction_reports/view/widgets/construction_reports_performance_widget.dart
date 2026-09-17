@@ -37,6 +37,8 @@ class ConstructionReportsPerformanceWidget extends StatelessWidget {
                 children: [
                   Expanded(
                     child: FinancialMetricCard(
+                      isWithCurrency: false,
+
                       label: AppStrings.activeContractsLabel,
                       value: '${state.activeContracts}',
                       icon: AppImages.documentsIcon,
@@ -47,6 +49,8 @@ class ConstructionReportsPerformanceWidget extends StatelessWidget {
                   SizedBox(width: 12.width),
                   Expanded(
                     child: FinancialMetricCard(
+                      isWithCurrency: false,
+
                       label: AppStrings.occupancyRate,
                       value: state.report.occupancyRateLabel,
                       icon: AppImages.occupancyRateIcon,
@@ -60,8 +64,10 @@ class ConstructionReportsPerformanceWidget extends StatelessWidget {
               SizedBox(
                 height: 90.height,
                 child: FinancialMetricCard(
+                  isWithCurrency: true,
+
                   isStartedTextVal: true,
-                  label: AppStrings.monthlyIncome,
+                  label: AppStrings.yearlyIncome,
                   value: formatPrice(state.monthlyIncome),
                   icon: AppImages.monthlyIncomeIcon,
                   colors: colors,

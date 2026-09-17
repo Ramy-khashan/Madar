@@ -7,6 +7,7 @@ class MyPropertiesModel {
   final String imageUrl;
   final String type;
   final int unitsCount;
+  final String publicationRequestStatus;
 
   const MyPropertiesModel({
     required this.id,
@@ -15,6 +16,7 @@ class MyPropertiesModel {
     required this.imageUrl,
     this.type = '',
     this.unitsCount = 0,
+    this.publicationRequestStatus = '',
   });
 
   bool get isBuilding => type.toUpperCase() == 'BUILDING';
@@ -50,6 +52,10 @@ class MyPropertiesModel {
       ),
       type: (json['type'] ?? json['propertyType'] ?? '').toString(),
       unitsCount: unitsRaw is num ? unitsRaw.toInt() : int.tryParse('$unitsRaw') ?? 0,
+      publicationRequestStatus: (json['publicationRequestStatus'] ??
+              json['publicationStatus'] ??
+              '')
+          .toString(),
     );
   }
 }
@@ -57,19 +63,19 @@ class MyPropertiesModel {
 class BusinessSummaryModel {
   final int totalProperties;
   final int occupancyRate;
-  final int monthlyIncome;
+  final int annualIncome;
 
   const BusinessSummaryModel({
     required this.totalProperties,
     required this.occupancyRate,
-    required this.monthlyIncome,
+    required this.annualIncome,
   });
 
   factory BusinessSummaryModel.fromJson(Map<String, dynamic> json) {
     return BusinessSummaryModel(
       totalProperties: json['totalProperties'] ?? 0,
       occupancyRate: json['occupancyRate'] ?? 0,
-      monthlyIncome: json['monthlyIncome'] ?? 0,
+      annualIncome: json['annualIncome'] ?? 0,
     );
   }
 }

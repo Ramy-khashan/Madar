@@ -14,6 +14,7 @@ class AppConstant {
   static const String business = 'broker';
   static const String developer = 'project_manager';
   static const String realtor = 'realtor';
+
   static const String owner = 'owner';
   static const String cairoFont = 'cairo-font';
   static const String residentialProjectType = 'RESIDENTIAL';

@@ -8,6 +8,7 @@ import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../core/utils/functions/hijri_date.dart';
+import '../../../../../core/utils/functions/print_state.dart';
 import '../../../individual/property_details/model/property_details_model.dart';
 import '../../property_file/model/property_file_model.dart';
 
@@ -68,26 +69,24 @@ class UnitDetailsBloc extends Bloc<UnitDetailsEvent, UnitDetailsState>
       return;
     }
     if (event.buildingId.isNotEmpty) {
-      final result = await PropertyFileApis.getBuildingApartment(event.unit.id);
+      final result = await PropertyFileApis.getBuildingUnit(
+        event.unit.id,
+        isShop: event.unit.isShop,
+      );
       if (isClosed) return;
       result.fold(
         (error) {
           emit(
-            state.copyWith(
-              loadStatus: RequestStatus.success,
-              errorMsg: error,
-            ),
+            state.copyWith(loadStatus: RequestStatus.success, errorMsg: error),
           );
         },
         (apartment) {
-          final merged = UnitModel.fromBuildingApartment(apartment);
-          syncControllers(merged);
-          emit(
-            state.copyWith(
-              unit: merged,
-              loadStatus: RequestStatus.success,
-            ),
+          final merged = UnitModel.fromBuildingApartment(apartment).copyWith(
+            isShop: event.unit.isShop || apartment.isShop,
+            buildingId: event.buildingId,
           );
+          syncControllers(merged);
+          emit(state.copyWith(unit: merged, loadStatus: RequestStatus.success));
         },
       );
       return;
@@ -97,10 +96,7 @@ class UnitDetailsBloc extends Bloc<UnitDetailsEvent, UnitDetailsState>
     result.fold(
       (error) {
         emit(
-          state.copyWith(
-            loadStatus: RequestStatus.success,
-            errorMsg: error,
-          ),
+          state.copyWith(loadStatus: RequestStatus.success, errorMsg: error),
         );
       },
       (details) {
@@ -155,15 +151,22 @@ class UnitDetailsBloc extends Bloc<UnitDetailsEvent, UnitDetailsState>
     UnitDetailsDatePicked event,
     Emitter<UnitDetailsState> emit,
   ) {
+    final u = state.unit;
+    if (u == null) return;
     final formatted = formatPickedDate(event.date);
     if (event.isStart) {
       rentStartController.text = formatted;
+      emit(state.copyWith(unit: u.copyWith(rentStartDate: formatted)));
     } else {
       rentEndController.text = formatted;
+      emit(state.copyWith(unit: u.copyWith(rentEndDate: formatted)));
     }
   }
 
-  Future<void> requestDate(BuildContext context, {required bool isStart}) async {
+  Future<void> requestDate(
+    BuildContext context, {
+    required bool isStart,
+  }) async {
     final now = DateTime.now();
     final useHijri = state.unit?.isHijriDate ?? false;
     final DateTime? picked;
@@ -190,14 +193,15 @@ class UnitDetailsBloc extends Bloc<UnitDetailsEvent, UnitDetailsState>
     UnitDetailsExpenseAdded event,
     Emitter<UnitDetailsState> emit,
   ) {
+    printState('state.unit?.expenses: ${state.unit}');
     final u = state.unit;
-    if (u == null) return;
+    if (u == null) {
+      printState('Unit is null, cannot add expense');
+      return;
+    }
     final updated = List<UnitExpenseModel>.from(u.expenses)
       ..add(
-        UnitExpenseModel(
-          description: event.description,
-          amount: event.amount,
-        ),
+        UnitExpenseModel(description: event.description, amount: event.amount),
       );
     emit(state.copyWith(unit: u.copyWith(expenses: updated)));
     expenseDescController.clear();
@@ -221,7 +225,6 @@ class UnitDetailsBloc extends Bloc<UnitDetailsEvent, UnitDetailsState>
   ) {
     emit(state.copyWith(expenseFiles: [...state.expenseFiles, ...event.paths]));
   }
-
 
   @override
   Future<void> close() {

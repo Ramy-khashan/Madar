@@ -19,7 +19,7 @@ class OwnerPublishButton extends StatelessWidget {
   final PropertyFileState state;
 
   bool get _canPublish =>
-      AccountRole.isOwner &&
+      AccountRole.isBusiness &&
       state.details != null &&
       !state.details!.isPublished;
 

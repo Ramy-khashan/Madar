@@ -9,15 +9,20 @@ class AddBuildingApartmentScreen extends StatelessWidget {
     super.key,
     required this.buildingId,
     this.buildingName = '',
+    this.isShop = false,
   });
 
   final String buildingId;
   final String buildingName;
+  final bool isShop;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => AddBuildingApartmentBloc(buildingId: buildingId),
+      create: (_) => AddBuildingApartmentBloc(
+        buildingId: buildingId,
+        isShop: isShop,
+      ),
       child: AddBuildingApartmentView(buildingName: buildingName),
     );
   }

@@ -16,6 +16,7 @@ class FinancialPropertyRow extends StatelessWidget {
     this.status,
     this.date,
     required this.colors,
+    this.onDelete,
   });
 
   final String name;
@@ -24,6 +25,7 @@ class FinancialPropertyRow extends StatelessWidget {
   final String? status;
   final bool paid;
   final AppThemeColors colors;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -101,6 +103,16 @@ class FinancialPropertyRow extends StatelessWidget {
               color: paid ? AppColors.successColor : AppColors.rate,
             ),
           ),
+          if (onDelete != null)
+            IconButton(
+              onPressed: onDelete,
+              icon: Icon(
+                Icons.delete_outline,
+                color: AppColors.errorColor,
+                size: 20.width,
+              ),
+              visualDensity: VisualDensity.compact,
+            ),
         ],
       ),
     );

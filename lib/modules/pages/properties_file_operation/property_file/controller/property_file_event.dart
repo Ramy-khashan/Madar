@@ -52,6 +52,10 @@ class PropertyFileDateTypeToggled extends PropertyFileEvent {
   List<Object?> get props => [isHijri];
 }
 
+class PropertyFileTenancySaved extends PropertyFileEvent {
+  const PropertyFileTenancySaved();
+}
+
 class PropertyFileDatePicked extends PropertyFileEvent {
   const PropertyFileDatePicked({required this.isStart, required this.date});
   final bool isStart;

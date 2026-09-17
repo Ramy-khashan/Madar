@@ -51,6 +51,8 @@ class FinancialReportsOverviewTabWidget extends StatelessWidget {
                 children: [
                   Expanded(
                     child: FinancialMetricCard(
+                      isWithCurrency: true,
+
                       label: AppStrings.totalIncomeLabel,
 
                       value: formatPrice(state.totalIncome),
@@ -62,6 +64,7 @@ class FinancialReportsOverviewTabWidget extends StatelessWidget {
                   SizedBox(width: 12.width),
                   Expanded(
                     child: FinancialMetricCard(
+                      isWithCurrency: true,
                       label: AppStrings.expenses,
 
                       value: formatPrice(state.totalExpenses),
@@ -78,6 +81,8 @@ class FinancialReportsOverviewTabWidget extends StatelessWidget {
                   children: [
                     Expanded(
                       child: FinancialMetricCard(
+                      isWithCurrency: true,
+
                         label: AppStrings.netProfit,
                         value: formatPrice(state.netProfit),
                         icon: AppImages.finalPriceIcon,
@@ -90,6 +95,8 @@ class FinancialReportsOverviewTabWidget extends StatelessWidget {
                     SizedBox(width: 12.width),
                     Expanded(
                       child: FinancialMetricCard(
+                      isWithCurrency: true,
+
                         label: AppStrings.lateRentLabel,
                         value: formatPrice(state.lateRent),
                         icon: AppImages.finalPriceIcon,
@@ -104,6 +111,8 @@ class FinancialReportsOverviewTabWidget extends StatelessWidget {
                 SizedBox(height: 16.height),
               ] else ...[
                 FinancialMetricCard(
+                      isWithCurrency: true,
+
                   label: AppStrings.netProfit,
                   value: formatPrice(state.netProfit),
                   icon: AppImages.finalPriceIcon,

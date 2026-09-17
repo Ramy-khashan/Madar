@@ -8,6 +8,7 @@ import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
+import '../../../../../common/chats/chat_navigator.dart';
 import '../../model/property_details_model.dart';
 
 class AdvertiserSectionWidget extends StatelessWidget {
@@ -18,6 +19,9 @@ class AdvertiserSectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
+    final falLicense = (advertiser?.falLicenseNumber ?? '').trim();
+    final adLicense = (advertiser?.adLicenseNumber ?? '').trim();
+    final hasLicenses = falLicense.isNotEmpty || adLicense.isNotEmpty;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -110,83 +114,35 @@ class AdvertiserSectionWidget extends StatelessWidget {
                   //       ],
                   //     ),
                   //   ),
+                  if (!hasLicenses) ...[
+                    SizedBox(width: 8.width),
+                    SizedBox(
+                      width: 44.width,
+                      height: 44.width,
+                      child: AppButton(
+                        isOutline: true,
+                        childImage: AppImages.chatIcon,
+                        onTap: () => _openOwnerChat(context),
+                      ),
+                    ),
+                  ],
                 ],
               ),
-
-              SizedBox(height: 16.height),
-
-              Container(
-                padding: EdgeInsets.symmetric(
-                  vertical: 13.height,
-                  horizontal: 8.width,
-                ),
-                decoration: BoxDecoration(
-                  color: colors.primaryBrand.withValues(alpha: .08),
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                child: Row(
-                  children: [
-                    ImageItem(AppImages.safetyIcon, width: 16.width),
-                    SizedBox(width: 8.width),
-                    Text(
-                      '${AppStrings.falLicenseLabel}: \n  ${advertiser?.falLicenseNumber ?? ''} ',
-                      style: TextStyle(
-                        fontSize: context.responsiveFontScale(13),
-                        color: colors.primaryBrand,
-                        fontFamily: AppConstant.appFont,
-                      ),
-                    ),
-
-                    // const Spacer(),
-                    // if (advertiser?.isVerified == true)
-                    //   Container(
-                    //     padding: EdgeInsets.symmetric(
-                    //       horizontal: 10.width,
-                    //       vertical: 3.height,
-                    //     ),
-                    //     decoration: BoxDecoration(
-                    //       color: AppColors.secondBrand.withValues(alpha: .8),
-                    //       borderRadius: BorderRadius.circular(20.radius),
-                    //       border: Border.all(color: AppColors.secondBrand),
-                    //     ),
-                    //     child: Text(
-                    //       AppStrings.falVerifiedBadge,
-                    //       style: TextStyle(
-                    //         fontSize: context.responsiveFontScale(12),
-                    //         color: colors.onPrimary,
-                    //         fontFamily: AppConstant.appHeaderFont,
-                    //         fontWeight: FontWeight.w600,
-                    //       ),
-                    //     ),
-                    //   ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 8.height),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  vertical: 13.height,
-                  horizontal: 8.width,
-                ),
-                decoration: BoxDecoration(
-                  color: colors.primaryBrand.withValues(alpha: .08),
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                child: Row(
-                  children: [
-                    ImageItem(AppImages.safetyIcon, width: 16.width),
-                    SizedBox(width: 8.width),
-                    Text(
-                      '${AppStrings.adLicenseLabel}:\n  ${advertiser?.adLicenseNumber ?? ''} ',
-                      style: TextStyle(
-                        fontSize: context.responsiveFontScale(13),
-                        color: colors.primaryBrand,
-                        fontFamily: AppConstant.appFont,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              if (hasLicenses) ...[
+                SizedBox(height: 16.height),
+                if (falLicense.isNotEmpty)
+                  _LicenseRow(
+                    colors: colors,
+                    text: '${AppStrings.falLicenseLabel}: \n  $falLicense',
+                  ),
+                if (falLicense.isNotEmpty && adLicense.isNotEmpty)
+                  SizedBox(height: 8.height),
+                if (adLicense.isNotEmpty)
+                  _LicenseRow(
+                    colors: colors,
+                    text: '${AppStrings.adLicenseLabel}:\n  $adLicense',
+                  ),
+              ],
               SizedBox(height: 16.height),
               AppButton(
                 text:
@@ -206,6 +162,52 @@ class AdvertiserSectionWidget extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  void _openOwnerChat(BuildContext context) {
+    ChatNavigator.openPrivateChat(
+      context,
+      receiverId: advertiser?.userId ?? '',
+      participantName: advertiser?.fullName ?? '',
+      participantAvatarUrl: advertiser?.image,
+    );
+  }
+}
+
+class _LicenseRow extends StatelessWidget {
+  const _LicenseRow({required this.colors, required this.text});
+
+  final AppThemeColors colors;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        vertical: 13.height,
+        horizontal: 8.width,
+      ),
+      decoration: BoxDecoration(
+        color: colors.primaryBrand.withValues(alpha: .08),
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Row(
+        children: [
+          ImageItem(AppImages.safetyIcon, width: 16.width),
+          SizedBox(width: 8.width),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: context.responsiveFontScale(13),
+                color: colors.primaryBrand,
+                fontFamily: AppConstant.appFont,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

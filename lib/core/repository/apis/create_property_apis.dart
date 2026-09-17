@@ -49,7 +49,11 @@ class CreatePropertyApis {
 
       return response.fold(
         (failedResponse) => Left(failedResponse),
-        (successResponse) => Right(successResponse.response['data']),
+        (successResponse) {
+          final body = successResponse.response;
+          if (body is Map && body['data'] != null) return Right(body['data']);
+          return Right(body);
+        },
       );
     } catch (e) {
       printState('Error creating property: $e');

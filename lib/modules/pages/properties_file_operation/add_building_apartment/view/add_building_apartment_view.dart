@@ -31,7 +31,11 @@ class AddBuildingApartmentView extends StatelessWidget {
       listener: (context, state) => RouterHandler.pop(context, true),
       child: Scaffold(
         backgroundColor: colors.backgroundPrimary,
-        appBar: AppAppbar(title: AppStrings.addApartmentToBuilding),
+        appBar: AppAppbar(
+          title: bloc.isShop
+              ? AppStrings.addShopToBuilding
+              : AppStrings.addApartmentToBuilding,
+        ),
         body: SafeArea(
           child: BlocBuilder<AddBuildingApartmentBloc, AddBuildingApartmentState>(
             builder: (context, state) {
@@ -51,10 +55,15 @@ class AddBuildingApartmentView extends StatelessWidget {
                     ),
                   AppTextField(
                     controller: bloc.unitNumberController,
-                    title: AppStrings.apartmentNumber,
-                    hint: AppStrings.enterApartmentNumber,
+                    title: bloc.isShop
+                        ? AppStrings.shopNumber
+                        : AppStrings.apartmentNumber,
+                    hint: bloc.isShop
+                        ? AppStrings.enterShopNumber
+                        : AppStrings.enterApartmentNumber,
                     textInputType: TextInputType.text,
                   ),
+                  if (!bloc.isShop) ...[
                   AppTextField(
                     controller: bloc.areaController,
                     title: AppStrings.areaSqmRequired,
@@ -73,6 +82,13 @@ class AddBuildingApartmentView extends StatelessWidget {
                     hint: AppStrings.numberOfBathrooms,
                     textInputType: TextInputType.number,
                   ),
+                  AppTextField(
+                    controller: bloc.livingRoomsController,
+                    title: AppStrings.numberOfLivingRooms,
+                    hint: AppStrings.numberOfLivingRooms,
+                    textInputType: TextInputType.number,
+                  ),
+                  ],
                   if (AccountRole.isBusiness) ...[
                   SizedBox(height: 8.height),
                   Text(
@@ -111,7 +127,11 @@ class AddBuildingApartmentView extends StatelessWidget {
                       hint: AppStrings.tenantNameLabel,
                     ),
                     PhoneNumberField(
+                      key: ValueKey(
+                        'add-tenant-phone-${bloc.tenantPhoneController.text}',
+                      ),
                       initialCountryCode: 'SA',
+                      initialValue: bloc.tenantPhoneController.text,
                       title: AppStrings.phoneNumber,
                       hint: AppStrings.enterPhoneNumber,
                       onChanged: (val) {
@@ -120,8 +140,8 @@ class AddBuildingApartmentView extends StatelessWidget {
                     ),
                     AppTextField(
                       controller: bloc.rentController,
-                      title: AppStrings.monthlyRent,
-                      hint: AppStrings.monthlyRent,
+                      title: AppStrings.yearlyRent,
+                      hint: AppStrings.yearlyRent,
                       textInputType: TextInputType.number,
                       isPrice: true,
                     ),
@@ -169,7 +189,9 @@ class AddBuildingApartmentView extends StatelessWidget {
                   ],
                   SizedBox(height: 20.height),
                   AppButton(
-                    text: AppStrings.addApartment,
+                    text: bloc.isShop
+                        ? AppStrings.addShop
+                        : AppStrings.addApartment,
                     isLoading: state.statusRequest == RequestStatus.loading,
                     onTap: () => bloc.add(const AddApartmentSubmit()),
                   ),

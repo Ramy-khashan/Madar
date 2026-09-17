@@ -20,7 +20,7 @@ class IndividualHomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isTablet = context.isTablet;
+    // final isTablet = context.isTablet;
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -76,6 +76,33 @@ class IndividualHomeView extends StatelessWidget {
                               SectionHeaderWidget(
                                 title: AppStrings.smartServices,
                               ),
+                              //  if (!isTablet)
+                              //   Container(
+                              //     margin: EdgeInsets.symmetric(
+                              //       vertical: 12.height,
+                              //       horizontal:
+                              //           context.responsiveHorizontalPadding,
+                              //     ),
+                              //     width: double.infinity,
+                              //     height: 200.height,
+                              //     child: SmartServiceCardWidget(
+                              //       service:
+                              //           IndividualHomeBloc.mockSmartServices.first,
+                              //       onTap: () {
+                              //         if (IndividualHomeBloc
+                              //             .mockSmartServices.first
+                              //             .route
+                              //             .isNotEmpty) {
+                              //           RouterHandler.navigate(
+                              //             context,
+                              //             IndividualHomeBloc
+                              //                 .mockSmartServices.first
+                              //                 .route,
+                              //           );
+                              //         }
+                              //       },
+                              //     ),
+                              //   ),
                               GridView.builder(
                                 padding: EdgeInsets.symmetric(
                                   horizontal:
@@ -105,8 +132,8 @@ class IndividualHomeView extends StatelessWidget {
                                 itemCount:
                                     IndividualHomeBloc
                                         .mockSmartServices
-                                        .length -
-                                    (isTablet ? 0 : 1),
+                                        .length ,
+                                    // (isTablet ? 0 : 1),
                                 itemBuilder: (context, index) {
                                   final service = IndividualHomeBloc
                                       .mockSmartServices[index];
@@ -123,33 +150,7 @@ class IndividualHomeView extends StatelessWidget {
                                   );
                                 },
                               ),
-                              if (!isTablet)
-                                Container(
-                                  margin: EdgeInsets.symmetric(
-                                    vertical: 12.height,
-                                    horizontal:
-                                        context.responsiveHorizontalPadding,
-                                  ),
-                                  width: double.infinity,
-                                  height: 200.height,
-                                  child: SmartServiceCardWidget(
-                                    service:
-                                        IndividualHomeBloc.mockSmartServices[4],
-                                    onTap: () {
-                                      if (IndividualHomeBloc
-                                          .mockSmartServices[4]
-                                          .route
-                                          .isNotEmpty) {
-                                        RouterHandler.navigate(
-                                          context,
-                                          IndividualHomeBloc
-                                              .mockSmartServices[4]
-                                              .route,
-                                        );
-                                      }
-                                    },
-                                  ),
-                                ),
+                             
                             ],
                           ),
                         ),
@@ -166,3 +167,7 @@ class IndividualHomeView extends StatelessWidget {
     );
   }
 }
+
+
+
+

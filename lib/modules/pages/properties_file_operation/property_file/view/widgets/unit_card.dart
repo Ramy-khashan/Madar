@@ -34,9 +34,8 @@ class UnitCard extends StatelessWidget {
       UnitStatus.vacant => AppStrings.vacantStatus,
     };
     final unitId = unit.number.isNotEmpty ? unit.number : unit.label;
-    final title = unitId.isEmpty
-        ? AppStrings.apartmentType
-        : '${AppStrings.apartmentType} $unitId';
+    final typeLabel = unit.isShop ? AppStrings.shopUnit : AppStrings.apartmentType;
+    final title = unitId.isEmpty ? typeLabel : '$typeLabel $unitId';
 
     return GestureDetector(
       onTap: onTap,
@@ -107,26 +106,27 @@ class UnitCard extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            Row(
-              children: [
-                if (unit.area > 0)
-                  Expanded(
-                    child: PropertyInfoItem(
-                      icon: AppImages.totalSpaceIcon,
-                      value: AppStrings.areaWithUnit(unit.area),
-                      colors: colors,
+            if (!unit.isShop)
+              Row(
+                children: [
+                  if (unit.area > 0)
+                    Expanded(
+                      child: PropertyInfoItem(
+                        icon: AppImages.totalSpaceIcon,
+                        value: AppStrings.areaWithUnit(unit.area),
+                        colors: colors,
+                      ),
                     ),
-                  ),
-                if (unit.rooms > 0)
-                  Expanded(
-                    child: PropertyInfoItem(
-                      icon: AppImages.bedroomIcon,
-                      value: AppStrings.roomsCount(unit.rooms),
-                      colors: colors,
+                  if (unit.rooms > 0)
+                    Expanded(
+                      child: PropertyInfoItem(
+                        icon: AppImages.bedroomIcon,
+                        value: AppStrings.roomsCount(unit.rooms),
+                        colors: colors,
+                      ),
                     ),
-                  ),
-              ],
-            ),
+                ],
+              ),
           ],
         ),
       ),

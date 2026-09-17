@@ -54,8 +54,12 @@ class _ChangeAccountItemState extends State<ChangeAccountItem> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: ImageItem(
-                  (PreferenceUtils().getString(StorageKeys.accountType) ==
-                          AppConstant.business)
+                  (  PreferenceUtils().getString(StorageKeys.accountType) ==
+                                  AppConstant.business ||
+                              PreferenceUtils().getString(
+                                    StorageKeys.accountType,
+                                  ) ==
+                                  AppConstant.owner)
                       ? AppImages.accountIcon
                       : AppImages.changeAccountIcon,
                   color: AppThemeColors.of(context).primaryBrand,
@@ -68,7 +72,11 @@ class _ChangeAccountItemState extends State<ChangeAccountItem> {
                   children: [
                     Text(
                       PreferenceUtils().getString(StorageKeys.accountType) ==
-                              AppConstant.business
+                                  AppConstant.business ||
+                              PreferenceUtils().getString(
+                                    StorageKeys.accountType,
+                                  ) ==
+                                  AppConstant.owner
                           ? AppStrings.changeAccountIndividual
                           : AppStrings.changeAccount,
                       style: TextStyle(
@@ -79,8 +87,12 @@ class _ChangeAccountItemState extends State<ChangeAccountItem> {
                     ),
                     SizedBox(height: 4.height),
                     Text(
-                      (PreferenceUtils().getString(StorageKeys.accountType) ==
-                              AppConstant.business)
+                      (  PreferenceUtils().getString(StorageKeys.accountType) ==
+                                  AppConstant.business ||
+                              PreferenceUtils().getString(
+                                    StorageKeys.accountType,
+                                  ) ==
+                                  AppConstant.owner)
                           ? AppStrings.personalAccountHint
                           : AppStrings.changeAccountHint,
                       style: TextStyle(

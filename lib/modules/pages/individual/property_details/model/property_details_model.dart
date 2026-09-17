@@ -1175,6 +1175,7 @@ class ChildProperty {
   num? totalArea;
   int? rooms;
   int? bathrooms;
+  int? livingRooms;
   String? tenancyStatus;
   num? monthlyRent;
 
@@ -1191,6 +1192,7 @@ class ChildProperty {
     this.totalArea,
     this.rooms,
     this.bathrooms,
+    this.livingRooms,
     this.tenancyStatus,
     this.monthlyRent,
   });
@@ -1213,6 +1215,7 @@ class ChildProperty {
       totalArea: _jsonDouble(json['totalArea']),
       rooms: _jsonInt(json['rooms']),
       bathrooms: _jsonInt(json['bathrooms']),
+      livingRooms: _jsonInt(json['livingRooms'] ?? json['councils']),
       tenancyStatus: json['tenancyStatus']?.toString(),
       monthlyRent: _jsonDouble(json['monthlyRent']),
     );
@@ -1232,6 +1235,7 @@ class ChildProperty {
     data['totalArea'] = totalArea;
     data['rooms'] = rooms;
     data['bathrooms'] = bathrooms;
+    data['livingRooms'] = livingRooms;
     data['tenancyStatus'] = tenancyStatus;
     data['monthlyRent'] = monthlyRent;
     return data;

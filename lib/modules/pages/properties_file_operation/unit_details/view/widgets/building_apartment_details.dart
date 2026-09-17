@@ -32,9 +32,10 @@ class BuildingApartmentDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = UnitDetailsBloc.get(context);
     final unitId = unit.number.isNotEmpty ? unit.number : unit.label;
-    final title = unitId.isEmpty
-        ? AppStrings.apartmentType
-        : '${AppStrings.apartmentType}($unitId)';
+    final typeLabel = unit.isShop
+        ? AppStrings.shopUnit
+        : AppStrings.apartmentType;
+    final title = unitId.isEmpty ? typeLabel : '$typeLabel($unitId)';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,7 +63,9 @@ class BuildingApartmentDetails extends StatelessWidget {
           colors: colors,
           children: [
             UnitInfoRow(
-              label: AppStrings.apartmentNumber,
+              label: unit.isShop
+                  ? AppStrings.shopNumber
+                  : AppStrings.apartmentNumber,
               value: unit.number,
               leadingImage: AppImages.propertyNumberIcon,
               colors: colors,
@@ -70,43 +73,54 @@ class BuildingApartmentDetails extends StatelessWidget {
               embedded: true,
             ),
             BuildingRowDivider(colors: colors),
-            UnitInfoRow(
-              label: AppStrings.areaLabel,
-              value: AppStrings.areaWithUnit(unit.area),
-              leadingImage: AppImages.totalSpaceIcon,
-              colors: colors,
-              isEditable: false,
-              embedded: true,
-            ),
-            BuildingRowDivider(colors: colors),
-            Row(
-              children: [
-                Expanded(
-                  child: UnitInfoRow(
-                    label: AppStrings.roomsLabel,
-                    value: '${unit.rooms}',
-                    leadingImage: AppImages.bedroomIcon,
-                    colors: colors,
-                    isEditable: false,
-                    embedded: true,
+            if (!unit.isShop) ...[
+              UnitInfoRow(
+                label: AppStrings.areaLabel,
+                value: AppStrings.areaWithUnit(unit.area),
+                leadingImage: AppImages.totalSpaceIcon,
+                colors: colors,
+                isEditable: false,
+                embedded: true,
+              ),
+              BuildingRowDivider(colors: colors),
+              Row(
+                children: [
+                  Expanded(
+                    child: UnitInfoRow(
+                      label: AppStrings.roomsLabel,
+                      value: '${unit.rooms}',
+                      leadingImage: AppImages.bedroomIcon,
+                      colors: colors,
+                      isEditable: false,
+                      embedded: true,
+                    ),
                   ),
-                ),
-                SizedBox(width: 10.width),
-                Expanded(
-                  child: UnitInfoRow(
-                    label: AppStrings.bathroomsLabel,
-                    value: '${unit.bathrooms}',
-                    leadingImage: AppImages.bathroomIcon,
-                    colors: colors,
-                    isEditable: false,
-                    embedded: true,
+                  SizedBox(width: 10.width),
+                  Expanded(
+                    child: UnitInfoRow(
+                      label: AppStrings.bathroomsLabel,
+                      value: '${unit.bathrooms}',
+                      leadingImage: AppImages.bathroomIcon,
+                      colors: colors,
+                      isEditable: false,
+                      embedded: true,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            BuildingRowDivider(colors: colors),
+                ],
+              ),
+              BuildingRowDivider(colors: colors),
+              UnitInfoRow(
+                label: AppStrings.numberOfLivingRooms,
+                value: '${unit.livingRooms}',
+                leadingImage: AppImages.bedroomIcon,
+                colors: colors,
+                isEditable: false,
+                embedded: true,
+              ),
+              BuildingRowDivider(colors: colors),
+            ],
             UnitInfoRow(
-              label: AppStrings.monthlyRent,
+              label: AppStrings.yearlyRent,
               value: unit.monthlyRent > 0 ? formatPrice(unit.monthlyRent) : '',
               leadingImage: AppImages.monthlyRentIcon,
               colors: colors,
@@ -119,7 +133,6 @@ class BuildingApartmentDetails extends StatelessWidget {
             ),
           ],
         ),
-        if (unit.isForRent) ...[
         SizedBox(height: 20.height),
         Text(
           AppStrings.rentStatus,
@@ -216,7 +229,7 @@ class BuildingApartmentDetails extends StatelessWidget {
                 embedded: true,
               ),
               PhoneNumberField(
-                key: ValueKey(unit.tenantPhone),
+                key: ValueKey('tenant-phone-${unit.status}-${unit.tenantPhone}'),
                 initialCountryCode: 'SA',
                 initialValue: unit.tenantPhone,
                 title: AppStrings.phoneNumber,
@@ -229,7 +242,6 @@ class BuildingApartmentDetails extends StatelessWidget {
             ],
           ],
         ),
-        ],
       ],
     );
   }
