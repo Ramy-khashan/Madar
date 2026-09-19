@@ -7,6 +7,7 @@ import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../core/connection/concept/end_points.dart';
 import '../../../../core/connection/interfaces/api_consumer.dart';
 import '../../../../core/utils/constants/app_enums.dart';
+import '../../../../core/utils/functions/print_state.dart';
 import '../../../../core/utils/functions/service_locator.dart';
 import '../../../pages/individual/individual_home/model/properties_item_model.dart';
 
@@ -33,6 +34,7 @@ class BrokerPropertiesBloc
         state.copyWith(
           loadingStatus: RequestStatus.loading,
           isLoadMore: event.isLoadMore,
+          brokerId: event.brokerId,
         ),
       );
       final res = await sl.get<ApiConsumer>().get(
@@ -59,7 +61,7 @@ class BrokerPropertiesBloc
             state.copyWith(
               loadingStatus: RequestStatus.success,
               brokerId: event.brokerId,
-              brokerName: r.response['broker']['fullName'] ?? '',
+              brokerName:r.response['broker']==null? r.response['user']['fullName'] ?? '' : r.response['broker']['fullName'] ?? '',
               brokerPropertiesCount: totalCount,
               brokerImageUrl: AppImages.building,
               properties: event.isLoadMore
@@ -72,6 +74,7 @@ class BrokerPropertiesBloc
         },
       );
     } catch (e) {
+      printState(e);
       emit(
         state.copyWith(
           loadingStatus: RequestStatus.failed,

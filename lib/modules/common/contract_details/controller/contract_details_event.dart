@@ -34,5 +34,14 @@ class ContractDetailsReject extends ContractDetailsEvent {
 }
 
 class ContractDetailsRenew extends ContractDetailsEvent {
-  const ContractDetailsRenew();
+  const ContractDetailsRenew({
+    required this.newEndDate,
+    required this.newPrice,
+  });
+
+  final String newEndDate;
+  final num newPrice;
+
+  @override
+  List<Object?> get props => [newEndDate, newPrice];
 }

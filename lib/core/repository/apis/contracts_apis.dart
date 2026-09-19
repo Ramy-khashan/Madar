@@ -114,11 +114,17 @@ class ContractsApis {
 
   static Future<Either<String, dynamic>> renew({
     required String contractId,
+    required String newEndDate,
+    required num newPrice,
   }) async {
     try {
       final response = await sl.get<ApiConsumer>().post(
         EndPoints.renewContract,
-        body: {'contractId': contractId},
+        body: {
+          'contractId': contractId,
+          'newEndDate': newEndDate,
+          'newPrice': newPrice,
+        },
       );
       return response.fold((failed) => Left(failed), (success) {
         printState('POST /contracts/renew: ${success.response}');

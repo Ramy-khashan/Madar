@@ -47,11 +47,6 @@ class FcmTokenService {
         onOpened?.call(_payloadMap(payload));
       };
 
-      await FirebaseMessaging.instance.requestPermission(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
       await FirebaseMessaging.instance
           .setForegroundNotificationPresentationOptions(
             alert: Platform.isIOS,

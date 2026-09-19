@@ -4,7 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/connection/concept/end_points.dart';
 import '../../../../../core/connection/interfaces/api_consumer.dart';
-import '../../../../../core/utils/constants/app_enums.dart' ;
+import '../../../../../core/utils/constants/app_enums.dart';
+import '../../../../../core/utils/functions/app_permissions.dart';
 import '../../../../../core/utils/functions/service_locator.dart';
 import '../../../business/real_estate_development/projects_list/model/realstate_projects_model.dart';
 part 'project_manager_home_event.dart';
@@ -24,6 +25,7 @@ class ProjectManagerHomeBloc
     Emitter<ProjectManagerHomeState> emit,
   ) async {
     try {
+      await AppPermissions.requestLocation();
       emit(state.copyWith(loadingStatus: RequestStatus.loading));
       final res = await sl.get<ApiConsumer>().get(EndPoints.realEstateProjects);
       await res.fold(

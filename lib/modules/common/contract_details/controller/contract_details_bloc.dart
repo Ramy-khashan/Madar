@@ -105,7 +105,11 @@ class ContractDetailsBloc
   ) async {
     await _runAction(
       emit,
-      () => ContractsApis.renew(contractId: _contractId),
+      () => ContractsApis.renew(
+        contractId: _contractId,
+        newEndDate: event.newEndDate,
+        newPrice: event.newPrice,
+      ),
       AppStrings.contractRenewedSuccess,
     );
   }

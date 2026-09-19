@@ -12,6 +12,7 @@ import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 import '../../../../../core/components/property_card_widget.dart';
 import '../../../../../core/utils/functions/router_handler.dart';
+import '../../chats/chat_navigator.dart';
 import '../controller/broker_properties_bloc.dart';
 import 'widgets/loading_grid_item.dart';
 
@@ -79,15 +80,21 @@ class BrokerPropertiesScreen extends StatelessWidget {
                           property: property,
                           footer: PropertyCardChatFooter(
                             onChat: () {
-                              RouterHandler.navigate(
+                              ChatNavigator.openPrivateChat(
                                 context,
-                                AppRouterKeys.conversationDetail,
-                                // extra: ConversationInfo(
-                                //   conversationId: property.id,
-                                //   participantName: property.title,
-                                //   participantAvatarUrl: property.imageUrl,
-                                // ),
+                                receiverId: state.brokerId,
+                                participantName: state.brokerName,
+                                participantAvatarUrl: '',
                               );
+                              // RouterHandler.navigate(
+                              //   context,
+                              //   AppRouterKeys.conversationDetail,
+                              //   // extra: ConversationInfo(
+                              //   //   conversationId: property.id,
+                              //   //   participantName: property.title,
+                              //   //   participantAvatarUrl: property.imageUrl,
+                              //   // ),
+                              // );
                             },
                           ),
                         );

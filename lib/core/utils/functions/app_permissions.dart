@@ -1,15 +1,20 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:geolocator/geolocator.dart';
 
-/// Requests the runtime permissions the app uses on launch.
+import 'notification_service.dart';
+
 class AppPermissions {
   AppPermissions._();
 
-  static Future<void> requestStartupPermissions() async {
-    await Future.wait([
-      _requestLocation(),
-      _requestNotifications(),
-    ]);
+  static Future<void>? _notificationsInFlight;
+  static Future<void>? _locationInFlight;
+
+  static Future<void> requestNotifications() {
+    return _notificationsInFlight ??= _requestNotifications();
+  }
+
+  static Future<void> requestLocation() {
+    return _locationInFlight ??= _requestLocation();
   }
 
   static Future<void> _requestLocation() async {
@@ -28,6 +33,7 @@ class AppPermissions {
         badge: true,
         sound: true,
       );
+      await NotificationService.instance.requestPermissions();
     } catch (_) {}
   }
 }

@@ -101,6 +101,9 @@ class AppStrings {
       'please_enter_contract_duration'.trans;
   static String get pleaseEnterContractPrice =>
       'please_enter_contract_price'.trans;
+  static String get newEndDate => 'new_end_date'.trans;
+  static String get newContractPrice => 'new_contract_price'.trans;
+  static String get pleaseEnterNewEndDate => 'please_enter_new_end_date'.trans;
   static String get contractApprovedSuccess =>
       'contract_approved_success'.trans;
   static String get contractRejectedSuccess =>

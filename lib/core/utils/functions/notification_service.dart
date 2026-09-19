@@ -22,9 +22,9 @@ class NotificationService {
     );
 
     const iosSettings = DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
+      requestAlertPermission: false,
+      requestBadgePermission: false,
+      requestSoundPermission: false,
     );
 
     const initSettings = InitializationSettings(
@@ -51,7 +51,9 @@ class NotificationService {
             importance: Importance.high,
           ),
         );
+  }
 
+  Future<void> requestPermissions() async {
     await _plugin
         .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin

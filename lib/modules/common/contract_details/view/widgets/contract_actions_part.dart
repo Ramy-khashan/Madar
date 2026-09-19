@@ -13,6 +13,7 @@ import '../../../../../core/utils/functions/responsive.dart';
 import '../../../../../core/utils/functions/router_handler.dart';
 import '../../controller/contract_details_bloc.dart';
 import 'approve_contract_dialog.dart';
+import 'renew_contract_dialog.dart';
 
 class ContractActionsPart extends StatelessWidget {
   const ContractActionsPart({super.key});
@@ -81,9 +82,7 @@ class ContractActionsPart extends StatelessWidget {
                         child: AppButton(
                           width: 560.width,
                           isLoading: loading,
-                          onTap: () => context.read<ContractDetailsBloc>().add(
-                            const ContractDetailsRenew(),
-                          ),
+                          onTap: () => _renew(context, state),
                           text: AppStrings.renewalContract,
                         ),
                       ),
@@ -135,6 +134,26 @@ class ContractActionsPart extends StatelessWidget {
       ContractDetailsApprove(
         durationInYears: result.durationInYears,
         finalPrice: result.finalPrice,
+      ),
+    );
+  }
+
+  Future<void> _renew(
+    BuildContext context,
+    ContractDetailsState state,
+  ) async {
+    final result = await showDialog<RenewContractResult>(
+      context: context,
+      builder: (_) => RenewContractDialog(
+        initialEndDate: state.contract?.endDate,
+        initialPrice: state.contract?.totalContractValue,
+      ),
+    );
+    if (result == null || !context.mounted) return;
+    context.read<ContractDetailsBloc>().add(
+      ContractDetailsRenew(
+        newEndDate: result.newEndDate,
+        newPrice: result.newPrice,
       ),
     );
   }

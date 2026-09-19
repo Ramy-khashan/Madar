@@ -8,6 +8,7 @@ import '../../../../core/utils/constants/app_constant.dart';
 import '../../../../core/utils/constants/app_enums.dart';
 import '../../../../core/utils/constants/storage_keys.dart';
 import '../../../../core/utils/functions/account_role.dart';
+import '../../../../core/utils/functions/app_permissions.dart';
 import '../../../../core/utils/functions/fcm_token_service.dart';
 import '../../../../core/utils/functions/handle_multi_callback.dart';
 import '../../../../core/utils/functions/preference_utils.dart';
@@ -21,6 +22,9 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     : super(SignInState(selectedRole: _initialBusinessRole())) {
     on<SignInActionEvent>(_signIn);
     on<SelectBusinessRoleEvent>(_onSelectRole);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AppPermissions.requestNotifications();
+    });
   }
 
   static SignInBloc get(BuildContext context) => BlocProvider.of(context);

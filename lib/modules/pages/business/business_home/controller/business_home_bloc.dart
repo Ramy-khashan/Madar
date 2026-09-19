@@ -11,6 +11,7 @@ import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_images.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/account_role.dart';
+import '../../../../../core/utils/functions/app_permissions.dart';
 import '../../../../../core/utils/functions/service_locator.dart';
 import '../../../individual/individual_home/model/properties_item_model.dart';
 import '../../../individual/individual_home/model/smart_service_model.dart';
@@ -228,6 +229,7 @@ class BusinessHomeBloc extends Bloc<BusinessHomeEvent, BusinessHomeState> {
     Emitter<BusinessHomeState> emit,
   ) async {
     try {
+      await AppPermissions.requestLocation();
       final bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
         emit(state.copyWith(location: ''));
