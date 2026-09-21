@@ -81,6 +81,24 @@ class MapLocationSelectedEvent extends AddPropertyEvent {
   List<Object?> get props => [latitude, longitude];
 }
 
+class SearchPlacesEvent extends AddPropertyEvent {
+  const SearchPlacesEvent(this.query);
+  final String query;
+  @override
+  List<Object?> get props => [query];
+}
+
+class SelectPlaceEvent extends AddPropertyEvent {
+  const SelectPlaceEvent(this.prediction);
+  final PlacePrediction prediction;
+  @override
+  List<Object?> get props => [prediction];
+}
+
+class ClearPlaceSuggestionsEvent extends AddPropertyEvent {
+  const ClearPlaceSuggestionsEvent();
+}
+
 class SelectDeedTypeEvent extends AddPropertyEvent {
   const SelectDeedTypeEvent(this.deedType);
   final String deedType;

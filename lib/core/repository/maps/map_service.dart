@@ -11,7 +11,7 @@ abstract class MapService {
     VoidCallback? onMapReady,
   });
 
-  void moveTo(PositionModel position);
+  void moveTo(PositionModel position, {double zoom = 16});
   Future<PositionModel?> getCurrentLocation();
   void zoomIn();
   void zoomOut();

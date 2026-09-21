@@ -89,6 +89,7 @@ class PropertiesMapView extends StatelessWidget {
                         PropertiesMapWidget(
                           cameraTarget: cameraTarget,
                           markers: markers,
+                          myLocationEnabled: state.isNearestToMe,
                           onTap: (latLng) => bloc.add(
                             MapTappedEvent(
                               latLng.latitude,

@@ -24,6 +24,8 @@ class AddPropertyState extends Equatable {
     this.aiDescription,
     this.parentCandidates = const [],
     this.parentCandidatesStatus = RequestStatus.init,
+    this.placePredictions = const [],
+    this.isSearchingPlaces = false,
   });
 
   final AddPropertyStep step;
@@ -44,6 +46,8 @@ class AddPropertyState extends Equatable {
   final String? aiDescription;
   final List<MyPropertiesModel> parentCandidates;
   final RequestStatus parentCandidatesStatus;
+  final List<PlacePrediction> placePredictions;
+  final bool isSearchingPlaces;
 
   /// Maps the current step to a 0-based indicator index (5 segments total).
   /// period shares index 0 with type (it's a sub-step of the type phase).
@@ -84,6 +88,8 @@ class AddPropertyState extends Equatable {
     String? aiDescription,
     List<MyPropertiesModel>? parentCandidates,
     RequestStatus? parentCandidatesStatus,
+    List<PlacePrediction>? placePredictions,
+    bool? isSearchingPlaces,
   }) {
     return AddPropertyState(
       step: step ?? this.step,
@@ -106,6 +112,8 @@ class AddPropertyState extends Equatable {
       parentCandidates: parentCandidates ?? this.parentCandidates,
       parentCandidatesStatus:
           parentCandidatesStatus ?? this.parentCandidatesStatus,
+      placePredictions: placePredictions ?? this.placePredictions,
+      isSearchingPlaces: isSearchingPlaces ?? this.isSearchingPlaces,
     );
   }
 
@@ -129,5 +137,7 @@ class AddPropertyState extends Equatable {
         aiDescription,
         parentCandidates,
         parentCandidatesStatus,
+        placePredictions,
+        isSearchingPlaces,
       ];
 }

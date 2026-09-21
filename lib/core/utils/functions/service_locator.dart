@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 
 import '../../../config/app_controller/app_controller_bloc.dart';
 import '../../../core/repository/maps/google_map_service.dart';
+import '../../../core/repository/maps/google_places_service.dart';
 import '../../../core/repository/maps/map_service.dart';
 import '../../connection/implementation/dio_consumer.dart';
 import '../../connection/interfaces/api_consumer.dart';
@@ -22,6 +23,7 @@ Future<void> intiService() async {
   sl.registerLazySingleton<AppControllerBloc>(() => AppControllerBloc());
   sl.registerLazySingleton<PreferenceUtils>(() => PreferenceUtils());
   sl.registerLazySingleton<MapService>(() => GoogleMapService());
+  sl.registerLazySingleton<GooglePlacesService>(() => GooglePlacesService());
   sl.registerLazySingleton<NotificationService>(
     () => NotificationService.instance,
   );

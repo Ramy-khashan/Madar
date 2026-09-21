@@ -278,6 +278,33 @@ class AppStrings {
   static String get termsS5Body => 'terms_s5_body'.trans;
   static String get termsS6Title => 'terms_s6_title'.trans;
   static String get termsS6Body => 'terms_s6_body'.trans;
+  static String get termsS7Title => 'terms_s7_title'.trans;
+  static String get termsS7Body => 'terms_s7_body'.trans;
+  static String get termsS8Title => 'terms_s8_title'.trans;
+  static String get termsS8Body => 'terms_s8_body'.trans;
+  static String get termsS9Title => 'terms_s9_title'.trans;
+  static String get termsS9Body => 'terms_s9_body'.trans;
+  static String get termsS10Title => 'terms_s10_title'.trans;
+  static String get termsS10Body => 'terms_s10_body'.trans;
+  static String get termsS11Title => 'terms_s11_title'.trans;
+  static String get termsS11Body => 'terms_s11_body'.trans;
+  static String get termsS12Title => 'terms_s12_title'.trans;
+  static String get termsS12Body => 'terms_s12_body'.trans;
+
+  static List<({String title, String body})> get termsSections => [
+    (title: termsS1Title, body: termsS1Body),
+    (title: termsS2Title, body: termsS2Body),
+    (title: termsS3Title, body: termsS3Body),
+    (title: termsS4Title, body: termsS4Body),
+    (title: termsS5Title, body: termsS5Body),
+    (title: termsS6Title, body: termsS6Body),
+    (title: termsS7Title, body: termsS7Body),
+    (title: termsS8Title, body: termsS8Body),
+    (title: termsS9Title, body: termsS9Body),
+    (title: termsS10Title, body: termsS10Body),
+    (title: termsS11Title, body: termsS11Body),
+    (title: termsS12Title, body: termsS12Body),
+  ];
   static String get helpAndSupport => 'help_and_support'.trans;
   static String get faqTitle => 'faq_title'.trans;
   static String get contactUsTitle => 'contact_us_title'.trans;

@@ -27,7 +27,7 @@ class BusinessHomeBloc extends Bloc<BusinessHomeEvent, BusinessHomeState> {
     on<BusinessHomeItemsEvent>((event, emit) {
       add(const BusinessPropertiesLoad());
       add(const PortfolioLoad());
-      if (AccountRole.isBroker) {
+      if (AccountRole.isBroker||AccountRole.isOwner) {
         add(const RequestsLoad());
       }
       add(const IndividualHomeLoadUserLocation());

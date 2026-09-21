@@ -226,7 +226,7 @@ class BusinessHomeScreen extends StatelessWidget {
                       ),
                     ),
 
-                    if (AccountRole.isBroker)
+                    if (AccountRole.isBroker||AccountRole.isOwner)
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: EdgeInsets.only(bottom: 20.height),

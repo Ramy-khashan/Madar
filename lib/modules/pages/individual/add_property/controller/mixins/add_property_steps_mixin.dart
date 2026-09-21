@@ -1,6 +1,7 @@
 part of '../add_property_bloc.dart';
 
 mixin AddPropertyStepsMixin on AddPropertyControllersMixin {
+  int _placesRequestId = 0;
   void _onNext(NextStepEvent event, Emitter<AddPropertyState> emit) {
     final model = modelWithControllerValues();
     final errors = _errorsForStep(state.step, model);
@@ -170,6 +171,8 @@ mixin AddPropertyStepsMixin on AddPropertyControllersMixin {
           latitude: event.latitude,
           longitude: event.longitude,
         ),
+        placePredictions: const [],
+        isSearchingPlaces: false,
       ),
     );
     try {
@@ -200,20 +203,128 @@ mixin AddPropertyStepsMixin on AddPropertyControllersMixin {
       final label = [line1, line2].where((s) => s.isNotEmpty).join('\n');
       buildingNumberController.text = house;
       streetController.text = road;
+      if (label.isNotEmpty) locationSearchController.text = label;
       emit(
         state.copyWith(
           model: state.model.copyWith(
-            location: label.isEmpty
-                ? state.model.location
-                : label,
+            location: label.isEmpty ? state.model.location : label,
             latitude: event.latitude,
             longitude: event.longitude,
             city: city,
             district: neighbourhood,
+            street: road,
+            buildingNumber: house,
           ),
         ),
       );
     } catch (_) {}
+  }
+
+  Future<void> _onSearchPlaces(
+    SearchPlacesEvent event,
+    Emitter<AddPropertyState> emit,
+  ) async {
+    final query = event.query.trim();
+    _placesRequestId++;
+    final requestId = _placesRequestId;
+    if (query.length < 2) {
+      emit(
+        state.copyWith(placePredictions: const [], isSearchingPlaces: false),
+      );
+      return;
+    }
+    emit(state.copyWith(isSearchingPlaces: true));
+    final places = sl.get<GooglePlacesService>();
+    final predictions = await places.searchPlaces(query);
+    if (isClosed || requestId != _placesRequestId) return;
+    emit(
+      state.copyWith(
+        placePredictions: predictions,
+        isSearchingPlaces: false,
+      ),
+    );
+
+    PlaceDetails? details;
+    if (predictions.isNotEmpty) {
+      details = await places.getPlaceLocation(predictions.first.placeId);
+    }
+    details ??= await places.geocodeQuery(query);
+    if (isClosed || requestId != _placesRequestId || details == null) return;
+    _applyPlaceDetails(details, emit, updateSearchText: false);
+  }
+
+  Future<void> _onSelectPlace(
+    SelectPlaceEvent event,
+    Emitter<AddPropertyState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        isSearchingPlaces: true,
+        placePredictions: const [],
+      ),
+    );
+    final details = await sl.get<GooglePlacesService>().getPlaceLocation(
+      event.prediction.placeId,
+    );
+    if (isClosed) return;
+    if (details == null) {
+      final fallback = await sl.get<GooglePlacesService>().geocodeQuery(
+        event.prediction.fullText,
+      );
+      if (isClosed) return;
+      if (fallback == null) {
+        emit(state.copyWith(isSearchingPlaces: false));
+        return;
+      }
+      _applyPlaceDetails(
+        fallback,
+        emit,
+        searchText: event.prediction.fullText,
+      );
+      return;
+    }
+    _applyPlaceDetails(details, emit, searchText: event.prediction.fullText);
+  }
+
+  void _onClearPlaceSuggestions(
+    ClearPlaceSuggestionsEvent event,
+    Emitter<AddPropertyState> emit,
+  ) {
+    if (state.placePredictions.isEmpty && !state.isSearchingPlaces) return;
+    emit(state.copyWith(placePredictions: const [], isSearchingPlaces: false));
+  }
+
+  void _applyPlaceDetails(
+    PlaceDetails details,
+    Emitter<AddPropertyState> emit, {
+    String? searchText,
+    bool updateSearchText = true,
+  }) {
+    if (updateSearchText) {
+      locationSearchController.text =
+          (searchText != null && searchText.trim().isNotEmpty)
+          ? searchText
+          : details.label;
+    }
+    final errors = Map<String, String>.from(state.fieldErrors)
+      ..remove(AddPropertyField.location);
+    emit(
+      state.copyWith(
+        model: state.model.copyWith(
+          location: details.label,
+          latitude: details.latitude,
+          longitude: details.longitude,
+        ),
+        fieldErrors: errors,
+        isSearchingPlaces: false,
+      ),
+    );
+    sl.get<MapService>().moveTo(
+      PositionModel(
+        latitude: details.latitude,
+        longitude: details.longitude,
+      ),
+    );
   }
 
   void _onSelectDeedType(

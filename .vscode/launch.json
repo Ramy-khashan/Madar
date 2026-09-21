@@ -8,19 +8,28 @@
         {
             "name": "madar_app",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "toolArgs": [
+                "--dart-define-from-file=maps.env"
+            ]
         },
         {
             "name": "madar_app (profile mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile"
+            "flutterMode": "profile",
+            "toolArgs": [
+                "--dart-define-from-file=maps.env"
+            ]
         },
         {
             "name": "madar_app (release mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release"
+            "flutterMode": "release",
+            "toolArgs": [
+                "--dart-define-from-file=maps.env"
+            ]
         }
     ]
 }

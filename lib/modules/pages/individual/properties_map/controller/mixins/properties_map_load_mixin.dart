@@ -93,44 +93,56 @@ mixin PropertiesMapLoadMixin on Bloc<PropertiesMapEvent, PropertiesMapState> {
     ToggleNearestToMeEvent event,
     Emitter<PropertiesMapState> emit,
   ) async {
-    emit(state.copyWith(isNearestToMe: event.value));
-
     if (!event.value) {
-      emit(state.copyWith(clearPickedPosition: true));
+      emit(state.copyWith(isNearestToMe: false, clearPickedPosition: true));
       add(LoadPropertiesMapEvent(position: initialPosition));
       return;
     }
 
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    if (permission == LocationPermission.denied) {
+      emit(state.copyWith(isNearestToMe: false));
+      AppToast(AppStrings.locationPermissionDenied, isError: true);
+      return;
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      emit(state.copyWith(isNearestToMe: false));
+      AppToast(AppStrings.locationPermissionDenied, isError: true);
+      await Geolocator.openAppSettings();
+      return;
+    }
+
+    final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      emit(state.copyWith(isNearestToMe: false));
+      AppToast(AppStrings.locationServiceDisabled, isError: true);
+      await Geolocator.openLocationSettings();
+      return;
+    }
+
     try {
-      final bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        emit(state.copyWith(isNearestToMe: false));
-        AppToast(AppStrings.locationServiceDisabled, isError: true);
-        return;
-      }
-
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-      }
-      if (permission == LocationPermission.denied ||
-          permission == LocationPermission.deniedForever) {
-        emit(state.copyWith(isNearestToMe: false));
-        AppToast(AppStrings.locationPermissionDenied, isError: true);
-        return;
-      }
-
       final position = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.high,
         ),
       );
-
       final userPosition = PositionModel(
         latitude: position.latitude,
         longitude: position.longitude,
       );
-      emit(state.copyWith(pickedPosition: userPosition, selectedIndex: -1));
+      cameraPosition = userPosition;
+      emit(
+        state.copyWith(
+          isNearestToMe: true,
+          pickedPosition: userPosition,
+          selectedIndex: -1,
+        ),
+      );
       add(LoadPropertiesMapEvent(position: userPosition));
     } catch (e) {
       emit(state.copyWith(isNearestToMe: false));

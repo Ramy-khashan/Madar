@@ -7,8 +7,8 @@ import 'map_service.dart';
 class GoogleMapService implements MapService {
   gmap.GoogleMapController? _controller;
   static const gmap.CameraPosition _defaultCameraPosition = gmap.CameraPosition(
-    target: gmap.LatLng(30.0444, 31.2357),
-    zoom: 15,
+    target: gmap.LatLng(24.7136, 46.6753),
+    zoom: 12,
   );
 
   @override
@@ -25,6 +25,11 @@ class GoogleMapService implements MapService {
           : _defaultCameraPosition,
       onMapCreated: (controller) {
         _controller = controller;
+        if (initialPosition != null) {
+          controller.animateCamera(
+            gmap.CameraUpdate.newLatLngZoom(initialPosition.position, 16),
+          );
+        }
         onMapReady?.call();
       },
       onTap: (position) => onTap(
@@ -41,10 +46,12 @@ class GoogleMapService implements MapService {
   }
 
   @override
-  void moveTo(PositionModel position) {
+  void moveTo(PositionModel position, {double zoom = 16}) {
     final controller = _controller;
     if (controller == null) return;
-    controller.animateCamera(gmap.CameraUpdate.newLatLng(position.position));
+    controller.animateCamera(
+      gmap.CameraUpdate.newLatLngZoom(position.position, zoom),
+    );
   }
 
   @override

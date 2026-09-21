@@ -3,6 +3,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../core/model/google_map_model.dart';
+import '../../../../../core/model/google_place_model.dart';
+import '../../../../../core/repository/maps/google_places_service.dart';
+import '../../../../../core/repository/maps/map_service.dart';
 import '../../../../../core/utils/functions/service_locator.dart';
 
 import '../../../../../core/repository/apis/create_property_apis.dart';
@@ -76,6 +80,9 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState>
     on<ConfirmSaveEvent>(_onConfirmSave);
     on<SendToBrokerEvent>(_onSendToBroker);
     on<MapLocationSelectedEvent>(_onMapLocationSelected);
+    on<SearchPlacesEvent>(_onSearchPlaces);
+    on<SelectPlaceEvent>(_onSelectPlace);
+    on<ClearPlaceSuggestionsEvent>(_onClearPlaceSuggestions);
   }
 
   // ── Static data ──────────────────────────────────────────────────────────

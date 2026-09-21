@@ -12,6 +12,7 @@ import '../../controller/add_property_bloc.dart';
 import '../../model/add_property_validator.dart';
 import '../widgets/add_property_location_card.dart';
 import '../widgets/add_property_location_map.dart';
+import '../widgets/add_property_places_search_field.dart';
 import '../widgets/add_property_section_label.dart';
 import '../widgets/add_property_step_buttons.dart';
 import '../widgets/date_type_toggle.dart';
@@ -48,12 +49,7 @@ class AddPropertyStep3Screen extends StatelessWidget {
                   ),
                 ),
                 12.height.toSizedBox,
-                AppTextField(
-                  controller: bloc.locationSearchController,
-                  hint: AppStrings.searchNeighborhoodHint,
-                  prefixImage: AppImages.searchIcon,
-                  onChanged: (v) => bloc.add(UpdateLocationEvent(v)),
-                ),
+                const AddPropertyPlacesSearchField(),
                 16.height.toSizedBox,
                 const AddPropertyLocationMap(),
                 const FieldErrorText(AddPropertyField.location),
