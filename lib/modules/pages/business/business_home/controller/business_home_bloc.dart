@@ -195,6 +195,30 @@ class BusinessHomeBloc extends Bloc<BusinessHomeEvent, BusinessHomeState> {
   ) async {
     try {
       emit(state.copyWith(requestsLoadStatus: RequestStatus.loading));
+      if (AccountRole.isOwner) {
+        final result = await BusinessPropertiesApis.fetchPublished();
+        result.fold(
+          (failedResponse) {
+            emit(
+              state.copyWith(
+                requestsLoadStatus: RequestStatus.failed,
+                requestsErrorMessage: failedResponse,
+              ),
+            );
+          },
+          (items) {
+            emit(
+              state.copyWith(
+                requestsLoadStatus: RequestStatus.success,
+                requests: items
+                    .map(BusinessPropertyRequestModel.fromPublished)
+                    .toList(),
+              ),
+            );
+          },
+        );
+        return;
+      }
       final result = await BusinessPropertiesApis.fetchRequests();
       result.fold(
         (failedResponse) {

@@ -61,7 +61,14 @@ class BrokerPropertiesBloc
             state.copyWith(
               loadingStatus: RequestStatus.success,
               brokerId: event.brokerId,
-              brokerName:r.response['broker']==null? r.response['user']['fullName'] ?? '' : r.response['broker']['fullName'] ?? '',
+              isBroker: r.response['broker'] == null
+                  ? r.response['user']['role'] == null
+                        ? false
+                        : r.response['user']['role'] == 'broker'
+                  : true,
+              brokerName: r.response['broker'] == null
+                  ? r.response['user']['fullName'] ?? ''
+                  : r.response['broker']['fullName'] ?? '',
               brokerPropertiesCount: totalCount,
               brokerImageUrl: AppImages.building,
               properties: event.isLoadMore

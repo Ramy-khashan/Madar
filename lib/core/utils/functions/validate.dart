@@ -137,6 +137,24 @@ class Validate {
     return null;
   }
 
+  static const int licenseNumberLength = 10;
+
+  static final List<TextInputFormatter> licenseNumberFormatters = [
+    FilteringTextInputFormatter.digitsOnly,
+    LengthLimitingTextInputFormatter(licenseNumberLength),
+  ];
+
+  static bool isLicenseNumber(String val) {
+    return RegExp(r'^\d{10}$').hasMatch(val.trim());
+  }
+
+  static String? licenseNumber(String? val, String errorMessage) {
+    if (!isLicenseNumber(val ?? '')) {
+      return errorMessage;
+    }
+    return null;
+  }
+
   static String? notEmptyPinCode(String val) {
     if (val.isEmpty) {
       return 'empty'.trans;

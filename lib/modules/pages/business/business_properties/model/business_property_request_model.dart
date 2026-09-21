@@ -45,6 +45,22 @@ class BusinessPropertyRequestModel {
     return '$y-$m-$d';
   }
 
+  factory BusinessPropertyRequestModel.fromPublished(
+    BusinessRequestPublishedPropertyModel item,
+  ) {
+    return BusinessPropertyRequestModel(
+      requestId: item.id,
+      propertyId: item.propertyId,
+      title: item.title,
+      owner: item.applicant.name,
+      status: item.status,
+      createdAt: item.requestDate,
+      image: item.imageUrl,
+      location: item.location,
+      adLicenseNumber: item.adLicenseNumber,
+    );
+  }
+
   factory BusinessPropertyRequestModel.fromJson(Map<String, dynamic> json) {
     final property = _asMap(json['property'] ?? json['listing']);
     final ownerRaw = json['owner'] ?? json['user'] ?? json['individual'];

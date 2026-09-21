@@ -51,6 +51,7 @@ class MarkerInfoCard extends StatelessWidget {
               width: context.isMobilePortrait
                   ? context.screenWidth * 0.91
                   : context.screenWidth * 0.4,
+                  height: 150.height,
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
                 color: colors.cardBackground,
@@ -70,8 +71,9 @@ class MarkerInfoCard extends StatelessWidget {
                   ImageItem(
                     _imageUrl,
                     width: 120.width,
-                    height: 140.height,
+                    height: 170.height,
                     fit: BoxFit.cover,
+                    
                   ),
                   Expanded(
                     child: Padding(
@@ -93,7 +95,7 @@ class MarkerInfoCard extends StatelessWidget {
                                     fontFamily: AppConstant.appHeaderFont,
                                     color: colors.textFieldTitle,
                                   ),
-                                  maxLines: 2,
+                                  maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -164,9 +166,12 @@ class MarkerInfoCard extends StatelessWidget {
                           SizedBox(height: 10.height),
                           // Price
                           Text.rich(
+                               maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                             TextSpan(
                               text: formatPrice(
                                 double.parse((property?.price ?? 0).toString()),
+                                
                               ),
                               style: TextStyle(
                                 fontSize: context.responsiveFontScale(18),
@@ -174,9 +179,11 @@ class MarkerInfoCard extends StatelessWidget {
                                 color: colors.textFieldTitle,
                                 fontFamily: AppConstant.appHeaderFont,
                               ),
+                              
                               children: [
                                 TextSpan(
                                   text: ' ${AppStrings.currency}',
+                                  
                                   style: TextStyle(
                                     fontSize: context.responsiveFontScale(14),
                                     fontWeight: FontWeight.w500,

@@ -121,8 +121,14 @@ class SignInScreen extends StatelessWidget {
                                     controller: SignInBloc.get(
                                       context,
                                     ).falLicenseController,
-                                    validator: (val) =>
-                                        Validate.notEmpty(val ?? ''),
+                                    textInputType: TextInputType.number,
+                                    maxLength: Validate.licenseNumberLength,
+                                    inputFormatters:
+                                        Validate.licenseNumberFormatters,
+                                    validator: (val) => Validate.licenseNumber(
+                                      val,
+                                      AppStrings.falNumberMustBe10Digits,
+                                    ),
                                   )
                                 else
                                   PhoneNumberField(

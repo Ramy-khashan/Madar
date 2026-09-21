@@ -787,6 +787,8 @@
   "accept_request_message": "هل أنت متأكد من قبول هذا الطلب؟ سيتم نقل العقار إلى قائمة ملفاتك العقارية",
   "accept_incoming_request_message": "هل أنت متأكد من قبول هذا الطلب؟",
   "please_enter_ad_license": "يرجى إدخال رقم ترخيص الإعلان",
+  "ad_license_must_be_10_digits": "رقم ترخيص الإعلان يجب أن يكون 10 أرقام بالضبط",
+  "fal_number_must_be_10_digits": "رقم فال يجب أن يكون 10 أرقام بالضبط",
   "ACCEPTED": "مقبول",
   "PUBLISHED": "منشور",
   "days_label": "أيام",

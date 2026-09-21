@@ -6,6 +6,7 @@ import '../../../../../core/repository/apis/business_properties_apis.dart';
 import '../../../../../core/repository/apis/contracts_apis.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../core/utils/functions/account_role.dart';
 import '../model/business_property_request_model.dart';
 
 part 'business_properties_event.dart';
@@ -31,35 +32,40 @@ class BusinessPropertiesBloc
     BusinessPropertiesLoad event,
     Emitter<BusinessPropertiesState> emit,
   ) async {
+    final isOwner = AccountRole.isOwner;
     emit(
       state.copyWith(
-        requestsStatus: RequestStatus.loading,
+        currentTab: isOwner ? 1 : state.currentTab,
+        requestsStatus: isOwner
+            ? RequestStatus.success
+            : RequestStatus.loading,
         publishedStatus: RequestStatus.loading,
+        requests: isOwner ? const [] : state.requests,
+        requestsErrorMessage: isOwner ? '' : state.requestsErrorMessage,
       ),
     );
 
-    final requestsFuture = BusinessPropertiesApis.fetchRequests();
-    final publishedFuture = BusinessPropertiesApis.fetchPublished();
-
-    final requestsResult = await requestsFuture;
-    requestsResult.fold(
-      (err) => emit(
-        state.copyWith(
-          requestsStatus: RequestStatus.failed,
-          requestsErrorMessage: err,
-          requests: const [],
+    if (!isOwner) {
+      final requestsResult = await BusinessPropertiesApis.fetchRequests();
+      requestsResult.fold(
+        (err) => emit(
+          state.copyWith(
+            requestsStatus: RequestStatus.failed,
+            requestsErrorMessage: err,
+            requests: const [],
+          ),
         ),
-      ),
-      (items) => emit(
-        state.copyWith(
-          requestsStatus: RequestStatus.success,
-          requests: items.where((e) => e.isPending).toList(),
-          requestsErrorMessage: '',
+        (items) => emit(
+          state.copyWith(
+            requestsStatus: RequestStatus.success,
+            requests: items.where((e) => e.isPending).toList(),
+            requestsErrorMessage: '',
+          ),
         ),
-      ),
-    );
+      );
+    }
 
-    final publishedResult = await publishedFuture;
+    final publishedResult = await BusinessPropertiesApis.fetchPublished();
     publishedResult.fold(
       (err) => emit(
         state.copyWith(

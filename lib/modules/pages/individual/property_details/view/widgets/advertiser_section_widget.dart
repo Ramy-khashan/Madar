@@ -145,14 +145,13 @@ class AdvertiserSectionWidget extends StatelessWidget {
               ],
               SizedBox(height: 16.height),
               AppButton(
-                text:
-                    '${AppStrings.viewOwnerProperties} (${advertiser?.propertiesCount ?? 0})',
+                text: AppStrings.viewOwnerProperties,
+                // '${AppStrings.viewOwnerProperties} (${advertiser?.propertiesCount ?? 0})',
                 onTap: () {
                   RouterHandler.navigate(
                     context,
                     AppRouterKeys.brokerProperties,
-                    extra:advertiser?.userId,
-
+                    extra: advertiser?.userId,
                   );
                 },
                 textSize: context.responsiveFontScale(14),
@@ -184,10 +183,7 @@ class _LicenseRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        vertical: 13.height,
-        horizontal: 8.width,
-      ),
+      padding: EdgeInsets.symmetric(vertical: 13.height, horizontal: 8.width),
       decoration: BoxDecoration(
         color: colors.primaryBrand.withValues(alpha: .08),
         borderRadius: BorderRadius.circular(24),

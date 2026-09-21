@@ -6,6 +6,7 @@ import '../../../../../../core/components/app_textfield.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../core/utils/functions/validate.dart';
 
 class OwnerPublishLicenses {
   const OwnerPublishLicenses({
@@ -55,12 +56,12 @@ class _OwnerPublishLicenseSheetState extends State<OwnerPublishLicenseSheet> {
   void _submit() {
     final adLicense = _adLicenseController.text.trim();
     final falLicense = _falLicenseController.text.trim();
-    if (adLicense.isEmpty) {
-      AppToast(AppStrings.pleaseEnterAdLicense, isError: true);
+    if (!Validate.isLicenseNumber(adLicense)) {
+      AppToast(AppStrings.adLicenseMustBe10Digits, isError: true);
       return;
     }
-    if (falLicense.isEmpty) {
-      AppToast(AppStrings.pleaseEnterFalLicense, isError: true);
+    if (!Validate.isLicenseNumber(falLicense)) {
+      AppToast(AppStrings.falNumberMustBe10Digits, isError: true);
       return;
     }
     Navigator.of(context).pop(
@@ -98,12 +99,18 @@ class _OwnerPublishLicenseSheetState extends State<OwnerPublishLicenseSheet> {
               title: AppStrings.adLicenseLabel,
               hint: AppStrings.adLicenseHint,
               controller: _adLicenseController,
+              textInputType: TextInputType.number,
+              maxLength: Validate.licenseNumberLength,
+              inputFormatters: Validate.licenseNumberFormatters,
             ),
             AppTextField(
               isWithTitle: true,
               title: AppStrings.falLicenseLabel,
               hint: AppStrings.falLicenseHint,
               controller: _falLicenseController,
+              textInputType: TextInputType.number,
+              maxLength: Validate.licenseNumberLength,
+              inputFormatters: Validate.licenseNumberFormatters,
               textInputAction: TextInputAction.done,
               onSubmitted: (_) => _submit(),
             ),

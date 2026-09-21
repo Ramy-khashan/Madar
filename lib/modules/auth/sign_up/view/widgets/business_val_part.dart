@@ -28,10 +28,15 @@ class BusinessValPart extends StatelessWidget {
         AppTextField(
           title: AppStrings.valLicenseNumber,
           hint: AppStrings.enterValLicenseNumber,
-          textInputType: TextInputType.text,
+          textInputType: TextInputType.number,
           isWithTitle: true,
           controller: bloc.falLicenseController,
-          validator: (value) => Validate.notEmpty(value ?? ''),
+          maxLength: Validate.licenseNumberLength,
+          inputFormatters: Validate.licenseNumberFormatters,
+          validator: (value) => Validate.licenseNumber(
+            value,
+            AppStrings.falNumberMustBe10Digits,
+          ),
         ),
         SizedBox(height: 12.height),
         Text(

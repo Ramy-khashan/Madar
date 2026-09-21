@@ -8,6 +8,7 @@ import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
+import '../../../../../../core/utils/functions/validate.dart';
 
 class AcceptRequestDialog extends StatefulWidget {
   const AcceptRequestDialog({
@@ -43,14 +44,14 @@ class _AcceptRequestDialogState extends State<AcceptRequestDialog> {
   void _confirm() {
     if (widget.requireLicense) {
       final license = _licenseController.text.trim();
-      if (license.isEmpty) {
-        AppToast(AppStrings.pleaseEnterAdLicense, isError: true);
+      if (!Validate.isLicenseNumber(license)) {
+        AppToast(AppStrings.adLicenseMustBe10Digits, isError: true);
         return;
       }
-   RouterHandler.pop(context,license);
+      RouterHandler.pop(context, license);
       return;
     }
-   RouterHandler.pop(context,'');
+    RouterHandler.pop(context, '');
   }
 
   @override
@@ -97,7 +98,9 @@ class _AcceptRequestDialogState extends State<AcceptRequestDialog> {
                 title: AppStrings.adLicenseLabel,
                 hint: AppStrings.adLicenseLabel,
                 controller: _licenseController,
-                textInputType: TextInputType.text,
+                textInputType: TextInputType.number,
+                maxLength: Validate.licenseNumberLength,
+                inputFormatters: Validate.licenseNumberFormatters,
               ),
             ],
             SizedBox(height: 16.height),

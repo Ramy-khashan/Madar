@@ -7,6 +7,7 @@ class BrokerPropertiesState extends Equatable {
     this.brokerPropertiesCount = 0,
     this.errorMsg = '',
     this.brokerId = '',
+    this.isBroker = false,
     this.loadingStatus = RequestStatus.init,
     this.properties = const [],
     this.isLoadMore = false,
@@ -17,6 +18,7 @@ class BrokerPropertiesState extends Equatable {
   final RequestStatus loadingStatus;
   final List<PropertiesItemModel> properties;
   final String brokerName;
+  final bool isBroker;
   final int brokerPropertiesCount;
   final String brokerImageUrl;
   final bool isLoadMore;
@@ -32,6 +34,7 @@ class BrokerPropertiesState extends Equatable {
     brokerImageUrl,
     isLoadMore,
     totalCount,
+    isBroker
   ];
   BrokerPropertiesState copyWith({
     String? errorMsg,
@@ -42,6 +45,7 @@ class BrokerPropertiesState extends Equatable {
     int? brokerPropertiesCount,
     String? brokerImageUrl,
     bool? isLoadMore,
+    bool? isBroker,
     int? totalCount,
   }) {
     return BrokerPropertiesState(
@@ -50,6 +54,7 @@ class BrokerPropertiesState extends Equatable {
       loadingStatus: loadingStatus ?? this.loadingStatus,
       properties: properties ?? this.properties,
       brokerName: brokerName ?? this.brokerName,
+      isBroker: isBroker ?? this.isBroker,
       brokerPropertiesCount:
           brokerPropertiesCount ?? this.brokerPropertiesCount,
       brokerImageUrl: brokerImageUrl ?? this.brokerImageUrl,

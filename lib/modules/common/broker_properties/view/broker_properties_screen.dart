@@ -21,18 +21,18 @@ class BrokerPropertiesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppAppbar(title: AppStrings.brokerPropertiesTitle),
-      body: SafeArea(
-        child: BlocBuilder<BrokerPropertiesBloc, BrokerPropertiesState>(
-          builder: (context, state) {
-            return Column(
+    return BlocBuilder<BrokerPropertiesBloc, BrokerPropertiesState>(
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppAppbar(title:state.loadingStatus==RequestStatus.loading ? '' : state.isBroker ? AppStrings.brokerPropertiesTitle : AppStrings.ownerPropertiesTitle),
+          body: SafeArea(
+            child: Column(
               children: [
                 UserInfoHeaderWidget(
                   name: state.brokerName,
                   propertiesCount: state.brokerPropertiesCount,
                   imageUrl: state.brokerImageUrl,
-                  isBroker: true,
+                  isBroker: state.isBroker,
                 ),
                 Expanded(
                   child: LoadingProcess(
@@ -103,10 +103,10 @@ class BrokerPropertiesScreen extends StatelessWidget {
                   ),
                 ),
               ],
-            );
-          },
-        ),
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

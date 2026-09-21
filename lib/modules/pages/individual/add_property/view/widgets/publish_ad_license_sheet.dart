@@ -6,6 +6,7 @@ import '../../../../../../core/components/app_textfield.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../core/utils/functions/validate.dart';
 
 class PublishAdLicenseSheet extends StatefulWidget {
   const PublishAdLicenseSheet({super.key});
@@ -40,8 +41,8 @@ class _PublishAdLicenseSheetState extends State<PublishAdLicenseSheet> {
 
   void _submit() {
     final license = _licenseController.text.trim();
-    if (license.isEmpty) {
-      AppToast(AppStrings.pleaseEnterAdLicense, isError: true);
+    if (!Validate.isLicenseNumber(license)) {
+      AppToast(AppStrings.adLicenseMustBe10Digits, isError: true);
       return;
     }
     Navigator.of(context).pop(license);
@@ -74,6 +75,9 @@ class _PublishAdLicenseSheetState extends State<PublishAdLicenseSheet> {
               title: AppStrings.adLicenseLabel,
               hint: AppStrings.adLicenseHint,
               controller: _licenseController,
+              textInputType: TextInputType.number,
+              maxLength: Validate.licenseNumberLength,
+              inputFormatters: Validate.licenseNumberFormatters,
               textInputAction: TextInputAction.done,
               onSubmitted: (_) => _submit(),
             ),

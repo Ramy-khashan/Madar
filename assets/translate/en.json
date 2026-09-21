@@ -761,6 +761,8 @@
   "accept_request_message": "Are you sure you want to accept this request? The property will be moved to your property files list.",
   "accept_incoming_request_message": "Are you sure you want to accept this request?",
   "please_enter_ad_license": "Please enter the ad license number",
+  "ad_license_must_be_10_digits": "Ad license number must be exactly 10 digits",
+  "fal_number_must_be_10_digits": "Fal number must be exactly 10 digits",
   "ACCEPTED": "Accepted",
   "PUBLISHED": "Published",
   "days_label": "Days",

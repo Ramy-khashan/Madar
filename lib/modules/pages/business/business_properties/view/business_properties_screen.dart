@@ -6,6 +6,7 @@ import '../../../../../core/components/app_appbar.dart';
 import '../../../../../core/components/loading_process.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../core/utils/functions/account_role.dart';
 import '../../../../../core/utils/functions/common_fun.dart';
 import '../../../individual/rent_installment/view/widgets/service_tab_toggle_widget.dart';
 import '../controller/business_properties_bloc.dart';
@@ -34,23 +35,25 @@ class BusinessPropertiesScreen extends StatelessWidget {
           }
         },
         builder: (context, state) {
+          final isOwner = AccountRole.isOwner;
           return SafeArea(
             child: Column(
               children: [
-                ServiceTabToggleWidget(
-                  labels: [
-                    AppStrings.businessPropertiesRequestsTab,
-                    AppStrings.businessPropertiesPublishedTab,
-                  ],
-                  selectedIndex: state.currentTab,
-                  onTabChanged: (i) => context
-                      .read<BusinessPropertiesBloc>()
-                      .add(BusinessPropertiesTabChanged(i)),
-                ),
+                if (!isOwner)
+                  ServiceTabToggleWidget(
+                    labels: [
+                      AppStrings.businessPropertiesRequestsTab,
+                      AppStrings.businessPropertiesPublishedTab,
+                    ],
+                    selectedIndex: state.currentTab,
+                    onTabChanged: (i) => context
+                        .read<BusinessPropertiesBloc>()
+                        .add(BusinessPropertiesTabChanged(i)),
+                  ),
                 Expanded(
                   child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 250),
-                    child: state.currentTab == 0
+                    child: !isOwner && state.currentTab == 0
                         ? LoadingProcess(
                             key: const ValueKey('requests'),
                             status: state.requestsStatus,
@@ -71,7 +74,6 @@ class BusinessPropertiesScreen extends StatelessWidget {
                                         owner: 'Owner',
                                         status: 'PENDING',
                                         location: 'Unknown Location',
-                                     
                                       ),
                                     )
                                   : state.requests,

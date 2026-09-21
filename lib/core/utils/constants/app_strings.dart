@@ -1088,6 +1088,10 @@ class AppStrings {
   static String get acceptIncomingRequestMessage =>
       'accept_incoming_request_message'.trans;
   static String get pleaseEnterAdLicense => 'please_enter_ad_license'.trans;
+  static String get adLicenseMustBe10Digits =>
+      'ad_license_must_be_10_digits'.trans;
+  static String get falNumberMustBe10Digits =>
+      'fal_number_must_be_10_digits'.trans;
 
   // Real Estate Development
   static String get addCommercialProjectTitle =>
