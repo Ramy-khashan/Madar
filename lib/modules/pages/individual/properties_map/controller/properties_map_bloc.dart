@@ -33,6 +33,7 @@ class PropertiesMapBloc extends Bloc<PropertiesMapEvent, PropertiesMapState>
     on<MapFilterApplied>(_onFilterApplied);
     on<MapSearchChanged>(_onSearchChanged);
     on<MapCameraMoved>(_onCameraMoved);
+    on<MapCameraIdle>(_onCameraIdle);
     on<MapTappedEvent>(_onMapTapped);
 
     add(LoadPropertiesMapEvent(position: initialPosition));
@@ -41,6 +42,9 @@ class PropertiesMapBloc extends Bloc<PropertiesMapEvent, PropertiesMapState>
   @override
   final PositionModel? initialPosition;
   Timer? _searchDebounce;
+  bool _pendingIdleFetch = false;
+
+  static const double _backendRadiusMeters = 10000;
 
   @override
   PositionModel? cameraPosition;
@@ -163,6 +167,48 @@ class PropertiesMapBloc extends Bloc<PropertiesMapEvent, PropertiesMapState>
       latitude: event.latitude,
       longitude: event.longitude,
     );
+  }
+
+  void _onCameraIdle(
+    MapCameraIdle event,
+    Emitter<PropertiesMapState> emit,
+  ) {
+    _fetchIfCameraLeftRadius();
+  }
+
+  @override
+  void onPropertiesFetchCompleted() {
+    if (_pendingIdleFetch) {
+      _fetchIfCameraLeftRadius();
+    }
+  }
+
+  void _fetchIfCameraLeftRadius() {
+    if (!_isCameraOutsideFetchRadius()) {
+      _pendingIdleFetch = false;
+      return;
+    }
+    if (state.status == RequestStatus.loading) {
+      _pendingIdleFetch = true;
+      return;
+    }
+    _pendingIdleFetch = false;
+    final position = cameraPosition;
+    if (position == null) return;
+    add(LoadPropertiesMapEvent(position: position));
+  }
+
+  bool _isCameraOutsideFetchRadius() {
+    final camera = cameraPosition;
+    if (camera == null) return false;
+    final lastFetch = state.mapCenter ?? initialPosition ?? _defaultPosition;
+    final meters = Geolocator.distanceBetween(
+      lastFetch.position.latitude,
+      lastFetch.position.longitude,
+      camera.position.latitude,
+      camera.position.longitude,
+    );
+    return meters >= _backendRadiusMeters;
   }
 
   @override

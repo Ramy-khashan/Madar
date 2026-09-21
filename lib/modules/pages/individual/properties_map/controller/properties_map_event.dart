@@ -66,6 +66,10 @@ final class MapCameraMoved extends PropertiesMapEvent {
   List<Object?> get props => [latitude, longitude];
 }
 
+final class MapCameraIdle extends PropertiesMapEvent {
+  const MapCameraIdle();
+}
+
 /// Drops a red pin on an empty map tap. Ignored when the tap is a property.
 final class MapTappedEvent extends PropertiesMapEvent {
   const MapTappedEvent(this.latitude, this.longitude);

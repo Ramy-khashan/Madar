@@ -104,6 +104,8 @@ class PropertiesMapView extends StatelessWidget {
                               ),
                             );
                           },
+                          onCameraIdle: () =>
+                              bloc.add(const MapCameraIdle()),
                         ),
                         if (state.status == RequestStatus.loading)
                           const Positioned.fill(

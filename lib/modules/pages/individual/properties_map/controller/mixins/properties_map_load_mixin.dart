@@ -5,22 +5,17 @@ mixin PropertiesMapLoadMixin on Bloc<PropertiesMapEvent, PropertiesMapState> {
   PositionModel? get cameraPosition;
   set cameraPosition(PositionModel? value);
   PositionModel get queryPosition;
+  void onPropertiesFetchCompleted();
 
   Future<void> onLoadProperties(
     LoadPropertiesMapEvent event,
     Emitter<PropertiesMapState> emit,
   ) async {
     try {
-      emit(
-        state.copyWith(
-          status: RequestStatus.loading,
-          properties: const [],
-          selectedIndex: -1,
-        ),
-      );
+      emit(state.copyWith(status: RequestStatus.loading));
 
       final position = event.position ?? queryPosition;
-      final List<PropertyDetailsModel> allProperties = [];
+      final List<PropertyDetailsModel> fetchedProperties = [];
 
       int page = 1;
       bool hasNext = true;
@@ -42,7 +37,7 @@ mixin PropertiesMapLoadMixin on Bloc<PropertiesMapEvent, PropertiesMapState> {
             final result = PropertiesMapResponseModel.fromJson(
               successResponse.response,
             );
-            allProperties.addAll(result.properties);
+            fetchedProperties.addAll(result.properties);
             final pagination = result.pagination;
             final currentPage = pagination?.page ?? page;
             hasNext =
@@ -62,23 +57,27 @@ mixin PropertiesMapLoadMixin on Bloc<PropertiesMapEvent, PropertiesMapState> {
         return;
       }
 
+      final merged = _mergePropertiesById(state.properties, fetchedProperties);
       final picked = state.pickedPosition;
       final nearPropertyIndex = picked == null
           ? null
           : propertyIndexNear(
               picked.position.latitude,
               picked.position.longitude,
-              properties: allProperties,
+              properties: merged,
             );
+      final keepSelected = state.selectedIndex >= 0 &&
+          state.selectedIndex < merged.length;
       emit(
         state.copyWith(
           status: RequestStatus.success,
-          properties: allProperties,
+          properties: merged,
           mapCenter: position,
-          selectedIndex: nearPropertyIndex ?? -1,
+          selectedIndex: nearPropertyIndex ?? (keepSelected ? state.selectedIndex : -1),
           clearPickedPosition: nearPropertyIndex != null,
         ),
       );
+      onPropertiesFetchCompleted();
     } catch (e) {
       emit(
         state.copyWith(
@@ -148,6 +147,31 @@ mixin PropertiesMapLoadMixin on Bloc<PropertiesMapEvent, PropertiesMapState> {
       emit(state.copyWith(isNearestToMe: false));
       AppToast(AppStrings.somethingWentWrong, isError: true);
     }
+  }
+
+  List<PropertyDetailsModel> _mergePropertiesById(
+    List<PropertyDetailsModel> existing,
+    List<PropertyDetailsModel> incoming,
+  ) {
+    final merged = List<PropertyDetailsModel>.from(existing);
+    final existingIds = <String>{
+      for (final property in merged)
+        if (_propertyId(property) != null) _propertyId(property)!,
+    };
+
+    for (final property in incoming) {
+      final id = _propertyId(property);
+      if (id == null || existingIds.contains(id)) continue;
+      existingIds.add(id);
+      merged.add(property);
+    }
+    return merged;
+  }
+
+  String? _propertyId(PropertyDetailsModel property) {
+    final id = property.propertyId?.toString().trim();
+    if (id == null || id.isEmpty) return null;
+    return id;
   }
 
   int? propertyIndexNear(

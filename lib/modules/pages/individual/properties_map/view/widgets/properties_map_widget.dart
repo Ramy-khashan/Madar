@@ -10,6 +10,7 @@ class PropertiesMapWidget extends StatefulWidget {
     required this.markers,
     required this.onTap,
     this.onCameraMove,
+    this.onCameraIdle,
     this.myLocationEnabled = false,
   });
 
@@ -17,6 +18,7 @@ class PropertiesMapWidget extends StatefulWidget {
   final Set<Marker> markers;
   final void Function(LatLng) onTap;
   final void Function(LatLng)? onCameraMove;
+  final VoidCallback? onCameraIdle;
   final bool myLocationEnabled;
 
   @override
@@ -59,6 +61,7 @@ class _PropertiesMapWidgetState extends State<PropertiesMapWidget> {
       onTap: widget.onTap,
       onCameraMove: (position) =>
           widget.onCameraMove?.call(position.target),
+      onCameraIdle: widget.onCameraIdle,
       myLocationEnabled: widget.myLocationEnabled,
       myLocationButtonEnabled: false,
       zoomControlsEnabled: false,
