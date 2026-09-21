@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madar_app/core/components/loading_process.dart';
 import 'package:madar_app/core/utils/constants/app_enums.dart';
-
 import '../../../../../config/router/app_router_keys.dart';
-import '../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../core/components/chatbot_item.dart';
 import '../../../../../core/components/portfolio_card_widget.dart';
 import '../../../../../core/components/property_card_widget.dart';

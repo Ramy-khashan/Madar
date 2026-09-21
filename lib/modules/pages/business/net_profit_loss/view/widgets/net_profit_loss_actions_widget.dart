@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../../../../core/components/app_button.dart';
-import '../../../../../../core/utils/constants/app_strings.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../../../core/utils/functions/responsive.dart';
+
+import '../../../../../../core/components/app_button.dart';
+import '../../../../../../core/utils/constants/app_enums.dart';
+import '../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../core/utils/functions/responsive.dart';
 import '../../controller/net_profit_loss_bloc.dart';
 
 class NetProfitLossActionsWidget extends StatelessWidget {
@@ -22,6 +24,7 @@ class NetProfitLossActionsWidget extends StatelessWidget {
                   const NetProfitLossExportPdf(),
                 ),
                 text: AppStrings.downloadPdf,
+                isLoading: state.exportStatus == RequestStatus.loading,
               ),
               SizedBox(height: 12.height),
               AppButton(

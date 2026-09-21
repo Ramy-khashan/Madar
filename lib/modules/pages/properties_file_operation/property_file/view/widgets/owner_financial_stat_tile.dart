@@ -10,12 +10,14 @@ class OwnerFinancialStatTile extends StatelessWidget {
   const OwnerFinancialStatTile({
     super.key,
     required this.label,
-    required this.amount,
     required this.color,
+    this.amount,
+    this.valueText,
   });
 
   final String label;
-  final double amount;
+  final double? amount;
+  final String? valueText;
   final Color color;
 
   @override
@@ -40,7 +42,8 @@ class OwnerFinancialStatTile extends StatelessWidget {
           ),
           SizedBox(height: 4.height),
           Text(
-            '${formatPrice(amount)} ${AppStrings.currency}',
+            valueText ??
+                '${formatPrice(amount ?? 0)} ${AppStrings.currency}',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: context.responsiveFontScale(11),

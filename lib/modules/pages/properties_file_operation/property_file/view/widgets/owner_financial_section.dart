@@ -4,6 +4,8 @@ import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../core/utils/functions/account_role.dart';
+import '../../../../../../core/utils/functions/print_state.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../individual/property_details/model/property_details_model.dart';
 import 'owner_financial_stat_tile.dart';
@@ -15,58 +17,143 @@ class OwnerFinancialSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!AccountRole.isBusiness) return const SizedBox.shrink();
     final colors = AppThemeColors.of(context);
-    final expenseTotal = (property?.expenses ?? []).fold<double>(
-      0,
-      (sum, e) => sum + (e.amount ?? 0).toDouble(),
-    );
-    final income = (property?.financialPerformance?.monthlyIncome ?? 0)
-        .toDouble();
-    final net = income - expenseTotal;
-    if (income == 0 && expenseTotal == 0) return const SizedBox.shrink();
+    final performance = property?.financialPerformance;
+    if (performance == null) return const SizedBox.shrink();
+printState( property?.type == 'BUILDING');
+    return property?.type == 'BUILDING'
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                AppStrings.financialPerformance,
+                style: TextStyle(
+                  fontSize: context.responsiveFontScale(16),
+                  fontWeight: FontWeight.w700,
+                  fontFamily: AppConstant.appHeaderFont,
+                  color: colors.textFieldTitle,
+                ),
+              ),
+              SizedBox(height: 12.height),
+              Row(
+                children: [
+                    Expanded(
+                    child: OwnerFinancialStatTile(
+                      label: AppStrings.activeUnits,
+                      valueText: '${performance.activeChildUnits ?? 0}',
+                      color: AppColors.successColor,
+                    ),
+                  ),
+                
+                  SizedBox(width: 8.width),
+                       Expanded(
+                    child: OwnerFinancialStatTile(
+                      label: AppStrings.occupancyRate,
+                      valueText: performance.occupancyRateLabel,
+                      color: AppColors.rate,
+                    ),
+                  ),
+                  // Expanded(
+                  //   child: OwnerFinancialStatTile(
+                  //     label: AppStrings.totalUnits,
+                  //     valueText: '${performance.totalChildUnits ?? 0}',
+                  //     color: colors.primaryBrand,
+                  //   ),
+                  // ),
+                ],
+              ),
+              SizedBox(height: 8.height),
+              // Row(
+              //   children: [
+              //     Expanded(
+              //       child: OwnerFinancialStatTile(
+              //         label: AppStrings.occupancyRate,
+              //         valueText: performance.occupancyRateLabel,
+              //         color: AppColors.rate,
+              //       ),
+              //     ),
+              //     SizedBox(width: 8.width),
+              //     Expanded(
+              //       child: OwnerFinancialStatTile(
+              //         label: AppStrings.yearlyIncome,
+              //         amount: performance.totalIncome?.toDouble(),
+              //         color: AppColors.successColor,
+              //       ),
+              //     ),
+              //   ],
+              // ),
+                Row(
+                children: [
+                  Expanded(
+                    child: OwnerFinancialStatTile(
+                      label: AppStrings.totalIncomeLabel,
+                      valueText: performance.totalIncome?.toString() ?? '0',
+                      color: AppColors.successColor,
+                    ),
+                  ),
+                  SizedBox(width: 8.width),
+                  Expanded(
+                    child: OwnerFinancialStatTile(
+                      label: AppStrings.totalExpensesLabel,
+                      valueText: performance.totalExpenses?.toString() ?? '0',
+                      color: AppColors.errorColor,
+                    ),
+                  ),
+                  SizedBox(width: 8.width),
+                  Expanded(
+                    child: OwnerFinancialStatTile(
+                      label: AppStrings.netProfit,
+                      valueText: performance.netProfit?.toString() ?? '0',
+                      color: AppColors.grey800,
+                    ),
+                  ),
+                ],
+              ),
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          AppStrings.financialPerformance,
-          style: TextStyle(
-            fontSize: context.responsiveFontScale(16),
-            fontWeight: FontWeight.w700,
-            fontFamily: AppConstant.appHeaderFont,
-            color: colors.textFieldTitle,
-          ),
-        ),
-        SizedBox(height: 12.height),
-        Row(
-          children: [
-            Expanded(
-              child: OwnerFinancialStatTile(
-                label: AppStrings.income,
-                amount: income,
-                color: AppColors.successColor,
+            ],
+          )
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                AppStrings.financialPerformance,
+                style: TextStyle(
+                  fontSize: context.responsiveFontScale(16),
+                  fontWeight: FontWeight.w700,
+                  fontFamily: AppConstant.appHeaderFont,
+                  color: colors.textFieldTitle,
+                ),
               ),
-            ),
-            SizedBox(width: 8.width),
-            Expanded(
-              child: OwnerFinancialStatTile(
-                label: AppStrings.expenses,
-                amount: expenseTotal,
-                color: AppColors.errorColor,
+              SizedBox(height: 12.height),
+              Row(
+                children: [
+                  Expanded(
+                    child: OwnerFinancialStatTile(
+                      label: AppStrings.totalIncomeLabel,
+                      valueText: performance.totalIncome?.toString() ?? '0',
+                      color: AppColors.successColor,
+                    ),
+                  ),
+                  SizedBox(width: 8.width),
+                  Expanded(
+                    child: OwnerFinancialStatTile(
+                      label: AppStrings.totalExpensesLabel,
+                      valueText: performance.totalExpenses?.toString() ?? '0',
+                      color: AppColors.errorColor,
+                    ),
+                  ),
+                  SizedBox(width: 8.width),
+                  Expanded(
+                    child: OwnerFinancialStatTile(
+                      label: AppStrings.netProfit,
+                      valueText: performance.netProfit?.toString() ?? '0',
+                      color: AppColors.grey800,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            SizedBox(width: 8.width),
-            Expanded(
-              child: OwnerFinancialStatTile(
-                label: AppStrings.netProfit,
-                amount: net,
-                color: colors.primaryBrand,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
+            ],
+          );
   }
 }
-

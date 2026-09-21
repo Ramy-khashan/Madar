@@ -62,7 +62,7 @@ class ImageItem extends StatelessWidget {
         placeholder: (context, url) =>
             SizedBox(width: width, height: height, child: const LoadingItem()),
         errorWidget: (context, url, error) => Image.asset(
-          AppImages.logo,
+          AppImages.logoImagePlaceHolder,
           width: width,
           height: height,
           fit: fit ?? BoxFit.contain,
@@ -71,7 +71,7 @@ class ImageItem extends StatelessWidget {
       );
     } else {
       imageWidget = Image.asset(
-        AppImages.logo,
+        AppImages.logoImagePlaceHolder,
         width: width,
         height: height,
         fit: fit ?? BoxFit.contain,

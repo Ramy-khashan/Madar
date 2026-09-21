@@ -6,6 +6,7 @@ import '../../../../../core/repository/apis/dashboard_apis.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/common_fun.dart';
+import '../../../../../core/utils/functions/pdf_generator.dart';
 import '../model/profit_loss_model.dart';
 
 part 'net_profit_loss_event.dart';
@@ -25,7 +26,23 @@ class NetProfitLossBloc extends Bloc<NetProfitLossEvent, NetProfitLossState> {
     NetProfitLossExportPdf event,
     Emitter<NetProfitLossState> emit,
   ) async {
-    AppToast(AppStrings.notAvailable);
+    if (state.exportStatus == RequestStatus.loading) return;
+    emit(state.copyWith(exportStatus: RequestStatus.loading));
+    try {
+      await PdfReportGenerator.generateAndOpen(
+        totalIncome: state.totalIncome,
+        totalExpenses: state.totalExpenses,
+        netProfit: state.netProfit,
+        incomeComparison: state.incomeComparison,
+        expensesComparison: state.expensesComparison,
+        netProfitComparison: state.netProfitComparison,
+        insights: state.insights,
+      );
+      emit(state.copyWith(exportStatus: RequestStatus.success));
+    } catch (_) {
+      emit(state.copyWith(exportStatus: RequestStatus.failed));
+      AppToast(AppStrings.somethingWentWrong, isError: true);
+    }
   }
 
   Future<void> _onExportExcel(
@@ -51,6 +68,7 @@ class NetProfitLossBloc extends Bloc<NetProfitLossEvent, NetProfitLossState> {
           state.copyWith(
             status: RequestStatus.success,
             errorMessage: '',
+            
             totalIncome: report.totalIncome,
             totalExpenses: report.totalExpenses,
             netProfit: report.netProfit,
@@ -63,4 +81,5 @@ class NetProfitLossBloc extends Bloc<NetProfitLossEvent, NetProfitLossState> {
       },
     );
   }
+  
 }

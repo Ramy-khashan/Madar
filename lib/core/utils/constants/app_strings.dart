@@ -1516,6 +1516,7 @@ class AppStrings {
   static String get towerName => 'tower_name'.trans;
   static String get towerClassification => 'tower_classification'.trans;
   static String get totalUnits => 'total_units'.trans;
+  static String get activeUnits => 'active_units'.trans;
   static String get numberOfElevators => 'number_of_elevators'.trans;
   static String get parkingFloors => 'parking_floors'.trans;
   static String get totalParkingSpaces => 'total_parking_spaces'.trans;

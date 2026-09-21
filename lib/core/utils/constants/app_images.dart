@@ -1,5 +1,6 @@
 class AppImages {
   static const String logo = 'assets/icons/app_logo.png';
+  static const String logoImagePlaceHolder = 'assets/images/logo_image.jpeg';
   static const String splashLogo = 'assets/images/logo.png';
   static const String splashBg = 'assets/images/splash_bg.png';
   static const String onBoarding1 = 'assets/images/onboarding1.png';

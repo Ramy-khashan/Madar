@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
-import '../../../../../../../core/components/outline_section.dart';
-import '../../../../../../../core/utils/constants/app_images.dart';
-import '../../../../../../../core/utils/constants/app_strings.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../../core/components/app_button.dart';
 import '../../../../../../../core/components/image_item.dart';
 import '../../../../../../../core/components/image_preview_screen.dart';
+import '../../../../../../../core/components/outline_section.dart';
 import '../../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../../core/utils/constants/app_constant.dart';
+import '../../../../../../../core/utils/constants/app_enums.dart';
+import '../../../../../../../core/utils/constants/app_images.dart';
+import '../../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
+import '../../controller/business_project_details_bloc.dart';
 
 class ProjectAttachmentsSectionWidget extends StatelessWidget {
   const ProjectAttachmentsSectionWidget({
@@ -108,14 +112,23 @@ class ProjectAttachmentsSectionWidget extends StatelessWidget {
                 colors: colors,
               );
             }),
-            SizedBox(height: 16.height),
-            AppButton(
-              text: AppStrings.downloadPdfReport,
-              height: 46,
-              textSize: 15,
-              onTap: () {},
-            ),
           ],
+          SizedBox(height: 16.height),
+          BlocBuilder<BusinessProjectDetailsBloc, BusinessProjectDetailsState>(
+            buildWhen: (previous, current) =>
+                previous.exportStatus != current.exportStatus,
+            builder: (context, state) {
+              return AppButton(
+                text: AppStrings.downloadPdfReport,
+                height: 46,
+                textSize: 15,
+                isLoading: state.exportStatus == RequestStatus.loading,
+                onTap: () => context.read<BusinessProjectDetailsBloc>().add(
+                  const BusinessProjectDetailsExportPdf(),
+                ),
+              );
+            },
+          ),
         ],
       ),
     );

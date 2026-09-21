@@ -123,10 +123,10 @@ class PropertyFileModel extends Equatable {
       location: loc,
       imageUrl: media.coverUrl,
       propertyType: labelForType(p.type),
-      occupancyRate: (apiRate != null && apiRate > 0)
-          ? apiRate
+      occupancyRate: apiRate != null
+          ? apiRate.round()
           : (units.isEmpty ? 0 : ((occupied / units.length) * 100).round()),
-      monthlyRevenue: (p.financialPerformance?.monthlyIncome ??
+      monthlyRevenue: (p.financialPerformance?.totalIncome ??
               p.details?.estimatedIncome ??
               0)
           .toDouble(),

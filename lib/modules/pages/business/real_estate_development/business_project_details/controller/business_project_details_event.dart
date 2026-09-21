@@ -11,10 +11,13 @@ final class BusinessProjectDetailsLoad extends BusinessProjectDetailsEvent {
   const BusinessProjectDetailsLoad({required this.projectId});
 
   final String projectId;
- 
- 
+
   @override
   List<Object?> get props => [projectId];
+}
+
+final class BusinessProjectDetailsExportPdf extends BusinessProjectDetailsEvent {
+  const BusinessProjectDetailsExportPdf();
 }
 
 // final class BusinessProjectDetailsAddTimeline extends BusinessProjectDetailsEvent {

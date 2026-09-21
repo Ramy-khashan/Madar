@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:madar_app/core/utils/constants/storage_keys.dart';
-import 'package:madar_app/core/utils/functions/preference_utils.dart';
-
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/components/image_preview_screen.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../core/utils/functions/account_role.dart';
 import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../property_file/model/property_file_model.dart';
@@ -178,19 +176,17 @@ class PropertyFileHeaderWidget extends StatelessWidget {
         ],
         SizedBox(height: 16.height),
         // Stats row
-        PreferenceUtils().getString(StorageKeys.accountType) ==
-                AppConstant.business
+        AccountRole.isBusiness
             ? Row(
                 children: [
                   Expanded(
                     child: PropertyStatusCard(
                       icon: Icons.home_outlined,
                       value: '${property?.totalUnits ?? 0}',
-                      label: AppStrings.apartments,
+                      label: AppStrings.totalUnits,
                       colors: colors,
                     ),
                   ),
-
                   SizedBox(width: 8.width),
                   Expanded(
                     child: PropertyStatusCard(
@@ -205,7 +201,7 @@ class PropertyFileHeaderWidget extends StatelessWidget {
                     child: PropertyStatusCard(
                       icon: Icons.description_outlined,
                       value: formatPrice(property?.monthlyRevenue ?? 0),
-                      label: AppStrings.monthlyRevenue,
+                      label: AppStrings.yearlyIncome,
                       colors: colors,
                     ),
                   ),

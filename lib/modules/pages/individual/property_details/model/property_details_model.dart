@@ -32,6 +32,7 @@ class PropertyDetailsModel {
   List<PropertyContract>? contracts;
   List<PropertyExpense>? expenses;
   FinancialPerformance? financialPerformance;
+  // FinancialPerformance? financialPerformance;
   String? tenancyStatus;
   String? tenantName;
   String? tenantPhone;
@@ -1372,32 +1373,55 @@ class FinancialPerformance {
   int? totalChildUnits;
   int? activeChildUnits;
   int? occupancyRate;
-  int? monthlyIncome;
+ 
 
+
+ 
+  num? totalIncome;
+  num? totalExpenses;
+  num? netProfit;
+ 
   FinancialPerformance({
-    this.totalChildUnits,
-    this.activeChildUnits,
+     this.activeChildUnits,
     this.occupancyRate,
-    this.monthlyIncome,
+ 
+    this.totalIncome,
+    this.totalExpenses,
+    this.netProfit,
   });
+
+ 
+  String get occupancyRateLabel {
+    final value = occupancyRate ?? 0;
+    final percent = value <= 1 && value > 0 ? value * 100 : value;
+    return '${percent.toStringAsFixed(0)}%';
+  }
 
   factory FinancialPerformance.fromJson(Map<String, dynamic> json) {
     return FinancialPerformance(
-      totalChildUnits: _jsonInt(json['totalChildUnits']),
-      activeChildUnits: _jsonInt(json['activeChildUnits']),
-      occupancyRate: _jsonInt(json['occupancyRate']),
-      monthlyIncome: _jsonInt(json['monthlyIncome']),
+       activeChildUnits: _jsonInt(json['activeChildUnits']),
+      occupancyRate: _jsonInt(json['occupancyRate']), 
+      totalIncome: _jsonNum(json['totalIncome']),
+      totalExpenses: _jsonNum(json['totalExpenses']),
+      netProfit: _jsonNum(json['netProfit']),
     );
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['totalChildUnits'] = totalChildUnits;
-    data['activeChildUnits'] = activeChildUnits;
-    data['occupancyRate'] = occupancyRate;
-    data['monthlyIncome'] = monthlyIncome;
+     data['activeChildUnits'] = activeChildUnits;
+    data['occupancyRate'] = occupancyRate; 
+    data['totalIncome'] = totalIncome;
+    data['totalExpenses'] = totalExpenses;
+    data['netProfit'] = netProfit;
     return data;
   }
+}
+
+num? _jsonNum(dynamic value) {
+  if (value == null) return null;
+  if (value is num) return value;
+  return num.tryParse(value.toString());
 }
 
 int? _jsonInt(dynamic value) {

@@ -77,7 +77,9 @@ class Project {
     endDate = json['endDate'];
     manager = json['manager'];
     overallProgress = json['overallProgress'];
-    attachments = json['attachments'].cast<String>();
+    attachments = json['attachments'] == null
+        ? <String>[]
+        : List<String>.from(json['attachments']);
   }
 
   Map<String, dynamic> toJson() {
@@ -156,6 +158,7 @@ class ProjectStages {
     data['stageName'] = stageName;
     data['progress'] = progress;
     data['status'] = status;
+    data['description'] = description;
     if (subStages != null) {
       data['subStages'] = subStages!.map((v) => v.toJson()).toList();
     }
@@ -210,7 +213,9 @@ class Timeline {
   Timeline.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     content = json['content'];
-    attachments = json['attachments'].cast<String>();
+    attachments = json['attachments'] == null
+        ? <String>[]
+        : List<String>.from(json['attachments']);
     date = json['date'];
     stageId = json['stageId'];
     stageName = json['stageName'];

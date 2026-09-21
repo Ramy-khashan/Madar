@@ -4,10 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../core/connection/concept/end_points.dart';
 import '../../../../../../core/connection/interfaces/api_consumer.dart';
+import '../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../core/utils/functions/common_fun.dart';
+import '../../../../../../core/utils/functions/pdf_generator.dart';
 import '../../../../../../core/utils/functions/print_state.dart';
 import '../../../../../../core/utils/functions/service_locator.dart';
- import '../../../../../../../../../core/utils/constants/app_enums.dart';
 import '../model/real_state_project_model.dart';
 
 part 'business_project_details_event.dart';
@@ -17,7 +19,7 @@ class BusinessProjectDetailsBloc
     extends Bloc<BusinessProjectDetailsEvent, BusinessProjectDetailsState> {
   BusinessProjectDetailsBloc() : super(const BusinessProjectDetailsState()) {
     on<BusinessProjectDetailsLoad>(_onLoad);
-    // on<BusinessProjectDetailsAddTimeline>(_onAddTimeline);
+    on<BusinessProjectDetailsExportPdf>(_onExportPdf);
   }
 
   static BusinessProjectDetailsBloc get(BuildContext context) =>
@@ -56,6 +58,22 @@ class BusinessProjectDetailsBloc
           errorMessage: AppStrings.somethingWentWrong,
         ),
       );
+    }
+  }
+
+  Future<void> _onExportPdf(
+    BusinessProjectDetailsExportPdf event,
+    Emitter<BusinessProjectDetailsState> emit,
+  ) async {
+    final project = state.project;
+    if (project == null || state.exportStatus == RequestStatus.loading) return;
+    emit(state.copyWith(exportStatus: RequestStatus.loading));
+    try {
+      await ProjectPdfGenerator.generateAndOpenFromProject(project);
+      emit(state.copyWith(exportStatus: RequestStatus.success));
+    } catch (_) {
+      emit(state.copyWith(exportStatus: RequestStatus.failed));
+      AppToast(AppStrings.somethingWentWrong, isError: true);
     }
   }
 }

@@ -8,6 +8,7 @@ class MyPropertiesModel {
   final String type;
   final int unitsCount;
   final String publicationRequestStatus;
+  final FinancialPerformance? financialPerformance;
 
   const MyPropertiesModel({
     required this.id,
@@ -17,6 +18,7 @@ class MyPropertiesModel {
     this.type = '',
     this.unitsCount = 0,
     this.publicationRequestStatus = '',
+    this.financialPerformance,
   });
 
   bool get isBuilding => type.toUpperCase() == 'BUILDING';
@@ -35,11 +37,18 @@ class MyPropertiesModel {
       district,
       city,
     ].where((e) => e.isNotEmpty).join(' , ');
+    final performanceRaw = json['financialPerformance'];
+    final performance = performanceRaw is Map
+        ? FinancialPerformance.fromJson(
+            Map<String, dynamic>.from(performanceRaw),
+          )
+        : null;
     final unitsRaw =
         json['unitsCount'] ??
         json['totalApartments'] ??
         json['totalUnits'] ??
-        json['childCount'];
+        json['childCount'] ??
+        performance?.totalChildUnits;
     return MyPropertiesModel(
       id: (json['propertyId'] ?? json['property_id'] ?? json['id'] ?? '')
           .toString(),
@@ -56,6 +65,7 @@ class MyPropertiesModel {
               json['publicationStatus'] ??
               '')
           .toString(),
+      financialPerformance: performance,
     );
   }
 }

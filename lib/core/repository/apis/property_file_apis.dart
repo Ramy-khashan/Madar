@@ -40,8 +40,8 @@ class PropertyFileApis {
   }) async {
     try {
       final response = await sl.get<ApiConsumer>().put(
-        EndPoints.propertyById(propertyId),
-        body: {'tenancy': tenancy},
+        EndPoints.tenancyUpdate(propertyId),
+        body:   tenancy,
       );
       return response.fold(Left.new, (success) {
         final data = success.response['data'];
