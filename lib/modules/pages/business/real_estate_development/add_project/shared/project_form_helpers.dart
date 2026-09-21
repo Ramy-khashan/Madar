@@ -69,6 +69,57 @@ class ProjectFormHelpers {
     return (selectedStageIds: nextStages, selectedSubStageIds: nextSubs);
   }
 
+  static ({
+    List<String> selectedStageIds,
+    Map<String, List<String>> selectedSubStageIds,
+    Map<String, List<String>> customSubStages,
+  })
+  toggleSelectAllExceptOther({
+    required List<ProjectStageModel> stages,
+    required String stageId,
+    required List<String> selectedStageIds,
+    required Map<String, List<String>> selectedSubStageIds,
+    Map<String, List<String>> customSubStages = const {},
+  }) {
+    ProjectStageModel? stage;
+    for (final item in stages) {
+      if (item.id == stageId) {
+        stage = item;
+        break;
+      }
+    }
+
+    final current = selectedSubStageIds[stageId] ?? const <String>[];
+    final shouldClear =
+        stage != null && areAllSelectableSelected(stage, current);
+
+    final nextCustom = Map<String, List<String>>.from(customSubStages);
+
+    if (shouldClear) {
+      final nextStages = List<String>.from(selectedStageIds)..remove(stageId);
+      final nextSubs = Map<String, List<String>>.from(selectedSubStageIds)
+        ..remove(stageId);
+      nextCustom.remove(stageId);
+      return (
+        selectedStageIds: nextStages,
+        selectedSubStageIds: nextSubs,
+        customSubStages: nextCustom,
+      );
+    }
+
+    final selected = selectAllExceptOther(
+      stages: stages,
+      stageId: stageId,
+      selectedStageIds: selectedStageIds,
+      selectedSubStageIds: selectedSubStageIds,
+    );
+    return (
+      selectedStageIds: selected.selectedStageIds,
+      selectedSubStageIds: selected.selectedSubStageIds,
+      customSubStages: nextCustom,
+    );
+  }
+
   static List<StageRequestModel> buildStages({
     required List<String> selectedStageIds,
     required Map<String, List<String>> selectedSubStageIds,

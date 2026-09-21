@@ -111,23 +111,26 @@ class ProjectsListScreen extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (_) => const ProjectTypeSelectionDialog(),
-                        ).then((val) {
-                          if (val != null) {
-                            if (context.mounted) {
-                              if (val == AppConstant.residentialProjectType) {
-                                RouterHandler.navigate(
-                                  context,
-                                  AppRouterKeys.realEstateDevelopmentAddProject,
-                                );
-                              } else if (val == AppConstant.commercialProjectType) {
-                                RouterHandler.navigate(
-                                  context,
-                                  AppRouterKeys
-                                      .realEstateDevelopmentAddCommercial,
-                                );
-                              }
-                              // context.push(AppRouterKeys.addProject, extra: val);
-                            }
+                        ).then((val) async {
+                          if (val == null || !context.mounted) return;
+                          Object? added;
+                          if (val == AppConstant.residentialProjectType) {
+                            added = await RouterHandler.navigate(
+                              context,
+                              AppRouterKeys.realEstateDevelopmentAddProject,
+                            );
+                          } else if (val ==
+                              AppConstant.commercialProjectType) {
+                            added = await RouterHandler.navigate(
+                              context,
+                              AppRouterKeys
+                                  .realEstateDevelopmentAddCommercial,
+                            );
+                          }
+                          if (added == true && context.mounted) {
+                            ProjectsListBloc.get(
+                              context,
+                            ).add(const ProjectsListLoad());
                           }
                         }),
                   ),

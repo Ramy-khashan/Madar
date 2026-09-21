@@ -9,7 +9,7 @@ import '../../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
 import '../models/project_stage_model.dart';
 
-class ProjectPhasesChecklistWidget extends StatelessWidget {
+class ProjectPhasesChecklistWidget extends StatefulWidget {
   const ProjectPhasesChecklistWidget({
     super.key,
     required this.label,
@@ -18,7 +18,6 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
     required this.onStageToggled,
     this.onStageSelectAll,
     required this.onSubStageToggled,
-    required this.selectedStageIds,
     required this.selectedSubStageIds,
     this.customSubStages = const {},
     this.onCustomSubStageAdded,
@@ -32,7 +31,6 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
   final void Function(String stageId) onStageToggled;
   final void Function(String stageId)? onStageSelectAll;
   final void Function(String stageId, String subStageId) onSubStageToggled;
-  final List<String> selectedStageIds;
   final Map<String, List<String>> selectedSubStageIds;
   final Map<String, List<String>> customSubStages;
   final void Function(String stageId, String name)? onCustomSubStageAdded;
@@ -40,10 +38,30 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
   final bool isLoading;
 
   @override
+  State<ProjectPhasesChecklistWidget> createState() =>
+      _ProjectPhasesChecklistWidgetState();
+}
+
+class _ProjectPhasesChecklistWidgetState
+    extends State<ProjectPhasesChecklistWidget> {
+  final Set<String> _expandedStageIds = {};
+
+  void _toggleExpanded(String stageId) {
+    setState(() {
+      if (_expandedStageIds.contains(stageId)) {
+        _expandedStageIds.remove(stageId);
+      } else {
+        _expandedStageIds.add(stageId);
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
+    final stages = widget.stages;
 
-    if (isLoading) {
+    if (widget.isLoading) {
       return Padding(
         padding: EdgeInsets.symmetric(vertical: 24.height),
         child: Center(
@@ -74,7 +92,7 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(top: 14.height, bottom: 4.height),
           child: Text(
-            label,
+            widget.label,
             style: TextStyle(
               fontSize: context.responsiveFontScale(16),
               fontWeight: FontWeight.w500,
@@ -84,7 +102,7 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
           ),
         ),
         Text(
-          subtitle,
+          widget.subtitle,
           style: TextStyle(
             fontSize: context.responsiveFontScale(13),
             color: colors.textSecondary,
@@ -93,9 +111,10 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
         ),
         SizedBox(height: 12.height),
         ...stages.map((stage) {
-          final isExpanded = selectedStageIds.contains(stage.id);
-          final selectedSubs = selectedSubStageIds[stage.id] ?? [];
-          final customForStage = customSubStages[stage.id] ?? [];
+          final isExpanded = _expandedStageIds.contains(stage.id);
+          final selectedSubs =
+              widget.selectedSubStageIds[stage.id] ?? [];
+          final customForStage = widget.customSubStages[stage.id] ?? [];
           final selectableSubs = stage.subStages
               .where((s) => !s.isOther)
               .toList();
@@ -118,78 +137,85 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    InkWell(
-                      onTap: () => onStageToggled(stage.id),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 12.width,
-                          vertical: 12.height,
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.width,
+                        vertical: 12.height,
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: InkWell(
+                              onTap: () => _toggleExpanded(stage.id),
+                              child: Row(
                                 children: [
-                                  Text(
-                                    stage.name,
-                                    style: TextStyle(
-                                      fontSize: context.responsiveFontScale(14),
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: AppConstant.appHeaderFont,
-                                      color: colors.textFieldTitle,
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          stage.name,
+                                          style: TextStyle(
+                                            fontSize: context
+                                                .responsiveFontScale(14),
+                                            fontWeight: FontWeight.w600,
+                                            fontFamily:
+                                                AppConstant.appHeaderFont,
+                                            color: colors.textFieldTitle,
+                                          ),
+                                        ),
+                                        if (stage.description.isNotEmpty)
+                                          Text(
+                                            stage.description,
+                                            style: TextStyle(
+                                              fontSize: context
+                                                  .responsiveFontScale(12),
+                                              color: colors.textSecondary,
+                                              fontFamily: AppConstant.appFont,
+                                            ),
+                                          ),
+                                      ],
                                     ),
                                   ),
-                                  if (stage.description.isNotEmpty)
-                                    Text(
-                                      stage.description,
-                                      style: TextStyle(
-                                        fontSize: context.responsiveFontScale(
-                                          12,
-                                        ),
-                                        color: colors.textSecondary,
-                                        fontFamily: AppConstant.appFont,
-                                      ),
-                                    ),
+                                  Icon(
+                                    isExpanded
+                                        ? Icons.keyboard_arrow_up_rounded
+                                        : Icons.keyboard_arrow_down_rounded,
+                                    color: colors.textSecondary,
+                                  ),
                                 ],
                               ),
                             ),
-                            Icon(
-                              isExpanded
-                                  ? Icons.keyboard_arrow_up_rounded
-                                  : Icons.keyboard_arrow_down_rounded,
-                              color: colors.textSecondary,
-                            ),
-                            SizedBox(width: 4.width),
-                            InkWell(
-                              onTap: () =>
-                                  (onStageSelectAll ?? onStageToggled)(
-                                    stage.id,
-                                  ),
-                              customBorder: const CircleBorder(),
-                              child: Container(
-                                width: 22.width,
-                                height: 22.width,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: allSelectableSelected && isExpanded
-                                      ? AppColors.successColor
-                                      : Colors.transparent,
-                                ),
-                                child: allSelectableSelected && isExpanded
-                                    ? Icon(
-                                        Icons.check_rounded,
-                                        size: 16.width,
-                                        color: Colors.white,
-                                      )
-                                    : ImageItem(
-                                        AppImages.trackRequestImage,
-                                        color: colors.primaryBrand,
-                                      ),
+                          ),
+                          SizedBox(width: 8.width),
+                          InkWell(
+                            onTap: () =>
+                                (widget.onStageSelectAll ??
+                                    widget.onStageToggled)(stage.id),
+                            customBorder: const CircleBorder(),
+                            child: Container(
+                              width: 22.width,
+                              height: 22.width,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: allSelectableSelected
+                                    ? AppColors.successColor
+                                    : Colors.transparent,
                               ),
+                              child: allSelectableSelected
+                                  ? Icon(
+                                      Icons.check_rounded,
+                                      size: 16.width,
+                                      color: Colors.white,
+                                    )
+                                  : ImageItem(
+                                      AppImages.trackRequestImage,
+                                      color: colors.primaryBrand,
+                                    ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                     if (isExpanded)
@@ -218,8 +244,10 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
                                     ListTileControlAffinity.trailing,
                                 value: selectedSubs.contains(subStage.id),
                                 activeColor: colors.primaryBrand,
-                                onChanged: (v) =>
-                                    onSubStageToggled(stage.id, subStage.id),
+                                onChanged: (v) => widget.onSubStageToggled(
+                                  stage.id,
+                                  subStage.id,
+                                ),
                                 title: Text(
                                   subStage.name,
                                   style: TextStyle(
@@ -230,7 +258,7 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
                                 ),
                               );
                             }),
-                            if (onCustomSubStageAdded != null &&
+                            if (widget.onCustomSubStageAdded != null &&
                                 isOtherSelected) ...[
                               ...customForStage.asMap().entries.map(
                                 (entry) => ListTile(
@@ -244,7 +272,8 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
                                       fontFamily: AppConstant.appFont,
                                     ),
                                   ),
-                                  trailing: onCustomSubStageRemoved == null
+                                  trailing:
+                                      widget.onCustomSubStageRemoved == null
                                       ? null
                                       : IconButton(
                                           icon: Icon(
@@ -253,7 +282,7 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
                                             color: AppColors.errorColor,
                                           ),
                                           onPressed: () =>
-                                              onCustomSubStageRemoved!(
+                                              widget.onCustomSubStageRemoved!(
                                                 stage.id,
                                                 entry.key,
                                               ),
@@ -262,7 +291,10 @@ class ProjectPhasesChecklistWidget extends StatelessWidget {
                               ),
                               _CustomSubStageInput(
                                 onAdd: (name) =>
-                                    onCustomSubStageAdded!(stage.id, name),
+                                    widget.onCustomSubStageAdded!(
+                                  stage.id,
+                                  name,
+                                ),
                               ),
                             ],
                           ],

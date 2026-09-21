@@ -63,7 +63,7 @@ class AddResidentialProjectView extends StatelessWidget {
             listenWhen: (prev, curr) => prev.submitStatus != curr.submitStatus,
             listener: (context, state) {
               if (state.submitStatus == RequestStatus.success) {
-                RouterHandler.pop(context);
+                RouterHandler.pop(context, true);
               } else if (state.submitStatus == RequestStatus.failed &&
                   (state.submitErrorMessage ?? '').isNotEmpty) {
                 AppToast(state.submitErrorMessage!, isError: true);
@@ -192,7 +192,6 @@ class AddResidentialProjectView extends StatelessWidget {
                               isLoading:
                                   state.stagesFetchStatus ==
                                   RequestStatus.loading,
-                              selectedStageIds: state.selectedStageIds,
                               selectedSubStageIds: state.selectedSubStageIds,
                               customSubStages: state.customSubStages,
                               onStageToggled: (stageId) =>

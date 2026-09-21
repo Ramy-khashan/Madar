@@ -251,8 +251,6 @@ class AddCommercialProjectBloc
 
     if (selectedStageIds.contains(event.stageId)) {
       selectedStageIds.remove(event.stageId);
-      selectedSubStageIds.remove(event.stageId);
-      customSubStages.remove(event.stageId);
     } else {
       selectedStageIds.add(event.stageId);
       if (!selectedSubStageIds.containsKey(event.stageId)) {
@@ -273,16 +271,18 @@ class AddCommercialProjectBloc
     AddCommercialStageSelectAll event,
     Emitter<AddCommercialProjectState> emit,
   ) {
-    final result = ProjectFormHelpers.selectAllExceptOther(
+    final result = ProjectFormHelpers.toggleSelectAllExceptOther(
       stages: state.stages,
       stageId: event.stageId,
       selectedStageIds: state.selectedStageIds,
       selectedSubStageIds: state.selectedSubStageIds,
+      customSubStages: state.customSubStages,
     );
     emit(
       state.copyWith(
         selectedStageIds: result.selectedStageIds,
         selectedSubStageIds: result.selectedSubStageIds,
+        customSubStages: result.customSubStages,
       ),
     );
   }
