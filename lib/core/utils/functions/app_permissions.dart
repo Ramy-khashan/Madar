@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'notification_service.dart';
+import 'print_state.dart';
 
 class AppPermissions {
   AppPermissions._();
@@ -28,12 +29,17 @@ class AppPermissions {
 
   static Future<void> _requestNotifications() async {
     try {
+      printState('Requesting notification permissions...');
       await FirebaseMessaging.instance.requestPermission(
         alert: true,
         badge: true,
         sound: true,
       );
+
       await NotificationService.instance.requestPermissions();
-    } catch (_) {}
+      FirebaseMessaging.instance.subscribeToTopic('madar_notification');
+    } catch (e) {
+      printState('Error requesting notification permissions: $e');
+    }
   }
 }

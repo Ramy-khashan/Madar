@@ -10,8 +10,7 @@ import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/account_role.dart';
 import '../../../../../../core/utils/functions/image_picker_helper.dart';
-import '../../../../../../core/utils/functions/print_state.dart';
-import '../../../../../../core/utils/functions/responsive.dart';
+ import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../individual/my_property_details/view/widgets/contracts_section_widget.dart';
 import '../../../../individual/my_property_details/view/widgets/related_services_section_widget.dart';
 import '../../../../individual/property_details/view/widgets/features_part.dart';
@@ -124,9 +123,7 @@ class OwnerPropertyContentItem extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(height: isTablet ? 0 : 16.height),
-                  ContractsSectionWidget(
-                    contracts: property?.contracts ?? [],
-                  ),
+                  ContractsSectionWidget(contracts: property?.contracts ?? []),
                   if (_canEdit) ...[
                     SizedBox(height: 16.height),
                     OwnerPropertyTenancySection(
@@ -143,9 +140,7 @@ class OwnerPropertyContentItem extends StatelessWidget {
                     canEdit: _canEdit,
                     descController: bloc.expenseDescController,
                     amountController: bloc.expenseAmountController,
-                    onAddExpense: (description) {
-                      printState('Adding expense 11');
-                      printState(description);
+                    onAddExpense: () {
                       bloc.add(const PropertyFileExpenseAdded());
                     },
                     onRemove: (i) => bloc.add(PropertyFileExpenseRemoved(i)),

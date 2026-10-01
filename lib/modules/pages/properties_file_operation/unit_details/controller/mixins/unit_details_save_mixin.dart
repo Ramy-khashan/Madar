@@ -47,9 +47,7 @@ mixin UnitDetailsSaveMixin on Bloc<UnitDetailsEvent, UnitDetailsState> {
       }
       emit(state.copyWith(saveStatus: RequestStatus.loading));
       final tenancyBody = <String, dynamic>{
-        'status': updatedUnit.status == UnitStatus.rented
-            ? 'RENTED'
-            : 'VACANT',
+        'status': updatedUnit.status == UnitStatus.rented ? 'RENTED' : 'VACANT',
       };
       if (updatedUnit.monthlyRent > 0) {
         tenancyBody['monthlyRent'] = updatedUnit.monthlyRent % 1 == 0
@@ -65,8 +63,6 @@ mixin UnitDetailsSaveMixin on Bloc<UnitDetailsEvent, UnitDetailsState> {
           'calendarType': updatedUnit.isHijriDate ? 'HIJRI' : 'GREGORIAN',
         });
       }
-      // TODO: this single PUT updates status + tenant. Change
-      // EndPoints.updateBuildingApartment when the URL is finalized.
       final statusResult = await PropertyFileApis.updateBuildingUnit(
         propertyId: u.id,
         body: tenancyBody,
@@ -82,7 +78,9 @@ mixin UnitDetailsSaveMixin on Bloc<UnitDetailsEvent, UnitDetailsState> {
         return;
       }
 
-      final newExpenses = updatedUnit.expenses.where((e) => !e.isRemote).toList();
+      final newExpenses = updatedUnit.expenses
+          .where((e) => !e.isRemote)
+          .toList();
       if (newExpenses.isNotEmpty || state.expenseFiles.isNotEmpty) {
         final expenseResult = await PropertyFileApis.saveExpenses(
           propertyId: u.id,
@@ -155,10 +153,7 @@ mixin UnitDetailsSaveMixin on Bloc<UnitDetailsEvent, UnitDetailsState> {
             expenses: updatedUnit.expenses.where((e) => !e.isRemote).toList(),
             filePaths: state.expenseFiles,
           );
-          expenseResult.fold(
-            (error) => AppToast(error, isError: true),
-            (_) {},
-          );
+          expenseResult.fold((error) => AppToast(error, isError: true), (_) {});
         }
         emit(
           state.copyWith(

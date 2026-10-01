@@ -147,7 +147,7 @@ class AddCommercialProjectScreen extends StatelessWidget {
                         isPrice: true,
                         validator: (value) => Validate.notEmpty(value ?? ''),
                         suffixIconWidget: Padding(
-                          padding: EdgeInsets.only (top:8),
+                          padding: const EdgeInsets.only (top:8),
                           child: Text(
                             AppStrings.currency,
                             style: TextStyle(

@@ -11,17 +11,7 @@ import 'utils/constants/app_strings.dart';
 import 'utils/functions/print_state.dart';
 import 'utils/functions/responsive.dart';
 
-/// Firebase kill switch.
-///
-/// Console: Remote Config → publish
-///   is_working (Boolean) default true
-///   maintenance_title (String) optional
-///   maintenance_description (String) optional
-///
-/// To remove later:
-/// 1. Delete this file
-/// 2. Remove [AppKillSwitchGate] from [MadarApp] builder
-/// 3. `fvm flutter pub remove firebase_remote_config`
+ 
 class AppKillSwitch extends ChangeNotifier {
   AppKillSwitch._();
   static final AppKillSwitch instance = AppKillSwitch._();
@@ -35,7 +25,7 @@ class AppKillSwitch extends ChangeNotifier {
   String title = '';
   String description = '';
 
-  StreamSubscription<RemoteConfigUpdate>? _sub; // ignore: cancel_subscriptions
+  StreamSubscription<RemoteConfigUpdate>? _sub;  
   bool _started = false;
 
   Future<void> init() async {
@@ -57,7 +47,7 @@ class AppKillSwitch extends ChangeNotifier {
       );
       await rc.fetchAndActivate();
       _apply(rc);
-      // App-lifetime listener; cancelled only if the process dies.
+      
       _sub ??= rc.onConfigUpdated.listen((_) async {
         await rc.activate();
         _apply(rc);

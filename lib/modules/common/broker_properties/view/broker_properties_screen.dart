@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../config/router/app_router_keys.dart';
-import '../../../../../core/components/app_appbar.dart';
+ import '../../../../../core/components/app_appbar.dart';
 import '../../../../../core/components/loading_process.dart';
 import '../../../../../core/components/pagination.dart';
 import '../../../../../core/components/property_card_footer_widget.dart';
@@ -11,8 +10,7 @@ import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 import '../../../../../core/components/property_card_widget.dart';
-import '../../../../../core/utils/functions/router_handler.dart';
-import '../../chats/chat_navigator.dart';
+ import '../../chats/chat_navigator.dart';
 import '../controller/broker_properties_bloc.dart';
 import 'widgets/loading_grid_item.dart';
 

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/connection/concept/end_points.dart';
@@ -18,11 +18,11 @@ part 'sign_in_event.dart';
 part 'sign_in_state.dart';
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
-  SignInBloc()
-    : super(SignInState(selectedRole: _initialBusinessRole())) {
+  SignInBloc() : super(SignInState(selectedRole: _initialBusinessRole())) {
     on<SignInActionEvent>(_signIn);
     on<SelectBusinessRoleEvent>(_onSelectRole);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+
       AppPermissions.requestNotifications();
     });
   }
@@ -103,9 +103,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
             sl.get<PreferenceUtils>().setBool(StorageKeys.isGuest, false),
           ]);
           FcmTokenService.instance.syncToken();
-          emit(
-            state.copyWith(signInStatus: RequestStatus.success, role: role),
-          );
+          emit(state.copyWith(signInStatus: RequestStatus.success, role: role));
         },
       );
     } catch (e) {

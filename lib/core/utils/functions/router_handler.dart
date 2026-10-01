@@ -77,8 +77,6 @@ class RouterHandler {
     context.pop<T>(result);
   }
 
-  /// Clears the stack like `goNamed` / pushAndRemoveUntil, then refreshes
-  /// navbar tabs after the route settles so mid-flow navigation is not interrupted.
   static void goToNavbar(BuildContext context, {bool resetToHome = true}) {
     if (!context.mounted || _navbarRestoreScheduled) return;
     _navbarRestoreScheduled = true;

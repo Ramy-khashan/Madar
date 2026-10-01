@@ -8,8 +8,7 @@ import '../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/account_role.dart';
 import '../../../../../../core/utils/functions/image_picker_helper.dart';
-import '../../../../../../core/utils/functions/print_state.dart';
-import '../../../../../../core/utils/functions/responsive.dart';
+ import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../../../individual/my_property_details/view/widgets/contracts_section_widget.dart';
 import '../../../../individual/my_property_details/view/widgets/related_services_section_widget.dart';
@@ -46,14 +45,19 @@ class PropertyFileContentItem extends StatelessWidget {
     final hasSold = units.any((u) => u.status == UnitStatus.sold);
     final isBuilding = (property?.rawType ?? '').toUpperCase() == 'BUILDING';
     final remainingApts =
-        ((property?.declaredTotalUnits ?? 0) - apartments.length).clamp(0, 9999);
-    final remainingShops =
-        ((property?.shopsCount ?? 0) - shops.length).clamp(0, 9999);
+        ((property?.declaredTotalUnits ?? 0) - apartments.length).clamp(
+          0,
+          9999,
+        );
+    final remainingShops = ((property?.shopsCount ?? 0) - shops.length).clamp(
+      0,
+      9999,
+    );
     final addAptCount = isBuilding && _canEdit ? remainingApts : 0;
     final addShopCount = isBuilding && _canEdit
         ? (remainingShops > 0
-            ? remainingShops
-            : ((property?.shopsCount ?? 0) == 0 ? 1 : 0))
+              ? remainingShops
+              : ((property?.shopsCount ?? 0) == 0 ? 1 : 0))
         : 0;
 
     return CustomScrollView(
@@ -84,7 +88,9 @@ class PropertyFileContentItem extends StatelessWidget {
                 SizedBox(width: 6.width),
                 Text(
                   AppStrings.rentedFromTotal(
-                    apartments.where((u) => u.status == UnitStatus.rented).length,
+                    apartments
+                        .where((u) => u.status == UnitStatus.rented)
+                        .length,
                     (property?.declaredTotalUnits ?? apartments.length),
                   ),
                   style: TextStyle(
@@ -203,7 +209,12 @@ class PropertyFileContentItem extends StatelessWidget {
         ),
         if (isBuilding && (shops.isNotEmpty || addShopCount > 0)) ...[
           SliverPadding(
-            padding: EdgeInsets.fromLTRB(16.width, 8.height, 16.width, 8.height),
+            padding: EdgeInsets.fromLTRB(
+              16.width,
+              8.height,
+              16.width,
+              8.height,
+            ),
             sliver: SliverToBoxAdapter(
               child: Row(
                 children: [
@@ -304,9 +315,7 @@ class PropertyFileContentItem extends StatelessWidget {
                   canEdit: _canEdit,
                   descController: bloc.expenseDescController,
                   amountController: bloc.expenseAmountController,
-                  onAddExpense: (description) {
-                    printState('Adding expense 11');
-                    printState(description);
+                  onAddExpense: () {
                     bloc.add(const PropertyFileExpenseAdded());
                   },
                   onRemove: (i) => bloc.add(PropertyFileExpenseRemoved(i)),

@@ -12,8 +12,7 @@ import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/guest_mode.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 import '../../../../../core/components/property_card_widget.dart';
-import '../../chats/chat_navigator.dart';
-import '../controller/my_wishlist_bloc.dart';
+ import '../controller/my_wishlist_bloc.dart';
 
 class MyWishlistScreen extends StatelessWidget {
   const MyWishlistScreen({super.key});

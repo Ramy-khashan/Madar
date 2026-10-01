@@ -13,8 +13,7 @@ import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/account_role.dart';
 import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../core/utils/functions/image_picker_helper.dart';
-import '../../../../../../core/utils/functions/print_state.dart';
-import '../../../../../../core/utils/functions/responsive.dart';
+ import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../../../individual/my_property_details/view/widgets/contracts_section_widget.dart';
 import '../../../property_file/view/widgets/owner_financial_section.dart';
@@ -254,16 +253,16 @@ class UnitDetailsContent extends StatelessWidget {
                               state.saveStatus == RequestStatus.loading,
                           descController: bloc.expenseDescController,
                           amountController: bloc.expenseAmountController,
-                          onAddExpense: (description) {
-                            printState('Adding expense 112222');
-                            printState(description);
+                          onAddExpense: () {
                             final desc = bloc.expenseDescController.text.trim();
-                            final amt = double.tryParse(
-                              bloc.expenseAmountController.text.trim().replaceAll(',', ''),
-                            )??0;
-                            printState(
-                              'desc: $desc, amt: $amt price ${bloc.expenseAmountController.text}',
-                            );
+                            final amt =
+                                double.tryParse(
+                                  bloc.expenseAmountController.text
+                                      .trim()
+                                      .replaceAll(',', ''),
+                                ) ??
+                                0;
+
                             if (desc.isEmpty || amt <= 0) return;
                             bloc.add(
                               UnitDetailsExpenseAdded(

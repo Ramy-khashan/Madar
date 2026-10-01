@@ -7,8 +7,7 @@ import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
-import '../../../../../../core/utils/functions/print_state.dart';
-import '../../../../../../core/utils/functions/responsive.dart';
+ import '../../../../../../core/utils/functions/responsive.dart';
 import '../../model/property_file_model.dart';
 import 'owner_expense_card.dart';
 
@@ -33,7 +32,7 @@ class OwnerPropertyExpenses extends StatelessWidget {
   final AppThemeColors colors;
   final TextEditingController descController;
   final TextEditingController amountController;
-  final Function(String) onAddExpense;
+  final Function() onAddExpense;
   final ValueChanged<int> onRemove;
   final VoidCallback onPickFiles;
   final bool canEdit;
@@ -153,8 +152,7 @@ class OwnerPropertyExpenses extends StatelessWidget {
                 SizedBox(height: 12.height),
                 AppButton(
                   onTap: () {
-                    printState('Adding expense 22');
-                     onAddExpense("Returning from onAddExpense");
+                      onAddExpense( );
                   },
                   childText: AppStrings.addExpenseBtn,
                   childIcon: Icons.add,
