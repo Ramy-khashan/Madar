@@ -7,7 +7,6 @@ sealed class FilterEvent extends Equatable {
   List<Object> get props => [];
 }
 
-/// Initialise the sheet with an optional existing filter.
 final class FilterInitialised extends FilterEvent {
   const FilterInitialised({this.initialFilter});
   final PropertyFilterModel? initialFilter;
@@ -61,7 +60,6 @@ final class FilterCityChanged extends FilterEvent {
   List<Object> get props => [city];
 }
 
-/// Fired when the user taps Apply — triggers the onApply callback upstream.
 final class FilterApplied extends FilterEvent {
   const FilterApplied();
 }

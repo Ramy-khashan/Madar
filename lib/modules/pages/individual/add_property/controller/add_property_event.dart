@@ -6,8 +6,6 @@ abstract class AddPropertyEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-// ─── Navigation ────────────────────────────────────────────────────────────
-
 class NextStepEvent extends AddPropertyEvent {
   const NextStepEvent();
 }
@@ -16,11 +14,9 @@ class PreviousStepEvent extends AddPropertyEvent {
   const PreviousStepEvent();
 }
 
-// ─── Step 1 — Type ─────────────────────────────────────────────────────────
-
 class SelectOperationTypeEvent extends AddPropertyEvent {
   const SelectOperationTypeEvent(this.type);
-  final String type; // 'sell' | 'rent'
+  final String type;
   @override
   List<Object?> get props => [type];
 }
@@ -32,16 +28,12 @@ class SelectPropertyTypeEvent extends AddPropertyEvent {
   List<Object?> get props => [typeId];
 }
 
-// ─── Step 2 — Rental Period ────────────────────────────────────────────────
-
 class SelectRentalPeriodEvent extends AddPropertyEvent {
   const SelectRentalPeriodEvent(this.period);
-  final String period; // 'monthly' | 'semi_annual' | 'annual'
+  final String period;
   @override
   List<Object?> get props => [period];
 }
-
-// ─── Step 3 — Location & Deed ──────────────────────────────────────────────
 
 class UpdateLocationEvent extends AddPropertyEvent {
   const UpdateLocationEvent(this.location);
@@ -50,7 +42,6 @@ class UpdateLocationEvent extends AddPropertyEvent {
   List<Object?> get props => [location];
 }
 
-/// Carries the map selection so the request can send a `location` object.
 class UpdateCoordinatesEvent extends AddPropertyEvent {
   const UpdateCoordinatesEvent({
     required this.latitude,
@@ -108,7 +99,7 @@ class SelectDeedTypeEvent extends AddPropertyEvent {
 
 class SelectDateTypeEvent extends AddPropertyEvent {
   const SelectDateTypeEvent(this.dateType);
-  final String dateType; // 'hijri' | 'gregorian'
+  final String dateType;
   @override
   List<Object?> get props => [dateType];
 }
@@ -119,8 +110,6 @@ class DeedDatePickedEvent extends AddPropertyEvent {
   @override
   List<Object?> get props => [date];
 }
-
-// ─── Step 4 — Images ───────────────────────────────────────────────────────
 
 class AddImageEvent extends AddPropertyEvent {
   const AddImageEvent(this.path);
@@ -188,8 +177,6 @@ class ApplyAiDescriptionEvent extends AddPropertyEvent {
   const ApplyAiDescriptionEvent();
 }
 
-// ─── Step 5 — Details ──────────────────────────────────────────────────────
-
 class SelectFacadeEvent extends AddPropertyEvent {
   const SelectFacadeEvent(this.facade);
   final String facade;
@@ -221,7 +208,7 @@ class SelectPropertyAgeEvent extends AddPropertyEvent {
 
 class IncrementCounterEvent extends AddPropertyEvent {
   const IncrementCounterEvent(this.field);
-  final String field; // 'beds' | 'baths' | 'lounges' | 'majlis'
+  final String field;
   @override
   List<Object?> get props => [field];
 }
@@ -241,9 +228,6 @@ class SelectDropdownEvent extends AddPropertyEvent {
   List<Object?> get props => [field, value];
 }
 
-// ─── Step 5 — Per-type details ─────────────────────────────────────────────
-
-/// Sets a single `details` field, keyed by its API field name.
 class SetDetailFieldEvent extends AddPropertyEvent {
   const SetDetailFieldEvent(this.key, this.value);
   final String key;
@@ -252,7 +236,6 @@ class SetDetailFieldEvent extends AddPropertyEvent {
   List<Object?> get props => [key, value];
 }
 
-/// Adds or removes [value] from a multi-select `details` list field.
 class ToggleDetailListItemEvent extends AddPropertyEvent {
   const ToggleDetailListItemEvent(this.key, this.value);
   final String key;
@@ -288,8 +271,6 @@ class ToggleAmenityEvent extends AddPropertyEvent {
   @override
   List<Object?> get props => [amenityId];
 }
-
-// ─── Step 6 — Price & Review ───────────────────────────────────────────────
 
 class ToggleRentInstallmentEvent extends AddPropertyEvent {
   const ToggleRentInstallmentEvent();

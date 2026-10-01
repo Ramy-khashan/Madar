@@ -40,7 +40,6 @@ class BusinessHomeState extends Equatable {
     portfolioErrorMessage,
     requestsErrorMessage,
     performanceSummary,
-    
   ];
   BusinessHomeState copyWith({
     List<PropertiesItemModel>? properties,

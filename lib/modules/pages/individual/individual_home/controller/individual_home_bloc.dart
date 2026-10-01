@@ -28,10 +28,7 @@ class IndividualHomeBloc
       add(const IndividualHomeLoadProperties());
       if (GuestMode.isGuest) {
         emit(
-          state.copyWith(
-            portfolioStatus: RequestStatus.success,
-            portfolio: [],
-          ),
+          state.copyWith(portfolioStatus: RequestStatus.success, portfolio: []),
         );
       } else {
         add(const IndividualHomeLoadPortfolio());
@@ -134,10 +131,7 @@ class IndividualHomeBloc
   ) async {
     if (GuestMode.isGuest) {
       emit(
-        state.copyWith(
-          portfolioStatus: RequestStatus.success,
-          portfolio: [],
-        ),
+        state.copyWith(portfolioStatus: RequestStatus.success, portfolio: []),
       );
       return;
     }
@@ -271,13 +265,6 @@ class IndividualHomeBloc
       description: AppStrings.propertyEvaluationDescription,
       icon: AppImages.ratingIcon,
     ),
-    // SmartServiceModel(
-    //   id: '4',
-    //   title: AppStrings.auctionProperty,
-    //   description: AppStrings.auctionPropertyDescription,
-    //   icon: AppImages.auctionIcon,
-    //   route: AppRouterKeys.auctionNavbar,
-    // ),
     SmartServiceModel(
       route: AppRouterKeys.realEstateNews,
       id: '5',

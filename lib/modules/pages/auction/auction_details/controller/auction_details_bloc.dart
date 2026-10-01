@@ -26,37 +26,41 @@ class AuctionDetailsBloc
     Emitter<AuctionDetailsState> emit,
   ) async {
     emit(state.copyWith(loadStatus: RequestStatus.loading));
-     emit(state.copyWith(
-      loadStatus: RequestStatus.success,
-      auction: AuctionDetailsModel(
-        id: event.auctionId,
-        title: 'شقة فاخرة في الملقا',
-        location: 'الرياض - حي الملقا',
-        currentBid: 90000,
-        minBidIncrement: 1000,
-        imageUrls: [AppImages.propertyImage, AppImages.propertyImage],
-        startTime: DateTime.now().subtract(const Duration(hours: 3)),
-        endTime: DateTime.now().add(const Duration(days: 2, hours: 2, minutes: 2, seconds: 2)),
-        bidsCount: 12,
-        propertyType: 'شقة سكنية',
-        beds: 3,
-        baths: 2,
-        area: '150 ${AppStrings.mesurement}',
-        floor: 3,
-        balconies: 2,
-        propertyNumber: '301',
-        description:
-            'شقة فاخرة بمساحة واسعة مع إطلالة رائعة على المدينة، تشطيب فاخر وموقع مميز',
-        status: AuctionStatus.live,
-        hasDepositPaid: false,
-        startingBid: 80000,
-        tag: 'شقة',
-        sellerName: 'أحمد محمد',
-        sellerRating: 4.8,
-        sellerReviewCount: 24,
-        depositAmount: 30000,
+    emit(
+      state.copyWith(
+        loadStatus: RequestStatus.success,
+        auction: AuctionDetailsModel(
+          id: event.auctionId,
+          title: 'شقة فاخرة في الملقا',
+          location: 'الرياض - حي الملقا',
+          currentBid: 90000,
+          minBidIncrement: 1000,
+          imageUrls: [AppImages.propertyImage, AppImages.propertyImage],
+          startTime: DateTime.now().subtract(const Duration(hours: 3)),
+          endTime: DateTime.now().add(
+            const Duration(days: 2, hours: 2, minutes: 2, seconds: 2),
+          ),
+          bidsCount: 12,
+          propertyType: 'شقة سكنية',
+          beds: 3,
+          baths: 2,
+          area: '150 ${AppStrings.mesurement}',
+          floor: 3,
+          balconies: 2,
+          propertyNumber: '301',
+          description:
+              'شقة فاخرة بمساحة واسعة مع إطلالة رائعة على المدينة، تشطيب فاخر وموقع مميز',
+          status: AuctionStatus.live,
+          hasDepositPaid: false,
+          startingBid: 80000,
+          tag: 'شقة',
+          sellerName: 'أحمد محمد',
+          sellerRating: 4.8,
+          sellerReviewCount: 24,
+          depositAmount: 30000,
+        ),
       ),
-    ));
+    );
   }
 
   Future<void> _onPlaceBid(
@@ -64,13 +68,16 @@ class AuctionDetailsBloc
     Emitter<AuctionDetailsState> emit,
   ) async {
     emit(state.copyWith(bidStatus: RequestStatus.loading));
-     if (state.auction == null) return;
-    emit(state.copyWith(
-      bidStatus: RequestStatus.success,
-      auction: state.auction!.copyWith(
-        currentBid: state.auction!.currentBid + state.auction!.minBidIncrement,
-        bidsCount: state.auction!.bidsCount + 1,
+    if (state.auction == null) return;
+    emit(
+      state.copyWith(
+        bidStatus: RequestStatus.success,
+        auction: state.auction!.copyWith(
+          currentBid:
+              state.auction!.currentBid + state.auction!.minBidIncrement,
+          bidsCount: state.auction!.bidsCount + 1,
+        ),
       ),
-    ));
+    );
   }
 }

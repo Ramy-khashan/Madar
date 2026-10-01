@@ -8,7 +8,7 @@ import '../../../../../../core/components/outline_section.dart';
 import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
-import '../../../../../../core/utils/constants/app_strings.dart'; 
+import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../controller/choose_broker_bloc.dart';
 import '../../model/broker_model.dart';
@@ -136,8 +136,9 @@ class BrokerDetailsContentWidget extends StatelessWidget {
                 width: 560.width,
                 text: AppStrings.sendToBrokerBtn,
                 isLoading: state.confirmStatus.name == 'loading',
-                onTap: () =>
-                    context.read<ChooseBrokerBloc>().add(const ChooseBrokerConfirm()),
+                onTap: () => context.read<ChooseBrokerBloc>().add(
+                  const ChooseBrokerConfirm(),
+                ),
               ),
             ),
           ],
@@ -146,4 +147,3 @@ class BrokerDetailsContentWidget extends StatelessWidget {
     );
   }
 }
- 

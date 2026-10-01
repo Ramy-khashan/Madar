@@ -109,7 +109,8 @@ class AddPropertyView extends StatelessWidget {
                       AddPropertyStepIndicator(tc: tc),
                       Expanded(
                         child: switch (state.step) {
-                          AddPropertyStep.type => const AddPropertyStep1Screen(),
+                          AddPropertyStep.type =>
+                            const AddPropertyStep1Screen(),
                           AddPropertyStep.period =>
                             const AddPropertyStep2Screen(),
                           AddPropertyStep.location =>

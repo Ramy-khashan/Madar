@@ -78,7 +78,7 @@ class InsuranceOptionsContentWidget extends StatelessWidget {
                                         vertical: 3.height,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: AppColors.lightSuccessColor ,
+                                        color: AppColors.lightSuccessColor,
                                         borderRadius: BorderRadius.circular(
                                           20.radius,
                                         ),
@@ -148,7 +148,7 @@ class InsuranceOptionsContentWidget extends StatelessWidget {
                       ),
                     ),
                     Card(
-                       shape: RoundedRectangleBorder(
+                      shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(32.radius),
                       ),
                       elevation: 0,

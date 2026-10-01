@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../../../../../../core/utils/constants/app_constant.dart';
@@ -6,7 +5,11 @@ import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 
 class NearestPropertyToggle extends StatelessWidget {
-  const NearestPropertyToggle({super.key, required this.value, required this.onChanged});
+  const NearestPropertyToggle({
+    super.key,
+    required this.value,
+    required this.onChanged,
+  });
 
   final bool value;
   final ValueChanged<bool> onChanged;

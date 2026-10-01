@@ -35,9 +35,10 @@ class PlanTileItem extends StatelessWidget {
                 vertical: 14.height,
               ),
               decoration: BoxDecoration(
-           
                 borderRadius: BorderRadius.circular(16.radius),
-                border: Border.all(color:isSelected ? colors.primaryBrand : colors.borderColor),
+                border: Border.all(
+                  color: isSelected ? colors.primaryBrand : colors.borderColor,
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

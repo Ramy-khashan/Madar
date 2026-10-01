@@ -18,7 +18,7 @@ import '../../../../core/utils/functions/preference_utils.dart';
 import '../../../../core/utils/functions/responsive.dart';
 import '../../../../core/utils/functions/router_handler.dart';
 import '../../../../core/utils/functions/validate.dart';
-import '../../common/business_role_toggle.dart';
+import '../../common/business_role_radios.dart';
 import '../../common/header_part.dart';
 import '../../common/password_item.dart';
 import '../controller/sign_up_bloc.dart';
@@ -39,12 +39,7 @@ class SignUpScreen extends StatelessWidget {
           if (state.signUpStatus == RequestStatus.success) {
             if (PreferenceUtils().getString(StorageKeys.accountType) ==
                 AppConstant.business) {
-              // RouterHandler.navigate(
-              //   context,
-              //   AppRouterKeys.subscriptionPlans,
-              //   routerType: RouterType.goName,
-              // );
-                RouterHandler.navigate(
+              RouterHandler.navigate(
                 context,
                 AppRouterKeys.navbar,
                 routerType: RouterType.goName,
@@ -114,7 +109,9 @@ class SignUpScreen extends StatelessWidget {
                                           value.completeNumber;
                                     },
                                   ),
-                                  if (SignUpBloc.get(context).isBusinessPath) ...[
+                                  if (SignUpBloc.get(
+                                    context,
+                                  ).isBusinessPath) ...[
                                     SizedBox(height: 8.height),
                                     BusinessRoleRadios(
                                       selectedRole: state.selectedRole,

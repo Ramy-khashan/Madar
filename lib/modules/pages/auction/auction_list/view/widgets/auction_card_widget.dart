@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../../config/router/app_router_keys.dart';
@@ -13,6 +12,8 @@ import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../model/auction_item_model.dart';
+import 'status_badge.dart';
+import 'countdown_row.dart';
 
 class AuctionCardWidget extends StatelessWidget {
   const AuctionCardWidget({super.key, this.item});
@@ -43,14 +44,16 @@ class AuctionCardWidget extends StatelessWidget {
               children: [
                 ImageItem(
                   item?.imageUrl ?? '',
-                   width: double.infinity,
+                  width: double.infinity,
                   fit: BoxFit.fill,
                   borderRadius: BorderRadius.circular(32.radius),
                 ),
                 PositionedDirectional(
                   top: 10.height,
                   end: 20.width,
-                  child: StatusBadge(status: item?.status ?? AuctionStatus.live),
+                  child: StatusBadge(
+                    status: item?.status ?? AuctionStatus.live,
+                  ),
                 ),
               ],
             ),
@@ -87,11 +90,15 @@ class AuctionCardWidget extends StatelessWidget {
                     IconButton(
                       style: IconButton.styleFrom(
                         padding: EdgeInsets.zero,
-                        backgroundColor:colors.borderColor.withValues(alpha: 0.5),
-                         
+                        backgroundColor: colors.borderColor.withValues(
+                          alpha: 0.5,
+                        ),
                       ),
                       onPressed: () {},
-                      icon: const Icon(Icons.bookmark_border, color: AppColors.secondBrand),
+                      icon: const Icon(
+                        Icons.bookmark_border,
+                        color: AppColors.secondBrand,
+                      ),
                     ),
                   ],
                 ),
@@ -112,7 +119,7 @@ class AuctionCardWidget extends StatelessWidget {
                     ),
                     if (item?.status == AuctionStatus.live) ...[
                       SizedBox(height: 8.height),
-                      _CountdownRow(endTime: item?.endTime ?? DateTime.now()),
+                      CountdownRow(endTime: item?.endTime ?? DateTime.now()),
                     ],
                   ],
                 ),
@@ -223,7 +230,8 @@ class AuctionCardWidget extends StatelessWidget {
 
                 AppButton(
                   onTap: () {
-             RouterHandler.navigate(context,
+                    RouterHandler.navigate(
+                      context,
                       AppRouterKeys.auctionDetails,
                       extra: item?.id ?? 0,
                     );
@@ -235,89 +243,6 @@ class AuctionCardWidget extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class StatusBadge extends StatelessWidget {
-  const StatusBadge({super.key, required this.status});
-  final AuctionStatus status;
-
-  @override
-  Widget build(BuildContext context) {
-    final (label, color) = switch (status) {
-      AuctionStatus.live => (
-        AppStrings.auctionLiveTab,
-        const Color(0xFF22C55E),
-      ),
-      AuctionStatus.upcoming => (
-        AppStrings.auctionUpcomingTab,
-        const Color(0xFFF59E0B),
-      ),
-      AuctionStatus.ended => (AppStrings.auctionEndedTab, Colors.grey),
-    };
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.width, vertical: 4.height),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(20.radius),
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 4.width,
-            backgroundColor: Colors.white.withValues(alpha: 0.5),
-          ),
-          SizedBox(width: 4.width),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: context.responsiveFontScale(12),
-              fontFamily: AppConstant.appFont,
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _CountdownRow extends StatelessWidget {
-  const _CountdownRow({required this.endTime});
-  final DateTime endTime;
-
-  String _formatDuration(Duration d) {
-    if (d.isNegative) return '00:00:00';
-    final h = d.inHours.toString().padLeft(2, '0');
-    final m = (d.inMinutes % 60).toString().padLeft(2, '0');
-    // final s = (d.inSeconds % 60).toString().padLeft(2, '0');
-    return '$h ${AppStrings.hoursLabel} $m ${AppStrings.minutesLabel}';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // final colors = AppThemeColors.of(context);
-    final remaining = endTime.difference(DateTime.now());
-    return Row(
-      children: [
-        Icon(
-          CupertinoIcons.clock,
-          size: 16.width,
-          color: AppColors.secondBrand,
-          weight: .9,
-        ),
-        SizedBox(width: 4.width),
-        Text(
-          _formatDuration(remaining),
-          style: TextStyle(
-            fontSize: context.responsiveFontScale(14),
-            fontFamily: AppConstant.appFont,
-            color: AppColors.secondBrand,
-          ),
-        ),
-      ],
     );
   }
 }

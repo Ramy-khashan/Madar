@@ -36,7 +36,7 @@ class BrokerModel extends Equatable {
     commissionPercent,
     description,
     imageUrl,
-    id
+    id,
   ];
 
   factory BrokerModel.fromJson(Map<String, dynamic> json) {

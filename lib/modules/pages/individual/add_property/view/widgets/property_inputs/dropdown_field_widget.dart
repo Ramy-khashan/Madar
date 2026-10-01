@@ -18,7 +18,6 @@ class DropdownFieldWidget extends StatelessWidget {
 
   final String label;
 
-  /// API wire values; the visible text comes from translating each entry.
   final List<String> items;
   final String? selectedValue;
   final ValueChanged<String?> onChanged;

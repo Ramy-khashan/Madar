@@ -77,7 +77,8 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
               notifications: event.isLoadMore
                   ? [...state.notifications, ...items]
                   : items,
-              totalCount: (successResponse.response['total'] as num?)?.toInt() ??
+              totalCount:
+                  (successResponse.response['total'] as num?)?.toInt() ??
                   items.length,
               unreadCount:
                   (successResponse.response['unreadCount'] as num?)?.toInt() ??
@@ -129,7 +130,9 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
           printState('mark as read failed: $failedResponse');
         },
         (successResponse) {
-          printState('PATCH /notifications/${event.id}/read: ${successResponse.response}');
+          printState(
+            'PATCH /notifications/${event.id}/read: ${successResponse.response}',
+          );
         },
       );
     } catch (e) {

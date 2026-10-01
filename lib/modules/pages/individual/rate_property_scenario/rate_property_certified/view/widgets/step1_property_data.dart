@@ -39,21 +39,19 @@ class Step1PropertyData extends StatelessWidget {
           ),
           SizedBox(height: 8.height),
           RatePropertyFormItem(
-            propertyController: RatePropertyCertifiedBloc.get(context).propertyController,
+            propertyController: RatePropertyCertifiedBloc.get(
+              context,
+            ).propertyController,
             properties: const [],
-            onSearch: (value) {
-              // Implement property search if needed in future
-            },
-            onSelectProperty: (value) {
-              // Implement property selection if needed in future
-            },
+            onSearch: (value) {},
+            onSelectProperty: (value) {},
             ratePropertyArea: RatePropertyCertifiedBloc.get(
               context,
             ).areaController,
             propertyLocation: RatePropertyCertifiedBloc.get(
               context,
             ).locationController,
-            propertyAge:state.propertyAge,
+            propertyAge: state.propertyAge,
             finishingLevel: state.finishingLevel,
             purpose: state.purpose,
             onPropertyAgeChanged: (v) => context

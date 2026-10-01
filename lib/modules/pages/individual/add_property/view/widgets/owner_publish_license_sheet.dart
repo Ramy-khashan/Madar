@@ -76,7 +76,9 @@ class _OwnerPublishLicenseSheetState extends State<OwnerPublishLicenseSheet> {
   Widget build(BuildContext context) {
     final tc = AppThemeColors.of(context);
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
       child: Container(
         decoration: BoxDecoration(
           color: tc.backgroundPrimary,

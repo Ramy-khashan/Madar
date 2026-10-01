@@ -65,8 +65,7 @@ class PropertiesMapView extends StatelessWidget {
                                 ? icons.selected
                                 : icons.normal,
                             anchor: const Offset(0.5, 1.0),
-                            onTap: () =>
-                                bloc.add(SelectMarkerEvent(e.key)),
+                            onTap: () => bloc.add(SelectMarkerEvent(e.key)),
                           );
                         }),
                       );
@@ -91,28 +90,19 @@ class PropertiesMapView extends StatelessWidget {
                           markers: markers,
                           myLocationEnabled: state.isNearestToMe,
                           onTap: (latLng) => bloc.add(
-                            MapTappedEvent(
-                              latLng.latitude,
-                              latLng.longitude,
-                            ),
+                            MapTappedEvent(latLng.latitude, latLng.longitude),
                           ),
                           onCameraMove: (latLng) {
                             bloc.add(
-                              MapCameraMoved(
-                                latLng.latitude,
-                                latLng.longitude,
-                              ),
+                              MapCameraMoved(latLng.latitude, latLng.longitude),
                             );
                           },
-                          onCameraIdle: () =>
-                              bloc.add(const MapCameraIdle()),
+                          onCameraIdle: () => bloc.add(const MapCameraIdle()),
                         ),
                         if (state.status == RequestStatus.loading)
                           const Positioned.fill(
                             child: IgnorePointer(
-                              child: Center(
-                                child: CircularProgressIndicator(),
-                              ),
+                              child: Center(child: CircularProgressIndicator()),
                             ),
                           ),
                         PositionedDirectional(
@@ -133,8 +123,7 @@ class PropertiesMapView extends StatelessWidget {
                               colors: colors,
                               marker: propertyMarkers[selectedIndex],
                               property: state.selectedProperty,
-                              onClose: () =>
-                                  bloc.add(const CloseMarkerEvent()),
+                              onClose: () => bloc.add(const CloseMarkerEvent()),
                             ),
                           ),
                       ],

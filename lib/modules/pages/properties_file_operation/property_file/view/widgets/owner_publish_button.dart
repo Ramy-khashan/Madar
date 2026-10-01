@@ -6,7 +6,7 @@ import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/account_role.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../individual/add_property/view/widgets/owner_publish_license_sheet.dart';
- import '../../controller/property_file_bloc.dart';
+import '../../controller/property_file_bloc.dart';
 
 class OwnerPublishButton extends StatelessWidget {
   const OwnerPublishButton({

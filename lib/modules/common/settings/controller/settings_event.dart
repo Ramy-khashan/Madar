@@ -24,8 +24,7 @@ final class HandleProfileImageEvent extends SettingsEvent {
 }
 
 class UpdateFullNameEvent extends SettingsEvent {
-  const UpdateFullNameEvent(
-      {required this.context});
+  const UpdateFullNameEvent({required this.context});
 
   final BuildContext context;
 }

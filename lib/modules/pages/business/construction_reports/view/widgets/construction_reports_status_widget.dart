@@ -22,8 +22,7 @@ class ConstructionReportsStatusWidget extends StatelessWidget {
           if (report.contractActive.count > 0 ||
               report.contractActive.percent > 0)
             StatisticCircleModel(
-              label:
-                  '${AppStrings.activeTab} (${report.contractActive.count})',
+              label: '${AppStrings.activeTab} (${report.contractActive.count})',
               value: report.contractActive.ratio,
               color: const Color(0xFF6C63FF),
             ),

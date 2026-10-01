@@ -34,15 +34,15 @@ class SubscriptionState extends Equatable {
 
   @override
   List<Object?> get props => [
-        loadStatus,
-        plans,
-        billingCycle,
-        selectedPlanId,
-        paymentMethod,
-        confirmStatus,
-        transactionId,
-        errorMsg,
-      ];
+    loadStatus,
+    plans,
+    billingCycle,
+    selectedPlanId,
+    paymentMethod,
+    confirmStatus,
+    transactionId,
+    errorMsg,
+  ];
 
   SubscriptionState copyWith({
     RequestStatus? loadStatus,

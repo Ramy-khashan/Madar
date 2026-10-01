@@ -251,7 +251,7 @@ class PropertyFileBloc extends Bloc<PropertyFileEvent, PropertyFileState>
       state.copyWith(
         expenses: [
           ...state.expenses,
-          UnitExpenseModel(description: desc, amount: amt,),
+          UnitExpenseModel(description: desc, amount: amt),
         ],
       ),
     );

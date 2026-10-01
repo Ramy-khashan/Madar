@@ -101,18 +101,14 @@ class AdSummaryTable extends StatelessWidget {
                   ),
                 ),
               ),
-              ...rows
-                  .asMap()
-                  .entries
-                  .map(
-                    (e) => SummaryRowWidget(
-                      label: e.value.label,
-                      value: e.value.value,
-                      isLast: e.key == rows.length - 1,
-                      tc: tc,
-                    ),
-                  )
-                  ,
+              ...rows.asMap().entries.map(
+                (e) => SummaryRowWidget(
+                  label: e.value.label,
+                  value: e.value.value,
+                  isLast: e.key == rows.length - 1,
+                  tc: tc,
+                ),
+              ),
             ],
           ),
         );

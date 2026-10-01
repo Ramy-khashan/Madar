@@ -38,10 +38,8 @@ class OwnerExpenseCard extends StatelessWidget {
         children: [
           if ((expense.fileUrl ?? '').isNotEmpty) ...[
             GestureDetector(
-              onTap: () => ImagePreviewScreen.open(
-                context,
-                imageUrl: expense.fileUrl!,
-              ),
+              onTap: () =>
+                  ImagePreviewScreen.open(context, imageUrl: expense.fileUrl!),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.radius),
                 child: ImageItem(

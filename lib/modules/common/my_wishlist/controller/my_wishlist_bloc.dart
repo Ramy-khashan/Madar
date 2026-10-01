@@ -14,7 +14,6 @@ part 'my_wishlist_state.dart';
 class MyWishlistBloc extends Bloc<MyWishlistEvent, MyWishlistState> {
   MyWishlistBloc() : super(const MyWishlistState()) {
     on<MyWishlistLoad>(_onLoad);
-    // on<PropertiesFilterApplied>(_onFilterApplied);
   }
   static MyWishlistBloc get(BuildContext context) =>
       BlocProvider.of<MyWishlistBloc>(context);

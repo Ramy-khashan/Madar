@@ -69,9 +69,9 @@ class OfferCard extends StatelessWidget {
               ),
             ],
           ),
-           Padding(
-             padding: EdgeInsets.symmetric(vertical: 12.height),
-             child: Row(
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 12.height),
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
@@ -92,10 +92,10 @@ class OfferCard extends StatelessWidget {
                   ),
                 ),
               ],
-                       ),
-           ),
+            ),
+          ),
 
-           Row(
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(

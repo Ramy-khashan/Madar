@@ -6,12 +6,10 @@ sealed class OnBoardingEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
 class OnBoardingChangePage extends OnBoardingEvent {
-   final BuildContext context;
-   const OnBoardingChangePage({
-    required this.context,});
+  final BuildContext context;
+  const OnBoardingChangePage({required this.context});
   @override
-  List<Object> get props => [
-    context,
-  ];
+  List<Object> get props => [context];
 }

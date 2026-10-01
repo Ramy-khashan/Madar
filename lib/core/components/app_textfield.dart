@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../config/theme/app_theme_colors.dart';
 import '../utils/constants/app_constant.dart';
 import '../utils/functions/common_fun.dart';
 import '../utils/functions/responsive.dart';
 import 'image_item.dart';
+import 'app_textfield_focus_cubit.dart';
 
-class AppTextField extends StatefulWidget {
+class AppTextField extends StatelessWidget {
   final TextInputAction textInputAction;
   final TextInputType textInputType;
   final bool obscureText;
@@ -114,158 +116,134 @@ class AppTextField extends StatefulWidget {
     this.autovalidateMode,
     this.isPrice = false,
   }) : assert(
-          !(obscureText && maxLines > 1),
-          'obscureText cannot be used with multiline',
-        );
-
-  @override
-  State<AppTextField> createState() => _AppTextFieldState();
-}
-
-class _AppTextFieldState extends State<AppTextField> {
-  late FocusNode _focusNode;
-  bool _isFocused = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _focusNode = widget.focusNode ?? FocusNode();
-    _focusNode.addListener(_onFocusChange);
-  }
-
-  @override
-  void didUpdateWidget(AppTextField oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.focusNode != widget.focusNode) {
-      _focusNode.removeListener(_onFocusChange);
-      if (oldWidget.focusNode == null) _focusNode.dispose();
-      _focusNode = widget.focusNode ?? FocusNode();
-      _focusNode.addListener(_onFocusChange);
-    }
-  }
-
-  @override
-  void dispose() {
-    _focusNode.removeListener(_onFocusChange);
-    if (widget.focusNode == null) _focusNode.dispose();
-    super.dispose();
-  }
-
-  void _onFocusChange() {
-    setState(() => _isFocused = _focusNode.hasFocus);
-  }
+         !(obscureText && maxLines > 1),
+         'obscureText cannot be used with multiline',
+       );
 
   @override
   Widget build(BuildContext context) {
-    final tc = AppThemeColors.of(context);
+    return BlocProvider(
+      create: (_) => AppTextFieldFocusCubit(focusNode),
+      child: BlocBuilder<AppTextFieldFocusCubit, bool>(
+        builder: (context, isFocused) {
+          final tc = AppThemeColors.of(context);
+          final activeFocusNode = context.read<AppTextFieldFocusCubit>().node;
 
-    final effectiveFillColor = !widget.enabled
-        ? (widget.fillColor ?? tc.textFieldFill).withValues(alpha: 0.5)
-        : widget.fillColor ?? tc.textFieldFill;
+          final effectiveFillColor = !enabled
+              ? (fillColor ?? tc.textFieldFill).withValues(alpha: 0.5)
+              : fillColor ?? tc.textFieldFill;
 
-    final padding = widget.contentPadding ??
-        EdgeInsets.symmetric(
-          horizontal: 12.width,
-          vertical: 14.height,
-        );
+          final padding =
+              contentPadding ??
+              EdgeInsets.symmetric(horizontal: 12.width, vertical: 14.height);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (widget.isWithTitle && widget.title != null) ...[
-          Padding(
-            padding: EdgeInsets.only(
-              bottom: widget.bottomPadding ?? 8.height,
-              top: 14.height,
-            ),
-            child: AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 200),
-              style: widget.titleStyle ??
-                  TextStyle(
-                    fontSize: context.responsiveFontScale(14),
-                    fontWeight: FontWeight.w700,
-                    fontFamily: AppConstant.appHeaderFont,
-                    color: _isFocused
-                        ? (widget.borderColor ?? tc.primaryBrand)
-                        : tc.textFieldTitle,
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (isWithTitle && title != null) ...[
+                Padding(
+                  padding: EdgeInsets.only(
+                    bottom: bottomPadding ?? 8.height,
+                    top: 14.height,
                   ),
-              child: Text(
-                widget.title!,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                  child: AnimatedDefaultTextStyle(
+                    duration: const Duration(milliseconds: 200),
+                    style:
+                        titleStyle ??
+                        TextStyle(
+                          fontSize: context.responsiveFontScale(14),
+                          fontWeight: FontWeight.w700,
+                          fontFamily: AppConstant.appHeaderFont,
+                          color: isFocused
+                              ? (borderColor ?? tc.primaryBrand)
+                              : tc.textFieldTitle,
+                        ),
+                    child: Text(
+                      title!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+              ],
+
+              TextFormField(
+                enabled: enabled,
+                controller: controller,
+                focusNode: activeFocusNode,
+                obscureText: obscureText,
+                readOnly: isReadOnly,
+                maxLines: maxLines,
+                minLines: minLines,
+                maxLength: maxLength,
+                textAlign: textAlign,
+                textInputAction: textInputAction,
+                keyboardType: textInputType,
+                inputFormatters: [
+                  if (isPrice) ThousandsSeparatorInputFormatter(),
+                  ...inputFormatters,
+                ],
+                validator: validator,
+                onChanged: onChanged,
+                onTap: onTapField,
+                onEditingComplete: onEditingComplete,
+                onFieldSubmitted: onSubmitted,
+                cursorColor: borderColor ?? tc.primaryBrand,
+                autovalidateMode:
+                    autovalidateMode ?? AutovalidateMode.onUserInteraction,
+
+                onTapUpOutside: (_) {
+                  FocusScope.of(context).unfocus();
+                },
+
+                style: TextStyle(
+                  color: enabled ? tc.textPrimary : tc.textSecondary,
+                  fontSize: context.responsiveFontScale(18),
+                ),
+
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: effectiveFillColor,
+                  isDense: isDense,
+                  contentPadding: padding,
+                  hintText: hint,
+                  errorText: errorText,
+                  counterText: '',
+                  hintStyle:
+                      hintStyle ??
+                      TextStyle(
+                        fontSize: context.responsiveFontScale(16),
+                        color: hintColor ?? tc.textFieldHint,
+                        fontFamily: AppConstant.appFont,
+                      ),
+                  errorStyle:
+                      errorStyle ??
+                      TextStyle(
+                        fontSize: context.responsiveFontScale(12),
+                        fontFamily: AppConstant.appFont,
+                      ),
+
+                  border: _buildBorder(tc),
+                  enabledBorder: _buildBorder(tc),
+                  focusedBorder: _buildBorder(tc, isFocused: true),
+                  disabledBorder: _buildBorder(tc, isDisabled: true),
+                  errorBorder: _buildBorder(tc, isError: true),
+                  focusedErrorBorder: _buildBorder(
+                    tc,
+                    isFocused: true,
+                    isError: true,
+                  ),
+
+                  prefixIconConstraints: prefixIconConstraints,
+                  suffixIconConstraints: suffixIconConstraints,
+                  prefixIcon: _buildPrefix(tc, isFocused),
+                  suffixIcon: _buildSuffix(tc, isFocused),
+                ),
               ),
-            ),
-          ),
-        ],
-
-        TextFormField(
-          enabled: widget.enabled,
-          controller: widget.controller,
-          focusNode: _focusNode,
-          obscureText: widget.obscureText,
-          readOnly: widget.isReadOnly,
-          maxLines: widget.maxLines,
-          minLines: widget.minLines,
-          maxLength: widget.maxLength,
-          textAlign: widget.textAlign,
-          textInputAction: widget.textInputAction,
-          keyboardType: widget.textInputType,
-          inputFormatters: [
-            if (widget.isPrice) ThousandsSeparatorInputFormatter(),
-            ...widget.inputFormatters,
-          ],
-          validator: widget.validator,
-          onChanged: widget.onChanged,
-          onTap: widget.onTapField,
-          onEditingComplete: widget.onEditingComplete,
-          onFieldSubmitted: widget.onSubmitted,
-          cursorColor: widget.borderColor ?? tc.primaryBrand,
-          autovalidateMode:
-              widget.autovalidateMode ?? AutovalidateMode.onUserInteraction,
-
-          onTapUpOutside: (_) {
-            FocusScope.of(context).unfocus();
-          },
-
-          style: TextStyle(
-            color: widget.enabled ? tc.textPrimary : tc.textSecondary,
-            fontSize: context.responsiveFontScale(18),
-          ),
-
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: effectiveFillColor,
-            isDense: widget.isDense,
-            contentPadding: padding,
-            hintText: widget.hint,
-            errorText: widget.errorText,
-            counterText: '',
-            hintStyle: widget.hintStyle ??
-                TextStyle(
-                  fontSize: context.responsiveFontScale(16),
-                  color: widget.hintColor ?? tc.textFieldHint,
-                  fontFamily: AppConstant.appFont,
-                ),
-            errorStyle: widget.errorStyle ??
-                TextStyle(
-                  fontSize: context.responsiveFontScale(12),
-                  fontFamily: AppConstant.appFont,
-                ),
-
-            border: _buildBorder(tc),
-            enabledBorder: _buildBorder(tc),
-            focusedBorder: _buildBorder(tc, isFocused: true),
-            disabledBorder: _buildBorder(tc, isDisabled: true),
-            errorBorder: _buildBorder(tc, isError: true),
-            focusedErrorBorder: _buildBorder(tc, isFocused: true, isError: true),
-
-            prefixIconConstraints: widget.prefixIconConstraints,
-            suffixIconConstraints: widget.suffixIconConstraints,
-            prefixIcon: _buildPrefix(tc),
-            suffixIcon: _buildSuffix(tc),
-          ),
-        ),
-      ],
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -279,63 +257,62 @@ class _AppTextFieldState extends State<AppTextField> {
     if (isError) {
       color = const Color(0xFFB00020);
     } else if (isDisabled) {
-      color = (widget.borderColor ?? tc.textFieldBorder).withValues(alpha: 0.4);
+      color = (borderColor ?? tc.textFieldBorder).withValues(alpha: 0.4);
     } else if (isFocused) {
-      color = widget.borderColor ?? tc.primaryBrand;
+      color = borderColor ?? tc.primaryBrand;
     } else {
-      color = widget.borderColor ?? tc.textFieldBorder;
+      color = borderColor ?? tc.textFieldBorder;
     }
 
     final side = BorderSide(
       color: color,
-      width: isFocused ? widget.borderWidth + 0.5 : widget.borderWidth,
+      width: isFocused ? borderWidth + 0.5 : borderWidth,
     );
 
-    if (widget.isUnderLineBorder) {
+    if (isUnderLineBorder) {
       return UnderlineInputBorder(borderSide: side);
     }
 
     return OutlineInputBorder(
-      borderRadius: BorderRadius.circular(widget.borderRadius),
+      borderRadius: BorderRadius.circular(borderRadius),
       borderSide: side,
     );
   }
 
-  Widget? _buildPrefix(AppThemeColors tc) {
-    if (widget.prefixIconWidget != null) return widget.prefixIconWidget;
+  Widget? _buildPrefix(AppThemeColors tc, bool isFocused) {
+    if (prefixIconWidget != null) return prefixIconWidget;
 
     final effectivePrefixPadding =
-        widget.prefixIconPadding ?? EdgeInsets.symmetric(horizontal: 12.width);
+        prefixIconPadding ?? EdgeInsets.symmetric(horizontal: 12.width);
 
-    if (widget.prefixIcon != null) {
+    if (prefixIcon != null) {
       return GestureDetector(
-        onTap: widget.onTapPrefixIcon,
+        onTap: onTapPrefixIcon,
         child: Padding(
           padding: effectivePrefixPadding,
           child: Icon(
-            widget.prefixIcon,
-            size: widget.prefixIconSize ?? 22,
-            color: _isFocused
-                ? (widget.prefixIconColor ?? tc.primaryBrand)
-                : (widget.prefixIconColor ?? tc.textFieldBorder),
+            prefixIcon,
+            size: prefixIconSize ?? 22,
+            color: isFocused
+                ? (prefixIconColor ?? tc.primaryBrand)
+                : (prefixIconColor ?? tc.textFieldBorder),
           ),
         ),
       );
     }
 
-    if (widget.prefixImage != null) {
+    if (prefixImage != null) {
       return SizedBox(
-        
         child: GestureDetector(
-          onTap: widget.onTapPrefixIcon,
+          onTap: onTapPrefixIcon,
           child: Padding(
             padding: effectivePrefixPadding,
             child: IntrinsicHeight(
               child: ImageItem(
-                widget.prefixImage!,
-                width: widget.prefixIconSize ?? 18,
-                height: widget.prefixIconSize ?? 18,
-                color: widget.prefixIconColor,
+                prefixImage!,
+                width: prefixIconSize ?? 18,
+                height: prefixIconSize ?? 18,
+                color: prefixIconColor,
               ),
             ),
           ),
@@ -346,37 +323,37 @@ class _AppTextFieldState extends State<AppTextField> {
     return null;
   }
 
-  Widget? _buildSuffix(AppThemeColors tc) {
-     final effectiveSuffixPadding =
-        widget.suffixIconPadding ?? EdgeInsets.symmetric(horizontal: 12.width);
-    if (widget.suffixIconWidget != null) return widget.suffixIconWidget;
-   
-    if (widget.suffixIcon != null) {
+  Widget? _buildSuffix(AppThemeColors tc, bool isFocused) {
+    final effectiveSuffixPadding =
+        suffixIconPadding ?? EdgeInsets.symmetric(horizontal: 12.width);
+    if (suffixIconWidget != null) return suffixIconWidget;
+
+    if (suffixIcon != null) {
       return GestureDetector(
-        onTap: widget.onTapSuffixIcon,
+        onTap: onTapSuffixIcon,
         child: Padding(
           padding: effectiveSuffixPadding,
           child: Icon(
-            widget.suffixIcon,
-            size: widget.suffixIconSize ?? 22,
-            color: _isFocused
-                ? (widget.suffixIconColor ?? tc.primaryBrand)
-                : (widget.suffixIconColor ?? tc.textFieldBorder),
+            suffixIcon,
+            size: suffixIconSize ?? 22,
+            color: isFocused
+                ? (suffixIconColor ?? tc.primaryBrand)
+                : (suffixIconColor ?? tc.textFieldBorder),
           ),
         ),
       );
     }
 
-    if (widget.suffixImage != null) {
+    if (suffixImage != null) {
       return GestureDetector(
-        onTap: widget.onTapSuffixIcon,
+        onTap: onTapSuffixIcon,
         child: Padding(
           padding: effectiveSuffixPadding,
           child: ImageItem(
-            widget.suffixImage!,
-            width: widget.suffixIconSize ?? 18,
-            height: widget.suffixIconSize ?? 18,
-            color: widget.suffixIconColor,
+            suffixImage!,
+            width: suffixIconSize ?? 18,
+            height: suffixIconSize ?? 18,
+            color: suffixIconColor,
           ),
         ),
       );

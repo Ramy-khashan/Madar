@@ -13,7 +13,6 @@ class GuestMode {
 
   static bool get isGuest => PreferenceUtils().getBool(StorageKeys.isGuest);
 
-  /// Clears guest mode and opens select-role with an empty navigation stack.
   static Future<void> exitToChooseRole(BuildContext context) async {
     await PreferenceUtils().setBool(StorageKeys.isGuest, false);
     if (!context.mounted) return;
@@ -24,8 +23,6 @@ class GuestMode {
     );
   }
 
-  /// Returns `true` when the user may continue. Guests are sent to select role
-  /// and the method returns `false`.
   static bool requireAuth(
     BuildContext context, {
     GuestAuthPrompt? prompt,

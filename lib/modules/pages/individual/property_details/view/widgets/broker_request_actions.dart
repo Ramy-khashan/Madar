@@ -6,6 +6,7 @@ import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../pages/business/business_properties/view/widgets/reject_request_dialog.dart';
 import '../../../../../pages/business/business_properties/view/widgets/request_action_dialogs.dart';
 import '../../controller/property_details_bloc.dart';
 

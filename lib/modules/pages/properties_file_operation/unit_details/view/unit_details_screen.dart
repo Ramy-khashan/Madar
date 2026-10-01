@@ -20,8 +20,8 @@ class UnitDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => UnitDetailsBloc()
-        ..add(UnitDetailsInit(unit, buildingId: buildingId)),
+      create: (_) =>
+          UnitDetailsBloc()..add(UnitDetailsInit(unit, buildingId: buildingId)),
       child: UnitDetailsContent(propertyName: propertyName),
     );
   }

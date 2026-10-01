@@ -24,7 +24,7 @@ class PropertyFileScreen extends StatelessWidget {
 
     return BlocListener<PropertyFileBloc, PropertyFileState>(
       listenWhen: (prev, curr) => curr.isDeleted && !prev.isDeleted,
-      listener: (context, state) =>RouterHandler.pop(context),
+      listener: (context, state) => RouterHandler.pop(context),
       child: Scaffold(
         backgroundColor: colors.backgroundPrimary,
         appBar: AppAppbar(
@@ -36,14 +36,14 @@ class PropertyFileScreen extends StatelessWidget {
               onSend: () => RouterHandler.navigate(
                 context,
                 AppRouterKeys.chooseBroker,
-                extra: bloc.state.details?.propertyId ?? bloc.state.property?.id,
+                extra:
+                    bloc.state.details?.propertyId ?? bloc.state.property?.id,
               ),
               onDelete: () => showConfirmDeleteDialog(
                 context: context,
                 title: AppStrings.deleteProperty,
                 content: AppStrings.deletePropertyConfirmation,
-                onConfirm: () =>
-                    bloc.add(const PropertyFileDeleteProperty()),
+                onConfirm: () => bloc.add(const PropertyFileDeleteProperty()),
               ),
             ),
           ],
@@ -58,11 +58,7 @@ class PropertyFileScreen extends StatelessWidget {
                 emptyMsg: '',
                 isEmptyList: false,
                 childIsLoader: true,
-                child: 
-                // state.property == null && state.details == null
-                //     ? const SizedBox()
-                //     :
-                     state.isMultiUnit
+                child: state.isMultiUnit
                     ? PropertyFileContentItem(
                         property: state.property,
                         colors: colors,

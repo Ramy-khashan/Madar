@@ -13,8 +13,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import '../../../firebase_options.dart';
 import '../../utils/functions/service_locator.dart';
 import '../../utils/functions/translation.dart';
- 
- 
+
 class CrashlyticsCollector {
   static final CrashlyticsCollector _instance =
       CrashlyticsCollector._internal();
@@ -36,7 +35,6 @@ class CrashlyticsCollector {
   bool _isLogging = false;
 
   void setup() {
-
     _setupFlutterErrorHandling();
     _setupPlatformErrorHandling();
     _setupErrorWidgetHandling();
@@ -50,13 +48,14 @@ class CrashlyticsCollector {
   }) async {
     _isGlobalErrorHandlerSetup = true;
 
-   await runZonedGuarded<Future<void>>(
+    await runZonedGuarded<Future<void>>(
       () async {
-          WidgetsFlutterBinding.ensureInitialized();
-      await intiService();
-  await initLocalization();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
+        WidgetsFlutterBinding.ensureInitialized();
+        await intiService();
+        await initLocalization();
+        await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
 
         setup();
         runApp(appBuilder());
@@ -839,4 +838,3 @@ enum ApiErrorSeverity {
   const ApiErrorSeverity(this.displayName);
   final String displayName;
 }
- 

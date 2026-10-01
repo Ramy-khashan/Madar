@@ -160,11 +160,7 @@ class SubStage {
   final double progress;
   final String status;
 
-  SubStage({
-    required this.name,
-    required this.progress,
-    required this.status,
-  });
+  SubStage({required this.name, required this.progress, required this.status});
 
   factory SubStage.fromJson(Map<String, dynamic> json) {
     return SubStage(
@@ -208,4 +204,3 @@ List<Map<String, dynamic>> _asList(dynamic value) {
   if (value is! List) return const [];
   return value.map(_asMap).toList();
 }
- 

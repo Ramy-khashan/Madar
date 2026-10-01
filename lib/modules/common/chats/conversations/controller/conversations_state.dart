@@ -1,7 +1,6 @@
 part of 'conversations_bloc.dart';
 
-  class ConversationsState extends Equatable {
- 
+class ConversationsState extends Equatable {
   const ConversationsState({
     this.conversations = const [],
     this.searchQuery = '',

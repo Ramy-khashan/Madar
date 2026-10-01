@@ -137,8 +137,8 @@ class SignInScreen extends StatelessWidget {
                                     hint: AppStrings.enterPhoneNumber,
                                     onChanged: (val) {
                                       SignInBloc.get(
-                                        context,
-                                      ).phoneController.text =
+                                            context,
+                                          ).phoneController.text =
                                           val.completeNumber;
                                     },
                                   ),

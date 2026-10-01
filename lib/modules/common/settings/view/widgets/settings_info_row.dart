@@ -62,7 +62,10 @@ class SettingsInfoRow extends StatelessWidget {
             if (onEdit != null)
               GestureDetector(
                 onTap: onEdit,
-                child: ImageItem(AppImages.editIcon, color: colors.textSecondary),
+                child: ImageItem(
+                  AppImages.editIcon,
+                  color: colors.textSecondary,
+                ),
               ),
           ],
         ),

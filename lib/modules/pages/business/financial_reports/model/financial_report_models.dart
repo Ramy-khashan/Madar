@@ -371,8 +371,9 @@ class DashboardRevenueItem extends Equatable {
     return DashboardRevenueItem(
       id: (json['id'] ?? json['otherIncomeId'] ?? '').toString(),
       contractId: (json['contractId'] ?? json['id'] ?? '').toString(),
-      property: (json['property'] ?? json['propertyTitle'] ?? json['title'] ?? '')
-          .toString(),
+      property:
+          (json['property'] ?? json['propertyTitle'] ?? json['title'] ?? '')
+              .toString(),
       type: (json['type'] ?? '').toString(),
       amount: _asDouble(json['amount']),
       date: DateTime.tryParse((json['date'] ?? '').toString()),
@@ -381,7 +382,15 @@ class DashboardRevenueItem extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, contractId, property, type, amount, date, status];
+  List<Object?> get props => [
+    id,
+    contractId,
+    property,
+    type,
+    amount,
+    date,
+    status,
+  ];
 }
 
 class DashboardRevenuesResponse extends Equatable {

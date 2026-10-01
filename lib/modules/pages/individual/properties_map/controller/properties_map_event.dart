@@ -7,9 +7,6 @@ sealed class PropertiesMapEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// Fetches properties from `properties/map` for [position] (or the map's
-/// default position when null), looping through pagination until all pages
-/// are collected.
 final class LoadPropertiesMapEvent extends PropertiesMapEvent {
   final PositionModel? position;
   const LoadPropertiesMapEvent({this.position});
@@ -18,9 +15,6 @@ final class LoadPropertiesMapEvent extends PropertiesMapEvent {
   List<Object?> get props => [position];
 }
 
-/// Toggles "عرض الاقرب لمنطقتي" — when enabled, requests location
-/// permission, fetches the user's current position and reloads the
-/// properties around it.
 final class ToggleNearestToMeEvent extends PropertiesMapEvent {
   final bool value;
   const ToggleNearestToMeEvent(this.value);
@@ -70,7 +64,6 @@ final class MapCameraIdle extends PropertiesMapEvent {
   const MapCameraIdle();
 }
 
-/// Drops a red pin on an empty map tap. Ignored when the tap is a property.
 final class MapTappedEvent extends PropertiesMapEvent {
   const MapTappedEvent(this.latitude, this.longitude);
   final double latitude;

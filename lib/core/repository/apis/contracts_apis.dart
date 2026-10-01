@@ -60,9 +60,11 @@ class ContractsApis {
       );
       return response.fold((failed) => Left(failed), (success) {
         printState('GET /contracts/$contractId: ${success.response}');
-        return Right(ContractDetailsModel.fromJson(
-          Map<String, dynamic>.from(success.response as Map),
-        ));
+        return Right(
+          ContractDetailsModel.fromJson(
+            Map<String, dynamic>.from(success.response as Map),
+          ),
+        );
       });
     } catch (e) {
       printState('fetchContractDetails error: $e');
@@ -152,7 +154,8 @@ class ContractsApis {
       final pagination = raw['pagination'];
       if (pagination is Map) {
         total = _asInt(pagination['total']) ?? counts['all'] ?? 0;
-        hasNext = pagination['hasNext'] == true || pagination['has_next'] == true;
+        hasNext =
+            pagination['hasNext'] == true || pagination['has_next'] == true;
       }
       final data = raw['data'] ?? raw['items'] ?? raw['list'] ?? [];
       if (data is List) list = data;

@@ -39,5 +39,4 @@ class FailedShape extends StatelessWidget {
       ),
     );
   }
- }
- 
+}

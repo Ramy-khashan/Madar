@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../core/connection/concept/end_points.dart';
 import '../../../../../../core/connection/interfaces/api_consumer.dart';
 import '../../../../../../core/utils/functions/service_locator.dart';
- import '../../../../../../../../../core/utils/constants/app_enums.dart';
+import '../../../../../../../../../core/utils/constants/app_enums.dart';
 import '../model/realstate_projects_model.dart';
 
 part 'projects_list_event.dart';
@@ -48,15 +48,5 @@ class ProjectsListBloc extends Bloc<ProjectsListEvent, ProjectsListState> {
         ),
       );
     }
-    // if (mockProjects.isEmpty) {
-    //   emit(state.copyWith(status: RequestStatus.failed, projects: const []));
-    // } else {
-    //   emit(
-    //     state.copyWith(
-    //       status: RequestStatus.success,
-    //       projects: [],
-    //      ),
-    //   );
-    // }
   }
 }

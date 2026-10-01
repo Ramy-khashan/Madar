@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmap;
 import 'package:geolocator/geolocator.dart';
- import '../../model/google_map_model.dart';
+import '../../model/google_map_model.dart';
 import 'map_service.dart';
+import 'map_style.dart';
 
 class GoogleMapService implements MapService {
   gmap.GoogleMapController? _controller;
@@ -20,6 +21,7 @@ class GoogleMapService implements MapService {
   }) {
     return gmap.GoogleMap(
       mapType: gmap.MapType.normal,
+      style: cleanMapStyle,
       initialCameraPosition: initialPosition != null
           ? gmap.CameraPosition(target: initialPosition.position, zoom: 15)
           : _defaultCameraPosition,

@@ -47,21 +47,24 @@ class AuctionNavbarBloc extends Bloc<AuctionNavbarEvent, AuctionNavbarState> {
       iconPath: AppImages.auctionIcon,
       page: BlocProvider(
         create: (_) => MyBidsBloc()..add(const MyBidsLoad()),
-        child:const MyBidsScreen()),
+        child: const MyBidsScreen(),
+      ),
     ),
     AuctionNavbarModel(
       title: AppStrings.add,
       iconPath: '',
-      page:BlocProvider(
-      create: (_) => AddAuctionPropertyBloc(),
-      child: const AddAuctionPropertyScreen()),
+      page: BlocProvider(
+        create: (_) => AddAuctionPropertyBloc(),
+        child: const AddAuctionPropertyScreen(),
+      ),
     ),
     AuctionNavbarModel(
       title: AppStrings.myExhibits,
       iconPath: AppImages.myAuctionIcon,
-      page:BlocProvider(
+      page: BlocProvider(
         create: (_) => MyListingsBloc()..add(const MyListingsLoad()),
-        child:const MyListingsScreen()),
+        child: const MyListingsScreen(),
+      ),
     ),
     AuctionNavbarModel(
       title: AppStrings.settings,

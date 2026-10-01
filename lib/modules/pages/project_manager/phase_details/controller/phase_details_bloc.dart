@@ -37,7 +37,6 @@ class PhaseDetailsBloc extends Bloc<PhaseDetailsEvent, PhaseDetailsState> {
       context.read<PhaseDetailsBloc>();
 
   void _onToggleTask(ToggleTaskEvent event, Emitter<PhaseDetailsState> emit) {
-    // Toggle task selection - not changing stage if done
     final List<String> selectedSubPhases = List<String>.from(
       state.selectedSubPhases,
     );
@@ -49,9 +48,7 @@ class PhaseDetailsBloc extends Bloc<PhaseDetailsEvent, PhaseDetailsState> {
     emit(state.copyWith(selectedSubPhases: selectedSubPhases));
   }
 
-  void _onAddImage(AddPhaseImageEvent event, Emitter<PhaseDetailsState> emit) {
-    // Legacy method - use PickImagesEvent instead
-  }
+  void _onAddImage(AddPhaseImageEvent event, Emitter<PhaseDetailsState> emit) {}
 
   void _onRemoveImage(
     RemovePhaseImageEvent event,
@@ -64,16 +61,12 @@ class PhaseDetailsBloc extends Bloc<PhaseDetailsEvent, PhaseDetailsState> {
     }
   }
 
-  void _onUpdateNote(UpdateNoteEvent event, Emitter<PhaseDetailsState> emit) {
-    // Note is stored in noteController
-  }
+  void _onUpdateNote(UpdateNoteEvent event, Emitter<PhaseDetailsState> emit) {}
 
   void _onUpdateCustomTask(
     UpdateCustomTaskEvent event,
     Emitter<PhaseDetailsState> emit,
-  ) {
-    // Custom task is stored in customTaskController
-  }
+  ) {}
 
   void _onPickImages(PickImagesEvent event, Emitter<PhaseDetailsState> emit) {
     final updated = List<String>.from(state.uploadedImagePaths)
@@ -93,27 +86,12 @@ class PhaseDetailsBloc extends Bloc<PhaseDetailsEvent, PhaseDetailsState> {
     );
 
     try {
-      // Build FormData with the uploaded images and phase details
       final formData = FormData.fromMap({
         'projectStageId': state.phase.id,
         'content': noteController.text,
-        // 'progress': (state.phase.subStages?.length ?? 0) > 0
-        //     ? (state.selectedSubPhases.length / state.phase.subStages!.length) *
-        //           100
-        //     : 100,
         'subStageIds': state.selectedSubPhases,
-        // 'subStageIds': jsonEncode([
-        //   {
-        //     // 'stageId': state.phase.id,
-        //     'subStageIds':
-        //     'customSubStages': (customTaskController.text.isNotEmpty)
-        //         ? [customTaskController.text]
-        //         : [],
-        //   },
-        // ]),
       });
 
-      // Add files from uploaded images
       for (final filePath in state.uploadedImagePaths) {
         formData.files.add(
           MapEntry(
@@ -126,7 +104,6 @@ class PhaseDetailsBloc extends Bloc<PhaseDetailsEvent, PhaseDetailsState> {
         );
       }
 
-      // Make API call
       final response = await sl.get<ApiConsumer>().postFormData(
         EndPoints.projectUpdates(event.projectId),
         body: formData,

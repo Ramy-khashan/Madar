@@ -94,32 +94,6 @@ class BrokerCardWidget extends StatelessWidget {
                             color: colors.textSecondary,
                           ),
                         ),
-                        // Text(
-                        //   '  •  ',
-                        //   style: TextStyle(
-                        //     color: colors.textSecondary,
-                        //     fontSize: context.responsiveFontScale(14),
-                        //   ),
-                        // ),
-                        // Text(
-                        //   '(${broker?.reviewsCount ?? 0})',
-                        //   style: TextStyle(
-                        //     fontSize: context.responsiveFontScale(14),
-                        //     fontFamily: AppConstant.appHeaderFont,
-                        //     color: colors.textSecondary,
-                        //   ),
-                        // ),
-                        // Text(
-                        //   ' ${broker?.rating ?? 0} ',
-                        //   style: TextStyle(
-                        //     fontSize: context.responsiveFontScale(14),
-                        //     fontFamily: AppConstant.appHeaderFont,
-                        //     fontWeight: FontWeight.w700,
-                        //     color: colors.textFieldTitle,
-                        //   ),
-                        // ),
-                        // SizedBox(width: 2.width),
-                        // Icon(Icons.star, size: 14.width, color: AppColors.rate),
                       ],
                     ),
                   ],
@@ -133,13 +107,6 @@ class BrokerCardWidget extends StatelessWidget {
             text: broker?.location ?? 'Location not available',
             colors: colors,
           ),
-          // SizedBox(height: 4.height),
-          // AgentDetailsRow(
-          //   icon: AppImages.experienceIcon,
-          //   text:
-          //       '${AppStrings.experiencePrefix} ${broker?.experienceYears ?? 0} ${AppStrings.experienceSuffix}',
-          //   colors: colors,
-          // ),
           SizedBox(height: 4.height),
           AgentDetailsRow(
             icon: AppImages.occupancyIcon,

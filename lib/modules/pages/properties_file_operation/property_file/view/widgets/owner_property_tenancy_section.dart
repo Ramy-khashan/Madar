@@ -53,12 +53,10 @@ class OwnerPropertyTenancySection extends StatelessWidget {
               leftSelected: state.isRented,
               enabled: true,
               colors: colors,
-              onLeft: () => bloc.add(
-                const PropertyFileStatusToggled(UnitStatus.rented),
-              ),
-              onRight: () => bloc.add(
-                const PropertyFileStatusToggled(UnitStatus.vacant),
-              ),
+              onLeft: () =>
+                  bloc.add(const PropertyFileStatusToggled(UnitStatus.rented)),
+              onRight: () =>
+                  bloc.add(const PropertyFileStatusToggled(UnitStatus.vacant)),
             ),
             if (state.isRented) ...[
               SizedBox(height: 14.height),
@@ -69,8 +67,7 @@ class OwnerPropertyTenancySection extends StatelessWidget {
                 leftSelected: state.isHijriDate,
                 enabled: true,
                 colors: colors,
-                onLeft: () =>
-                    bloc.add(const PropertyFileDateTypeToggled(true)),
+                onLeft: () => bloc.add(const PropertyFileDateTypeToggled(true)),
                 onRight: () =>
                     bloc.add(const PropertyFileDateTypeToggled(false)),
               ),

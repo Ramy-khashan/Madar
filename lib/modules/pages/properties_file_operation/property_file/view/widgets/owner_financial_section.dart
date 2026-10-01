@@ -21,7 +21,7 @@ class OwnerFinancialSection extends StatelessWidget {
     final colors = AppThemeColors.of(context);
     final performance = property?.financialPerformance;
     if (performance == null) return const SizedBox.shrink();
-printState( property?.type == 'BUILDING');
+    printState(property?.type == 'BUILDING');
     return property?.type == 'BUILDING'
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,52 +38,26 @@ printState( property?.type == 'BUILDING');
               SizedBox(height: 12.height),
               Row(
                 children: [
-                    Expanded(
+                  Expanded(
                     child: OwnerFinancialStatTile(
                       label: AppStrings.activeUnits,
                       valueText: '${performance.activeChildUnits ?? 0}',
                       color: AppColors.successColor,
                     ),
                   ),
-                
+
                   SizedBox(width: 8.width),
-                       Expanded(
+                  Expanded(
                     child: OwnerFinancialStatTile(
                       label: AppStrings.occupancyRate,
                       valueText: performance.occupancyRateLabel,
                       color: AppColors.rate,
                     ),
                   ),
-                  // Expanded(
-                  //   child: OwnerFinancialStatTile(
-                  //     label: AppStrings.totalUnits,
-                  //     valueText: '${performance.totalChildUnits ?? 0}',
-                  //     color: colors.primaryBrand,
-                  //   ),
-                  // ),
                 ],
               ),
               SizedBox(height: 8.height),
-              // Row(
-              //   children: [
-              //     Expanded(
-              //       child: OwnerFinancialStatTile(
-              //         label: AppStrings.occupancyRate,
-              //         valueText: performance.occupancyRateLabel,
-              //         color: AppColors.rate,
-              //       ),
-              //     ),
-              //     SizedBox(width: 8.width),
-              //     Expanded(
-              //       child: OwnerFinancialStatTile(
-              //         label: AppStrings.yearlyIncome,
-              //         amount: performance.totalIncome?.toDouble(),
-              //         color: AppColors.successColor,
-              //       ),
-              //     ),
-              //   ],
-              // ),
-                Row(
+              Row(
                 children: [
                   Expanded(
                     child: OwnerFinancialStatTile(
@@ -110,7 +84,6 @@ printState( property?.type == 'BUILDING');
                   ),
                 ],
               ),
-
             ],
           )
         : Column(

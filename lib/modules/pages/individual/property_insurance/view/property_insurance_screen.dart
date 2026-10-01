@@ -13,39 +13,40 @@ class PropertyInsuranceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  BlocBuilder<PropertyInsuranceBloc, PropertyInsuranceState>(
-        builder: (context, state) {
-          final colors = AppThemeColors.of(context);
-          return Scaffold(
-            backgroundColor: colors.backgroundPrimary,
-            appBar: AppAppbar(title: AppStrings.propertyInsuranceScreenTitle),
-            body: SafeArea(
-              child: Column(
-                children: [
-                  ServiceTabToggleWidget(
-                    labels: [ AppStrings.insuranceRequestsTab, AppStrings.insuranceInfoTab],
-                     selectedIndex: state.selectedTab,
-                    onTabChanged: (index) => context
-                        .read<PropertyInsuranceBloc>()
-                        .add(PropertyInsuranceTabChanged(index)),
+    return BlocBuilder<PropertyInsuranceBloc, PropertyInsuranceState>(
+      builder: (context, state) {
+        final colors = AppThemeColors.of(context);
+        return Scaffold(
+          backgroundColor: colors.backgroundPrimary,
+          appBar: AppAppbar(title: AppStrings.propertyInsuranceScreenTitle),
+          body: SafeArea(
+            child: Column(
+              children: [
+                ServiceTabToggleWidget(
+                  labels: [
+                    AppStrings.insuranceRequestsTab,
+                    AppStrings.insuranceInfoTab,
+                  ],
+                  selectedIndex: state.selectedTab,
+                  onTabChanged: (index) => context
+                      .read<PropertyInsuranceBloc>()
+                      .add(PropertyInsuranceTabChanged(index)),
+                ),
+                Expanded(
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 250),
+                    child: state.selectedTab == 0
+                        ? const InsuranceRequestsTabWidget(
+                            key: ValueKey('requests'),
+                          )
+                        : const InsuranceInfoTabWidget(key: ValueKey('info')),
                   ),
-                  Expanded(
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 250),
-                      child: state.selectedTab == 0
-                          ? const InsuranceRequestsTabWidget(
-                              key: ValueKey('requests'),
-                            )
-                          : const InsuranceInfoTabWidget(
-                              key: ValueKey('info'),
-                            ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          );
-        },
-     );
+          ),
+        );
+      },
+    );
   }
 }

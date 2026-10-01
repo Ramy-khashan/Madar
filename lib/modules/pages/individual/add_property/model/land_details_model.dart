@@ -2,7 +2,6 @@ import 'land_dimensions_model.dart';
 import 'property_details_base.dart';
 import 'property_enums.dart';
 
-/// `details` payload for `type: LAND`.
 class LandDetailsModel extends PropertyDetailsBase {
   const LandDetailsModel({
     this.classification,
@@ -14,17 +13,14 @@ class LandDetailsModel extends PropertyDetailsBase {
     this.services = const [],
   });
 
-  /// One of [PropertyApiEnums.classificationResidential] and friends.
   final String? classification;
   final String? plotNumber;
   final String? planNumber;
   final LandDimensionsModel? dimensions;
 
-  /// Allowed construction ratio as a percentage, e.g. `60`.
   final num? buildingRatio;
   final int? allowedFloors;
 
-  /// Values from [PropertyApiEnums.landServiceElectricity] and friends.
   final List<String> services;
 
   @override

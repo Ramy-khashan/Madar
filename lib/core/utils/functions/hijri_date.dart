@@ -1,4 +1,3 @@
-/// Gregorian ↔ Hijri conversion using the Kuwaiti algorithm.
 class HijriDate {
   HijriDate._();
 

@@ -5,32 +5,19 @@ import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../model/auction_details_model.dart';
+import 'colon.dart';
+import 'time_box.dart';
 
-class AcutionTimerPart extends StatefulWidget {
+class AcutionTimerPart extends StatelessWidget {
   const AcutionTimerPart({super.key, this.auction});
   final AuctionDetailsModel? auction;
-  @override
-  State<AcutionTimerPart> createState() => _AcutionTimerPartState();
-}
-
-class _AcutionTimerPartState extends State<AcutionTimerPart> {
-  late final Duration remaining;
-  late final Duration r;
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.auction != null) {
-      remaining = widget.auction!.endTime.difference(DateTime.now());
-      r = remaining.isNegative ? Duration.zero : remaining;
-    } else {
-      remaining = Duration.zero;
-      r = Duration.zero;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
+    final remaining = auction == null
+        ? Duration.zero
+        : auction!.endTime.difference(DateTime.now());
+    final r = remaining.isNegative ? Duration.zero : remaining;
     final colors = AppThemeColors.of(context);
     return Container(
       decoration: BoxDecoration(
@@ -92,69 +79,6 @@ class _AcutionTimerPartState extends State<AcutionTimerPart> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class TimeBox extends StatelessWidget {
-  const TimeBox({super.key, required this.value, required this.label});
-  final int value;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = AppThemeColors.of(context);
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: 8.width,
-            vertical: 4.height,
-          ),
-
-          child: Text(
-            value.toString().padLeft(2, '0'),
-            style: TextStyle(
-              fontSize: context.responsiveFontScale(12),
-              fontFamily: AppConstant.appHeaderFont,
-              fontWeight: FontWeight.w700,
-              color: colors.primaryBrand,
-            ),
-          ),
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: context.responsiveFontScale(10),
-            fontFamily: AppConstant.appFont,
-            color: colors.textSecondary,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class Colon extends StatelessWidget {
-  const Colon({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = AppThemeColors.of(context);
-    return Padding(
-      padding: EdgeInsets.only(
-        bottom: 14.height,
-        left: 3.width,
-        right: 3.width,
-      ),
-      child: Text(
-        ':',
-        style: TextStyle(
-          fontSize: context.responsiveFontScale(14),
-          fontWeight: FontWeight.w700,
-          color: colors.primaryBrand,
-        ),
       ),
     );
   }

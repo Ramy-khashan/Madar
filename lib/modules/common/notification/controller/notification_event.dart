@@ -10,10 +10,7 @@ sealed class NotificationEvent extends Equatable {
 final class NotificationLoad extends NotificationEvent {
   final int page;
   final bool isLoadMore;
-  const NotificationLoad({
-    this.page = 1,
-    this.isLoadMore = false,
-  });
+  const NotificationLoad({this.page = 1, this.isLoadMore = false});
 }
 
 final class NotificationMarkAsRead extends NotificationEvent {

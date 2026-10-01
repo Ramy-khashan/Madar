@@ -30,9 +30,9 @@ class BotBubble extends StatelessWidget {
                 bottomEnd: Radius.circular(20.radius),
                 topEnd: Radius.circular(4.radius),
               ),
-              color: AppThemeColors.of(context).primaryBrand.withValues(alpha: .1),
-              
-              
+              color: AppThemeColors.of(
+                context,
+              ).primaryBrand.withValues(alpha: .1),
             ),
             child: Text(
               message.text,
@@ -54,9 +54,7 @@ class BotBubble extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           padding: EdgeInsets.all(4.width),
-          child: const ImageItem(
-      AppImages.chatbotIcon,
-           ),
+          child: const ImageItem(AppImages.chatbotIcon),
         ),
       ],
     );

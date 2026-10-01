@@ -40,7 +40,6 @@ class RealEstateNewsScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                // CategoryTabs(selectedCategory: state.selectedCategory),
                 SizedBox(height: 8.height),
                 Expanded(
                   child: LoadingProcess(

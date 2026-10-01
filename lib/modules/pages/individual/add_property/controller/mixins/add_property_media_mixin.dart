@@ -137,7 +137,7 @@ mixin AddPropertyMediaMixin on AddPropertyControllersMixin {
         ),
       );
     } catch (e) {
-       emit(
+      emit(
         state.copyWith(
           isPreviewLoading: false,
           hasMarketData: false,

@@ -46,7 +46,9 @@ class SmartAssistantChatBloc
     SmartAssistantChatLoad event,
     Emitter<SmartAssistantChatState> emit,
   ) async {
-    emit(SmartAssistantChatLoaded(messages: [_welcome], isLoadingHistory: true));
+    emit(
+      SmartAssistantChatLoaded(messages: [_welcome], isLoadingHistory: true),
+    );
 
     final result = await ChatApis.getMyChats();
     if (isClosed) return;
@@ -59,10 +61,7 @@ class SmartAssistantChatBloc
         final aiChat = chats.where((c) => c.isAiChat).firstOrNull;
         if (aiChat == null || aiChat.messages.isEmpty) {
           emit(
-            SmartAssistantChatLoaded(
-              messages: [_welcome],
-              chatId: aiChat?.id,
-            ),
+            SmartAssistantChatLoaded(messages: [_welcome], chatId: aiChat?.id),
           );
           return;
         }

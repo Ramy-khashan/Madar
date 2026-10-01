@@ -5,13 +5,19 @@ class RealStateProjectModel {
   List<ProjectStages>? stages;
   List<Timeline>? timeline;
 
-  RealStateProjectModel(
-      {this.success, this.project, this.stats, this.stages, this.timeline});
+  RealStateProjectModel({
+    this.success,
+    this.project,
+    this.stats,
+    this.stages,
+    this.timeline,
+  });
 
   RealStateProjectModel.fromJson(Map<String, dynamic> json) {
     success = json['success'];
-    project =
-        json['project'] != null ? Project.fromJson(json['project']) : null;
+    project = json['project'] != null
+        ? Project.fromJson(json['project'])
+        : null;
     stats = json['stats'] != null ? Stats.fromJson(json['stats']) : null;
     if (json['stages'] != null) {
       stages = <ProjectStages>[];
@@ -57,16 +63,17 @@ class Project {
   int? overallProgress;
   List<String>? attachments;
 
-  Project(
-      {this.id,
-      this.name,
-      this.type,
-      this.location,
-      this.startDate,
-      this.endDate,
-      this.manager,
-      this.overallProgress,
-      this.attachments});
+  Project({
+    this.id,
+    this.name,
+    this.type,
+    this.location,
+    this.startDate,
+    this.endDate,
+    this.manager,
+    this.overallProgress,
+    this.attachments,
+  });
 
   Project.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -124,23 +131,24 @@ class Stats {
 
 class ProjectStages {
   String? id;
-   String? stageName;
+  String? stageName;
   int? progress;
   String? status;
   String? description;
   List<SubStages>? subStages;
 
-  ProjectStages(
-      {this.id,
-       this.stageName,
-      this.progress,
-      this.status,
-      this.description,
-      this.subStages});
+  ProjectStages({
+    this.id,
+    this.stageName,
+    this.progress,
+    this.status,
+    this.description,
+    this.subStages,
+  });
 
   ProjectStages.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-     stageName = json['stageName'];
+    stageName = json['stageName'];
     progress = json['progress'];
     description = json['description'];
     status = json['status'];
@@ -202,13 +210,14 @@ class Timeline {
   String? stageId;
   String? stageName;
 
-  Timeline(
-      {this.id,
-      this.content,
-      this.attachments,
-      this.date,
-      this.stageId,
-      this.stageName});
+  Timeline({
+    this.id,
+    this.content,
+    this.attachments,
+    this.date,
+    this.stageId,
+    this.stageName,
+  });
 
   Timeline.fromJson(Map<String, dynamic> json) {
     id = json['id'];

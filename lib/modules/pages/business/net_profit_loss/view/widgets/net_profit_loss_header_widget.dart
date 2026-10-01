@@ -7,6 +7,7 @@ import '../../../../../../core/components/image_item.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../controller/net_profit_loss_bloc.dart';
+import 'summary_tile.dart';
 
 class NetProfitLossHeaderWidget extends StatelessWidget {
   const NetProfitLossHeaderWidget({super.key, required this.state});
@@ -67,7 +68,7 @@ class NetProfitLossHeaderWidget extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: _SummaryTile(
+                child: SummaryTile(
                   label: AppStrings.totalIncomeLabel,
                   value: formatPrice(state.totalIncome),
                   color: dark,
@@ -76,7 +77,7 @@ class NetProfitLossHeaderWidget extends StatelessWidget {
               ),
               SizedBox(width: 12.width),
               Expanded(
-                child: _SummaryTile(
+                child: SummaryTile(
                   label: AppStrings.totalExpensesLabel,
                   value: formatPrice(state.totalExpenses),
                   color: dark,
@@ -87,45 +88,6 @@ class NetProfitLossHeaderWidget extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _SummaryTile extends StatelessWidget {
-  const _SummaryTile({
-    required this.label,
-    required this.value,
-    required this.color,
-    required this.captionColor,
-  });
-
-  final String label;
-  final String value;
-  final Color color;
-  final Color captionColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: context.responsiveFontScale(24),
-            fontWeight: FontWeight.w700,
-            color: color,
-          ),
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: context.responsiveFontScale(12),
-            color: captionColor,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
     );
   }
 }

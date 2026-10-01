@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/utils/constants/app_enums.dart';
@@ -11,10 +12,15 @@ import '../../../../core/utils/functions/service_locator.dart';
 part 'splash_event.dart';
 part 'splash_state.dart';
 
+class _SplashTickerProvider implements TickerProvider {
+  @override
+  Ticker createTicker(TickerCallback onTick) => Ticker(onTick);
+}
+
 class SplashBloc extends Bloc<SplashEvent, SplashState> {
-  SplashBloc(TickerProvider vsync) : super(const SplashState()) {
+  SplashBloc() : super(const SplashState()) {
     _controller = AnimationController(
-      vsync: vsync,
+      vsync: _SplashTickerProvider(),
       duration: const Duration(milliseconds: 1600),
     );
 

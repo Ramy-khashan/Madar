@@ -36,9 +36,7 @@ class BusinessPropertiesBloc
     emit(
       state.copyWith(
         currentTab: isOwner ? 1 : state.currentTab,
-        requestsStatus: isOwner
-            ? RequestStatus.success
-            : RequestStatus.loading,
+        requestsStatus: isOwner ? RequestStatus.success : RequestStatus.loading,
         publishedStatus: RequestStatus.loading,
         requests: isOwner ? const [] : state.requests,
         requestsErrorMessage: isOwner ? '' : state.requestsErrorMessage,

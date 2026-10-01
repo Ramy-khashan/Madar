@@ -20,4 +20,3 @@ class AuctionDepositTypeModel extends Equatable {
 }
 
 enum AuctionDepositStep { paymentSelection, processing, success }
-

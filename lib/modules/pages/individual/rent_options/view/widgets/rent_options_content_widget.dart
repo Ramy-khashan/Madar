@@ -115,7 +115,6 @@ class RentOptionsContentWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                   
                   ],
                 );
               },

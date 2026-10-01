@@ -14,7 +14,7 @@ class HeaderPart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       flex: isTable ? 2 : 0,
-     
+
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -23,7 +23,6 @@ class HeaderPart extends StatelessWidget {
               padding: EdgeInsetsDirectional.only(
                 top: 16.height,
                 bottom: 8.height,
-         
               ),
               child: ImageItem(
                 AppImages.splashLogo,
@@ -58,36 +57,3 @@ class HeaderPart extends StatelessWidget {
     );
   }
 }
-
-// class _AuthPanelClipper extends CustomClipper<Path> {
-//   const _AuthPanelClipper({required this.isTablet});
-//   final bool isTablet;
-
-//   @override
-//   Path getClip(Size size) {
-//     const double archDepth = 60;
-//     final path = Path();
-//     if (isTablet) {
-//       path.lineTo(size.width, 0);
-//       path.lineTo(size.width, size.height);
-//       path.lineTo(archDepth, size.height);
-//       path.quadraticBezierTo(0, size.height / 2, archDepth, 0);
-//     } else {
-//       // Convex dome at the bottom — center extends down, corners are higher
-//       path.lineTo(size.width, 0);
-//       path.lineTo(size.width, size.height - archDepth);
-//       path.quadraticBezierTo(
-//         size.width / 2,
-//         size.height,
-//         0,
-//         size.height - archDepth,
-//       );
-//     }
-//     path.close();
-//     return path;
-//   }
-
-//   @override
-//   bool shouldReclip(_AuthPanelClipper oldClipper) =>
-//       oldClipper.isTablet != isTablet;
-// }

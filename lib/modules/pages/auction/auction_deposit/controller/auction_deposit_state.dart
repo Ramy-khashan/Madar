@@ -23,15 +23,15 @@ class AuctionDepositState extends Equatable {
 
   @override
   List<Object?> get props => [
-        depositAmount,
-        propertyTitle,
-        selectedPaymentMethod,
-        transactionId,
-        step,
-        loadStatus,
-        confirmStatus,
-        errorMsg,
-      ];
+    depositAmount,
+    propertyTitle,
+    selectedPaymentMethod,
+    transactionId,
+    step,
+    loadStatus,
+    confirmStatus,
+    errorMsg,
+  ];
 
   AuctionDepositState copyWith({
     double? depositAmount,

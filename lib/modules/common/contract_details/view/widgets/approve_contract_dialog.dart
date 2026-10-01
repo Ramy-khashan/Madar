@@ -55,9 +55,7 @@ class _ApproveContractDialogState extends State<ApproveContractDialog> {
   }
 
   void _confirm() {
-    final duration = widget.showDuration
-        ? _durationController.text.trim()
-        : '';
+    final duration = widget.showDuration ? _durationController.text.trim() : '';
     final price = parsePrice(_priceController.text);
     if (widget.showDuration && duration.isEmpty) {
       AppToast(AppStrings.pleaseEnterContractDuration, isError: true);
@@ -67,9 +65,9 @@ class _ApproveContractDialogState extends State<ApproveContractDialog> {
       AppToast(AppStrings.pleaseEnterContractPrice, isError: true);
       return;
     }
-    Navigator.of(context).pop(
-      ApproveContractResult(durationInYears: duration, finalPrice: price),
-    );
+    Navigator.of(
+      context,
+    ).pop(ApproveContractResult(durationInYears: duration, finalPrice: price));
   }
 
   @override

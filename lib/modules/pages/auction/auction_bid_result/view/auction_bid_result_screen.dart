@@ -14,28 +14,27 @@ class AuctionBidResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  BlocBuilder<AuctionBidResultBloc, AuctionBidResultState>(
-        builder: (context, state) {
-          final colors = AppThemeColors.of(context);
-          return Scaffold(
-            backgroundColor: colors.backgroundPrimary,
-            appBar: AppAppbar(title: AppStrings.bidResultTitle),
-            body: SafeArea(
-              child: LoadingProcess(
-                status: state.loadStatus,
-                errorMsg: state.errorMsg,
-                onTapRefresh: () => context
-                    .read<AuctionBidResultBloc>()
-                    .add(AuctionBidResultLoad(auctionId)),
-                emptyMsg: '',
-                isEmptyList: false,
-                childIsLoader: true,
-                child: const AuctionBidResultContentWidget(),
+    return BlocBuilder<AuctionBidResultBloc, AuctionBidResultState>(
+      builder: (context, state) {
+        final colors = AppThemeColors.of(context);
+        return Scaffold(
+          backgroundColor: colors.backgroundPrimary,
+          appBar: AppAppbar(title: AppStrings.bidResultTitle),
+          body: SafeArea(
+            child: LoadingProcess(
+              status: state.loadStatus,
+              errorMsg: state.errorMsg,
+              onTapRefresh: () => context.read<AuctionBidResultBloc>().add(
+                AuctionBidResultLoad(auctionId),
               ),
+              emptyMsg: '',
+              isEmptyList: false,
+              childIsLoader: true,
+              child: const AuctionBidResultContentWidget(),
             ),
-          );
-        },
-    
+          ),
+        );
+      },
     );
   }
 }

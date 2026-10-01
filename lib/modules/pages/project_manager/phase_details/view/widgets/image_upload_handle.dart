@@ -1,15 +1,14 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
- import '../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/image_picker_helper.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../business/real_estate_development/add_project/shared/widgets/file_upload_widget.dart';
 import '../../../../business/real_estate_development/business_project_details/model/real_state_project_model.dart';
 import '../../controller/phase_details_bloc.dart';
+import 'image_grid.dart';
 
 class ImagesSection extends StatelessWidget {
   const ImagesSection({
@@ -29,21 +28,19 @@ class ImagesSection extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
- 
-          
-               FileUploadWidget(
-                          isRequired: true,
-                          title: AppStrings.images,
-                          onTap: () async {
-                            final paths = await pickImages();
-                            if (paths != null && paths.isNotEmpty) {
-                              bloc.add(PickImagesEvent(paths));
-                            }
-                          },
-                        ),
+            FileUploadWidget(
+              isRequired: true,
+              title: AppStrings.images,
+              onTap: () async {
+                final paths = await pickImages();
+                if (paths != null && paths.isNotEmpty) {
+                  bloc.add(PickImagesEvent(paths));
+                }
+              },
+            ),
             SizedBox(height: 8.height),
             if (state.uploadedImagePaths.isNotEmpty)
-              _ImageGrid(
+              ImageGrid(
                 bloc: bloc,
                 tc: tc,
                 imagePaths: state.uploadedImagePaths,
@@ -60,123 +57,18 @@ class ImagesSection extends StatelessWidget {
                   ),
                 ),
               ),
-            // SizedBox(height: 12.height),
-            // _UploadArea(tc: tc, bloc: bloc),
-              if (timeline.every((e) => (e.attachments ?? []).isEmpty))
-            ...timeline.map((e) => _ImageGrid(
+            if (timeline.every((e) => (e.attachments ?? []).isEmpty))
+              ...timeline.map(
+                (e) => ImageGrid(
                   bloc: bloc,
                   tc: tc,
                   imagePaths: e.attachments ?? <String>[],
                   isReadOnly: true,
-                )),
-           ],
-        );
-      },
-    );
-  }
-}
- 
-class _ImageGrid extends StatelessWidget {
-  const _ImageGrid({
-    required this.imagePaths,
-    required this.tc,
-    required this.bloc,
-    this.isReadOnly = true,
-  });
-  final List<String> imagePaths;
-  final AppThemeColors tc;
-  final PhaseDetailsBloc bloc;
-  final bool isReadOnly;
-
-  @override
-  Widget build(BuildContext context) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 1,
-        crossAxisSpacing: 8,
-        mainAxisSpacing: 8,
-      ),
-      itemCount: imagePaths.length,
-      itemBuilder: (context, i) {
-        return _ImageTile(
-          path: imagePaths[i],
-          index: i,
-          tc: tc,
-          bloc: bloc,
-          isReadOnly: isReadOnly,
-        );
-      },
-    );
-  }
-}
-
-class _ImageTile extends StatelessWidget {
-  const _ImageTile({
-    required this.path,
-    required this.index,
-    required this.tc,
-    required this.bloc,
-    this.isReadOnly = true,
-  });
-  final String path;
-  final int index;
-  final AppThemeColors tc;
-  final PhaseDetailsBloc bloc;
-  final bool isReadOnly;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: isReadOnly || path.startsWith('http')
-              ? Image.network(
-                  path,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: double.infinity,
-                  errorBuilder: (_, _, _) => Container(
-                    color: tc.borderColor.withValues(alpha: 0.3),
-                    child: Icon(Icons.image_rounded, color: tc.textSecondary),
-                  ),
-                )
-              : Image.file(
-                  File(path),
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: double.infinity,
-                  errorBuilder: (_, _, _) => Container(
-                    color: tc.borderColor.withValues(alpha: 0.3),
-                    child: Icon(Icons.image_rounded, color: tc.textSecondary),
-                  ),
-                ),
-        ),
-        if (!isReadOnly)
-          Positioned(
-            top: 4,
-            left: 4,
-            child: GestureDetector(
-              onTap: () => bloc.add(RemovePhaseImageEvent(index)),
-              child: Container(
-                width: 22,
-                height: 22,
-                decoration: const BoxDecoration(
-                  color: Colors.black54,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.close_rounded,
-                  color: Colors.white,
-                  size: 13,
                 ),
               ),
-            ),
-          ),
-      ],
+          ],
+        );
+      },
     );
   }
 }

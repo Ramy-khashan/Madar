@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../../../../../../../config/theme/app_theme_colors.dart';
@@ -6,7 +5,8 @@ import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
 
 class FeatureRow extends StatelessWidget {
-  const FeatureRow({super.key, 
+  const FeatureRow({
+    super.key,
     required this.icon,
     required this.title,
     required this.desc,

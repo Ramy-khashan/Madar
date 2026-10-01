@@ -71,15 +71,15 @@ class PaymentTypeScreen extends StatelessWidget {
                             subtitle: AppStrings.subscriptionApplePaySubtitle,
                             iconPath: 'assets/icons/apple_pay.svg',
                             method: SubscriptionPaymentMethod.applePay,
-                             onTap: () {
-                              context
-                                .read<SubscriptionBloc>()
-                                .add(const SubscriptionPaymentMethodSelected(
+                            onTap: () {
+                              context.read<SubscriptionBloc>().add(
+                                const SubscriptionPaymentMethodSelected(
                                   SubscriptionPaymentMethod.applePay,
-                                ));
-                                context
-                              .read<SubscriptionBloc>()
-                              .add(const SubscriptionConfirmPayment());
+                                ),
+                              );
+                              context.read<SubscriptionBloc>().add(
+                                const SubscriptionConfirmPayment(),
+                              );
                             },
                           ),
                           SubscriptionPaymentOptionCard(
@@ -87,22 +87,21 @@ class PaymentTypeScreen extends StatelessWidget {
                             subtitle: AppStrings.subscriptionVisaSubtitle,
                             iconPath: 'assets/icons/visa.svg',
                             method: SubscriptionPaymentMethod.visa,
-                             onTap: () {
-                              context
-                                .read<SubscriptionBloc>()
-                                .add(const SubscriptionPaymentMethodSelected(
+                            onTap: () {
+                              context.read<SubscriptionBloc>().add(
+                                const SubscriptionPaymentMethodSelected(
                                   SubscriptionPaymentMethod.visa,
-                                ));
-                                context
-                              .read<SubscriptionBloc>()
-                              .add(const SubscriptionConfirmPayment());
+                                ),
+                              );
+                              context.read<SubscriptionBloc>().add(
+                                const SubscriptionConfirmPayment(),
+                              );
                             },
                           ),
                         ],
                       ),
                     ),
                   ),
-                 
                 ],
               ),
             ),

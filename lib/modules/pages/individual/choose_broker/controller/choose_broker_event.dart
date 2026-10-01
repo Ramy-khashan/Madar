@@ -23,7 +23,9 @@ class ChooseBrokerSearch extends ChooseBrokerEvent {
 
   @override
   List<Object?> get props => [query];
-}class GetPropertyIdEvent extends ChooseBrokerEvent {
+}
+
+class GetPropertyIdEvent extends ChooseBrokerEvent {
   final String propertyId;
   const GetPropertyIdEvent(this.propertyId);
 

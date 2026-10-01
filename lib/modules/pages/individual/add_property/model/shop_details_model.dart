@@ -1,7 +1,6 @@
 import 'property_details_base.dart';
 import 'property_enums.dart';
 
-/// `details` payload for `type: SHOP`.
 class ShopDetailsModel extends PropertyDetailsBase {
   const ShopDetailsModel({
     this.frontWidth,
@@ -12,17 +11,13 @@ class ShopDetailsModel extends PropertyDetailsBase {
     this.condition,
   });
 
-  /// Shop frontage width in meters.
   final num? frontWidth;
 
-  /// One of [PropertyApiEnums.shopLocationMainStreet] and friends.
   final String? locationType;
   final String? mallName;
 
-  /// Values from [PropertyApiEnums.facilityAc] and friends.
   final List<String> facilities;
 
-  /// Values from [PropertyApiEnums.activityCafe] and friends.
   final List<String> activities;
   final String? condition;
 

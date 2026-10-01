@@ -25,8 +25,8 @@ class OtpVerificationScreen extends StatelessWidget {
     final bloc = OtpVerificationBloc.get(context);
 
     final defaultTheme = PinTheme(
-                    width: 48,
-                    height: 56,
+      width: 48,
+      height: 56,
       textStyle: TextStyle(
         fontSize: context.responsiveFontScale(22),
         fontWeight: FontWeight.w700,

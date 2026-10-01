@@ -39,7 +39,7 @@ class PaymentOptionCard extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: isSelected
-              ?colors.primaryBrand.withValues(alpha: 0.1)
+              ? colors.primaryBrand.withValues(alpha: 0.1)
               : colors.cardBackground,
           borderRadius: BorderRadius.circular(14.radius),
           border: Border.all(

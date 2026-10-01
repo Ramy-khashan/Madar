@@ -6,7 +6,12 @@ import '../utils/constants/app_strings.dart';
 import '../utils/functions/responsive.dart';
 
 class SectionHeaderWidget extends StatelessWidget {
-  const SectionHeaderWidget({super.key, required this.title, this.onViewAll, this.trailing});
+  const SectionHeaderWidget({
+    super.key,
+    required this.title,
+    this.onViewAll,
+    this.trailing,
+  });
 
   final String title;
   final Widget? trailing;
@@ -47,7 +52,7 @@ class SectionHeaderWidget extends StatelessWidget {
                   ),
                 )
               : const SizedBox.shrink(),
-              trailing ?? SizedBox(width: 8.width),
+          trailing ?? SizedBox(width: 8.width),
         ],
       ),
     );

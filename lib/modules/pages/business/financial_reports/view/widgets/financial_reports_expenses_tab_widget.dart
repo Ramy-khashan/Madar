@@ -31,7 +31,6 @@ class FinancialReportsExpensesTabWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              // حسب الفئة
               Container(
                 padding: EdgeInsets.all(14.width),
                 decoration: BoxDecoration(
@@ -80,7 +79,6 @@ class FinancialReportsExpensesTabWidget extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 12.height),
-              // تفاصيل المعاملات
               OutlinedSection(
                 title: AppStrings.transactionDetails,
                 child: Column(

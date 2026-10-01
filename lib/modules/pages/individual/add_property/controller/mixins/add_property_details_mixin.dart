@@ -100,8 +100,6 @@ mixin AddPropertyDetailsMixin on AddPropertyControllersMixin {
     );
   }
 
-  /// Per-type detail fields all funnel through one map, so these handlers stay
-  /// type-agnostic.
   void _emitDetail(Emitter<AddPropertyState> emit, String key, dynamic value) {
     final updated = Map<String, dynamic>.from(state.model.typeDetails);
     if (value == null) {

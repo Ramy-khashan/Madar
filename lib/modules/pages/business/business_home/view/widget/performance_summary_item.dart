@@ -4,7 +4,7 @@ import '../../../../../../core/components/section_header_widget.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../individual/individual_home/model/smart_service_model.dart';
- import 'performance_summary_shape.dart';
+import 'performance_summary_shape.dart';
 
 class PerformanceSummaryItem extends StatelessWidget {
   final List<SmartServiceModel> performanceSummary;

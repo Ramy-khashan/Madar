@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/components/loading_process.dart';
 import '../../../../../../core/components/pagination.dart';
- import '../../../../../../core/utils/constants/app_enums.dart';
+import '../../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
@@ -38,7 +38,6 @@ class BrokerListContentWidget extends StatelessWidget {
                 ),
               ),
             ),
-            // const SearchItem(),
             Expanded(
               child: LoadingProcess(
                 status: state.isLoadMore
@@ -53,7 +52,7 @@ class BrokerListContentWidget extends StatelessWidget {
                     horizontal: context.responsiveHorizontalPadding,
                     vertical: 10.height,
                   ),
-                  itemBuilder: (_, _) =>   const BrokerCardWidget(),
+                  itemBuilder: (_, _) => const BrokerCardWidget(),
                   separatorBuilder: (_, _) => SizedBox(height: 10.height),
                   itemCount: 15,
                 ),
@@ -78,10 +77,9 @@ class BrokerListContentWidget extends StatelessWidget {
                   ).toInt(),
                   requestStatus: state.loadStatus,
                   hasReachedMax: state.brokers.length >= state.totalCount,
-                  onLoadMore: (page) =>
-                      ChooseBrokerBloc.get(context).add(
-                        ChooseBrokerLoad(page: page, isLoadMore: true),
-                      ),
+                  onLoadMore: (page) => ChooseBrokerBloc.get(
+                    context,
+                  ).add(ChooseBrokerLoad(page: page, isLoadMore: true)),
                   itemBuilder: (_, i) =>
                       BrokerCardWidget(broker: state.filteredBrokers[i]),
                 ),

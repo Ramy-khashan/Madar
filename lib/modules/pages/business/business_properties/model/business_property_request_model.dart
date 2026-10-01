@@ -10,7 +10,7 @@ class BusinessPropertyRequestModel {
     this.createdAt,
     this.image,
     this.location,
- 
+
     this.adLicenseNumber,
   });
 
@@ -22,7 +22,7 @@ class BusinessPropertyRequestModel {
   String? createdAt;
   String? image;
   String? location;
- 
+
   String? adLicenseNumber;
 
   bool get isPending {
@@ -32,8 +32,6 @@ class BusinessPropertyRequestModel {
         value == 'WAITING' ||
         value == 'NEW';
   }
-
- 
 
   String get createdAtLabel {
     final parsed = DateTime.tryParse(createdAt ?? '');
@@ -360,7 +358,8 @@ class BusinessRequestPublishedPropertyModel {
             property['listingType'],
           ]) ??
           '',
-      paymentType: _firstNonEmpty([json['paymentType'], json['payment_type']]) ?? '',
+      paymentType:
+          _firstNonEmpty([json['paymentType'], json['payment_type']]) ?? '',
       wantsInsurance: json['wantsInsurance'] == true,
       requestDate:
           _firstNonEmpty([
@@ -369,7 +368,8 @@ class BusinessRequestPublishedPropertyModel {
             json['requestDate'],
           ]) ??
           '',
-      status: _firstNonEmpty([
+      status:
+          _firstNonEmpty([
             json['status'],
             json['requestStatus'],
             contract['status'],
@@ -397,7 +397,8 @@ class BusinessRequestPublishedPropertyModel {
             json['contractId'],
           ]) ??
           '',
-      contractNo: _firstNonEmpty([contract['contractNo'], contract['title']]) ?? '',
+      contractNo:
+          _firstNonEmpty([contract['contractNo'], contract['title']]) ?? '',
       contractStatus: _firstNonEmpty([contract['status']]) ?? '',
       commissionAmount: commissionRaw is num
           ? commissionRaw.toDouble()

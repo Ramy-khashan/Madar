@@ -1,5 +1,6 @@
 // ignore: depend_on_referenced_packages
 import 'package:shared_preferences/shared_preferences.dart';
+
 class PreferenceUtils {
   static SharedPreferences? _prefsInstance;
 
@@ -26,7 +27,9 @@ class PreferenceUtils {
 
   Future<bool> clear(String key) async {
     return await _prefsInstance!.remove(key);
-  }  Future<bool> clearAll() async {
+  }
+
+  Future<bool> clearAll() async {
     return await _prefsInstance!.clear();
   }
 }

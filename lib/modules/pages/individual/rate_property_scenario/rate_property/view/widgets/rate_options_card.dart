@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import '../../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../../core/components/image_item.dart';
@@ -6,7 +5,8 @@ import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
 
 class RateOptionCard extends StatelessWidget {
-  const RateOptionCard({super.key, 
+  const RateOptionCard({
+    super.key,
     required this.title,
     required this.badge,
     required this.badgeColor,
@@ -111,7 +111,7 @@ class RateOptionCard extends StatelessWidget {
                   SizedBox(height: 6.height),
                   Text(
                     subtitle,
-                     style: TextStyle(
+                    style: TextStyle(
                       fontSize: context.responsiveFontScale(14),
                       color: colors.textSecondary,
                       fontFamily: AppConstant.appFont,

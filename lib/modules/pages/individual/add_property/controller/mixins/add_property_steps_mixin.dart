@@ -101,8 +101,6 @@ mixin AddPropertyStepsMixin on AddPropertyControllersMixin {
     }
   }
 
-  // ── Step 1 handlers ──────────────────────────────────────────────────────
-
   void _onSelectOperationType(
     SelectOperationTypeEvent event,
     Emitter<AddPropertyState> emit,
@@ -117,13 +115,9 @@ mixin AddPropertyStepsMixin on AddPropertyControllersMixin {
     Emitter<AddPropertyState> emit,
   ) {
     emit(
-      state.copyWith(
-        model: state.model.copyWith(propertyType: event.typeId),
-      ),
+      state.copyWith(model: state.model.copyWith(propertyType: event.typeId)),
     );
   }
-
-  // ── Step 2 handlers ──────────────────────────────────────────────────────
 
   void _onSelectRentalPeriod(
     SelectRentalPeriodEvent event,
@@ -133,8 +127,6 @@ mixin AddPropertyStepsMixin on AddPropertyControllersMixin {
       state.copyWith(model: state.model.copyWith(rentalPeriod: event.period)),
     );
   }
-
-  // ── Step 3 handlers ──────────────────────────────────────────────────────
 
   void _onUpdateLocation(
     UpdateLocationEvent event,
@@ -238,10 +230,7 @@ mixin AddPropertyStepsMixin on AddPropertyControllersMixin {
     final predictions = await places.searchPlaces(query);
     if (isClosed || requestId != _placesRequestId) return;
     emit(
-      state.copyWith(
-        placePredictions: predictions,
-        isSearchingPlaces: false,
-      ),
+      state.copyWith(placePredictions: predictions, isSearchingPlaces: false),
     );
 
     PlaceDetails? details;
@@ -257,12 +246,7 @@ mixin AddPropertyStepsMixin on AddPropertyControllersMixin {
     SelectPlaceEvent event,
     Emitter<AddPropertyState> emit,
   ) async {
-    emit(
-      state.copyWith(
-        isSearchingPlaces: true,
-        placePredictions: const [],
-      ),
-    );
+    emit(state.copyWith(isSearchingPlaces: true, placePredictions: const []));
     final details = await sl.get<GooglePlacesService>().getPlaceLocation(
       event.prediction.placeId,
     );
@@ -276,11 +260,7 @@ mixin AddPropertyStepsMixin on AddPropertyControllersMixin {
         emit(state.copyWith(isSearchingPlaces: false));
         return;
       }
-      _applyPlaceDetails(
-        fallback,
-        emit,
-        searchText: event.prediction.fullText,
-      );
+      _applyPlaceDetails(fallback, emit, searchText: event.prediction.fullText);
       return;
     }
     _applyPlaceDetails(details, emit, searchText: event.prediction.fullText);
@@ -320,10 +300,7 @@ mixin AddPropertyStepsMixin on AddPropertyControllersMixin {
       ),
     );
     sl.get<MapService>().moveTo(
-      PositionModel(
-        latitude: details.latitude,
-        longitude: details.longitude,
-      ),
+      PositionModel(latitude: details.latitude, longitude: details.longitude),
     );
   }
 

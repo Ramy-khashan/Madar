@@ -29,22 +29,29 @@ class InsuranceOptionsState extends Equatable {
   final RequestStatus confirmStatus;
   final String requestNumber;
 
-  InsuranceTypeModel? get selectedType =>
-      selectedTypeId == null
-          ? null
-          : types.where((t) => t.id == selectedTypeId).firstOrNull;
+  InsuranceTypeModel? get selectedType => selectedTypeId == null
+      ? null
+      : types.where((t) => t.id == selectedTypeId).firstOrNull;
 
-  InsuranceCompanyModel? get selectedCompany =>
-      selectedCompanyId == null
-          ? null
-          : companies.where((c) => c.id == selectedCompanyId).firstOrNull;
+  InsuranceCompanyModel? get selectedCompany => selectedCompanyId == null
+      ? null
+      : companies.where((c) => c.id == selectedCompanyId).firstOrNull;
 
   @override
   List<Object?> get props => [
-        types, companies, selectedTypeId, selectedCompanyId,
-        propertyTitle, propertyLocation, propertyPrice, propertyType,
-        getDetailsStatus, errorMsg, confirmStatus, requestNumber,
-      ];
+    types,
+    companies,
+    selectedTypeId,
+    selectedCompanyId,
+    propertyTitle,
+    propertyLocation,
+    propertyPrice,
+    propertyType,
+    getDetailsStatus,
+    errorMsg,
+    confirmStatus,
+    requestNumber,
+  ];
 
   InsuranceOptionsState copyWith({
     List<InsuranceTypeModel>? types,

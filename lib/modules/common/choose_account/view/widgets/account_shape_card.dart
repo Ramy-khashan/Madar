@@ -91,7 +91,11 @@ class AccountShapeCard extends StatelessWidget {
                                 child: Text(
                                   account.badge,
                                   style: TextStyle(
-                                    fontSize: context.responsiveFontScale(locale(context).languageCode=='ar'?10:8),
+                                    fontSize: context.responsiveFontScale(
+                                      locale(context).languageCode == 'ar'
+                                          ? 10
+                                          : 8,
+                                    ),
                                     color: colors.textSecondary,
                                     fontFamily: AppConstant.appFont,
                                   ),

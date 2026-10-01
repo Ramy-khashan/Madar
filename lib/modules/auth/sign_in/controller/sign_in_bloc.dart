@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/connection/concept/end_points.dart';
@@ -22,7 +22,6 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     on<SignInActionEvent>(_signIn);
     on<SelectBusinessRoleEvent>(_onSelectRole);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-
       AppPermissions.requestNotifications();
     });
   }

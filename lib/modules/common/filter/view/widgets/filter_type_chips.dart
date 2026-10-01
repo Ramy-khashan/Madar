@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
- 
+
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
- import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../core/utils/functions/translation.dart';
 
 class FilterTypeChips extends StatelessWidget {
@@ -19,7 +19,7 @@ class FilterTypeChips extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
-    
+
     return SizedBox(
       height: 30.height,
       child: ListView.separated(

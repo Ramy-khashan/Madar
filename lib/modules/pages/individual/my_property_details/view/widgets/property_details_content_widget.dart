@@ -4,7 +4,7 @@ import '../../../../../../core/components/is_scrollable_widget.dart';
 import '../../../../../../core/components/responsive_row_column.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../property_details/model/property_details_model.dart';
- import 'contracts_section_widget.dart';
+import 'contracts_section_widget.dart';
 import 'property_header_section_widget.dart';
 import 'property_image_section_widget.dart';
 import 'property_info_card_widget.dart';
@@ -53,8 +53,6 @@ class PropertyDetailsContentWidget extends StatelessWidget {
                     ContractsSectionWidget(
                       contracts: property?.contracts ?? [],
                     ),
-                    // SizedBox(height: 16.height),
-                    // FinancialPerformanceSectionWidget(property: property),
                     SizedBox(height: 16.height),
                     const RelatedServicesSectionWidget(),
                     SizedBox(height: 32.height),

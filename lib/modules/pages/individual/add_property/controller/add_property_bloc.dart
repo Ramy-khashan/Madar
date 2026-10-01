@@ -85,8 +85,6 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState>
     on<ClearPlaceSuggestionsEvent>(_onClearPlaceSuggestions);
   }
 
-  // ── Static data ──────────────────────────────────────────────────────────
-
   static AddPropertyBloc get(BuildContext context) =>
       context.read<AddPropertyBloc>();
   static List<Map<String, dynamic>> get propertyTypeItems => [
@@ -182,8 +180,6 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState>
       'icon': AppImages.other,
     },
   ];
-  // Option lists hold API wire values; widgets render them through `.trans`
-  // so labels stay localized while the stored value stays submittable.
 
   static const List<String> facadeOptions = PropertyApiEnums.facadeByIndex;
 
@@ -209,7 +205,6 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState>
     PropertyApiEnums.viewGarden,
   ];
 
-  /// Townhouse community facilities.
   static const List<String> communityFacilityOptions = [
     PropertyApiEnums.communityPool,
     PropertyApiEnums.communityGym,
@@ -267,7 +262,6 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState>
     PropertyApiEnums.farmFacilityElectricity,
   ];
 
-  /// Slot of the floor within its building, used by `type: FLOOR`.
   static const List<String> floorTypeOptions = [
     PropertyApiEnums.floorTypeGround,
     PropertyApiEnums.floorTypeUpper,
@@ -309,8 +303,6 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState>
     PropertyApiEnums.soilMixed,
   ];
 
-  /// Numeric pickers submit plain integers, so their label is the value itself
-  /// and must not be translated.
   static List<String> numberOptions(int max, {int min = 0}) =>
       List.generate(max - min + 1, (i) => '${min + i}');
 
@@ -318,7 +310,6 @@ class AddPropertyBloc extends Bloc<AddPropertyEvent, AddPropertyState>
   static List<String> get floorsCountOptions => numberOptions(100, min: 1);
   static List<String> get unitCountOptions => numberOptions(200);
   static List<String> get parkingFloorOptions => numberOptions(15);
-
 
   @override
   Future<void> close() {

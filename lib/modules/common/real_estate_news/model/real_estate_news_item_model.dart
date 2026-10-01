@@ -41,10 +41,8 @@ class RealEstateNewsItemModel {
     );
   }
 
-  /// Minutes to read, derived from [readTime].
   String get readMinutes => readTime;
 
-  /// Relative time string derived from [publishedAt].
   String get timeAgo {
     if (publishedAt.isEmpty) return '';
     final date = DateTime.tryParse(publishedAt);
@@ -68,16 +66,16 @@ class RealEstateNewsItemModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'category': category,
-        'title': title,
-        'summary': summary,
-        'body': body,
-        'readTime': readTime,
-        'publishedAt': publishedAt,
-        'image': image,
-        'tags': tags,
-        'createdAt': createdAt,
-        'updatedAt': updatedAt,
-      };
+    'id': id,
+    'category': category,
+    'title': title,
+    'summary': summary,
+    'body': body,
+    'readTime': readTime,
+    'publishedAt': publishedAt,
+    'image': image,
+    'tags': tags,
+    'createdAt': createdAt,
+    'updatedAt': updatedAt,
+  };
 }

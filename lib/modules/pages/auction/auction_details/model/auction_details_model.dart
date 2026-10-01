@@ -63,27 +63,27 @@ class AuctionDetailsModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        title,
-        location,
-        currentBid,
-        minBidIncrement,
-        imageUrls,
-        endTime,
-        bidsCount,
-        propertyType,
-        beds,
-        baths,
-        area,
-        floor,
-        balconies,
-        propertyNumber,
-        description,
-        status,
-        hasDepositPaid,
-        startingBid,
-        tag,
-      ];
+    id,
+    title,
+    location,
+    currentBid,
+    minBidIncrement,
+    imageUrls,
+    endTime,
+    bidsCount,
+    propertyType,
+    beds,
+    baths,
+    area,
+    floor,
+    balconies,
+    propertyNumber,
+    description,
+    status,
+    hasDepositPaid,
+    startingBid,
+    tag,
+  ];
 
   AuctionDetailsModel copyWith({
     String? id,
@@ -140,14 +140,16 @@ class AuctionDetailsModel extends Equatable {
       depositAmount: depositAmount ?? this.depositAmount,
     );
   }
-    static String label(AuctionStatus status) => switch (status) {
-       AuctionStatus.live => AppStrings.auctionStatusOpen,
-      AuctionStatus.upcoming => AppStrings.auctionStatusUpcoming,
-      AuctionStatus.ended => AppStrings.auctionStatusEnded,
-    };
-    static Color color(BuildContext context, AuctionStatus status) => switch (status) {
-      AuctionStatus.live => AppThemeColors.of(context).primaryBrand,
-      AuctionStatus.upcoming => AppThemeColors.of(context).primaryBrand,
-      AuctionStatus.ended => AppColors.errorColor,
-    };
+
+  static String label(AuctionStatus status) => switch (status) {
+    AuctionStatus.live => AppStrings.auctionStatusOpen,
+    AuctionStatus.upcoming => AppStrings.auctionStatusUpcoming,
+    AuctionStatus.ended => AppStrings.auctionStatusEnded,
+  };
+  static Color color(BuildContext context, AuctionStatus status) =>
+      switch (status) {
+        AuctionStatus.live => AppThemeColors.of(context).primaryBrand,
+        AuctionStatus.upcoming => AppThemeColors.of(context).primaryBrand,
+        AuctionStatus.ended => AppColors.errorColor,
+      };
 }

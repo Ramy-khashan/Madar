@@ -27,7 +27,7 @@ class RentOptionsBloc extends Bloc<RentOptionsEvent, RentOptionsState> {
     Emitter<RentOptionsState> emit,
   ) async {
     emit(state.copyWith(getDetailsStatus: RequestStatus.loading));
-     emit(
+    emit(
       state.copyWith(
         getDetailsStatus: RequestStatus.success,
         propertyTitle: 'شقة فاخرة في الملقا',
@@ -35,14 +35,44 @@ class RentOptionsBloc extends Bloc<RentOptionsEvent, RentOptionsState> {
         propertyPrice: 850000,
         propertyType: 'شقة سكنية',
         plans: const [
-          InstallmentPlanModel(id: 'p4', monthsCount: 4, monthlyAmount: 850000, fees: 500),
-          InstallmentPlanModel(id: 'p6', monthsCount: 6, monthlyAmount: 850000, fees: 500),
-          InstallmentPlanModel(id: 'p12', monthsCount: 12, monthlyAmount: 850000, fees: 500),
+          InstallmentPlanModel(
+            id: 'p4',
+            monthsCount: 4,
+            monthlyAmount: 850000,
+            fees: 500,
+          ),
+          InstallmentPlanModel(
+            id: 'p6',
+            monthsCount: 6,
+            monthlyAmount: 850000,
+            fees: 500,
+          ),
+          InstallmentPlanModel(
+            id: 'p12',
+            monthsCount: 12,
+            monthlyAmount: 850000,
+            fees: 500,
+          ),
         ],
         providers: [
-          InstallmentProviderModel(id: 'tamara', name: AppStrings.providerTamara, rating: 4.8, processingHours: 24),
-          InstallmentProviderModel(id: 'tabby', name: AppStrings.providerTabby, rating: 4.8, processingHours: 24),
-          InstallmentProviderModel(id: 'postpay', name: 'بوست باي', rating: 4.8, processingHours: 24),
+          InstallmentProviderModel(
+            id: 'tamara',
+            name: AppStrings.providerTamara,
+            rating: 4.8,
+            processingHours: 24,
+          ),
+          InstallmentProviderModel(
+            id: 'tabby',
+            name: AppStrings.providerTabby,
+            rating: 4.8,
+            processingHours: 24,
+          ),
+          InstallmentProviderModel(
+            id: 'postpay',
+            name: 'بوست باي',
+            rating: 4.8,
+            processingHours: 24,
+          ),
         ],
       ),
     );
@@ -67,9 +97,11 @@ class RentOptionsBloc extends Bloc<RentOptionsEvent, RentOptionsState> {
     Emitter<RentOptionsState> emit,
   ) async {
     emit(state.copyWith(confirmStatus: RequestStatus.loading));
-     emit(state.copyWith(
-      confirmStatus: RequestStatus.success,
-      requestNumber: 'INS-002',
-    ));
+    emit(
+      state.copyWith(
+        confirmStatus: RequestStatus.success,
+        requestNumber: 'INS-002',
+      ),
+    );
   }
 }

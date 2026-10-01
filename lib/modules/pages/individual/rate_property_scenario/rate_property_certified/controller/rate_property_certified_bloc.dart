@@ -27,7 +27,7 @@ class RatePropertyCertifiedBloc
   final TextEditingController propertyController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final TextEditingController areaController = TextEditingController();
-   void _onTypeSelected(
+  void _onTypeSelected(
     RatePropertyCertifiedTypeSelected event,
     Emitter<RatePropertyCertifiedState> emit,
   ) {
@@ -53,7 +53,7 @@ class RatePropertyCertifiedBloc
     RatePropertyCertifiedNextStep event,
     Emitter<RatePropertyCertifiedState> emit,
   ) {
-     if (state.currentStep < 2) {
+    if (state.currentStep < 2) {
       emit(state.copyWith(currentStep: state.currentStep + 1));
     }
   }
@@ -104,7 +104,7 @@ class RatePropertyCertifiedBloc
     Emitter<RatePropertyCertifiedState> emit,
   ) async {
     emit(state.copyWith(companiesStatus: RequestStatus.loading));
-     emit(
+    emit(
       state.copyWith(
         companiesStatus: RequestStatus.success,
         companies: const [
@@ -148,12 +148,8 @@ class RatePropertyCertifiedBloc
     RatePropertyCertifiedSubmit event,
     Emitter<RatePropertyCertifiedState> emit,
   ) async {
-    // if (state.ownerIdFile == null) {
-    //   emit(state.copyWith(ownerIdError: true));
-    //   return;
-    // }
     emit(state.copyWith(submitStatus: RequestStatus.loading));
-     emit(
+    emit(
       state.copyWith(
         submitStatus: RequestStatus.success,
         requestNumber: 'INS-002',

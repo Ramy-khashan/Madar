@@ -5,7 +5,7 @@ class InsuranceRequestModel {
   final String companyName;
   final String startDate;
   final String endDate;
-  final String status; // 'active' | 'renewal_pending' | 'expired'
+  final String status;
 
   const InsuranceRequestModel({
     required this.id,

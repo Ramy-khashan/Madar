@@ -6,6 +6,7 @@ sealed class BusinessHomeEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
 class BusinessHomeItemsEvent extends BusinessHomeEvent {
   const BusinessHomeItemsEvent();
 }
@@ -17,6 +18,7 @@ class BusinessPropertiesLoad extends BusinessHomeEvent {
 class PortfolioLoad extends BusinessHomeEvent {
   const PortfolioLoad();
 }
+
 final class IndividualHomeLoadUserLocation extends BusinessHomeEvent {
   const IndividualHomeLoadUserLocation();
 }

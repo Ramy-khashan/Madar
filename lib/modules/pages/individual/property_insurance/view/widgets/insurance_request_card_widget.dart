@@ -22,7 +22,7 @@ class InsuranceRequestCardWidget extends StatelessWidget {
     );
 
     return Container(
-       padding: EdgeInsets.all(16.width),
+      padding: EdgeInsets.all(16.width),
       decoration: BoxDecoration(
         color: colors.cardBackground,
         borderRadius: BorderRadius.circular(16.radius),

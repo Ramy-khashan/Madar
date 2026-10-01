@@ -26,16 +26,13 @@ class ConversationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    appBar: AppAppbar(
-      isWithBack: false,
-        title:
-          AppStrings.conversationsTitle,
-
+      appBar: AppAppbar(
+        isWithBack: false,
+        title: AppStrings.conversationsTitle,
       ),
       body: SafeArea(
         child: Column(
           children: [
-            
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.width),
               child: AppTextField(
@@ -66,33 +63,42 @@ class ConversationsScreen extends StatelessWidget {
                       notificationPredicate: (_) => true,
                       onRefresh: () => NavbarBloc.get(context).reload(),
                       child: ListView.separated(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      padding: EdgeInsets.symmetric(vertical: 8.height),
-                      itemCount:
-                          state.loadingConversationsStatus ==
-                              RequestStatus.loading
-                          ? 12
-                          : state.filteredConversations.length,
-              
-                      separatorBuilder: (_, _) => Divider(
-                        color: AppThemeColors.of(context).borderColor,
-                        indent: 16.width,
-                        endIndent: 16.width,
-                        height: 1,
-                      ),
-                      itemBuilder: (context, i) => ConversationItem(
-                        item:
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: EdgeInsets.symmetric(vertical: 8.height),
+                        itemCount:
                             state.loadingConversationsStatus ==
                                 RequestStatus.loading
-                            ? null
-                            : state.filteredConversations[i],
-                        onTap: () {RouterHandler.navigate(context,AppRouterKeys.conversationDetail,extra: ConversationInfo(
-                          conversationId: state.filteredConversations[i].id,
-                          participantName: state.filteredConversations[i].title,
-                          participantAvatarUrl: state.filteredConversations[i].imageUrl,
-                        ));},
+                            ? 12
+                            : state.filteredConversations.length,
+
+                        separatorBuilder: (_, _) => Divider(
+                          color: AppThemeColors.of(context).borderColor,
+                          indent: 16.width,
+                          endIndent: 16.width,
+                          height: 1,
+                        ),
+                        itemBuilder: (context, i) => ConversationItem(
+                          item:
+                              state.loadingConversationsStatus ==
+                                  RequestStatus.loading
+                              ? null
+                              : state.filteredConversations[i],
+                          onTap: () {
+                            RouterHandler.navigate(
+                              context,
+                              AppRouterKeys.conversationDetail,
+                              extra: ConversationInfo(
+                                conversationId:
+                                    state.filteredConversations[i].id,
+                                participantName:
+                                    state.filteredConversations[i].title,
+                                participantAvatarUrl:
+                                    state.filteredConversations[i].imageUrl,
+                              ),
+                            );
+                          },
+                        ),
                       ),
-                    ),
                     ),
                   );
                 },

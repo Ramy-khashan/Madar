@@ -17,12 +17,10 @@ class MyListingItemModel extends Equatable {
     required this.status,
     this.startingBid = 0,
     this.endTime,
-    // Completed fields
     this.finalPrice,
     this.winnerName,
     this.deliveryStatus,
     this.receiptFileName,
-    // Cancelled fields
     this.cancellationReason,
     this.cancelledAt,
   });
@@ -38,12 +36,10 @@ class MyListingItemModel extends Equatable {
   final String status;
   final double startingBid;
   final DateTime? endTime;
-  // Completed
   final double? finalPrice;
   final String? winnerName;
   final String? deliveryStatus;
   final String? receiptFileName;
-  // Cancelled
   final String? cancellationReason;
   final DateTime? cancelledAt;
 

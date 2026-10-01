@@ -1,4 +1,4 @@
-class ContractTabsModel{
+class ContractTabsModel {
   final String id;
   final String title;
 

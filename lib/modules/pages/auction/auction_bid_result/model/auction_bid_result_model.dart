@@ -21,13 +21,13 @@ class AuctionBidResultModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        auctionId,
-        propertyTitle,
-        propertyLocation,
-        bidAmount,
-        status,
-        countdownSeconds,
-      ];
+    auctionId,
+    propertyTitle,
+    propertyLocation,
+    bidAmount,
+    status,
+    countdownSeconds,
+  ];
 
   AuctionBidResultModel copyWith({
     String? auctionId,

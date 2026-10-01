@@ -24,5 +24,5 @@ class ProjectManagerHomeState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [projects, loadingStatus,errorMsg];
+  List<Object?> get props => [projects, loadingStatus, errorMsg];
 }

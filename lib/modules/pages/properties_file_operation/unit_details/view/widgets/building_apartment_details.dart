@@ -155,12 +155,10 @@ class BuildingApartmentDetails extends StatelessWidget {
                 leftSelected: unit.status == UnitStatus.rented,
                 enabled: true,
                 colors: colors,
-                onLeft: () => bloc.add(
-                  const UnitDetailsStatusToggled(UnitStatus.rented),
-                ),
-                onRight: () => bloc.add(
-                  const UnitDetailsStatusToggled(UnitStatus.vacant),
-                ),
+                onLeft: () =>
+                    bloc.add(const UnitDetailsStatusToggled(UnitStatus.rented)),
+                onRight: () =>
+                    bloc.add(const UnitDetailsStatusToggled(UnitStatus.vacant)),
               )
             else
               UnitInfoRow(
@@ -229,7 +227,9 @@ class BuildingApartmentDetails extends StatelessWidget {
                 embedded: true,
               ),
               PhoneNumberField(
-                key: ValueKey('tenant-phone-${unit.status}-${unit.tenantPhone}'),
+                key: ValueKey(
+                  'tenant-phone-${unit.status}-${unit.tenantPhone}',
+                ),
                 initialCountryCode: 'SA',
                 initialValue: unit.tenantPhone,
                 title: AppStrings.phoneNumber,

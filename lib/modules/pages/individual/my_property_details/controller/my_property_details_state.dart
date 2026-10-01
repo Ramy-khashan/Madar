@@ -13,8 +13,12 @@ class MyPropertyDetailsState extends Equatable {
   final int currentImagePage;
 
   @override
-  List<Object?> get props =>
-      [property, getDetailsStatus, errorMsg, currentImagePage];
+  List<Object?> get props => [
+    property,
+    getDetailsStatus,
+    errorMsg,
+    currentImagePage,
+  ];
 
   MyPropertyDetailsState copyWith({
     PropertyDetailsModel? property,

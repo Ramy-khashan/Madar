@@ -109,7 +109,9 @@ class AuctionListBloc extends Bloc<AuctionListEvent, AuctionListState> {
     AuctionListFilterChanged event,
     Emitter<AuctionListState> emit,
   ) {
-    emit(state.copyWith(activeFilter: event.filter, allItems: [], totalCount: 0));
+    emit(
+      state.copyWith(activeFilter: event.filter, allItems: [], totalCount: 0),
+    );
     add(const AuctionListLoad());
   }
 }

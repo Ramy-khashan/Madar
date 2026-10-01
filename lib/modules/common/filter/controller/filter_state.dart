@@ -29,14 +29,14 @@ final class FilterUpdated extends FilterState {
   final String? city;
 
   PropertyFilterModel get asModel => PropertyFilterModel(
-        isForSale: isForSale,
-        propertyTypeId: typeId,
-        minPrice: minPrice,
-        maxPrice: maxPrice,
-        paymentSystem: paymentSystem,
-        duration: isForSale ? null : duration,
-        city: city,
-      );
+    isForSale: isForSale,
+    propertyTypeId: typeId,
+    minPrice: minPrice,
+    maxPrice: maxPrice,
+    paymentSystem: paymentSystem,
+    duration: isForSale ? null : duration,
+    city: city,
+  );
 
   FilterUpdated copyWith({
     bool? isForSale,
@@ -61,13 +61,19 @@ final class FilterUpdated extends FilterState {
   }
 
   @override
-  List<Object?> get props =>
-      [isForSale, typeId, minPrice, maxPrice, paymentSystem, duration, city];
+  List<Object?> get props => [
+    isForSale,
+    typeId,
+    minPrice,
+    maxPrice,
+    paymentSystem,
+    duration,
+    city,
+  ];
 }
 
 const Object _sentinel = Object();
 
-/// Emitted once when Apply is tapped — the parent listens and closes the sheet.
 final class FilterApplyRequested extends FilterState {
   const FilterApplyRequested({required this.filter});
   final PropertyFilterModel filter;

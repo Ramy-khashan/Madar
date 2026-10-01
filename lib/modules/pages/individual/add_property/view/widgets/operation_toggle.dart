@@ -5,6 +5,7 @@ import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../controller/add_property_bloc.dart';
+import 'toggle_option.dart';
 
 class OperationToggle extends StatelessWidget {
   const OperationToggle({super.key});
@@ -26,7 +27,7 @@ class OperationToggle extends StatelessWidget {
           padding: const EdgeInsets.all(4),
           child: Row(
             children: [
-              _ToggleOption(
+              ToggleOption(
                 label: AppStrings.sellLabel,
                 isActive: isSell,
                 onTap: () => AddPropertyBloc.get(
@@ -34,7 +35,7 @@ class OperationToggle extends StatelessWidget {
                 ).add(const SelectOperationTypeEvent('sell')),
                 tc: tc,
               ),
-              _ToggleOption(
+              ToggleOption(
                 label: AppStrings.rentLabel,
                 isActive: !isSell,
                 onTap: () => AddPropertyBloc.get(
@@ -46,45 +47,6 @@ class OperationToggle extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class _ToggleOption extends StatelessWidget {
-  const _ToggleOption({
-    required this.label,
-    required this.isActive,
-    required this.onTap,
-    required this.tc,
-  });
-  final String label;
-  final bool isActive;
-  final VoidCallback onTap;
-  final AppThemeColors tc;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          alignment: Alignment.center,
-          height: 44,
-          decoration: BoxDecoration(
-            color: isActive ? tc.primaryBrand : Colors.transparent,
-            borderRadius: BorderRadius.circular(28),
-          ),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: context.responsiveFontScale(15),
-              fontWeight: FontWeight.w700,
-              color: isActive ? tc.onPrimary : tc.textSecondary,
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

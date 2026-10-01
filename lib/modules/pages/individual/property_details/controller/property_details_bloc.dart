@@ -208,9 +208,9 @@ class PropertyDetailsBloc
           ),
         );
       });
-    } catch (e){
+    } catch (e) {
       printState('Error adding property to saved: $e');
-    } 
+    }
   }
 
   Future<void> _onBrokerAccept(

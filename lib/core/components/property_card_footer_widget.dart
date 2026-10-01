@@ -4,8 +4,6 @@ import '../utils/constants/app_strings.dart';
 import '../utils/functions/responsive.dart';
 import 'app_button.dart';
 
-/// Two-button footer for a property card: [Send Request] + [Chat].
-/// Used in the general properties listing screen.
 class PropertyCardDualFooter extends StatelessWidget {
   const PropertyCardDualFooter({
     super.key,
@@ -48,28 +46,6 @@ class PropertyCardDualFooter extends StatelessWidget {
             ),
           ],
         ],
-      ),
-    );
-  }
-}
-
-/// Single full-width chat button footer for a property card.
-/// Used in broker and owner property listing screens.
-class PropertyCardChatFooter extends StatelessWidget {
-  const PropertyCardChatFooter({super.key, this.onChat});
-
-  final VoidCallback? onChat;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 12.height),
-      child: AppButton(
-        onTap: onChat,
-        childText: AppStrings.conversation,
-        childImage: AppImages.chatIcon,
-        height: 44,
-        textSize: 15,
       ),
     );
   }

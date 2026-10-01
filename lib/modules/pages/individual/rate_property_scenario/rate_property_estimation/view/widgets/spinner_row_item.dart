@@ -5,13 +5,10 @@ import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
 
 class SpinnerRowItem extends StatelessWidget {
-  const SpinnerRowItem({super.key, 
-    required this.label,
-     required this.colors,
-  });
+  const SpinnerRowItem({super.key, required this.label, required this.colors});
 
   final String label;
-   final AppThemeColors colors;
+  final AppThemeColors colors;
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +18,13 @@ class SpinnerRowItem extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-           CircularProgressIndicator(
+            CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation(colors.primaryBrand),
               strokeWidth: 2.5.width,
               value: null,
-           ),
+            ),
             SizedBox(width: 12.width),
-        
+
             Expanded(
               child: Text(
                 label,

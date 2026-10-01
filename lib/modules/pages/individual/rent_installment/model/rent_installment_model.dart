@@ -5,7 +5,7 @@ class RentInstallmentRequestModel {
   final double rentValue;
   final int planMonths;
   final String providerName;
-  final String status; // 'accepted' | 'under_review' | 'rejected'
+  final String status;
   final String? rejectionReason;
 
   const RentInstallmentRequestModel({
@@ -18,7 +18,6 @@ class RentInstallmentRequestModel {
     required this.status,
     this.rejectionReason,
   });
-  
 }
 
 class InstallmentProviderInfoModel {
@@ -29,5 +28,4 @@ class InstallmentProviderInfoModel {
     required this.name,
     required this.subtitle,
   });
-
 }

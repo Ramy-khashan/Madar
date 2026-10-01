@@ -34,7 +34,6 @@ class AddCommercialProjectBloc
     on<AddCommercialCustomSubStageAdded>(_onCustomSubStageAdded);
     on<AddCommercialCustomSubStageRemoved>(_onCustomSubStageRemoved);
 
-    // Auto-fetch stages on initialization
     add(const AddCommercialFetchStages());
   }
 

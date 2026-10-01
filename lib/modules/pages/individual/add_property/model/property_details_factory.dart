@@ -13,11 +13,6 @@ import 'townhouse_details_model.dart';
 import 'villa_details_model.dart';
 import 'warehouse_details_model.dart';
 
-/// Rebuilds the correct [PropertyDetailsBase] subtype from a raw `details`
-/// object, using the sibling `type` value to pick the shape.
-///
-/// Returns `null` for unknown types so callers can fall back instead of
-/// crashing on a newly added backend type.
 PropertyDetailsBase? propertyDetailsFromJson(
   String? propertyType,
   Map<String, dynamic>? details,

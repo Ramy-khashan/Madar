@@ -89,7 +89,6 @@ class InsuranceCoverageDetailsSection extends StatelessWidget {
                   ],
                 ),
               ),
-              // Table rows
               ...risks.asMap().entries.map((entry) {
                 final index = entry.key;
                 final risk = entry.value;

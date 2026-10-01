@@ -35,11 +35,14 @@ class OutlinedSection extends StatelessWidget {
         children: [
           Row(
             children: [
-              if (imageUrl != null) ...[ImageItem(imageUrl ?? ''),SizedBox(width: 8.width)],
+              if (imageUrl != null) ...[
+                ImageItem(imageUrl ?? ''),
+                SizedBox(width: 8.width),
+              ],
               Expanded(
                 child: Text(
                   title,
-                   style: TextStyle(
+                  style: TextStyle(
                     fontSize: context.responsiveFontScale(titleFontSize),
                     fontWeight: FontWeight.w700,
                     fontFamily: AppConstant.appHeaderFont,
@@ -50,10 +53,7 @@ class OutlinedSection extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16.height),
-          Material(
-            color: Colors.transparent,
-            child: child,
-          ),
+          Material(color: Colors.transparent, child: child),
         ],
       ),
     );

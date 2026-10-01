@@ -37,9 +37,9 @@ class InsuranceOptionsScreen extends StatelessWidget {
             child: LoadingProcess(
               status: state.getDetailsStatus,
               errorMsg: state.errorMsg,
-              onTapRefresh: () => context
-                  .read<InsuranceOptionsBloc>()
-                  .add(InsuranceOptionsLoad(propertyId)),
+              onTapRefresh: () => context.read<InsuranceOptionsBloc>().add(
+                InsuranceOptionsLoad(propertyId),
+              ),
               emptyMsg: '',
               isEmptyList: false,
               childIsLoader: true,

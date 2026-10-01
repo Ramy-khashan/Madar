@@ -19,10 +19,8 @@ class AddBuildingApartmentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => AddBuildingApartmentBloc(
-        buildingId: buildingId,
-        isShop: isShop,
-      ),
+      create: (_) =>
+          AddBuildingApartmentBloc(buildingId: buildingId, isShop: isShop),
       child: AddBuildingApartmentView(buildingName: buildingName),
     );
   }

@@ -12,7 +12,7 @@ import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/guest_mode.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 import '../../../../../core/components/property_card_widget.dart';
- import '../controller/my_wishlist_bloc.dart';
+import '../controller/my_wishlist_bloc.dart';
 
 class MyWishlistScreen extends StatelessWidget {
   const MyWishlistScreen({super.key});
@@ -93,31 +93,7 @@ class MyWishlistScreen extends StatelessWidget {
                                       extra: id,
                                     );
                                   },
-                                  onChat: () {
-                                    // final receiverId =
-                                    //     property?.publisher?.userId ??
-                                    //     property?.owner?.userId ??
-                                    //     '';
-                                    // ChatNavigator.openPrivateChat(
-                                    //   context,
-                                    //   receiverId: receiverId,
-                                    //   participantName:
-                                    //       property?.publisher?.fullName ??
-                                    //       property?.owner?.fullName ??
-                                    //       '',
-                                    //   participantAvatarUrl:
-                                    //       property?.publisher?.image,
-                                    // );
-                                    //                 RouterHandler.navigate(
-                                    //                   context,
-                                    //                   AppRouterKeys.conversationDetail,
-                                    //                   // extra: ConversationInfo(
-                                    //                   //   conversationId: property.id,
-                                    //                   //   participantName: property.title,
-                                    //                   //   participantAvatarUrl: property.imageUrl,
-                                    //                   // ),
-                                    //                 );
-                                  },
+                                  onChat: () {},
                                 ),
                               );
                             },

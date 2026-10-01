@@ -58,7 +58,6 @@ class AuctionDetailsScreen extends StatelessWidget {
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-
                       AppButton(
                         width: 560.width,
                         onTap: () {

@@ -79,7 +79,9 @@ mixin AddPropertySubmitMixin on AddPropertyControllersMixin {
     ConfirmSaveEvent event,
     Emitter<AddPropertyState> emit,
   ) async {
-    final model = modelWithControllerValues().copyWith(clearPropertyParent: true);
+    final model = modelWithControllerValues().copyWith(
+      clearPropertyParent: true,
+    );
     final errors = _errorsForSubmit(model);
 
     if (errors.isNotEmpty) {

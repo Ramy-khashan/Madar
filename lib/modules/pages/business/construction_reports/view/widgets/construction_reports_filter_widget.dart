@@ -16,11 +16,6 @@ class ConstructionReportsFilterWidget extends StatelessWidget {
     {'id': 'yearly', 'label': AppStrings.yearly},
   ];
 
-  // List<Map<String, String>> get _scopes => [
-  //   {'id': 'all', 'label': AppStrings.allPropertiesScope},
-  //   {'id': 'single', 'label': AppStrings.singlePropertyScope},
-  // ];
-
   @override
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
@@ -46,16 +41,6 @@ class ConstructionReportsFilterWidget extends StatelessWidget {
                   ConstructionReportsPeriodChanged(id),
                 ),
               ),
-              // SizedBox(height: 8.height),
-              // FilterCard(
-              //   title: AppStrings.chooseScope,
-              //   options: _scopes,
-              //   selectedId: state.selectedScope,
-              //   colors: colors,
-              //   onChanged: (id) => context.read<ConstructionReportsBloc>().add(
-              //     ConstructionReportsScopeChanged(id),
-              //   ),
-              // ),
             ],
           ),
         );

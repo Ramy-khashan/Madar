@@ -1,7 +1,6 @@
 import 'property_details_base.dart';
 import 'property_enums.dart';
 
-/// `details` payload for `type: OFFICE`.
 class OfficeDetailsModel extends PropertyDetailsBase {
   const OfficeDetailsModel({
     this.floor,
@@ -17,7 +16,6 @@ class OfficeDetailsModel extends PropertyDetailsBase {
   final int? roomsCount;
   final int? bathrooms;
 
-  /// Values from [PropertyApiEnums.facilityAc] and friends.
   final List<String> facilities;
   final bool? furnishedOffice;
   final String? furnishing;

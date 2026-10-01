@@ -19,8 +19,7 @@ class ChatUserModel extends Equatable {
   final String? role;
   final String? image;
 
-  bool get isAiAssistant =>
-      (role ?? '').toUpperCase() == 'AI_ASSISTANT';
+  bool get isAiAssistant => (role ?? '').toUpperCase() == 'AI_ASSISTANT';
 
   factory ChatUserModel.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
@@ -162,8 +161,7 @@ class ChatModel extends Equatable {
     return AppStrings.conversation;
   }
 
-  ChatMessageModel? get lastMessage =>
-      messages.isEmpty ? null : messages.last;
+  ChatMessageModel? get lastMessage => messages.isEmpty ? null : messages.last;
 
   factory ChatModel.fromJson(Map<String, dynamic> json) {
     final usersJson = json['users'];
@@ -172,8 +170,9 @@ class ChatModel extends Equatable {
       id: (json['id'] ?? json['chatId'] ?? '').toString(),
       isGroup: json['isGroup'] == true,
       name: json['name']?.toString(),
-      createdAt: DateTime.tryParse((json['createdAt'] ?? '').toString())
-          ?.toLocal(),
+      createdAt: DateTime.tryParse(
+        (json['createdAt'] ?? '').toString(),
+      )?.toLocal(),
       users: usersJson is List
           ? usersJson
                 .whereType<Map>()
@@ -184,17 +183,19 @@ class ChatModel extends Equatable {
           : const [],
       messages: messagesJson is List
           ? (messagesJson
-                  .whereType<Map>()
-                  .map(
-                    (e) =>
-                        ChatMessageModel.fromJson(Map<String, dynamic>.from(e)),
-                  )
-                  .toList()
-                ..sort((a, b) {
-                  final aDate = a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
-                  final bDate = b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
-                  return aDate.compareTo(bDate);
-                }))
+                .whereType<Map>()
+                .map(
+                  (e) =>
+                      ChatMessageModel.fromJson(Map<String, dynamic>.from(e)),
+                )
+                .toList()
+              ..sort((a, b) {
+                final aDate =
+                    a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+                final bDate =
+                    b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+                return aDate.compareTo(bDate);
+              }))
           : const [],
       unreadCount: (json['unreadCount'] as num?)?.toInt() ?? 0,
     );
@@ -243,9 +244,7 @@ class ChatSession {
     Set<String>? shared;
     for (final chat in chats) {
       final ids = chat.users
-          .map(
-            (m) => m.user.userId.isNotEmpty ? m.user.userId : m.userId,
-          )
+          .map((m) => m.user.userId.isNotEmpty ? m.user.userId : m.userId)
           .where((id) => id.isNotEmpty)
           .toSet();
       if (ids.isEmpty) continue;

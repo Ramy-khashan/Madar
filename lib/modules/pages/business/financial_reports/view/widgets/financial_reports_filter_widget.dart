@@ -16,10 +16,6 @@ class FinancialReportsFilterWidget extends StatelessWidget {
     {'id': 'halfYearly', 'label': AppStrings.halfYearly},
     {'id': 'yearly', 'label': AppStrings.yearly},
   ];
-  // List<Map<String, String>> get _scopes => [
-  //   {'id': 'all', 'label': AppStrings.allPropertiesScope},
-  //   {'id': 'single', 'label': AppStrings.singlePropertyScope},
-  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -46,16 +42,6 @@ class FinancialReportsFilterWidget extends StatelessWidget {
                   FinancialReportsPeriodChanged(id),
                 ),
               ),
-              // SizedBox(height: 8.height),
-              // FilterCard(
-              //   title: AppStrings.chooseScope,
-              //   options: _scopes,
-              //   selectedId: state.selectedScope,
-              //   colors: colors,
-              //   onChanged: (id) => context.read<FinancialReportsBloc>().add(
-              //     FinancialReportsScopeChanged(id),
-              //   ),
-              // ),
             ],
           ),
         );

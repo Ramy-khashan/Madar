@@ -4,14 +4,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 
-import '../config/theme/app_theme_colors.dart';
-import 'components/app_button.dart';
-import 'utils/constants/app_constant.dart';
-import 'utils/constants/app_strings.dart';
 import 'utils/functions/print_state.dart';
-import 'utils/functions/responsive.dart';
+import 'maintenance_overlay.dart';
 
- 
 class AppKillSwitch extends ChangeNotifier {
   AppKillSwitch._();
   static final AppKillSwitch instance = AppKillSwitch._();
@@ -25,7 +20,7 @@ class AppKillSwitch extends ChangeNotifier {
   String title = '';
   String description = '';
 
-  StreamSubscription<RemoteConfigUpdate>? _sub;  
+  StreamSubscription<RemoteConfigUpdate>? _sub;
   bool _started = false;
 
   Future<void> init() async {
@@ -47,7 +42,7 @@ class AppKillSwitch extends ChangeNotifier {
       );
       await rc.fetchAndActivate();
       _apply(rc);
-      
+
       _sub ??= rc.onConfigUpdated.listen((_) async {
         await rc.activate();
         _apply(rc);
@@ -90,24 +85,19 @@ class AppKillSwitch extends ChangeNotifier {
   }
 }
 
-class AppKillSwitchGate extends StatefulWidget {
+class AppKillSwitchGate extends StatelessWidget {
   const AppKillSwitchGate({super.key, required this.child});
 
   final Widget child;
 
-  @override
-  State<AppKillSwitchGate> createState() => _AppKillSwitchGateState();
-}
-
-class _AppKillSwitchGateState extends State<AppKillSwitchGate> {
-  @override
-  void initState() {
-    super.initState();
-    AppKillSwitch.instance.init();
-  }
+  static bool _initCalled = false;
 
   @override
   Widget build(BuildContext context) {
+    if (!_initCalled) {
+      _initCalled = true;
+      AppKillSwitch.instance.init();
+    }
     return ListenableBuilder(
       listenable: AppKillSwitch.instance,
       builder: (context, _) {
@@ -115,86 +105,11 @@ class _AppKillSwitchGateState extends State<AppKillSwitchGate> {
         return Stack(
           alignment: Alignment.topLeft,
           children: [
-            widget.child,
-            if (!kill.isWorking) _MaintenanceOverlay(kill: kill),
+            child,
+            if (!kill.isWorking) MaintenanceOverlay(kill: kill),
           ],
         );
       },
-    );
-  }
-}
-
-class _MaintenanceOverlay extends StatelessWidget {
-  const _MaintenanceOverlay({required this.kill});
-
-  final AppKillSwitch kill;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = AppThemeColors.of(context);
-    final title = kill.title.isEmpty ? AppStrings.appPausedTitle : kill.title;
-    final description = kill.description.isEmpty
-        ? AppStrings.appPausedDescription
-        : kill.description;
-
-    return Positioned.fill(
-      child: PopScope(
-        canPop: false,
-        child: Material(
-          color: colors.backgroundPrimary,
-          child: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 28.width),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 72.width,
-                    height: 72.width,
-                    decoration: BoxDecoration(
-                      color: colors.primaryBrand.withValues(alpha: 0.12),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.pause_circle_outline_rounded,
-                      size: 36.width,
-                      color: colors.primaryBrand,
-                    ),
-                  ),
-                  SizedBox(height: 24.height),
-                  Text(
-                    title,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: context.responsiveFontScale(20),
-                      fontWeight: FontWeight.w700,
-                      fontFamily: AppConstant.appHeaderFont,
-                      color: colors.textFieldTitle,
-                    ),
-                  ),
-                  SizedBox(height: 12.height),
-                  Text(
-                    description,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: context.responsiveFontScale(14),
-                      height: 1.5,
-                      color: colors.textSecondary,
-                    ),
-                  ),
-                  SizedBox(height: 32.height),
-                  AppButton(
-                    childText: AppStrings.appPausedRefresh,
-                    childIcon: Icons.refresh_rounded,
-                    isLoading: kill.isRefreshing,
-                    onTap: kill.refresh,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

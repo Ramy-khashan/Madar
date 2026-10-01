@@ -51,9 +51,7 @@ mixin PropertiesMapLoadMixin on Bloc<PropertiesMapEvent, PropertiesMapState> {
       }
 
       if (errorMsg != null) {
-        emit(
-          state.copyWith(status: RequestStatus.failed, errorMsg: errorMsg),
-        );
+        emit(state.copyWith(status: RequestStatus.failed, errorMsg: errorMsg));
         return;
       }
 
@@ -66,14 +64,15 @@ mixin PropertiesMapLoadMixin on Bloc<PropertiesMapEvent, PropertiesMapState> {
               picked.position.longitude,
               properties: merged,
             );
-      final keepSelected = state.selectedIndex >= 0 &&
-          state.selectedIndex < merged.length;
+      final keepSelected =
+          state.selectedIndex >= 0 && state.selectedIndex < merged.length;
       emit(
         state.copyWith(
           status: RequestStatus.success,
           properties: merged,
           mapCenter: position,
-          selectedIndex: nearPropertyIndex ?? (keepSelected ? state.selectedIndex : -1),
+          selectedIndex:
+              nearPropertyIndex ?? (keepSelected ? state.selectedIndex : -1),
           clearPickedPosition: nearPropertyIndex != null,
         ),
       );

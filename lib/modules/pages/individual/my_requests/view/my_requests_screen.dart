@@ -37,38 +37,39 @@ class MyRequestsScreen extends StatelessWidget {
           body: GuestMode.isGuest
               ? const GuestLockedView()
               : SafeArea(
-            child: LoadingProcess(
-              status: state.listStatus,
-              errorMsg: state.errorMsg,
-              emptyMsg: AppStrings.myRequestsEmpty,
-              isEmptyList: state.requests.isEmpty,
-              childIsLoader: true,
-              onTapRefresh: () =>
-                  context.read<MyRequestsBloc>().add(const MyRequestsLoad()),
-              child: ListView.separated(
-                padding: EdgeInsets.symmetric(
-                  horizontal: context.responsiveHorizontalPadding,
-                  vertical: 16.height,
+                  child: LoadingProcess(
+                    status: state.listStatus,
+                    errorMsg: state.errorMsg,
+                    emptyMsg: AppStrings.myRequestsEmpty,
+                    isEmptyList: state.requests.isEmpty,
+                    childIsLoader: true,
+                    onTapRefresh: () => context.read<MyRequestsBloc>().add(
+                      const MyRequestsLoad(),
+                    ),
+                    child: ListView.separated(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.responsiveHorizontalPadding,
+                        vertical: 16.height,
+                      ),
+                      itemCount: state.listStatus == RequestStatus.loading
+                          ? 4
+                          : state.requests.length,
+                      separatorBuilder: (_, _) => SizedBox(height: 12.height),
+                      itemBuilder: (context, index) {
+                        if (state.listStatus == RequestStatus.loading) {
+                          return const MyRequestCardWidget();
+                        }
+                        final item = state.requests[index];
+                        return MyRequestCardWidget(
+                          item: item,
+                          isActionLoading:
+                              state.actionStatus == RequestStatus.loading &&
+                              state.actionRequestId == item.id,
+                        );
+                      },
+                    ),
+                  ),
                 ),
-                itemCount: state.listStatus == RequestStatus.loading
-                    ? 4
-                    : state.requests.length,
-                separatorBuilder: (_, _) => SizedBox(height: 12.height),
-                itemBuilder: (context, index) {
-                  if (state.listStatus == RequestStatus.loading) {
-                    return const MyRequestCardWidget();
-                  }
-                  final item = state.requests[index];
-                  return MyRequestCardWidget(
-                    item: item,
-                    isActionLoading:
-                        state.actionStatus == RequestStatus.loading &&
-                        state.actionRequestId == item.id,
-                  );
-                },
-              ),
-            ),
-          ),
         );
       },
     );

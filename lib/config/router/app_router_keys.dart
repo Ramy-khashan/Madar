@@ -32,23 +32,26 @@ class AppRouterKeys {
   static const String auctionNavbar = '/auctionNavbar';
   static const String conversationDetail = '/conversationDetail';
   static const String rateProperty = '/rateProperty';
-  static const String ratePropertyEstimationForm = '/ratePropertyEstimationForm';
+  static const String ratePropertyEstimationForm =
+      '/ratePropertyEstimationForm';
   static const String ratePropertyLoading = '/ratePropertyLoading';
   static const String ratePropertyResult = '/ratePropertyResult';
   static const String ratePropertyCertifiedInfo = '/ratePropertyCertifiedInfo';
   static const String ratePropertyCertifiedForm = '/ratePropertyCertifiedForm';
   static const String propertiesListing = '/propertiesListing';
   static const String brokerProperties = '/brokerProperties';
-  // static const String ownerProperties = '/ownerProperties';
   static const String propertyLocationMap = '/propertyLocationMap';
   static const String projectManagerHome = '/projectManagerHome';
   static const String projectManagerDetails = '/projectManagerDetails';
-   static const String realEstateDevelopmentList = '/realEstateDevelopmentList';
-  static const String realEstateDevelopmentDetails = '/realEstateDevelopmentDetails';
-  static const String realEstateDevelopmentAddProject = '/realEstateDevelopmentAddProject';
-  static const String realEstateDevelopmentAddCommercial = '/realEstateDevelopmentAddCommercial';
+  static const String realEstateDevelopmentList = '/realEstateDevelopmentList';
+  static const String realEstateDevelopmentDetails =
+      '/realEstateDevelopmentDetails';
+  static const String realEstateDevelopmentAddProject =
+      '/realEstateDevelopmentAddProject';
+  static const String realEstateDevelopmentAddCommercial =
+      '/realEstateDevelopmentAddCommercial';
   static const String supportAndHelpScreen = '/supportAndHelp';
-   static const String termsAndConditionScreen = '/termsAndCondition';
+  static const String termsAndConditionScreen = '/termsAndCondition';
   static const String notification = '/notification';
   static const String myWishlist = '/my_wishlist';
   static const String myRequests = '/myRequests';
@@ -67,4 +70,3 @@ class AppRouterKeys {
   static const String unitDetailsScreen = '/unitDetailsScreen';
   static const String addBuildingApartment = '/addBuildingApartment';
 }
-

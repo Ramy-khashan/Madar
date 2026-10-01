@@ -19,7 +19,8 @@ class ChatSocketService {
   String? _openChatId;
 
   final _messagesController = StreamController<ChatMessageModel>.broadcast();
-  final _typingController = StreamController<(String chatId, bool isTyping)>.broadcast();
+  final _typingController =
+      StreamController<(String chatId, bool isTyping)>.broadcast();
 
   Stream<ChatMessageModel> get incomingMessages => _messagesController.stream;
   Stream<(String chatId, bool isTyping)> get typing => _typingController.stream;

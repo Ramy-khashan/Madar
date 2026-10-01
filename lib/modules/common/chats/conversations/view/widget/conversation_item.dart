@@ -31,9 +31,9 @@ class ConversationItem extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   alignment: Alignment.center,
-                  child:item?.imageUrl.isNotEmpty == true
+                  child: item?.imageUrl.isNotEmpty == true
                       ? ImageItem(
-                          item?.imageUrl??'',
+                          item?.imageUrl ?? '',
                           width: 56.width,
                           height: 56.width,
                           fit: BoxFit.cover,
@@ -44,8 +44,8 @@ class ConversationItem extends StatelessWidget {
                             color: Colors.white,
                             fontSize: context.responsiveFontScale(22),
                             fontFamily: 'app-header-font',
-                    ),
-                  ),
+                          ),
+                        ),
                 ),
                 if (item?.isOnline ?? false)
                   Positioned(
@@ -83,7 +83,6 @@ class ConversationItem extends StatelessWidget {
                           ),
                         ),
                       ),
-                    
                     ],
                   ),
                   SizedBox(height: 4.height),
@@ -113,26 +112,27 @@ class ConversationItem extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 4.height),
-            if (item?.unreadCount != null && item!.unreadCount > 0)
-              SizedBox(
-                width: 28.width,
-                child: CircleAvatar(
-                  radius: 12.width,
-                  backgroundColor:AppColors.lightSuccessColor,
+                if (item?.unreadCount != null && item!.unreadCount > 0)
+                  SizedBox(
+                    width: 28.width,
+                    child: CircleAvatar(
+                      radius: 12.width,
+                      backgroundColor: AppColors.lightSuccessColor,
 
-                  child: Center(
-                    child: Text(
-                      '${item?.unreadCount ?? 0}',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: context.responsiveFontScale(11),
-                        fontWeight: FontWeight.w700,
+                      child: Center(
+                        child: Text(
+                          '${item?.unreadCount ?? 0}',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: context.responsiveFontScale(11),
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-              ]),
+              ],
+            ),
           ],
         ),
       ),

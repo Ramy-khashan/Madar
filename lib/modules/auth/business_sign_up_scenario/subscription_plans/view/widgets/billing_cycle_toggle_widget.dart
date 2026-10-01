@@ -29,8 +29,8 @@ class BillingCycleToggleWidget extends StatelessWidget {
           child: Text(
             AppStrings.subscriptionMonthly,
             style: TextStyle(
-               fontSize: context.responsiveFontScale(20),
-              fontWeight:  FontWeight.w500,
+              fontSize: context.responsiveFontScale(20),
+              fontWeight: FontWeight.w500,
               fontFamily: AppConstant.appHeaderFont,
               color: colors.textFieldTitle,
             ),
@@ -54,7 +54,7 @@ class BillingCycleToggleWidget extends StatelessWidget {
             AppStrings.subscriptionYearly,
             style: TextStyle(
               fontSize: context.responsiveFontScale(20),
-              fontWeight:  FontWeight.w500,
+              fontWeight: FontWeight.w500,
               fontFamily: AppConstant.appHeaderFont,
               color: colors.textFieldTitle,
             ),

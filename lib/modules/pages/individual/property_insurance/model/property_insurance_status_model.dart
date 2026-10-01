@@ -15,7 +15,10 @@ class PropertyInsuranceStatusModel {
     required this.textColor,
   });
 
-  static PropertyInsuranceStatusModel statusInfo(String status, BuildContext context) {
+  static PropertyInsuranceStatusModel statusInfo(
+    String status,
+    BuildContext context,
+  ) {
     switch (status) {
       case 'active':
         return PropertyInsuranceStatusModel(

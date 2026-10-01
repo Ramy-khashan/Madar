@@ -19,14 +19,9 @@ class AppControllerBloc extends Bloc<AppControllerEvent, AppControllerState> {
   static AppControllerBloc get(BuildContext context) =>
       context.read<AppControllerBloc>();
 
-  void _onInit(
-    AppControllerInit event,
-    Emitter<AppControllerState> emit,
-  ) {
+  void _onInit(AppControllerInit event, Emitter<AppControllerState> emit) {
     final isDark = sl<PreferenceUtils>().getBool(_kThemeKey);
-    emit(state.copyWith(
-      themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
-    ));
+    emit(state.copyWith(themeMode: isDark ? ThemeMode.dark : ThemeMode.light));
   }
 
   Future<void> _onThemeToggled(
@@ -35,9 +30,8 @@ class AppControllerBloc extends Bloc<AppControllerEvent, AppControllerState> {
   ) async {
     final newIsDark = !state.isDark;
     await sl<PreferenceUtils>().setBool(_kThemeKey, newIsDark);
-    emit(state.copyWith(
-      themeMode: newIsDark ? ThemeMode.dark : ThemeMode.light,
-    ));
+    emit(
+      state.copyWith(themeMode: newIsDark ? ThemeMode.dark : ThemeMode.light),
+    );
   }
 }
-

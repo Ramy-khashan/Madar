@@ -51,7 +51,7 @@ class MarkerInfoCard extends StatelessWidget {
               width: context.isMobilePortrait
                   ? context.screenWidth * 0.91
                   : context.screenWidth * 0.4,
-                  height: 150.height,
+              height: 150.height,
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
                 color: colors.cardBackground,
@@ -67,13 +67,11 @@ class MarkerInfoCard extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Left: details
                   ImageItem(
                     _imageUrl,
                     width: 120.width,
                     height: 170.height,
                     fit: BoxFit.cover,
-                    
                   ),
                   Expanded(
                     child: Padding(
@@ -82,7 +80,6 @@ class MarkerInfoCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Title + close button row
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -111,7 +108,6 @@ class MarkerInfoCard extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: 6.height),
-                          // Location
                           Row(
                             children: [
                               Icon(
@@ -141,7 +137,6 @@ class MarkerInfoCard extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: 10.height),
-                          // Specs row: beds | balconies | area
                           Row(
                             children: [
                               PropertyItem(
@@ -164,14 +159,12 @@ class MarkerInfoCard extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: 10.height),
-                          // Price
                           Text.rich(
-                               maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             TextSpan(
                               text: formatPrice(
                                 double.parse((property?.price ?? 0).toString()),
-                                
                               ),
                               style: TextStyle(
                                 fontSize: context.responsiveFontScale(18),
@@ -179,11 +172,11 @@ class MarkerInfoCard extends StatelessWidget {
                                 color: colors.textFieldTitle,
                                 fontFamily: AppConstant.appHeaderFont,
                               ),
-                              
+
                               children: [
                                 TextSpan(
                                   text: ' ${AppStrings.currency}',
-                                  
+
                                   style: TextStyle(
                                     fontSize: context.responsiveFontScale(14),
                                     fontWeight: FontWeight.w500,

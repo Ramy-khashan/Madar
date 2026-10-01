@@ -49,8 +49,6 @@ class AddPropertyState extends Equatable {
   final List<PlacePrediction> placePredictions;
   final bool isSearchingPlaces;
 
-  /// Maps the current step to a 0-based indicator index (5 segments total).
-  /// period shares index 0 with type (it's a sub-step of the type phase).
   int get indicatorIndex {
     switch (step) {
       case AddPropertyStep.type:
@@ -127,17 +125,17 @@ class AddPropertyState extends Equatable {
     hasPortfolioMode,
     submitStatus,
     errorMessage,
-        createdPropertyId,
-        fieldErrors,
-        openChooseBrokerOnSuccess,
-        isPreviewLoading,
-        hasMarketData,
-        suggestedMin,
-        suggestedMax,
-        aiDescription,
-        parentCandidates,
-        parentCandidatesStatus,
-        placePredictions,
-        isSearchingPlaces,
-      ];
+    createdPropertyId,
+    fieldErrors,
+    openChooseBrokerOnSuccess,
+    isPreviewLoading,
+    hasMarketData,
+    suggestedMin,
+    suggestedMax,
+    aiDescription,
+    parentCandidates,
+    parentCandidatesStatus,
+    placePredictions,
+    isSearchingPlaces,
+  ];
 }

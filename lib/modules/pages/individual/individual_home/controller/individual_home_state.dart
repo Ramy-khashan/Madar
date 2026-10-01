@@ -26,7 +26,18 @@ class IndividualHomeState extends Equatable {
   });
 
   @override
-  List<Object> get props => [properties, portfolio, adsItem, userLocation, propertiesErrorMsg, portfolioErrorMsg, adsErrorMsg, propertiesStatus, portfolioStatus, adsStatus];
+  List<Object> get props => [
+    properties,
+    portfolio,
+    adsItem,
+    userLocation,
+    propertiesErrorMsg,
+    portfolioErrorMsg,
+    adsErrorMsg,
+    propertiesStatus,
+    portfolioStatus,
+    adsStatus,
+  ];
   IndividualHomeState copyWith({
     List<PropertiesItemModel>? properties,
     List<MyPropertiesModel>? portfolio,

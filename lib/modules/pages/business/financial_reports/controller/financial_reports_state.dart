@@ -28,7 +28,6 @@ class FinancialReportsState extends Equatable {
     this.isSubmittingOtherIncome = false,
   });
 
-  /// 0 = نظرة عامة, 1 = الايرادات, 2 = المصروفات
   final int selectedTab;
   final String selectedPeriod;
   final String selectedScope;
@@ -41,7 +40,6 @@ class FinancialReportsState extends Equatable {
   final String? errorMessage;
   final RequestStatus status;
 
-  // Data lists
   final List<FinancialPropertyItem> categoryItems;
   final List<FinancialTransaction> transactions;
   final List<FinancialRentItem> rentItems;

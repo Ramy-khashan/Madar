@@ -52,7 +52,9 @@ class GooglePlacesService {
       final data = _asMap(response.data);
       final status = data['status']?.toString();
       if (status != null && status != 'OK' && status != 'ZERO_RESULTS') {
-        printState('Places autocomplete status: $status ${data['error_message']}');
+        printState(
+          'Places autocomplete status: $status ${data['error_message']}',
+        );
       }
       final predictions = data['predictions'];
       if (predictions is! List) return [];

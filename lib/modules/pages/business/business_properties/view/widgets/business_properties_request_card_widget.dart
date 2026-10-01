@@ -17,6 +17,7 @@ import '../../../business_home/controller/business_home_bloc.dart'
 import '../../../../individual/property_details/model/property_details_route_args.dart';
 import '../../controller/business_properties_bloc.dart';
 import '../../model/business_property_request_model.dart';
+import 'reject_request_dialog.dart';
 import 'request_action_dialogs.dart';
 
 class BusinessPropertiesRequestCardWidget extends StatelessWidget {
@@ -59,7 +60,6 @@ class BusinessPropertiesRequestCardWidget extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Property image
                     Center(
                       child: ImageItem(
                         item?.image ?? '',
@@ -76,7 +76,6 @@ class BusinessPropertiesRequestCardWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Status badge
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -121,8 +120,6 @@ class BusinessPropertiesRequestCardWidget extends StatelessWidget {
                             ],
                           ),
 
-                          // Title
-                          // Location
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -143,7 +140,6 @@ class BusinessPropertiesRequestCardWidget extends StatelessWidget {
                               ),
                             ],
                           ),
-                          // Individual
                           Row(
                             children: [
                               Icon(
@@ -164,7 +160,6 @@ class BusinessPropertiesRequestCardWidget extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              // Date
                               ImageItem(
                                 AppImages.updateIcon,
                                 color: colors.textSecondary,
@@ -189,7 +184,6 @@ class BusinessPropertiesRequestCardWidget extends StatelessWidget {
             ),
             if (isWithActionButtons && (item?.isPending ?? true)) ...[
               SizedBox(height: 12.height),
-              // Buttons
               Row(
                 children: [
                   Expanded(

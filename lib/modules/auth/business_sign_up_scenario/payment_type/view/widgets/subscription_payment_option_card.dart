@@ -14,14 +14,14 @@ class SubscriptionPaymentOptionCard extends StatelessWidget {
     required this.subtitle,
     required this.iconPath,
     required this.method,
-     required this.onTap,
+    required this.onTap,
   });
 
   final String label;
   final String subtitle;
   final String iconPath;
   final SubscriptionPaymentMethod method;
-   final VoidCallback onTap;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +38,7 @@ class SubscriptionPaymentOptionCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: colors.cardBackground,
           borderRadius: BorderRadius.circular(14.radius),
-          border: Border.all(
-            color: colors.textFieldBorder,
-            width: 1,
-          ),
+          border: Border.all(color: colors.textFieldBorder, width: 1),
         ),
         child: Row(
           children: [

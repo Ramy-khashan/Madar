@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 import '../../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
-import '../../../../../../core/components/outline_section.dart';
 import '../../../../../../core/components/statistic_circle_shape_item.dart';
 import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../controller/financial_reports_bloc.dart';
-import '../../model/financial_report_models.dart';
 import 'shared/financial_metric_card.dart';
+import 'late_tenants_card.dart';
+import 'income_vs_expenses_chart.dart';
+import 'overview_transactions.dart';
 
 class FinancialReportsOverviewTabWidget extends StatelessWidget {
   const FinancialReportsOverviewTabWidget({super.key});
@@ -81,7 +81,7 @@ class FinancialReportsOverviewTabWidget extends StatelessWidget {
                   children: [
                     Expanded(
                       child: FinancialMetricCard(
-                      isWithCurrency: true,
+                        isWithCurrency: true,
 
                         label: AppStrings.netProfit,
                         value: formatPrice(state.netProfit),
@@ -95,7 +95,7 @@ class FinancialReportsOverviewTabWidget extends StatelessWidget {
                     SizedBox(width: 12.width),
                     Expanded(
                       child: FinancialMetricCard(
-                      isWithCurrency: true,
+                        isWithCurrency: true,
 
                         label: AppStrings.lateRentLabel,
                         value: formatPrice(state.lateRent),
@@ -107,11 +107,11 @@ class FinancialReportsOverviewTabWidget extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 16.height),
-                _LateTenantsCard(colors: colors, tenants: state.lateTenants),
+                LateTenantsCard(colors: colors, tenants: state.lateTenants),
                 SizedBox(height: 16.height),
               ] else ...[
                 FinancialMetricCard(
-                      isWithCurrency: true,
+                  isWithCurrency: true,
 
                   label: AppStrings.netProfit,
                   value: formatPrice(state.netProfit),
@@ -123,7 +123,7 @@ class FinancialReportsOverviewTabWidget extends StatelessWidget {
                 ),
                 SizedBox(height: 16.height),
               ],
-              _IncomeVsExpensesChart(
+              IncomeVsExpensesChart(
                 colors: colors,
                 points: state.incomeVsExpense,
               ),
@@ -149,236 +149,12 @@ class FinancialReportsOverviewTabWidget extends StatelessWidget {
               ),
               if (state.transactions.isNotEmpty) ...[
                 SizedBox(height: 16.height),
-                _OverviewTransactions(colors: colors, items: state.transactions),
+                OverviewTransactions(colors: colors, items: state.transactions),
               ],
             ],
           ),
         );
       },
-    );
-  }
-}
-
-class _LateTenantsCard extends StatelessWidget {
-  const _LateTenantsCard({required this.colors, required this.tenants});
-
-  final AppThemeColors colors;
-  final List<FinancialTenant> tenants;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(14.width),
-      decoration: BoxDecoration(
-        color: AppColors.rate.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12.radius),
-        border: Border.all(color: AppColors.rate.withValues(alpha: 0.3)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '${AppStrings.latePaymentsLabel} (${tenants.length})',
-            textAlign: TextAlign.right,
-            style: TextStyle(
-              fontSize: context.responsiveFontScale(14),
-              fontWeight: FontWeight.w600,
-              color: colors.textPrimary,
-            ),
-          ),
-          SizedBox(height: 10.height),
-          ...tenants.map(
-            (t) => Padding(
-              padding: EdgeInsets.only(bottom: 8.height),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        t.name,
-                        style: TextStyle(
-                          fontSize: context.responsiveFontScale(13),
-                          color: colors.textPrimary,
-                        ),
-                      ),
-                      Text(
-                        t.property,
-                        style: TextStyle(
-                          fontSize: context.responsiveFontScale(11),
-                          color: colors.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        '${t.amount} ${AppStrings.currency}',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontSize: context.responsiveFontScale(13),
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.brownColor,
-                        ),
-                      ),
-                      Text(
-                        t.days,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontSize: context.responsiveFontScale(11),
-                          color: AppColors.errorColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _IncomeVsExpensesChart extends StatelessWidget {
-  const _IncomeVsExpensesChart({required this.colors, required this.points});
-
-  final AppThemeColors colors;
-  final List<IncomeVsExpenseItem> points;
-
-  @override
-  Widget build(BuildContext context) {
-    if (points.isEmpty) {
-      return const SizedBox.shrink();
-    }
-    final maxVal = points
-        .map((item) => item.income > item.expense ? item.income : item.expense)
-        .fold<double>(1, (a, b) => a > b ? a : b);
-    return OutlinedSection(
-      title: AppStrings.incomeVsExpenses,
-
-      child: SizedBox(
-        height: 145.height,
-        child: Column(
-          children: [
-            Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: List.generate(points.length, (i) {
-                  return Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 2.width),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Expanded(
-                            child: Container(
-                              height: (points[i].income / maxVal) * 100.height,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF26C6DA),
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(3.radius),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 1.width),
-                          Expanded(
-                            child: Container(
-                              height: (points[i].expense / maxVal) * 100.height,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF6C63FF),
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(3.radius),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }),
-              ),
-            ),
-            SizedBox(height: 8.height),
-            Row(
-              children: List.generate(points.length, (i) {
-                return Expanded(
-                  child: Text(
-                    AppStrings.dashboardMonthShortLabel(points[i].month),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: context.responsiveFontScale(10),
-                      color: colors.textSecondary,
-                    ),
-                  ),
-                );
-              }),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _OverviewTransactions extends StatelessWidget {
-  const _OverviewTransactions({required this.colors, required this.items});
-
-  final AppThemeColors colors;
-  final List<FinancialTransaction> items;
-
-  @override
-  Widget build(BuildContext context) {
-    final visible = items.length > 12 ? items.take(12).toList() : items;
-    return OutlinedSection(
-      title: AppStrings.transactionDetails,
-      child: Column(
-        children: [
-          for (final item in visible)
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.height),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item.name,
-                          style: TextStyle(
-                            fontSize: context.responsiveFontScale(13),
-                            color: colors.textPrimary,
-                          ),
-                        ),
-                        Text(
-                          DateFormat('dd-MM-yyyy').format(item.date),
-                          style: TextStyle(
-                            fontSize: context.responsiveFontScale(11),
-                            color: colors.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Text(
-                    '${item.amount} ${AppStrings.currency}',
-                    style: TextStyle(
-                      fontSize: context.responsiveFontScale(13),
-                      fontWeight: FontWeight.w600,
-                      color: colors.textPrimary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-        ],
-      ),
     );
   }
 }

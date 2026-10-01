@@ -28,17 +28,14 @@ class TaskRowItem extends StatelessWidget {
             decoration: BoxDecoration(
               border: isLast
                   ? null
-                  : Border(
-                      bottom: BorderSide(
-                        color: tc.borderColor,
-                      ),
-                    ),
+                  : Border(bottom: BorderSide(color: tc.borderColor)),
             ),
             child: CheckboxListTile(
               value: state.selectedSubPhases.contains(task.id ?? ''),
               onChanged: (_) {
-                 PhaseDetailsBloc.get(context)
-                    .add(ToggleTaskEvent(task.id ?? ''));
+                PhaseDetailsBloc.get(
+                  context,
+                ).add(ToggleTaskEvent(task.id ?? ''));
               },
               title: Text(
                 task.name ?? 'Task Name',
@@ -51,8 +48,7 @@ class TaskRowItem extends StatelessWidget {
               activeColor: tc.primaryBrand,
               checkColor: tc.onPrimary,
               controlAffinity: ListTileControlAffinity.trailing,
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 12.width),
+              contentPadding: EdgeInsets.symmetric(horizontal: 12.width),
               dense: true,
             ),
           ),

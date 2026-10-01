@@ -26,10 +26,6 @@ class EvaluationPreview {
 class CreatePropertyApis {
   CreatePropertyApis._();
 
-  /// `POST /properties` as multipart form data.
-  ///
-  /// Returns the created property payload on success, or a user-facing error
-  /// message on failure.
   static Future<Either<String, dynamic>> createProperty(
     CreatePropertyRequestModel request,
   ) async {
@@ -47,21 +43,19 @@ class CreatePropertyApis {
         body: formData,
       );
 
-      return response.fold(
-        (failedResponse) => Left(failedResponse),
-        (successResponse) {
-          final body = successResponse.response;
-          if (body is Map && body['data'] != null) return Right(body['data']);
-          return Right(body);
-        },
-      );
+      return response.fold((failedResponse) => Left(failedResponse), (
+        successResponse,
+      ) {
+        final body = successResponse.response;
+        if (body is Map && body['data'] != null) return Right(body['data']);
+        return Right(body);
+      });
     } catch (e) {
       printState('Error creating property: $e');
       return Left(AppStrings.somethingWentWrong);
     }
   }
 
-  /// `POST /evaluations/preview` — suggested price range + AI description.
   static Future<Either<String, EvaluationPreview>> previewEvaluation(
     AddPropertyModel model,
   ) async {

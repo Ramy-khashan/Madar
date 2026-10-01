@@ -26,12 +26,9 @@ class AddAuctionPropertyScreen extends StatelessWidget {
         }
       },
       child: Scaffold(
-       appBar: AppAppbar(title: AppStrings.addAuctionPropertyTitle),
-       body: const SafeArea(
-         child: AddAuctionPropertyContentWidget(),
-       ),
-      
-                ),
+        appBar: AppAppbar(title: AppStrings.addAuctionPropertyTitle),
+        body: const SafeArea(child: AddAuctionPropertyContentWidget()),
+      ),
     );
   }
 }

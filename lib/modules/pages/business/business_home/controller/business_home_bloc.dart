@@ -27,7 +27,7 @@ class BusinessHomeBloc extends Bloc<BusinessHomeEvent, BusinessHomeState> {
     on<BusinessHomeItemsEvent>((event, emit) {
       add(const BusinessPropertiesLoad());
       add(const PortfolioLoad());
-      if (AccountRole.isBroker||AccountRole.isOwner) {
+      if (AccountRole.isBroker || AccountRole.isOwner) {
         add(const RequestsLoad());
       }
       add(const IndividualHomeLoadUserLocation());
@@ -343,24 +343,15 @@ class BusinessHomeBloc extends Bloc<BusinessHomeEvent, BusinessHomeState> {
       title: AppStrings.performanceReports,
       description: AppStrings.performanceReportsDescription,
       icon: AppImages.performanceReportsIcon,
-      // route: AppRouterKeys.performanceReports,
       route: AppRouterKeys.constructionReportsScreen,
     ),
     SmartServiceModel(
-      // route: AppRouterKeys.financialReports,
       route: AppRouterKeys.financialReportsScreen,
       id: '3',
       title: AppStrings.financialReports,
       description: AppStrings.financialReportsDescription,
       icon: AppImages.financialReportsIcon,
     ),
-    // SmartServiceModel(
-    //   id: '4',
-    //   title: AppStrings.auctionProperty,
-    //   description: AppStrings.auctionPropertyDescription,
-    //   icon: AppImages.auctionIcon,
-    //   route: AppRouterKeys.auctionNavbar,
-    // ),
     SmartServiceModel(
       route: AppRouterKeys.realEstateNews,
       id: '5',

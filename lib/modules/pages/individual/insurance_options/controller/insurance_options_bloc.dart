@@ -25,7 +25,7 @@ class InsuranceOptionsBloc
     Emitter<InsuranceOptionsState> emit,
   ) async {
     emit(state.copyWith(getDetailsStatus: RequestStatus.loading));
-     emit(
+    emit(
       state.copyWith(
         getDetailsStatus: RequestStatus.success,
         propertyTitle: 'شقة فاخرة في الملقا',
@@ -45,16 +45,38 @@ class InsuranceOptionsBloc
             name: 'تأمين شامل',
             pricePerYear: 850000,
             coverages: [
-              'أضرار المياه', 'السرقة', 'الكوارث الطبيعية',
-              'الأضرار الكهربائية', 'المسؤولية المدنية', 'الحرائق',
+              'أضرار المياه',
+              'السرقة',
+              'الكوارث الطبيعية',
+              'الأضرار الكهربائية',
+              'المسؤولية المدنية',
+              'الحرائق',
             ],
             isRecommended: true,
           ),
         ],
         companies: const [
-          InsuranceCompanyModel(id: 'taawuni', name: 'التعاونية', rating: 4.8, processingHours: 24, discountPercent: 5),
-          InsuranceCompanyModel(id: 'malath', name: 'ملاذ للتأمين', rating: 4.8, processingHours: 24, discountPercent: 5),
-          InsuranceCompanyModel(id: 'wala', name: 'ولاء للتأمين', rating: 4.8, processingHours: 24, discountPercent: 5),
+          InsuranceCompanyModel(
+            id: 'taawuni',
+            name: 'التعاونية',
+            rating: 4.8,
+            processingHours: 24,
+            discountPercent: 5,
+          ),
+          InsuranceCompanyModel(
+            id: 'malath',
+            name: 'ملاذ للتأمين',
+            rating: 4.8,
+            processingHours: 24,
+            discountPercent: 5,
+          ),
+          InsuranceCompanyModel(
+            id: 'wala',
+            name: 'ولاء للتأمين',
+            rating: 4.8,
+            processingHours: 24,
+            discountPercent: 5,
+          ),
         ],
       ),
     );
@@ -79,9 +101,11 @@ class InsuranceOptionsBloc
     Emitter<InsuranceOptionsState> emit,
   ) async {
     emit(state.copyWith(confirmStatus: RequestStatus.loading));
-     emit(state.copyWith(
-      confirmStatus: RequestStatus.success,
-      requestNumber: 'INS-003',
-    ));
+    emit(
+      state.copyWith(
+        confirmStatus: RequestStatus.success,
+        requestNumber: 'INS-003',
+      ),
+    );
   }
 }

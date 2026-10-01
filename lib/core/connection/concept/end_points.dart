@@ -30,7 +30,6 @@ class EndPoints {
   static String brokerProperties(String brokerId) =>
       'broker/$brokerId/properties';
 
-  ///Wishlist Endpoints
   static const String wishlist = 'saved-properties';
   static String addToWishlist(String id) => 'saved-properties/$id/toggle';
   static String removeFromWishlist(String id) => 'saved-properties/$id/unsave';
@@ -57,8 +56,7 @@ class EndPoints {
   static String propertyRequestsByProperty(String propertyId) =>
       'requests/property/$propertyId';
   static const String financialReports = 'dashboard/financial-reports';
-  static const String financialReportsOverview =
-      'dashboard/overview'; 
+  static const String financialReportsOverview = 'dashboard/overview';
   static const String dashboardRevenues = 'dashboard/revenues';
   static const String dashboardExpenses = 'dashboard/expenses';
   static const String performanceReports = 'dashboard/performance-reports';
@@ -95,4 +93,4 @@ class EndPoints {
       'building/apartments/$propertyId';
   static String updateBuildingShop(String propertyId) =>
       'building/shops/$propertyId';
-} 
+}

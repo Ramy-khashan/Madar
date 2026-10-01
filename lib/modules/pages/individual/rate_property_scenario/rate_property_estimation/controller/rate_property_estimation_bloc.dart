@@ -27,7 +27,6 @@ class RatePropertyEstimationBloc
   final TextEditingController locationController = TextEditingController();
   final TextEditingController areaController = TextEditingController();
 
-  /// Maps property names to their IDs for quick lookup
   final Map<String, String> propertyNameToIdMap = {};
   static RatePropertyEstimationBloc get(BuildContext context) =>
       BlocProvider.of<RatePropertyEstimationBloc>(context);
@@ -48,7 +47,6 @@ class RatePropertyEstimationBloc
         location: event.location ?? state.location,
         area: event.area ?? state.area,
         propertyAge: event.propertyAge ?? state.propertyAge,
-        // finishingLevel: event.finishingLevel ?? state.finishingLevel,
         purpose: event.purpose ?? state.purpose,
       ),
     );
@@ -63,7 +61,6 @@ class RatePropertyEstimationBloc
           locationController.text.isEmpty ||
           areaController.text.isEmpty ||
           state.propertyAge.isEmpty ||
-          // state.finishingLevel == null ||
           state.purpose == null) {
         AppToast(AppStrings.pleaseFillForm);
         return;
@@ -76,7 +73,6 @@ class RatePropertyEstimationBloc
           'location': locationController.text,
           'area': int.parse(areaController.text),
           'propertyAge': state.propertyAge,
-          // 'finishing': state.finishingLevel,
           'purpose': state.purpose,
         },
       );
@@ -104,7 +100,6 @@ class RatePropertyEstimationBloc
                   evaluation['suggestedMax']?.toString() ?? '0',
                 ),
                 periodDays: evaluation['periodDays'] ?? 0,
-                // reasons:[]
               ),
             );
           } catch (e) {
@@ -171,7 +166,6 @@ class RatePropertyEstimationBloc
           'location': locationController.text,
           'area': int.parse(areaController.text),
           'propertyAge': state.propertyAge,
-          // 'finishing': state.finishingLevel,
           'purpose': state.purpose,
         },
       );

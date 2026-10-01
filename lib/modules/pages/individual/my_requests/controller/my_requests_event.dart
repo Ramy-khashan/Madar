@@ -30,10 +30,7 @@ class MyRequestDelete extends MyRequestsEvent {
 }
 
 class MyRequestUpdateStatus extends MyRequestsEvent {
-  const MyRequestUpdateStatus({
-    required this.requestId,
-    required this.status,
-  });
+  const MyRequestUpdateStatus({required this.requestId, required this.status});
 
   final String requestId;
   final String status;

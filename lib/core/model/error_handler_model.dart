@@ -1,12 +1,5 @@
 import '../utils/constants/app_strings.dart';
 
-/// Parses Node.js / Express error response bodies.
-///
-/// Handles the common shapes emitted by Express and express-validator:
-///   { "message": "..." }
-///   { "error": "..." }
-///   { "errors": [{ "msg": "..." }, ...] }           ← express-validator array
-///   { "errors": { "field": "...", ... } }            ← object / map shape
 class ErrorHandlerModel {
   final String? message;
   final String? error;
@@ -22,7 +15,6 @@ class ErrorHandlerModel {
     );
   }
 
-  /// Returns the first meaningful error string from the response.
   String get firstErrorMessage {
     if (message != null && message!.trim().isNotEmpty) {
       return _localizeMsg(message!.trim());
@@ -61,8 +53,6 @@ class ErrorHandlerModel {
 
   bool get hasFieldErrors => formattedFieldErrors.isNotEmpty;
 
-  /// Field-level lines for add-property validation, e.g.
-  /// `عدد الصالات: قيمة غير صحيحة`.
   String get createPropertyMessage {
     final lines = formattedFieldErrors;
     if (lines.isNotEmpty) return lines.join('\n');

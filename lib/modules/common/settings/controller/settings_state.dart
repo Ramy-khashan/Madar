@@ -13,16 +13,16 @@ class SettingsState extends Equatable {
   final RequestStatus updatePhoneStatus;
 
   const SettingsState({
-      this.profile,
-      this.notificationsEnabled=false,
-      this.darkModeEnabled=false,
-      this.selectedLanguage='ar',
-      this.savedItem=0,
-      this.loadingSavedItems=RequestStatus.init,
-      this.loadingProfile=RequestStatus.init, 
-      this.loadingImageProfile=RequestStatus.init, 
-      this.updateFullNameStatus=RequestStatus.init,
-      this.updatePhoneStatus=RequestStatus.init,
+    this.profile,
+    this.notificationsEnabled = false,
+    this.darkModeEnabled = false,
+    this.selectedLanguage = 'ar',
+    this.savedItem = 0,
+    this.loadingSavedItems = RequestStatus.init,
+    this.loadingProfile = RequestStatus.init,
+    this.loadingImageProfile = RequestStatus.init,
+    this.updateFullNameStatus = RequestStatus.init,
+    this.updatePhoneStatus = RequestStatus.init,
   });
 
   SettingsState copyWith({
@@ -50,5 +50,14 @@ class SettingsState extends Equatable {
   );
 
   @override
-  List<Object?> get props => [profile, notificationsEnabled, loadingImageProfile,darkModeEnabled, selectedLanguage, savedItem,loadingSavedItems,loadingProfile ];
+  List<Object?> get props => [
+    profile,
+    notificationsEnabled,
+    loadingImageProfile,
+    darkModeEnabled,
+    selectedLanguage,
+    savedItem,
+    loadingSavedItems,
+    loadingProfile,
+  ];
 }

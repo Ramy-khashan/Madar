@@ -13,6 +13,9 @@ import 'widget/chat_compose_bar_item.dart';
 import 'widget/conversation_header.dart';
 
 part 'widget/chat_body.dart';
+part 'widget/incoming_bubble.dart';
+part 'widget/outgoing_bubble.dart';
+
 class ConversationDetailScreen extends StatelessWidget {
   const ConversationDetailScreen({super.key, required this.conversation});
 
@@ -30,7 +33,8 @@ class ConversationDetailScreen extends StatelessWidget {
               child:
                   BlocBuilder<ConversationDetailBloc, ConversationDetailState>(
                     builder: (context, state) {
-                      if (state.loadingMessagesStatus == RequestStatus.loading) {
+                      if (state.loadingMessagesStatus ==
+                          RequestStatus.loading) {
                         return const Center(child: CircularProgressIndicator());
                       }
                       if (state.loadingMessagesStatus == RequestStatus.failed) {
@@ -42,7 +46,8 @@ class ConversationDetailScreen extends StatelessWidget {
                           ),
                         );
                       }
-                      if (state.loadingMessagesStatus == RequestStatus.success) {
+                      if (state.loadingMessagesStatus ==
+                          RequestStatus.success) {
                         return ChatMessageList(
                           messages: state.messages,
                           imageUrl: conversation.participantAvatarUrl ?? '',

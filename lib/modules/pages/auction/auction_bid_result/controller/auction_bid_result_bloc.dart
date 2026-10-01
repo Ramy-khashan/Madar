@@ -27,7 +27,7 @@ class AuctionBidResultBloc
     Emitter<AuctionBidResultState> emit,
   ) async {
     emit(state.copyWith(loadStatus: RequestStatus.loading));
-     final result = AuctionBidResultModel(
+    final result = AuctionBidResultModel(
       auctionId: event.auctionId,
       propertyTitle: 'شقة فاخرة في الملقا',
       propertyLocation: 'الرياض - حي الملقا',
@@ -35,10 +35,7 @@ class AuctionBidResultBloc
       status: BidResultStatus.waiting,
       countdownSeconds: 5,
     );
-    emit(state.copyWith(
-      loadStatus: RequestStatus.success,
-      result: result,
-    ));
+    emit(state.copyWith(loadStatus: RequestStatus.success, result: result));
     _startCountdown();
   }
 
@@ -57,15 +54,18 @@ class AuctionBidResultBloc
     final current = state.result!.countdownSeconds;
     if (current <= 0) {
       _timer?.cancel();
-      // Simulate result: won
-      emit(state.copyWith(
-        result: state.result!.copyWith(status: BidResultStatus.won),
-      ));
+      emit(
+        state.copyWith(
+          result: state.result!.copyWith(status: BidResultStatus.won),
+        ),
+      );
       return;
     }
-    emit(state.copyWith(
-      result: state.result!.copyWith(countdownSeconds: current - 1),
-    ));
+    emit(
+      state.copyWith(
+        result: state.result!.copyWith(countdownSeconds: current - 1),
+      ),
+    );
   }
 
   @override

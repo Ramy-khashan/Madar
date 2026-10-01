@@ -16,61 +16,70 @@ class MyBidsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  BlocBuilder<MyBidsBloc, MyBidsState>(
-        builder: (context, state) {
-          final colors = AppThemeColors.of(context);
-          return Scaffold(
-            backgroundColor: colors.backgroundPrimary,
-            appBar: AppAppbar(title: AppStrings.myBids),
-            body: SafeArea(
-              child: Column(
-                children: [
-                  FilterTabBar(activeFilter: state.activeFilter),
+    return BlocBuilder<MyBidsBloc, MyBidsState>(
+      builder: (context, state) {
+        final colors = AppThemeColors.of(context);
+        return Scaffold(
+          backgroundColor: colors.backgroundPrimary,
+          appBar: AppAppbar(title: AppStrings.myBids),
+          body: SafeArea(
+            child: Column(
+              children: [
+                FilterTabBar(activeFilter: state.activeFilter),
 
-                  Expanded(
-                    child: LoadingProcess(
-                      status: state.loadStatus,
-                      errorMsg: state.errorMsg,
-                      onTapRefresh: () =>
-                          context.read<MyBidsBloc>().add(const MyBidsLoad()),
-                      emptyMsg: AppStrings.noMyBids,
-                      isEmptyList:
-                          state.loadStatus == RequestStatus.success &&
-                          state.filteredItems.isEmpty,
-                      childIsLoader: true,
-                      child: GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: ResponsiveUtils.types(
-                            context,
-                            mobilePortrait: 1,
-                            mobileLandscape: 2,
-                            tabletPortrait: 2,
-                            tabletLandscape: 3,
-                          ).toInt(),
-                          mainAxisSpacing: 12.height,
-                          crossAxisSpacing: 12.width,
-                          mainAxisExtent: ResponsiveUtils.types(
-                            context,
-                            mobilePortrait: 245.height,
-                            mobileLandscape: 255.height,
-                            tabletPortrait: 170.height,
-                            tabletLandscape: 250.height,
-                          ),
+                Expanded(
+                  child: LoadingProcess(
+                    status: state.loadStatus,
+                    errorMsg: state.errorMsg,
+                    onTapRefresh: () =>
+                        context.read<MyBidsBloc>().add(const MyBidsLoad()),
+                    emptyMsg: AppStrings.noMyBids,
+                    isEmptyList:
+                        state.loadStatus == RequestStatus.success &&
+                        state.filteredItems.isEmpty,
+                    childIsLoader: true,
+                    child: GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: ResponsiveUtils.types(
+                          context,
+                          mobilePortrait: 1,
+                          mobileLandscape: 2,
+                          tabletPortrait: 2,
+                          tabletLandscape: 3,
+                        ).toInt(),
+                        mainAxisSpacing: 12.height,
+                        crossAxisSpacing: 12.width,
+                        mainAxisExtent: ResponsiveUtils.types(
+                          context,
+                          mobilePortrait: 245.height,
+                          mobileLandscape: 255.height,
+                          tabletPortrait: 170.height,
+                          tabletLandscape: 250.height,
                         ),
-                        padding: EdgeInsets.only(left: 12.width, right: 12.width,bottom: 40.height, top: 8.height),
-                        itemCount:state.loadStatus==RequestStatus.loading ?12: state.filteredItems.length ,
+                      ),
+                      padding: EdgeInsets.only(
+                        left: 12.width,
+                        right: 12.width,
+                        bottom: 40.height,
+                        top: 8.height,
+                      ),
+                      itemCount: state.loadStatus == RequestStatus.loading
+                          ? 12
+                          : state.filteredItems.length,
 
-                        itemBuilder: (_, i) =>
-                            MyBidCardWidget(   item:state.loadStatus==RequestStatus.loading?null: state.filteredItems[i]),
+                      itemBuilder: (_, i) => MyBidCardWidget(
+                        item: state.loadStatus == RequestStatus.loading
+                            ? null
+                            : state.filteredItems[i],
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          );
-        },
-       
+          ),
+        );
+      },
     );
   }
 }

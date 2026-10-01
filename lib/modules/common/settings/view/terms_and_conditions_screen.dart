@@ -4,6 +4,7 @@ import '../../../../config/theme/app_theme_colors.dart';
 import '../../../../core/components/app_appbar.dart';
 import '../../../../core/utils/constants/app_strings.dart';
 import '../../../../core/utils/functions/responsive.dart';
+import 'terms_section.dart';
 
 class TermsAndConditionsScreen extends StatelessWidget {
   const TermsAndConditionsScreen({super.key});
@@ -21,15 +22,6 @@ class TermsAndConditionsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Text(
-            //   AppStrings.termsLastUpdated,
-            //   style: TextStyle(
-            //     fontSize: context.responsiveFontScale(12),
-            //     fontWeight: FontWeight.w400,
-            //     color: tc.textSecondary,
-            //   ),
-            // ),
-            // 12.height.toSizedBox,
             Text(
               AppStrings.termsIntro,
               style: TextStyle(
@@ -41,7 +33,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
             ),
             20.height.toSizedBox,
             ...AppStrings.termsSections.map(
-              (section) => _TermsSection(
+              (section) => TermsSection(
                 title: section.title,
                 body: section.body,
                 tc: tc,
@@ -50,48 +42,6 @@ class TermsAndConditionsScreen extends StatelessWidget {
             24.height.toSizedBox,
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _TermsSection extends StatelessWidget {
-  const _TermsSection({
-    required this.title,
-    required this.body,
-    required this.tc,
-  });
-
-  final String title;
-  final String body;
-  final AppThemeColors tc;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 20.height),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: context.responsiveFontScale(15),
-              fontWeight: FontWeight.w700,
-              color: tc.primaryBrand,
-            ),
-          ),
-          8.height.toSizedBox,
-          Text(
-            body,
-            style: TextStyle(
-              fontSize: context.responsiveFontScale(13),
-              fontWeight: FontWeight.w400,
-              height: 1.7,
-              color: tc.textPrimary,
-            ),
-          ),
-        ],
       ),
     );
   }

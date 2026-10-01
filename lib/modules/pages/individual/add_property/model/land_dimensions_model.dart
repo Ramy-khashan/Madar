@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-/// Plot side lengths nested under the LAND `details.dimensions` object.
 class LandDimensionsModel extends Equatable {
   const LandDimensionsModel({this.north, this.south, this.east, this.west});
 

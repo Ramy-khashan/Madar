@@ -1,5 +1,3 @@
-/// Unified Property Details Model
-/// Handles all property types: Apartment, Villa, Floor, Farm
 class PropertyDetailsModel {
   String? propertyId;
   String? title;
@@ -8,9 +6,9 @@ class PropertyDetailsModel {
   String? listingType;
   int? price;
   int? totalArea;
-  String? facadeDirection; // Not used in Apartment
-  dynamic streetsCount; // String in some models, int in others
-  dynamic streetWidth; // String in some models, int in others
+  String? facadeDirection;
+  dynamic streetsCount;
+  dynamic streetWidth;
   String? paymentType;
   String? description;
   bool? isNegotiable;
@@ -32,7 +30,6 @@ class PropertyDetailsModel {
   List<PropertyContract>? contracts;
   List<PropertyExpense>? expenses;
   FinancialPerformance? financialPerformance;
-  // FinancialPerformance? financialPerformance;
   String? tenancyStatus;
   String? tenantName;
   String? tenantPhone;
@@ -90,7 +87,6 @@ class PropertyDetailsModel {
   });
 
   factory PropertyDetailsModel.fromJson(Map<String, dynamic> json) {
-    // Handle Apartment wrapper structure (success + data)
     if (json.containsKey('success') && json.containsKey('data')) {
       json = json['data'] ?? {};
     }
@@ -190,8 +186,7 @@ class PropertyDetailsModel {
         tenancy['endDate'] ?? json['tenancyEndDate'],
       ),
       tenancyCalendarType:
-          (tenancy['calendarType'] ?? json['tenancyCalendarType'])
-              ?.toString(),
+          (tenancy['calendarType'] ?? json['tenancyCalendarType'])?.toString(),
     );
   }
 
@@ -244,7 +239,6 @@ class PropertyDetailsModel {
   }
 }
 
-/// Unified Details class that handles all property types
 class PropertyDetails {
   int? area;
   int? totalArea;
@@ -634,10 +628,6 @@ class Dimensions {
   }
 }
 
-/// Unified Features class for all property types.
-///
-/// GET details returns `features` as a string list
-/// (`["CENTRAL_AC","PARKING"]`). Older payloads used a bool map.
 class PropertyFeatures {
   final Map<String, bool> features;
   final List<String> allowedActivities;
@@ -1373,24 +1363,20 @@ class FinancialPerformance {
   int? totalChildUnits;
   int? activeChildUnits;
   int? occupancyRate;
- 
 
-
- 
   num? totalIncome;
   num? totalExpenses;
   num? netProfit;
- 
+
   FinancialPerformance({
-     this.activeChildUnits,
+    this.activeChildUnits,
     this.occupancyRate,
- 
+
     this.totalIncome,
     this.totalExpenses,
     this.netProfit,
   });
 
- 
   String get occupancyRateLabel {
     final value = occupancyRate ?? 0;
     final percent = value <= 1 && value > 0 ? value * 100 : value;
@@ -1399,8 +1385,8 @@ class FinancialPerformance {
 
   factory FinancialPerformance.fromJson(Map<String, dynamic> json) {
     return FinancialPerformance(
-       activeChildUnits: _jsonInt(json['activeChildUnits']),
-      occupancyRate: _jsonInt(json['occupancyRate']), 
+      activeChildUnits: _jsonInt(json['activeChildUnits']),
+      occupancyRate: _jsonInt(json['occupancyRate']),
       totalIncome: _jsonNum(json['totalIncome']),
       totalExpenses: _jsonNum(json['totalExpenses']),
       netProfit: _jsonNum(json['netProfit']),
@@ -1409,8 +1395,8 @@ class FinancialPerformance {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-     data['activeChildUnits'] = activeChildUnits;
-    data['occupancyRate'] = occupancyRate; 
+    data['activeChildUnits'] = activeChildUnits;
+    data['occupancyRate'] = occupancyRate;
     data['totalIncome'] = totalIncome;
     data['totalExpenses'] = totalExpenses;
     data['netProfit'] = netProfit;

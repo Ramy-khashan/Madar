@@ -5,7 +5,7 @@ class AppImages {
   static const String splashBg = 'assets/images/splash_bg.png';
   static const String onBoarding1 = 'assets/images/onboarding1.png';
   static const String onBoarding2 = 'assets/images/onboarding2.png';
-  static const String onBoarding3 = 'assets/images/onboarding3.png'; 
+  static const String onBoarding3 = 'assets/images/onboarding3.png';
   static const String agentImage = 'assets/icons/agent_image.png';
   static const String businessIcon = 'assets/icons/business.svg';
   static const String changeAccountIcon = 'assets/icons/change_account.svg';
@@ -14,7 +14,8 @@ class AppImages {
   static const String authBg = 'assets/images/auth_img.png';
   static const String individualIcon = 'assets/icons/individual.svg';
   static const String chatIcon = 'assets/icons/chat.svg';
-  static const String occupancyRateIcon = 'assets/icons/occupancy_rate_icon.svg';
+  static const String occupancyRateIcon =
+      'assets/icons/occupancy_rate_icon.svg';
   static const String documentsIcon = 'assets/icons/documents.svg';
   static const String propertyShapeIcon = 'assets/icons/property_shape.svg';
   static const String editPencilIcon = 'assets/icons/edit_pencil.svg';
@@ -37,7 +38,8 @@ class AppImages {
   static const String ratingIcon = 'assets/icons/rating.svg';
   static const String rentIcon = 'assets/icons/rent.svg';
   static const String developmentIcon = 'assets/icons/development.svg';
-  static const String propertiesDevelopmentIcon = 'assets/icons/properties_development.svg';
+  static const String propertiesDevelopmentIcon =
+      'assets/icons/properties_development.svg';
   static const String performanceReportsIcon =
       'assets/icons/performance_reports.svg';
   static const String financialReportsIcon =
@@ -114,7 +116,4 @@ class AppImages {
   static const String apartmentIcon = 'assets/icons/apartment_icon.svg';
   static const String deleteIcon = 'assets/icons/trash.svg';
   static const String logout = 'assets/icons/logout.svg';
-
-
-
 }

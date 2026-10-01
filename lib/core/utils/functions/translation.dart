@@ -41,6 +41,3 @@ extension Translation on String {
 
   String get transIfExists => hasTrans ? trans : this;
 }
-
-
-

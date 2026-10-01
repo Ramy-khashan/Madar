@@ -28,7 +28,6 @@ class PropertyFileHeaderWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Hero image with overlay badges
         Stack(
           children: [
             GestureDetector(
@@ -47,7 +46,6 @@ class PropertyFileHeaderWidget extends StatelessWidget {
                 ),
               ),
             ),
-            // Bookmark
             Positioned(
               top: 12.height,
               left: 12.width,
@@ -75,7 +73,6 @@ class PropertyFileHeaderWidget extends StatelessWidget {
                 ),
               ),
             ),
-            // Property type tag
             Positioned(
               top: 12.height,
               right: 12.width,
@@ -112,7 +109,6 @@ class PropertyFileHeaderWidget extends StatelessWidget {
           ],
         ),
         SizedBox(height: 12.height),
-        // Name
         Text(
           property?.name ?? 'Property Name',
           style: TextStyle(
@@ -123,7 +119,6 @@ class PropertyFileHeaderWidget extends StatelessWidget {
           ),
         ),
         SizedBox(height: 4.height),
-        // Location
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -175,7 +170,6 @@ class PropertyFileHeaderWidget extends StatelessWidget {
           ),
         ],
         SizedBox(height: 16.height),
-        // Stats row
         AccountRole.isBusiness
             ? Row(
                 children: [

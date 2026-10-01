@@ -97,25 +97,16 @@ class PropertiesMapBloc extends Bloc<PropertiesMapEvent, PropertiesMapState>
   ) {
     if (event.index < state.properties.length) {
       emit(
-        state.copyWith(
-          selectedIndex: event.index,
-          clearPickedPosition: true,
-        ),
+        state.copyWith(selectedIndex: event.index, clearPickedPosition: true),
       );
     }
   }
 
-  void _onMapTapped(
-    MapTappedEvent event,
-    Emitter<PropertiesMapState> emit,
-  ) {
+  void _onMapTapped(MapTappedEvent event, Emitter<PropertiesMapState> emit) {
     final propertyIndex = propertyIndexNear(event.latitude, event.longitude);
     if (propertyIndex != null) {
       emit(
-        state.copyWith(
-          selectedIndex: propertyIndex,
-          clearPickedPosition: true,
-        ),
+        state.copyWith(selectedIndex: propertyIndex, clearPickedPosition: true),
       );
       return;
     }
@@ -124,12 +115,7 @@ class PropertiesMapBloc extends Bloc<PropertiesMapEvent, PropertiesMapState>
       longitude: event.longitude,
     );
     cameraPosition = tapped;
-    emit(
-      state.copyWith(
-        selectedIndex: -1,
-        pickedPosition: tapped,
-      ),
-    );
+    emit(state.copyWith(selectedIndex: -1, pickedPosition: tapped));
     add(LoadPropertiesMapEvent(position: tapped));
   }
 
@@ -159,20 +145,14 @@ class PropertiesMapBloc extends Bloc<PropertiesMapEvent, PropertiesMapState>
     });
   }
 
-  void _onCameraMoved(
-    MapCameraMoved event,
-    Emitter<PropertiesMapState> emit,
-  ) {
+  void _onCameraMoved(MapCameraMoved event, Emitter<PropertiesMapState> emit) {
     cameraPosition = PositionModel(
       latitude: event.latitude,
       longitude: event.longitude,
     );
   }
 
-  void _onCameraIdle(
-    MapCameraIdle event,
-    Emitter<PropertiesMapState> emit,
-  ) {
+  void _onCameraIdle(MapCameraIdle event, Emitter<PropertiesMapState> emit) {
     _fetchIfCameraLeftRadius();
   }
 

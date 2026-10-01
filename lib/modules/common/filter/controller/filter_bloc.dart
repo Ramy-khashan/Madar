@@ -39,45 +39,56 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
   void _onInitialised(FilterInitialised event, Emitter<FilterState> emit) {
     final f = event.initialFilter ?? const PropertyFilterModel();
     cityController.text = f.city ?? '';
-    emit(FilterUpdated(
-      isForSale: f.isForSale,
-      typeId: f.propertyTypeId,
-      minPrice: f.minPrice,
-      maxPrice: f.maxPrice,
-      paymentSystem: f.paymentSystem,
-      duration: f.isForSale ? null : f.duration,
-      city: f.city,
-    ));
+    emit(
+      FilterUpdated(
+        isForSale: f.isForSale,
+        typeId: f.propertyTypeId,
+        minPrice: f.minPrice,
+        maxPrice: f.maxPrice,
+        paymentSystem: f.paymentSystem,
+        duration: f.isForSale ? null : f.duration,
+        city: f.city,
+      ),
+    );
   }
 
   void _onSaleTypeChanged(
-      FilterSaleTypeChanged event, Emitter<FilterState> emit) {
-    emit(_current.copyWith(
-      isForSale: event.isForSale,
-      duration: event.isForSale ? null : _current.duration,
-    ));
+    FilterSaleTypeChanged event,
+    Emitter<FilterState> emit,
+  ) {
+    emit(
+      _current.copyWith(
+        isForSale: event.isForSale,
+        duration: event.isForSale ? null : _current.duration,
+      ),
+    );
   }
 
   void _onPropertyTypeChanged(
-      FilterPropertyTypeChanged event, Emitter<FilterState> emit) {
+    FilterPropertyTypeChanged event,
+    Emitter<FilterState> emit,
+  ) {
     emit(_current.copyWith(typeId: event.typeId));
   }
 
   void _onPriceRangeChanged(
-      FilterPriceRangeChanged event, Emitter<FilterState> emit) {
-    emit(_current.copyWith(
-      minPrice: event.minPrice,
-      maxPrice: event.maxPrice,
-    ));
+    FilterPriceRangeChanged event,
+    Emitter<FilterState> emit,
+  ) {
+    emit(_current.copyWith(minPrice: event.minPrice, maxPrice: event.maxPrice));
   }
 
   void _onPaymentSystemChanged(
-      FilterPaymentSystemChanged event, Emitter<FilterState> emit) {
+    FilterPaymentSystemChanged event,
+    Emitter<FilterState> emit,
+  ) {
     emit(_current.copyWith(paymentSystem: event.paymentSystem));
   }
 
   void _onDurationChanged(
-      FilterDurationChanged event, Emitter<FilterState> emit) {
+    FilterDurationChanged event,
+    Emitter<FilterState> emit,
+  ) {
     emit(_current.copyWith(duration: event.duration));
   }
 

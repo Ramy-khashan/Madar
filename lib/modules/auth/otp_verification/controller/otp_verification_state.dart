@@ -30,4 +30,3 @@ final class OtpResendSuccess extends OtpVerificationState {
   @override
   List<Object> get props => [message];
 }
-

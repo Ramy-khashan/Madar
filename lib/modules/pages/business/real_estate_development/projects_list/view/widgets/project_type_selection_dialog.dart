@@ -5,6 +5,7 @@ import '../../../../../../../core/components/app_button.dart';
 import '../../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
+import 'type_radio_tile.dart';
 
 class ProjectTypeSelectionDialog extends StatefulWidget {
   const ProjectTypeSelectionDialog({super.key});
@@ -46,7 +47,7 @@ class _ProjectTypeSelectionDialogState
               ),
             ),
             SizedBox(height: 20.height),
-            _TypeRadioTile(
+            TypeRadioTile(
               value: AppConstant.residentialProjectType,
               groupValue: _selected,
               title: AppStrings.residentialProject,
@@ -55,7 +56,7 @@ class _ProjectTypeSelectionDialogState
               onChanged: (v) => setState(() => _selected = v!),
             ),
             SizedBox(height: 22.height),
-            _TypeRadioTile(
+            TypeRadioTile(
               value: AppConstant.commercialProjectType,
               groupValue: _selected,
               title: AppStrings.commercialProject,
@@ -72,60 +73,6 @@ class _ProjectTypeSelectionDialogState
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _TypeRadioTile extends StatelessWidget {
-  const _TypeRadioTile({
-    required this.value,
-    required this.groupValue,
-    required this.title,
-    required this.subtitle,
-    required this.colors,
-    required this.onChanged,
-  });
-
-  final String value;
-  final String groupValue;
-  final String title;
-  final String subtitle;
-  final AppThemeColors colors;
-  final ValueChanged<String?> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return RadioGroup(
-      groupValue: groupValue,
-      onChanged: onChanged,
-      child: RadioListTile<String>(
-        dense: true,
-        minVerticalPadding: 0,
-        minLeadingWidth: 0,
-        contentPadding: EdgeInsets.zero,
-        minTileHeight: 0,
-        value: value,
-
-        activeColor: colors.primaryBrand,
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        title: Text(
-          title,
-          style: TextStyle(
-            fontSize: context.responsiveFontScale(15),
-            fontWeight: FontWeight.w600,
-            fontFamily: AppConstant.appHeaderFont,
-            color: colors.textFieldTitle,
-          ),
-        ),
-        // subtitle: Text(
-        //   subtitle,
-        //   style: TextStyle(
-        //     fontSize: context.responsiveFontScale(12),
-        //     color: colors.textSecondary,
-        //     fontFamily: AppConstant.appFont,
-        //   ),
-        // ),
       ),
     );
   }

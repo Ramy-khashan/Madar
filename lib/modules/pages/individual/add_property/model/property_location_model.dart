@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-/// Sent as the JSON-encoded `location` field of the create-property FormData.
 class PropertyLocationModel extends Equatable {
   const PropertyLocationModel({
     required this.city,

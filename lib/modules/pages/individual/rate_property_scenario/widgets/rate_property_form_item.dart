@@ -89,13 +89,6 @@ class RatePropertyFormItem extends StatelessWidget {
           ),
         ),
         SizedBox(height: 10.height),
-        // PropertySearchField(
-        //   controller: propertyController,
-        //   suggestions: properties,
-        //   onSearch: onSearch,
-        //   onSelectProperty: onSelectProperty,
-        //   colors: colors,
-        // ),
         AppTextField(
           title: AppStrings.propertyLocationLabel,
           hint: AppStrings.ratePropertyLocationHint,
@@ -120,13 +113,6 @@ class RatePropertyFormItem extends StatelessWidget {
           items: AppConstant.propertyAges,
           onChanged: onPropertyAgeChanged,
         ),
-        // AppDropDownItem(
-        //   title: AppStrings.ratePropertyFinishingLabel,
-        //   hintText: AppStrings.ratePropertyFinishingHint,
-        //   value: finishingLevel,
-        //   items: AppConstant.finishingLevels,
-        //   onChanged: onFinishingLevelChanged,
-        // ),
         AppDropDownItem(
           title: AppStrings.ratePropertyPurposeLabel,
           hintText: AppStrings.ratePropertyPurposeHint,

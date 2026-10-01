@@ -113,9 +113,7 @@ class UserRequestsApis {
         body: body,
       );
       return response.fold((failed) => Left(failed), (success) {
-        printState(
-          'PATCH /requests/$requestId/status: ${success.response}',
-        );
+        printState('PATCH /requests/$requestId/status: ${success.response}');
         return Right(success.response);
       });
     } catch (e) {

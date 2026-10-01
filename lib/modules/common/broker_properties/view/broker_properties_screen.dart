@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
- import '../../../../../core/components/app_appbar.dart';
+import '../../../../../core/components/app_appbar.dart';
 import '../../../../../core/components/loading_process.dart';
 import '../../../../../core/components/pagination.dart';
-import '../../../../../core/components/property_card_footer_widget.dart';
+import '../../../../../core/components/property_card_chat_footer.dart';
 import '../../../../../core/components/user_info_header_widget.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 import '../../../../../core/components/property_card_widget.dart';
- import '../../chats/chat_navigator.dart';
+import '../../chats/chat_navigator.dart';
 import '../controller/broker_properties_bloc.dart';
 import 'widgets/loading_grid_item.dart';
 
@@ -22,7 +22,13 @@ class BrokerPropertiesScreen extends StatelessWidget {
     return BlocBuilder<BrokerPropertiesBloc, BrokerPropertiesState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: AppAppbar(title:state.loadingStatus==RequestStatus.loading ? '' : state.isBroker ? AppStrings.brokerPropertiesTitle : AppStrings.ownerPropertiesTitle),
+          appBar: AppAppbar(
+            title: state.loadingStatus == RequestStatus.loading
+                ? ''
+                : state.isBroker
+                ? AppStrings.brokerPropertiesTitle
+                : AppStrings.ownerPropertiesTitle,
+          ),
           body: SafeArea(
             child: Column(
               children: [
@@ -84,15 +90,6 @@ class BrokerPropertiesScreen extends StatelessWidget {
                                 participantName: state.brokerName,
                                 participantAvatarUrl: '',
                               );
-                              // RouterHandler.navigate(
-                              //   context,
-                              //   AppRouterKeys.conversationDetail,
-                              //   // extra: ConversationInfo(
-                              //   //   conversationId: property.id,
-                              //   //   participantName: property.title,
-                              //   //   participantAvatarUrl: property.imageUrl,
-                              //   // ),
-                              // );
                             },
                           ),
                         );

@@ -63,7 +63,8 @@ class ContractSummaryCard extends StatelessWidget {
                   fontFamily: AppConstant.appHeaderFont,
                   color: colors.primaryBrand,
                 ),
-              ),SizedBox(width: 10.width),
+              ),
+              SizedBox(width: 10.width),
               Expanded(
                 child: Align(
                   alignment: AlignmentDirectional.centerEnd,
@@ -71,7 +72,7 @@ class ContractSummaryCard extends StatelessWidget {
                     contract?.propertyName ?? '',
                     style: TextStyle(
                       fontSize: context.responsiveFontScale(15),
-                      
+
                       fontWeight: FontWeight.w400,
                       fontFamily: AppConstant.appFont,
                       color: colors.textFieldTitle,

@@ -117,7 +117,12 @@ class _MadarPdf {
           children: [
             rtlText(title, size: 10, color: muted),
             pw.SizedBox(height: 6),
-            rtlText(value, size: 13, color: valueColor, weight: pw.FontWeight.bold),
+            rtlText(
+              value,
+              size: 13,
+              color: valueColor,
+              weight: pw.FontWeight.bold,
+            ),
           ],
         ),
       ),
@@ -211,7 +216,9 @@ class PdfReportGenerator {
               _MadarPdf.metricCard(
                 title: 'صافي الربح',
                 value: _formatAmount(netProfit),
-                valueColor: netProfit < 0 ? _MadarPdf.negative : _MadarPdf.positive,
+                valueColor: netProfit < 0
+                    ? _MadarPdf.negative
+                    : _MadarPdf.positive,
               ),
             ],
           ),
@@ -227,9 +234,21 @@ class PdfReportGenerator {
               pw.TableRow(
                 decoration: const pw.BoxDecoration(color: _MadarPdf.tableHead),
                 children: [
-                  _tableCell('نسبة التغير', header: true, color: _MadarPdf.tableLabel),
-                  _tableCell('قيمة التغير', header: true, color: _MadarPdf.tableLabel),
-                  _tableCell('البند', header: true, color: _MadarPdf.tableLabel),
+                  _tableCell(
+                    'نسبة التغير',
+                    header: true,
+                    color: _MadarPdf.tableLabel,
+                  ),
+                  _tableCell(
+                    'قيمة التغير',
+                    header: true,
+                    color: _MadarPdf.tableLabel,
+                  ),
+                  _tableCell(
+                    'البند',
+                    header: true,
+                    color: _MadarPdf.tableLabel,
+                  ),
                 ],
               ),
               pw.TableRow(
@@ -285,7 +304,11 @@ class PdfReportGenerator {
               crossAxisAlignment: pw.CrossAxisAlignment.end,
               children: [
                 for (final note in notes) ...[
-                  _MadarPdf.rtlText('• $note', size: 11, color: _MadarPdf.insightText),
+                  _MadarPdf.rtlText(
+                    '• $note',
+                    size: 11,
+                    color: _MadarPdf.insightText,
+                  ),
                   if (note != notes.last) pw.SizedBox(height: 6),
                 ],
               ],
@@ -370,7 +393,9 @@ class ProjectPdfGenerator {
       final client = HttpClient()
         ..connectionTimeout = const Duration(seconds: 8);
       final request = await client.getUrl(uri);
-      final response = await request.close().timeout(const Duration(seconds: 8));
+      final response = await request.close().timeout(
+        const Duration(seconds: 8),
+      );
       if (response.statusCode != 200) {
         client.close(force: true);
         return null;
@@ -404,7 +429,9 @@ class ProjectPdfGenerator {
 
   static List<pw.Widget> _stageCards(ProjectDetailsModel data) {
     if (data.stages.isEmpty) {
-      return [_MadarPdf.rtlText('لا توجد مراحل', size: 11, color: _MadarPdf.muted)];
+      return [
+        _MadarPdf.rtlText('لا توجد مراحل', size: 11, color: _MadarPdf.muted),
+      ];
     }
     return [
       for (final stage in data.stages)
@@ -563,7 +590,11 @@ class ProjectPdfGenerator {
               ),
               if (item.content.isNotEmpty) ...[
                 pw.SizedBox(height: 4),
-                _MadarPdf.rtlText(item.content, size: 12, color: _MadarPdf.heading),
+                _MadarPdf.rtlText(
+                  item.content,
+                  size: 12,
+                  color: _MadarPdf.heading,
+                ),
               ],
               if (item.attachments.any((url) => images[url] != null)) ...[
                 pw.SizedBox(height: 6),
@@ -670,11 +701,15 @@ class ProjectPdfGenerator {
     await _MadarPdf.saveAndOpen(doc, 'project_report');
   }
 
-  static Future<void> generateAndOpenFromProject(RealStateProjectModel project) {
+  static Future<void> generateAndOpenFromProject(
+    RealStateProjectModel project,
+  ) {
     return generateAndOpen(ProjectDetailsModel.fromRealState(project));
   }
 
-  static Future<void> generateAndOpenFromMap(Map<String, dynamic> jsonResponse) {
+  static Future<void> generateAndOpenFromMap(
+    Map<String, dynamic> jsonResponse,
+  ) {
     return generateAndOpen(ProjectDetailsModel.fromJson(jsonResponse));
   }
 }

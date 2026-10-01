@@ -42,10 +42,8 @@ class BusinessProjectDetailsScreen extends StatelessWidget {
                   msg: AppStrings.failedLoadProjectDetails,
                   onTapRefresh: () {
                     context.read<BusinessProjectDetailsBloc>().add(
-                          BusinessProjectDetailsLoad(
-                            projectId: state.projectId,
-                          ),
-                        );
+                      BusinessProjectDetailsLoad(projectId: state.projectId),
+                    );
                   },
                 );
               }
@@ -105,8 +103,12 @@ class BusinessProjectDetailsScreen extends StatelessWidget {
                       ProjectPhasesSectionWidget(phases: p.stages ?? []),
                       SizedBox(height: 14.height),
                       ProjectAttachmentsSectionWidget(
-                        smartNotes:( p.timeline??[]).map((e)=> e.content ?? '').toList(),
-                        attachmentUrl: ( p.timeline??[]).map((e)=> e.attachments ?? []).toList(),
+                        smartNotes: (p.timeline ?? [])
+                            .map((e) => e.content ?? '')
+                            .toList(),
+                        attachmentUrl: (p.timeline ?? [])
+                            .map((e) => e.attachments ?? [])
+                            .toList(),
                       ),
                       SizedBox(height: 24.height),
                     ],

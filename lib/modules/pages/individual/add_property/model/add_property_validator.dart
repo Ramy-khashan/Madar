@@ -3,7 +3,6 @@ import 'add_property_model.dart';
 import 'add_property_request_mapper.dart';
 import 'property_enums.dart';
 
-/// Keys used both by the validator and by widgets that show `errorText`.
 class AddPropertyField {
   AddPropertyField._();
 
@@ -24,10 +23,6 @@ class AddPropertyField {
   static const String title = 'title';
 }
 
-/// Step-gated validation for the add-property wizard.
-///
-/// Returns a map of field key → localized message. An empty map means the
-/// current step (or the whole form) is ready to submit.
 class AddPropertyValidator {
   AddPropertyValidator._();
 
@@ -161,68 +156,192 @@ class AddPropertyValidator {
     switch (type) {
       case PropertyApiEnums.typeApartment:
         return {
-          ..._requireCount(model, DetailKeys.bedrooms, AppStrings.numberOfBedrooms),
-          ..._requireCount(model, DetailKeys.bathrooms, AppStrings.numberOfBathrooms),
+          ..._requireCount(
+            model,
+            DetailKeys.bedrooms,
+            AppStrings.numberOfBedrooms,
+          ),
+          ..._requireCount(
+            model,
+            DetailKeys.bathrooms,
+            AppStrings.numberOfBathrooms,
+          ),
           ..._requirePresent(model, DetailKeys.floor, AppStrings.floorLabel),
-          ..._requireString(model, DetailKeys.furnishing, AppStrings.furnitureCondition),
-          ..._requireString(model, DetailKeys.condition, AppStrings.propertyCondition),
+          ..._requireString(
+            model,
+            DetailKeys.furnishing,
+            AppStrings.furnitureCondition,
+          ),
+          ..._requireString(
+            model,
+            DetailKeys.condition,
+            AppStrings.propertyCondition,
+          ),
         };
       case PropertyApiEnums.typeVilla:
         return {
-          ..._requireCount(model, DetailKeys.bedrooms, AppStrings.numberOfBedrooms),
-          ..._requireCount(model, DetailKeys.bathrooms, AppStrings.numberOfBathrooms),
-          ..._requireString(model, DetailKeys.furnishing, AppStrings.furnitureCondition),
-          ..._requireString(model, DetailKeys.condition, AppStrings.propertyCondition),
+          ..._requireCount(
+            model,
+            DetailKeys.bedrooms,
+            AppStrings.numberOfBedrooms,
+          ),
+          ..._requireCount(
+            model,
+            DetailKeys.bathrooms,
+            AppStrings.numberOfBathrooms,
+          ),
+          ..._requireString(
+            model,
+            DetailKeys.furnishing,
+            AppStrings.furnitureCondition,
+          ),
+          ..._requireString(
+            model,
+            DetailKeys.condition,
+            AppStrings.propertyCondition,
+          ),
         };
       case PropertyApiEnums.typeFloor:
         return {
-          ..._requireCount(model, DetailKeys.bedrooms, AppStrings.numberOfBedrooms),
-          ..._requireCount(model, DetailKeys.bathrooms, AppStrings.numberOfBathrooms),
+          ..._requireCount(
+            model,
+            DetailKeys.bedrooms,
+            AppStrings.numberOfBedrooms,
+          ),
+          ..._requireCount(
+            model,
+            DetailKeys.bathrooms,
+            AppStrings.numberOfBathrooms,
+          ),
           ..._requireString(model, DetailKeys.floorType, AppStrings.floorSlot),
-          ..._requireString(model, DetailKeys.furnishing, AppStrings.furnitureCondition),
-          ..._requireString(model, DetailKeys.condition, AppStrings.propertyCondition),
+          ..._requireString(
+            model,
+            DetailKeys.furnishing,
+            AppStrings.furnitureCondition,
+          ),
+          ..._requireString(
+            model,
+            DetailKeys.condition,
+            AppStrings.propertyCondition,
+          ),
         };
       case PropertyApiEnums.typeTownhouse:
         return {
-          ..._requireCount(model, DetailKeys.bedrooms, AppStrings.numberOfBedrooms),
-          ..._requireCount(model, DetailKeys.bathrooms, AppStrings.numberOfBathrooms),
-          ..._requirePresent(model, DetailKeys.floorsCount, AppStrings.numberOfFloors),
-          ..._requireString(model, DetailKeys.furnishing, AppStrings.furnitureCondition),
-          ..._requireString(model, DetailKeys.condition, AppStrings.propertyCondition),
+          ..._requireCount(
+            model,
+            DetailKeys.bedrooms,
+            AppStrings.numberOfBedrooms,
+          ),
+          ..._requireCount(
+            model,
+            DetailKeys.bathrooms,
+            AppStrings.numberOfBathrooms,
+          ),
+          ..._requirePresent(
+            model,
+            DetailKeys.floorsCount,
+            AppStrings.numberOfFloors,
+          ),
+          ..._requireString(
+            model,
+            DetailKeys.furnishing,
+            AppStrings.furnitureCondition,
+          ),
+          ..._requireString(
+            model,
+            DetailKeys.condition,
+            AppStrings.propertyCondition,
+          ),
         };
       case PropertyApiEnums.typeBuilding:
         return {
-          ..._requirePresent(model, DetailKeys.floorsCount, AppStrings.totalFloorsInBuilding),
-          ..._requirePresent(model, DetailKeys.totalApartments, AppStrings.totalApartments),
-          ..._requireString(model, DetailKeys.classification, AppStrings.buildingClassification),
-          ..._requireString(model, DetailKeys.condition, AppStrings.propertyCondition),
+          ..._requirePresent(
+            model,
+            DetailKeys.floorsCount,
+            AppStrings.totalFloorsInBuilding,
+          ),
+          ..._requirePresent(
+            model,
+            DetailKeys.totalApartments,
+            AppStrings.totalApartments,
+          ),
+          ..._requireString(
+            model,
+            DetailKeys.classification,
+            AppStrings.buildingClassification,
+          ),
+          ..._requireString(
+            model,
+            DetailKeys.condition,
+            AppStrings.propertyCondition,
+          ),
         };
       case PropertyApiEnums.typeLand:
         return {
-          ..._requireString(model, DetailKeys.classification, AppStrings.landClassification),
+          ..._requireString(
+            model,
+            DetailKeys.classification,
+            AppStrings.landClassification,
+          ),
         };
       case PropertyApiEnums.typeRestHouse:
         return {
-          ..._requireCount(model, DetailKeys.bedrooms, AppStrings.numberOfBedrooms),
-          ..._requireCount(model, DetailKeys.bathrooms, AppStrings.numberOfBathrooms),
+          ..._requireCount(
+            model,
+            DetailKeys.bedrooms,
+            AppStrings.numberOfBedrooms,
+          ),
+          ..._requireCount(
+            model,
+            DetailKeys.bathrooms,
+            AppStrings.numberOfBathrooms,
+          ),
         };
       case PropertyApiEnums.typeTower:
         return {
           ..._requireString(model, DetailKeys.name, AppStrings.towerName),
-          ..._requirePresent(model, DetailKeys.floorsCount, AppStrings.totalFloorsInBuilding),
-          ..._requireString(model, DetailKeys.classification, AppStrings.towerClassification),
-          ..._requirePresent(model, DetailKeys.totalUnits, AppStrings.totalUnits),
-          ..._requireString(model, DetailKeys.condition, AppStrings.propertyCondition),
+          ..._requirePresent(
+            model,
+            DetailKeys.floorsCount,
+            AppStrings.totalFloorsInBuilding,
+          ),
+          ..._requireString(
+            model,
+            DetailKeys.classification,
+            AppStrings.towerClassification,
+          ),
+          ..._requirePresent(
+            model,
+            DetailKeys.totalUnits,
+            AppStrings.totalUnits,
+          ),
+          ..._requireString(
+            model,
+            DetailKeys.condition,
+            AppStrings.propertyCondition,
+          ),
         };
       case PropertyApiEnums.typeShop:
         return {
-          ..._requirePresent(model, DetailKeys.frontWidth, AppStrings.frontagWidth),
-          ..._requireString(model, DetailKeys.locationType, AppStrings.location),
+          ..._requirePresent(
+            model,
+            DetailKeys.frontWidth,
+            AppStrings.frontagWidth,
+          ),
+          ..._requireString(
+            model,
+            DetailKeys.locationType,
+            AppStrings.location,
+          ),
         };
       case PropertyApiEnums.typeOffice:
         return {
           ..._requirePresent(model, DetailKeys.floor, AppStrings.floorLabel),
-          ..._requireCount(model, DetailKeys.roomsCount, AppStrings.numberOfRooms),
+          ..._requireCount(
+            model,
+            DetailKeys.roomsCount,
+            AppStrings.numberOfRooms,
+          ),
         };
       case PropertyApiEnums.typeFarm:
         return {
@@ -231,7 +350,11 @@ class AddPropertyValidator {
         };
       case PropertyApiEnums.typeWarehouse:
         return {
-          ..._requirePresent(model, DetailKeys.height, AppStrings.internalHeight),
+          ..._requirePresent(
+            model,
+            DetailKeys.height,
+            AppStrings.internalHeight,
+          ),
           ..._requireString(model, DetailKeys.doorType, AppStrings.doorType),
           ..._requireString(model, DetailKeys.coolingType, AppStrings.cooling),
           ..._requireString(model, DetailKeys.floorType, AppStrings.flooring),
@@ -268,7 +391,6 @@ class AddPropertyValidator {
     return const {};
   }
 
-  /// Accepts `0` (e.g. ground floor) as long as the user picked a value.
   static Map<String, String> _requirePresent(
     AddPropertyModel model,
     String key,

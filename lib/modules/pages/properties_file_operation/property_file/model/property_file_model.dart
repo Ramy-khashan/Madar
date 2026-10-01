@@ -93,6 +93,7 @@ class PropertyFileModel extends Equatable {
     if (declaredTotalUnits > units.length) return declaredTotalUnits;
     return units.length;
   }
+
   int get rentedCount =>
       units.where((u) => u.status == UnitStatus.rented).length;
   int get vacantCount =>
@@ -126,10 +127,11 @@ class PropertyFileModel extends Equatable {
       occupancyRate: apiRate != null
           ? apiRate.round()
           : (units.isEmpty ? 0 : ((occupied / units.length) * 100).round()),
-      monthlyRevenue: (p.financialPerformance?.totalIncome ??
-              p.details?.estimatedIncome ??
-              0)
-          .toDouble(),
+      monthlyRevenue:
+          (p.financialPerformance?.totalIncome ??
+                  p.details?.estimatedIncome ??
+                  0)
+              .toDouble(),
       units: units,
       rawType: p.type ?? '',
       declaredTotalUnits: declared,
@@ -326,8 +328,7 @@ class UnitModel extends Equatable {
       rawStatus: p.status ?? base?.rawStatus ?? '',
       buildingId: base?.buildingId ?? '',
       livingRooms: d?.livingRooms ?? base?.livingRooms ?? 0,
-      isShop:
-          (p.type ?? '').toUpperCase() == 'SHOP' || (base?.isShop ?? false),
+      isShop: (p.type ?? '').toUpperCase() == 'SHOP' || (base?.isShop ?? false),
     );
   }
 
@@ -538,9 +539,8 @@ class BuildingApartmentModel extends Equatable {
           ? (json['expenses'] as List)
                 .whereType<Map>()
                 .map(
-                  (e) => UnitExpenseModel.fromJson(
-                    Map<String, dynamic>.from(e),
-                  ),
+                  (e) =>
+                      UnitExpenseModel.fromJson(Map<String, dynamic>.from(e)),
                 )
                 .toList()
           : const [],
@@ -573,4 +573,3 @@ String _dateOnly(dynamic value) {
   if (text.isEmpty || text == 'null') return '';
   return text.split('T').first;
 }
-

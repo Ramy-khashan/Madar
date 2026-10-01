@@ -17,12 +17,12 @@ Future<void> showConfirmDeleteDialog({
       content: Text(content),
       actions: [
         TextButton(
-          onPressed: () =>RouterHandler.pop(context),
+          onPressed: () => RouterHandler.pop(context),
           child: Text(AppStrings.cancel),
         ),
         TextButton(
           onPressed: () {
-          RouterHandler.pop(context);
+            RouterHandler.pop(context);
             onConfirm();
           },
           child: Text(

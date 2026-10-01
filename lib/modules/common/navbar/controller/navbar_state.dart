@@ -24,4 +24,3 @@ class NavbarState extends Equatable {
     refreshId: refreshId ?? this.refreshId,
   );
 }
- 

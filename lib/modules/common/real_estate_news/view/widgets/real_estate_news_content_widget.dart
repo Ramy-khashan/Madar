@@ -12,13 +12,15 @@ class RealEstateNewsContentWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RealEstateNewsBloc, RealEstateNewsState>(
-      builder: (context, state) { 
+      builder: (context, state) {
         return GridView.builder(
           padding: EdgeInsets.symmetric(
             vertical: 8.height,
             horizontal: 12.width,
           ),
-          itemCount:state.newsStatus==RequestStatus.success ? state.items.length : 10,
+          itemCount: state.newsStatus == RequestStatus.success
+              ? state.items.length
+              : 10,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: ResponsiveUtils.types(
               context,
@@ -37,8 +39,11 @@ class RealEstateNewsContentWidget extends StatelessWidget {
               tabletLandscape: 400.height,
             ),
           ),
-          itemBuilder: (context, i) =>
-              NewsCardWidget(item: state.newsStatus==RequestStatus.success?state.items[i]:null),
+          itemBuilder: (context, i) => NewsCardWidget(
+            item: state.newsStatus == RequestStatus.success
+                ? state.items[i]
+                : null,
+          ),
         );
       },
     );

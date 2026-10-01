@@ -24,9 +24,9 @@ class RealEstateNewsDetailsScreen extends StatelessWidget {
             child: LoadingProcess(
               status: state.status,
               errorMsg: state.errorMsg,
-              onTapRefresh: () => context
-                  .read<RealEstateNewsDetailsBloc>()
-                  .add(RealEstateNewsDetailsLoad(newsId)),
+              onTapRefresh: () => context.read<RealEstateNewsDetailsBloc>().add(
+                RealEstateNewsDetailsLoad(newsId),
+              ),
               emptyMsg: AppStrings.noNews,
               isEmptyList:
                   state.status == RequestStatus.success &&

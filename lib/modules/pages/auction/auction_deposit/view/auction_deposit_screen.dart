@@ -37,9 +37,9 @@ class AuctionDepositScreen extends StatelessWidget {
             child: LoadingProcess(
               status: state.loadStatus,
               errorMsg: state.errorMsg,
-              onTapRefresh: () => context
-                  .read<AuctionDepositBloc>()
-                  .add(AuctionDepositLoad(auctionId)),
+              onTapRefresh: () => context.read<AuctionDepositBloc>().add(
+                AuctionDepositLoad(auctionId),
+              ),
               emptyMsg: '',
               isEmptyList: false,
               childIsLoader: true,

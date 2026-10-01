@@ -97,9 +97,7 @@ mixin PropertyFileTenancyMixin on Bloc<PropertyFileEvent, PropertyFileState> {
   String _toIsoDate(String value) {
     final trimmed = value.trim();
     if (trimmed.contains('T')) return trimmed;
-    if (trimmed.length == 10 &&
-        trimmed[4] == '-' &&
-        trimmed[7] == '-') {
+    if (trimmed.length == 10 && trimmed[4] == '-' && trimmed[7] == '-') {
       return '${trimmed}T00:00:00.000Z';
     }
     return trimmed;

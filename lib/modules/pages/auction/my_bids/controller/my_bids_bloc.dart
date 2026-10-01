@@ -83,7 +83,7 @@ class MyBidsBloc extends Bloc<MyBidsEvent, MyBidsState> {
   ];
   Future<void> _onLoad(MyBidsLoad event, Emitter<MyBidsState> emit) async {
     emit(state.copyWith(loadStatus: RequestStatus.loading));
-     emit(
+    emit(
       state.copyWith(loadStatus: RequestStatus.success, allItems: _allItems),
     );
   }

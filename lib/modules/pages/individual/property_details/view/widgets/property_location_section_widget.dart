@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../../../../config/router/app_router_keys.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/model/google_map_model.dart';
+import '../../../../../../core/repository/maps/map_style.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
@@ -35,7 +36,6 @@ class PropertyLocationSectionWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // ── Section title ───────────────────────────────────────────────
         Text(
           AppStrings.locationOnMap,
           style: TextStyle(
@@ -47,12 +47,12 @@ class PropertyLocationSectionWidget extends StatelessWidget {
         ),
         SizedBox(height: 12.height),
 
-        // ── Map ─────────────────────────────────────────────────────────
         ClipRRect(
           borderRadius: BorderRadius.circular(16.radius),
           child: SizedBox(
             height: 160.height,
             child: GoogleMap(
+              style: cleanMapStyle,
               onTap: (_) {
                 RouterHandler.navigate(
                   context,
@@ -72,14 +72,12 @@ class PropertyLocationSectionWidget extends StatelessWidget {
               tiltGesturesEnabled: false,
               rotateGesturesEnabled: false,
               myLocationButtonEnabled: false,
-              liteModeEnabled: true,
             ),
           ),
         ),
 
         SizedBox(height: 12.height),
 
-        // ── Location row ────────────────────────────────────────────────
         Container(
           padding: EdgeInsets.symmetric(
             horizontal: 12.width,
@@ -117,7 +115,6 @@ class PropertyLocationSectionWidget extends StatelessWidget {
           ),
         ),
 
-        // ── Nearby places ───────────────────────────────────────────────
         if (nearby.isNotEmpty)
           Container(
             margin: EdgeInsets.only(top: 16.height),

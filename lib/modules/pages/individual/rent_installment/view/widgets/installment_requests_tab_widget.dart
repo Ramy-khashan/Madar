@@ -30,32 +30,31 @@ class InstallmentRequestsTabWidget extends StatelessWidget {
           );
         }
         return GridView.builder(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: context.responsiveHorizontalPadding,
-                      vertical: 8.height,
-                    ),
-                    itemCount: state.requests.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: ResponsiveUtils.types(
-                        context,
-                        mobilePortrait: 1,
-                        mobileLandscape: 2,
-                        tabletPortrait: 2,
-                        tabletLandscape: 3,
-                      ).toInt(),
-                      crossAxisSpacing: 8.width,
-                      mainAxisSpacing: 8.height,
-                      mainAxisExtent: ResponsiveUtils.types(
-                        context,
-                        mobilePortrait: 310.height,
-                        mobileLandscape: 325.height,
-                        tabletPortrait: 330.height,
-                        tabletLandscape: 345.height,
-                      ),
-                    ),
-          itemBuilder: (context, index) => InstallmentRequestCardWidget(
-            request: state.requests[index],
+          padding: EdgeInsets.symmetric(
+            horizontal: context.responsiveHorizontalPadding,
+            vertical: 8.height,
           ),
+          itemCount: state.requests.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: ResponsiveUtils.types(
+              context,
+              mobilePortrait: 1,
+              mobileLandscape: 2,
+              tabletPortrait: 2,
+              tabletLandscape: 3,
+            ).toInt(),
+            crossAxisSpacing: 8.width,
+            mainAxisSpacing: 8.height,
+            mainAxisExtent: ResponsiveUtils.types(
+              context,
+              mobilePortrait: 310.height,
+              mobileLandscape: 325.height,
+              tabletPortrait: 330.height,
+              tabletLandscape: 345.height,
+            ),
+          ),
+          itemBuilder: (context, index) =>
+              InstallmentRequestCardWidget(request: state.requests[index]),
         );
       },
     );

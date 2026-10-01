@@ -81,13 +81,6 @@ class GeneralSettingsSectionWidget extends StatelessWidget {
             colors: colors,
             onTap: onHelpTap,
           ),
-
-          // SettingsActionRow(
-          //   icon: Icons.switch_account_outlined,
-          //   label: ,
-          //   colors: colors,
-          //   onTap: onSwitchAccountTap,
-          // ),
         ],
       ),
     );

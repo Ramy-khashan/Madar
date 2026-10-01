@@ -19,7 +19,12 @@ class AuctionListState extends Equatable {
 
   @override
   List<Object?> get props => [
-    allItems, activeFilter, loadStatus, errorMsg, isLoadMore, totalCount,
+    allItems,
+    activeFilter,
+    loadStatus,
+    errorMsg,
+    isLoadMore,
+    totalCount,
   ];
 
   AuctionListState copyWith({
@@ -31,12 +36,12 @@ class AuctionListState extends Equatable {
     int? totalCount,
   }) {
     return AuctionListState(
-      allItems:     allItems     ?? this.allItems,
+      allItems: allItems ?? this.allItems,
       activeFilter: activeFilter ?? this.activeFilter,
-      loadStatus:   loadStatus   ?? this.loadStatus,
-      errorMsg:     errorMsg     ?? this.errorMsg,
-      isLoadMore:   isLoadMore   ?? this.isLoadMore,
-      totalCount:   totalCount   ?? this.totalCount,
+      loadStatus: loadStatus ?? this.loadStatus,
+      errorMsg: errorMsg ?? this.errorMsg,
+      isLoadMore: isLoadMore ?? this.isLoadMore,
+      totalCount: totalCount ?? this.totalCount,
     );
   }
 }

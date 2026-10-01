@@ -45,30 +45,29 @@ class RatePropertyCertifiedState extends Equatable {
       finishingLevel != null &&
       purpose != null;
 
-  RatePropertyCompanyModel? get selectedCompany =>
-      selectedCompanyId == null
-          ? null
-          : companies.where((c) => c.id == selectedCompanyId).firstOrNull;
+  RatePropertyCompanyModel? get selectedCompany => selectedCompanyId == null
+      ? null
+      : companies.where((c) => c.id == selectedCompanyId).firstOrNull;
 
   @override
   List<Object?> get props => [
-        currentStep,
-        selectedType,
-        location,
-        area,
-        propertyAge,
-        finishingLevel,
-        purpose,
-        ownershipDeedFile,
-        ownerIdFile,
-        propertyPlanFile,
-        ownerIdError,
-        companies,
-        companiesStatus,
-        selectedCompanyId,
-        submitStatus,
-        requestNumber,
-      ];
+    currentStep,
+    selectedType,
+    location,
+    area,
+    propertyAge,
+    finishingLevel,
+    purpose,
+    ownershipDeedFile,
+    ownerIdFile,
+    propertyPlanFile,
+    ownerIdError,
+    companies,
+    companiesStatus,
+    selectedCompanyId,
+    submitStatus,
+    requestNumber,
+  ];
 
   RatePropertyCertifiedState copyWith({
     int? currentStep,
@@ -102,8 +101,7 @@ class RatePropertyCertifiedState extends Equatable {
       ownershipDeedFile: clearOwnershipDeed
           ? null
           : (ownershipDeedFile ?? this.ownershipDeedFile),
-      ownerIdFile:
-          clearOwnerId ? null : (ownerIdFile ?? this.ownerIdFile),
+      ownerIdFile: clearOwnerId ? null : (ownerIdFile ?? this.ownerIdFile),
       propertyPlanFile: clearPropertyPlan
           ? null
           : (propertyPlanFile ?? this.propertyPlanFile),

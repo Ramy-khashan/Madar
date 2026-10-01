@@ -10,7 +10,7 @@ import '../../../../../../core/utils/constants/app_images.dart';
 import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/account_role.dart';
 import '../../../../../../core/utils/functions/image_picker_helper.dart';
- import '../../../../../../core/utils/functions/responsive.dart';
+import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../individual/my_property_details/view/widgets/contracts_section_widget.dart';
 import '../../../../individual/my_property_details/view/widgets/related_services_section_widget.dart';
 import '../../../../individual/property_details/view/widgets/features_part.dart';

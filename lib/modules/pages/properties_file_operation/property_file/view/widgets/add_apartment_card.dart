@@ -25,7 +25,9 @@ class AddApartmentCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: colors.cardBackground,
           borderRadius: BorderRadius.circular(12.radius),
-          border: Border.all(color: colors.primaryBrand.withValues(alpha: 0.45)),
+          border: Border.all(
+            color: colors.primaryBrand.withValues(alpha: 0.45),
+          ),
         ),
         padding: EdgeInsets.all(8.width),
         child: Column(

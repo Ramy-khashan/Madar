@@ -14,17 +14,13 @@ import 'core/utils/functions/router_handler.dart';
 import 'core/utils/functions/service_locator.dart';
 import 'core/utils/functions/translation.dart';
 
-class MadarApp extends StatefulWidget {
+class MadarApp extends StatelessWidget {
   const MadarApp({super.key});
   static final GlobalKey<NavigatorState> navigatorKey =
       GlobalKey<NavigatorState>();
+  static bool _fcmReady = false;
 
-  @override
-  State<MadarApp> createState() => _MadarAppState();
-}
-
-class _MadarAppState extends State<MadarApp> {
-  void _openFromNotification(Map<String, dynamic> data) {
+  static void _openFromNotification(Map<String, dynamic> data) {
     final context = MadarApp.navigatorKey.currentContext;
     if (context == null || !context.mounted) return;
     final propertyId = '${data['propertyId'] ?? ''}'.trim();
@@ -61,14 +57,12 @@ class _MadarAppState extends State<MadarApp> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    FcmTokenService.instance.onOpened = _openFromNotification;
-    FcmTokenService.instance.init();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    if (!_fcmReady) {
+      _fcmReady = true;
+      FcmTokenService.instance.onOpened = _openFromNotification;
+      FcmTokenService.instance.init();
+    }
     return BlocProvider.value(
       value: sl<AppControllerBloc>()..add(const AppControllerInit()),
       child: BlocBuilder<AppControllerBloc, AppControllerState>(
@@ -85,9 +79,8 @@ class _MadarAppState extends State<MadarApp> {
               title: AppConstant.appName,
               routerConfig: appRouter,
               debugShowCheckedModeBanner: true,
-              builder: (context, child) => AppKillSwitchGate(
-                child: child ?? const SizedBox.shrink(),
-              ),
+              builder: (context, child) =>
+                  AppKillSwitchGate(child: child ?? const SizedBox.shrink()),
             ),
           );
         },

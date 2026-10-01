@@ -1,11 +1,10 @@
 import 'package:equatable/equatable.dart';
 
- 
 class RatePropertyRequestModel extends Equatable {
   final String id;
   final String title;
   final String requestNumber;
-  final String type; // 'certified' | 'estimated'
+  final String type;
   final String requestDate;
   final String status;
   final double? estimatedValue;
@@ -21,8 +20,15 @@ class RatePropertyRequestModel extends Equatable {
   });
 
   @override
-  List<Object?> get props =>
-      [id, title, requestNumber, type, requestDate, status, estimatedValue];
+  List<Object?> get props => [
+    id,
+    title,
+    requestNumber,
+    type,
+    requestDate,
+    status,
+    estimatedValue,
+  ];
 }
 
 class RatePropertyCompanyModel extends Equatable {
@@ -43,18 +49,14 @@ class RatePropertyCompanyModel extends Equatable {
   });
 
   @override
-  List<Object?> get props =>
-      [id, name, rating, reviewsCount, workDays, price];
+  List<Object?> get props => [id, name, rating, reviewsCount, workDays, price];
 }
 
 class RatePropertyUploadedFile extends Equatable {
   final String name;
   final double sizeKb;
 
-  const RatePropertyUploadedFile({
-    required this.name,
-    required this.sizeKb,
-  });
+  const RatePropertyUploadedFile({required this.name, required this.sizeKb});
 
   @override
   List<Object?> get props => [name, sizeKb];

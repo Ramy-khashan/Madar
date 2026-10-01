@@ -20,9 +20,7 @@ class PropertiesBloc extends Bloc<PropertiesEvent, PropertiesState> {
   PropertiesBloc({
     PropertyFilterModel? initialFilter,
     String initialSearch = '',
-  }) : super(
-         PropertiesState(filter: initialFilter, search: initialSearch),
-       ) {
+  }) : super(PropertiesState(filter: initialFilter, search: initialSearch)) {
     on<PropertiesLoad>(_onLoad);
     on<PropertiesFilterApplied>(_onFilterApplied);
     on<PropertiesSearchChanged>(_onSearchChanged);
@@ -111,11 +109,7 @@ class PropertiesBloc extends Bloc<PropertiesEvent, PropertiesState> {
     Emitter<PropertiesState> emit,
   ) {
     emit(
-      state.copyWith(
-        filter: event.filter,
-        properties: const [],
-        totalCount: 0,
-      ),
+      state.copyWith(filter: event.filter, properties: const [], totalCount: 0),
     );
     add(const PropertiesLoad());
   }
@@ -132,7 +126,8 @@ class PropertiesBloc extends Bloc<PropertiesEvent, PropertiesState> {
   }
 
   List<PropertiesItemModel> _itemsFrom(Map<String, dynamic> response) {
-    final raw = response['properties'] ??
+    final raw =
+        response['properties'] ??
         (response['data'] is Map
             ? (response['data'] as Map)['properties']
             : response['data']);

@@ -13,40 +13,40 @@ class RentInstallmentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  BlocBuilder<RentInstallmentBloc, RentInstallmentState>(
-        builder: (context, state) {
-          final colors = AppThemeColors.of(context);
-          return Scaffold(
-            backgroundColor: colors.backgroundPrimary,
-            appBar: AppAppbar(title: AppStrings.rentInstallment),
-            body: SafeArea(
-              child: Column(
-                children: [
-                  ServiceTabToggleWidget(
-                    labels: [AppStrings.installmentRequestsTab, AppStrings.installmentInfoTab],
-                    selectedIndex: state.selectedTab,
-                    onTabChanged: (index) => context
-                        .read<RentInstallmentBloc>()
-                        .add(RentInstallmentTabChanged(index)),
+    return BlocBuilder<RentInstallmentBloc, RentInstallmentState>(
+      builder: (context, state) {
+        final colors = AppThemeColors.of(context);
+        return Scaffold(
+          backgroundColor: colors.backgroundPrimary,
+          appBar: AppAppbar(title: AppStrings.rentInstallment),
+          body: SafeArea(
+            child: Column(
+              children: [
+                ServiceTabToggleWidget(
+                  labels: [
+                    AppStrings.installmentRequestsTab,
+                    AppStrings.installmentInfoTab,
+                  ],
+                  selectedIndex: state.selectedTab,
+                  onTabChanged: (index) => context
+                      .read<RentInstallmentBloc>()
+                      .add(RentInstallmentTabChanged(index)),
+                ),
+                Expanded(
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 250),
+                    child: state.selectedTab == 0
+                        ? const InstallmentRequestsTabWidget(
+                            key: ValueKey('requests'),
+                          )
+                        : const InstallmentInfoTabWidget(key: ValueKey('info')),
                   ),
-                  Expanded(
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 250),
-                      child: state.selectedTab == 0
-                          ? const InstallmentRequestsTabWidget(
-                              key: ValueKey('requests'),
-                            )
-                          : const InstallmentInfoTabWidget(
-                              key: ValueKey('info'),
-                            ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          );
-        },
-    
+          ),
+        );
+      },
     );
   }
 }

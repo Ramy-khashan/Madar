@@ -21,7 +21,9 @@ class HomeBannerWidget extends StatelessWidget {
           emptyMsg: '',
           isEmptyList: state.adsItem.isEmpty,
           onTapRefresh: () {
-            context.read<IndividualHomeBloc>().add(const IndividualHomeLoadAds());
+            context.read<IndividualHomeBloc>().add(
+              const IndividualHomeLoadAds(),
+            );
           },
           childIsLoader: true,
           errorMsg: state.adsErrorMsg,
@@ -46,7 +48,7 @@ class HomeBannerWidget extends StatelessWidget {
                       return InkWell(
                         onTap: () async {
                           if (item?.targetUrl != null) {
-                             await urlLauncher(item!.targetUrl!);
+                            await urlLauncher(item!.targetUrl!);
                           }
                         },
                         child: Container(

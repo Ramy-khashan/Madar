@@ -151,8 +151,13 @@ class AddResidentialProjectView extends StatelessWidget {
                             validator: (value) =>
                                 Validate.notEmpty(value ?? ''),
                             suffixIconWidget: Padding(
-                              padding:   EdgeInsets.only(top:8.height),
-                              child: Text(AppStrings.currency,style: TextStyle(fontSize: context.responsiveFontScale(22)),),
+                              padding: EdgeInsets.only(top: 8.height),
+                              child: Text(
+                                AppStrings.currency,
+                                style: TextStyle(
+                                  fontSize: context.responsiveFontScale(22),
+                                ),
+                              ),
                             ),
                             prefixIconConstraints: BoxConstraints(
                               minWidth: 40.width,
@@ -292,9 +297,12 @@ class AddResidentialProjectView extends StatelessWidget {
                             ),
                           ],
                           SizedBox(height: 20.height),
-                          Text(AppStrings.chooseProjectManager,style: TextStyle(
-                            fontSize: context.responsiveFontScale(20)
-                          ),),
+                          Text(
+                            AppStrings.chooseProjectManager,
+                            style: TextStyle(
+                              fontSize: context.responsiveFontScale(20),
+                            ),
+                          ),
                           ProjectManagerFields(
                             nameController: bloc.usernameController,
                             passwordController: bloc.passwordController,

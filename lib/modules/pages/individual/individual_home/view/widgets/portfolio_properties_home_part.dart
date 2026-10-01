@@ -21,7 +21,7 @@ class PortfolioPropertiesHomePart extends StatelessWidget {
     return SliverToBoxAdapter(
       child: BlocBuilder<IndividualHomeBloc, IndividualHomeState>(
         builder: (context, state) {
-           return Padding(
+          return Padding(
             padding: EdgeInsets.only(bottom: 20.height),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -50,48 +50,48 @@ class PortfolioPropertiesHomePart extends StatelessWidget {
                     child: const GuestLockedView(compact: true),
                   )
                 else
-                SizedBox(
-                  height: ResponsiveUtils.types(
-                    context,
-                    mobilePortrait: 165.height,
-                    mobileLandscape: 190.height,
-                    tabletPortrait: 150.height,
-                    tabletLandscape: 180.height,
-                  ),
-                  child: LoadingProcess(
-                    // status: state.portfolioStatus,
-                    status: state.portfolioStatus,
-                    errorMsg: state.portfolioErrorMsg,
-                    onTapRefresh: () {
-                      IndividualHomeBloc.get(
-                        context,
-                      ).add(const IndividualHomeLoadPortfolio());
-                    },
-                    emptyMsg: AppStrings.noPortfolioFound,
-                    isEmptyList: state.portfolio.isEmpty,
-                    childIsLoader: true,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: context.responsiveHorizontalPadding,
-                      ),
-                      itemCount: state.portfolioStatus == RequestStatus.loading
-                          ? 10
-                          : state.portfolio.length,
-                      separatorBuilder: (_, _) => SizedBox(width: 12.width),
-                      itemBuilder: (context, index) {
-                        final item =
-                            state.portfolioStatus == RequestStatus.loading
-                            ? null
-                            : state.portfolio[index];
-                        return PortfolioCardWidget(
-                          isWithWidth: true,
-                          portfolio: item,
-                        );
+                  SizedBox(
+                    height: ResponsiveUtils.types(
+                      context,
+                      mobilePortrait: 165.height,
+                      mobileLandscape: 190.height,
+                      tabletPortrait: 150.height,
+                      tabletLandscape: 180.height,
+                    ),
+                    child: LoadingProcess(
+                      status: state.portfolioStatus,
+                      errorMsg: state.portfolioErrorMsg,
+                      onTapRefresh: () {
+                        IndividualHomeBloc.get(
+                          context,
+                        ).add(const IndividualHomeLoadPortfolio());
                       },
+                      emptyMsg: AppStrings.noPortfolioFound,
+                      isEmptyList: state.portfolio.isEmpty,
+                      childIsLoader: true,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: context.responsiveHorizontalPadding,
+                        ),
+                        itemCount:
+                            state.portfolioStatus == RequestStatus.loading
+                            ? 10
+                            : state.portfolio.length,
+                        separatorBuilder: (_, _) => SizedBox(width: 12.width),
+                        itemBuilder: (context, index) {
+                          final item =
+                              state.portfolioStatus == RequestStatus.loading
+                              ? null
+                              : state.portfolio[index];
+                          return PortfolioCardWidget(
+                            isWithWidth: true,
+                            portfolio: item,
+                          );
+                        },
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
           );

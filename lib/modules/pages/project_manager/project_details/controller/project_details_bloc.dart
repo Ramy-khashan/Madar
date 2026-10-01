@@ -9,7 +9,7 @@ import '../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../core/utils/functions/print_state.dart';
 import '../../../../../core/utils/functions/service_locator.dart';
 import '../../../business/real_estate_development/business_project_details/model/real_state_project_model.dart';
- 
+
 part 'project_details_event.dart';
 part 'project_details_state.dart';
 
@@ -17,7 +17,6 @@ class ProjectDetailsBloc
     extends Bloc<ProjectDetailsEvent, ProjectDetailsState> {
   ProjectDetailsBloc() : super(const ProjectDetailsState()) {
     on<ProjectDetailsLoad>(_onLoad);
-    // on<ProjectDetailsAddTimeline>(_onAddTimeline);
   }
 
   static ProjectDetailsBloc get(BuildContext context) =>

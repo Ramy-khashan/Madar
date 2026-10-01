@@ -20,7 +20,7 @@ class ProjectRequestBase extends Equatable {
   final String startDate;
   final String endDate;
   final String price;
-  final String type; // "RESIDENTIAL" or "COMMERCIAL"
+  final String type;
   final List<StageRequestModel> stages;
   final ManagerRequestModel manager;
 

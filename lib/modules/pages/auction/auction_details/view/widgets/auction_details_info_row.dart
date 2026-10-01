@@ -1,5 +1,5 @@
-
 part of 'auction_details_content_widget.dart';
+
 class AuctionDetailsInfoRow extends StatelessWidget {
   const AuctionDetailsInfoRow({
     super.key,

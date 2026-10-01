@@ -102,10 +102,11 @@ class _HijriDatePickerDialogState extends State<_HijriDatePickerDialog> {
     final next = _month == 12
         ? (year: _year + 1, month: 1, day: 1)
         : (year: _year, month: _month + 1, day: 1);
-    return HijriDate.compare(
-          (year: next.year, month: next.month, day: 1),
-          widget.last,
-        ) <=
+    return HijriDate.compare((
+          year: next.year,
+          month: next.month,
+          day: 1,
+        ), widget.last) <=
         0;
   }
 
@@ -114,7 +115,6 @@ class _HijriDatePickerDialogState extends State<_HijriDatePickerDialog> {
     final tc = AppThemeColors.of(context);
     final days = HijriDate.daysInMonth(_year, _month);
     final firstWeekday = HijriDate.toGregorian(_year, _month, 1).weekday;
-    // Week starts Saturday to match Gulf calendars: Sat=0 … Fri=6.
     final leading = (firstWeekday + 1) % 7;
     final weekdays = [
       AppStrings.hijriWeekdaySat,
@@ -212,9 +212,7 @@ class _HijriDatePickerDialogState extends State<_HijriDatePickerDialog> {
                 final disabled = _isDisabled(date);
                 final selected = _day == day;
                 return InkWell(
-                  onTap: disabled
-                      ? null
-                      : () => setState(() => _day = day),
+                  onTap: disabled ? null : () => setState(() => _day = day),
                   borderRadius: BorderRadius.circular(20),
                   child: DecoratedBox(
                     decoration: BoxDecoration(
@@ -250,9 +248,9 @@ class _HijriDatePickerDialogState extends State<_HijriDatePickerDialog> {
                 TextButton(
                   onPressed: _isDisabled(_selected)
                       ? null
-                      : () => Navigator.of(context).pop(
-                          HijriDate.toGregorian(_year, _month, _day),
-                        ),
+                      : () => Navigator.of(
+                          context,
+                        ).pop(HijriDate.toGregorian(_year, _month, _day)),
                   child: Text(AppStrings.confirm),
                 ),
               ],

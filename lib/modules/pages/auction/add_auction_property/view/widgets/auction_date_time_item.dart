@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
@@ -6,7 +5,8 @@ import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 
 class AuctionDateTimeItem extends StatelessWidget {
-  const AuctionDateTimeItem({super.key, 
+  const AuctionDateTimeItem({
+    super.key,
     required this.title,
     required this.value,
     required this.icon,

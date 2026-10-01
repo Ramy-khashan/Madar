@@ -68,7 +68,7 @@ class NetProfitLossBloc extends Bloc<NetProfitLossEvent, NetProfitLossState> {
           state.copyWith(
             status: RequestStatus.success,
             errorMessage: '',
-            
+
             totalIncome: report.totalIncome,
             totalExpenses: report.totalExpenses,
             netProfit: report.netProfit,
@@ -81,5 +81,4 @@ class NetProfitLossBloc extends Bloc<NetProfitLossEvent, NetProfitLossState> {
       },
     );
   }
-  
 }

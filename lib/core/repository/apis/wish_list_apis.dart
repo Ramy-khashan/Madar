@@ -6,7 +6,7 @@ import '../../utils/constants/app_strings.dart';
 import '../../utils/functions/service_locator.dart';
 
 class WishlistApis {
-  WishlistApis._(); 
+  WishlistApis._();
   static Future<Either<String, dynamic>> getWishlist() async {
     try {
       final response = await sl.get<ApiConsumer>().get(EndPoints.wishlist);

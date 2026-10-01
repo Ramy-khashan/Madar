@@ -42,8 +42,7 @@ class OwnerFinancialStatTile extends StatelessWidget {
           ),
           SizedBox(height: 4.height),
           Text(
-            valueText ??
-                '${formatPrice(amount ?? 0)} ${AppStrings.currency}',
+            valueText ?? '${formatPrice(amount ?? 0)} ${AppStrings.currency}',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: context.responsiveFontScale(11),

@@ -15,7 +15,6 @@ class NotificationService {
 
   void Function(String? payload)? onTap;
 
-  /// Call once at app startup.
   Future<void> init() async {
     const androidSettings = AndroidInitializationSettings(
       '@drawable/ic_notification',

@@ -48,7 +48,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
   bool get isBroker =>
       isBusinessPath && state.selectedRole == AppConstant.business;
- 
+
   Future<void> _onSelectRole(
     SignUpSelectRoleEvent event,
     Emitter<SignUpState> emit,

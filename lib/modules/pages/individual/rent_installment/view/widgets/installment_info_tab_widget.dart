@@ -140,7 +140,10 @@ class InstallmentInfoTabWidget extends StatelessWidget {
               child: AppButton(
                 text: AppStrings.choosePropertyForInstallment,
                 onTap: () {
-                  RouterHandler.navigate(context, AppRouterKeys.propertiesListing);
+                  RouterHandler.navigate(
+                    context,
+                    AppRouterKeys.propertiesListing,
+                  );
                 },
               ),
             ),

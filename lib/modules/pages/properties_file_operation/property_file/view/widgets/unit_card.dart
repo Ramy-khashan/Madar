@@ -34,7 +34,9 @@ class UnitCard extends StatelessWidget {
       UnitStatus.vacant => AppStrings.vacantStatus,
     };
     final unitId = unit.number.isNotEmpty ? unit.number : unit.label;
-    final typeLabel = unit.isShop ? AppStrings.shopUnit : AppStrings.apartmentType;
+    final typeLabel = unit.isShop
+        ? AppStrings.shopUnit
+        : AppStrings.apartmentType;
     final title = unitId.isEmpty ? typeLabel : '$typeLabel $unitId';
 
     return GestureDetector(

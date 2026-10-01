@@ -31,8 +31,13 @@ class RatePropertyCertifiedFieldChanged extends RatePropertyCertifiedEvent {
   });
 
   @override
-  List<Object?> get props =>
-      [location, area, propertyAge, finishingLevel, purpose];
+  List<Object?> get props => [
+    location,
+    area,
+    propertyAge,
+    finishingLevel,
+    purpose,
+  ];
 }
 
 class RatePropertyCertifiedNextStep extends RatePropertyCertifiedEvent {

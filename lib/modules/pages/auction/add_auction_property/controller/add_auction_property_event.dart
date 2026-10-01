@@ -33,14 +33,14 @@ class AddAuctionPropertyFieldChanged extends AddAuctionPropertyEvent {
 
   @override
   List<Object?> get props => [
-        location,
-        startingPrice,
-        startDate,
-        startTime,
-        endDate,
-        endTime,
-        description,
-      ];
+    location,
+    startingPrice,
+    startDate,
+    startTime,
+    endDate,
+    endTime,
+    description,
+  ];
 }
 
 class AddAuctionPropertyCounterChanged extends AddAuctionPropertyEvent {
@@ -60,8 +60,14 @@ class AddAuctionPropertyCounterChanged extends AddAuctionPropertyEvent {
   final int? propertyNumber;
 
   @override
-  List<Object?> get props =>
-      [rooms, bathrooms, area, balcony, floor, propertyNumber];
+  List<Object?> get props => [
+    rooms,
+    bathrooms,
+    area,
+    balcony,
+    floor,
+    propertyNumber,
+  ];
 }
 
 class AddAuctionPropertySubmit extends AddAuctionPropertyEvent {

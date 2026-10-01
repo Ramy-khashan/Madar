@@ -29,22 +29,29 @@ class RentOptionsState extends Equatable {
   final RequestStatus confirmStatus;
   final String requestNumber;
 
-  InstallmentPlanModel? get selectedPlan =>
-      selectedPlanId == null
-          ? null
-          : plans.where((p) => p.id == selectedPlanId).firstOrNull;
+  InstallmentPlanModel? get selectedPlan => selectedPlanId == null
+      ? null
+      : plans.where((p) => p.id == selectedPlanId).firstOrNull;
 
-  InstallmentProviderModel? get selectedProvider =>
-      selectedProviderId == null
-          ? null
-          : providers.where((p) => p.id == selectedProviderId).firstOrNull;
+  InstallmentProviderModel? get selectedProvider => selectedProviderId == null
+      ? null
+      : providers.where((p) => p.id == selectedProviderId).firstOrNull;
 
   @override
   List<Object?> get props => [
-        plans, providers, selectedPlanId, selectedProviderId,
-        propertyTitle, propertyLocation, propertyPrice, propertyType,
-        getDetailsStatus, errorMsg, confirmStatus, requestNumber,
-      ];
+    plans,
+    providers,
+    selectedPlanId,
+    selectedProviderId,
+    propertyTitle,
+    propertyLocation,
+    propertyPrice,
+    propertyType,
+    getDetailsStatus,
+    errorMsg,
+    confirmStatus,
+    requestNumber,
+  ];
 
   RentOptionsState copyWith({
     List<InstallmentPlanModel>? plans,

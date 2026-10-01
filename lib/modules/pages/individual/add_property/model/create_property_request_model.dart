@@ -8,11 +8,6 @@ import 'property_details_base.dart';
 import 'property_enums.dart';
 import 'property_location_model.dart';
 
-/// Multipart request body for `POST /properties`.
-///
-/// `location`, `details` and `features` travel as JSON-encoded strings inside
-/// the FormData, deeds use indexed `deeds[i][field]` keys, and images, the
-/// virtual tour and ownership documents are attached as multipart files.
 class CreatePropertyRequestModel extends Equatable {
   const CreatePropertyRequestModel({
     required this.title,
@@ -43,23 +38,18 @@ class CreatePropertyRequestModel extends Equatable {
 
   final String title;
 
-  /// One of [PropertyApiEnums.allTypes].
   final String type;
 
-  /// [PropertyApiEnums.listingSale] or [PropertyApiEnums.listingRent].
   final String listingType;
   final num price;
 
-  /// Total area in square meters.
   final num totalArea;
   final PropertyLocationModel location;
 
-  /// Per-type details; the concrete subtype must match [type].
   final PropertyDetailsBase? details;
   final String paymentType;
   final String? brokerId;
 
-  /// Values from [PropertyApiEnums.featureInternet] and friends.
   final List<String> features;
   final List<PropertyDeedModel> deeds;
   final List<String> imagePaths;
@@ -67,28 +57,22 @@ class CreatePropertyRequestModel extends Equatable {
   final String? videoPath;
   final String? description;
 
-  /// Required by the backend when [listingType] is [PropertyApiEnums.listingRent].
   final String? rentPeriod;
   final String? projectName;
 
-  /// Set when the listing belongs to an existing parent property/portfolio.
   final String? propertyParentId;
   final String? adLicenseNumber;
   final String? propertyNo;
 
-  /// One of [PropertyApiEnums.ageNew] and friends.
   final String? propertyAge;
 
-  /// One of [PropertyApiEnums.facadeNorth] and friends.
   final String? facadeDirection;
   final int? streetsCount;
 
-  /// Street width in meters.
   final num? streetWidth;
 
   bool get isRent => listingType == PropertyApiEnums.listingRent;
 
-  /// Scalar text fields of the multipart body, already stringified.
   Map<String, String> toFields() {
     final fields = <String, String>{
       'title': title,
@@ -145,7 +129,6 @@ class CreatePropertyRequestModel extends Equatable {
     return fields;
   }
 
-  /// Builds the multipart body, reading every attached file from disk.
   Future<FormData> toFormData() async {
     final formData = FormData();
 

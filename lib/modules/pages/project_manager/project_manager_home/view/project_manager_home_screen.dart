@@ -102,24 +102,25 @@ class ProjectManagerHomeScreen extends StatelessWidget {
                           emptyMsg: AppStrings.noProjectsExist,
                           isEmptyList: state.projects.isEmpty,
                           child: GridView.builder(
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: ResponsiveUtils.types(
-                                context,
-                                mobilePortrait: 1,
-                                mobileLandscape: 2,
-                                tabletPortrait: 2,
-                                tabletLandscape: 3,
-                              ).toInt(),
-                              mainAxisExtent: ResponsiveUtils.types(
-                                context,
-                                mobilePortrait: 225.height,
-                                mobileLandscape: 230.height,
-                                tabletPortrait: 160.height,
-                                tabletLandscape: 220.height,
-                              ),
-                              crossAxisSpacing: 12.width,
-                              mainAxisSpacing: 12.height,
-                            ),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: ResponsiveUtils.types(
+                                    context,
+                                    mobilePortrait: 1,
+                                    mobileLandscape: 2,
+                                    tabletPortrait: 2,
+                                    tabletLandscape: 3,
+                                  ).toInt(),
+                                  mainAxisExtent: ResponsiveUtils.types(
+                                    context,
+                                    mobilePortrait: 225.height,
+                                    mobileLandscape: 230.height,
+                                    tabletPortrait: 160.height,
+                                    tabletLandscape: 220.height,
+                                  ),
+                                  crossAxisSpacing: 12.width,
+                                  mainAxisSpacing: 12.height,
+                                ),
                             padding: EdgeInsets.symmetric(
                               horizontal: 16.width,
                               vertical: 12.height,
@@ -128,7 +129,7 @@ class ProjectManagerHomeScreen extends StatelessWidget {
                                 state.loadingStatus == RequestStatus.loading
                                 ? 10
                                 : state.projects.length,
-                          
+
                             itemBuilder: (context, i) {
                               return ProjectCardItem(
                                 project:

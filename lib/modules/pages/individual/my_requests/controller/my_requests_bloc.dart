@@ -45,9 +45,8 @@ class MyRequestsBloc extends Bloc<MyRequestsEvent, MyRequestsState> {
     );
     final result = await UserRequestsApis.fetchMyRequests();
     result.fold(
-      (err) => emit(
-        state.copyWith(listStatus: RequestStatus.failed, errorMsg: err),
-      ),
+      (err) =>
+          emit(state.copyWith(listStatus: RequestStatus.failed, errorMsg: err)),
       (items) => emit(
         state.copyWith(listStatus: RequestStatus.success, requests: items),
       ),
@@ -83,7 +82,8 @@ class MyRequestsBloc extends Bloc<MyRequestsEvent, MyRequestsState> {
     MyRequestDelete event,
     Emitter<MyRequestsState> emit,
   ) async {
-    if (event.requestId.isEmpty || state.actionStatus == RequestStatus.loading) {
+    if (event.requestId.isEmpty ||
+        state.actionStatus == RequestStatus.loading) {
       return;
     }
     emit(
@@ -119,7 +119,8 @@ class MyRequestsBloc extends Bloc<MyRequestsEvent, MyRequestsState> {
     MyRequestUpdateStatus event,
     Emitter<MyRequestsState> emit,
   ) async {
-    if (event.requestId.isEmpty || state.actionStatus == RequestStatus.loading) {
+    if (event.requestId.isEmpty ||
+        state.actionStatus == RequestStatus.loading) {
       return;
     }
     emit(
@@ -138,7 +139,8 @@ class MyRequestsBloc extends Bloc<MyRequestsEvent, MyRequestsState> {
         state.copyWith(actionStatus: RequestStatus.failed, actionMessage: err),
       ),
       (_) {
-        final nextStatus = event.status.toUpperCase() ==
+        final nextStatus =
+            event.status.toUpperCase() ==
                 UserRequestsApis.approvedStatus.toUpperCase()
             ? 'APPROVED'
             : 'REJECTED';

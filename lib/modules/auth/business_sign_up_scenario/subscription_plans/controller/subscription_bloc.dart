@@ -62,10 +62,7 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
     Emitter<SubscriptionState> emit,
   ) async {
     emit(state.copyWith(loadStatus: RequestStatus.loading));
-     emit(state.copyWith(
-      loadStatus: RequestStatus.success,
-      plans: _mockPlans,
-    ));
+    emit(state.copyWith(loadStatus: RequestStatus.success, plans: _mockPlans));
   }
 
   void _onBillingCycleToggled(
@@ -96,9 +93,8 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
     emit(state.copyWith(confirmStatus: RequestStatus.loading));
     await Future.delayed(const Duration(seconds: 2));
     final txId = 'APL${DateTime.now().millisecondsSinceEpoch}';
-    emit(state.copyWith(
-      confirmStatus: RequestStatus.success,
-      transactionId: txId,
-    ));
+    emit(
+      state.copyWith(confirmStatus: RequestStatus.success, transactionId: txId),
+    );
   }
 }

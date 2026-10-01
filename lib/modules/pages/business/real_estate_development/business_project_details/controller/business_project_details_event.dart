@@ -16,19 +16,7 @@ final class BusinessProjectDetailsLoad extends BusinessProjectDetailsEvent {
   List<Object?> get props => [projectId];
 }
 
-final class BusinessProjectDetailsExportPdf extends BusinessProjectDetailsEvent {
+final class BusinessProjectDetailsExportPdf
+    extends BusinessProjectDetailsEvent {
   const BusinessProjectDetailsExportPdf();
 }
-
-// final class BusinessProjectDetailsAddTimeline extends BusinessProjectDetailsEvent {
-//   const BusinessProjectDetailsAddTimeline({
-//     required this.date,
-//     required this.description,
-//   });
-
-//   final String date;
-//   final String description;
-
-//   @override
-//   List<Object?> get props => [date, description];
-// }

@@ -33,10 +33,8 @@ class BusinessValPart extends StatelessWidget {
           controller: bloc.falLicenseController,
           maxLength: Validate.licenseNumberLength,
           inputFormatters: Validate.licenseNumberFormatters,
-          validator: (value) => Validate.licenseNumber(
-            value,
-            AppStrings.falNumberMustBe10Digits,
-          ),
+          validator: (value) =>
+              Validate.licenseNumber(value, AppStrings.falNumberMustBe10Digits),
         ),
         SizedBox(height: 12.height),
         Text(

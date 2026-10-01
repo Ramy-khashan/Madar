@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../../../../../../core/utils/constants/app_colors.dart';
@@ -31,4 +30,3 @@ class ProjectStatusBadge extends StatelessWidget {
     );
   }
 }
-

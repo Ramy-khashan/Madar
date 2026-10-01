@@ -10,10 +10,7 @@ import '../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../core/utils/functions/responsive.dart';
 
 class RenewContractResult {
-  const RenewContractResult({
-    required this.newEndDate,
-    required this.newPrice,
-  });
+  const RenewContractResult({required this.newEndDate, required this.newPrice});
 
   final String newEndDate;
   final num newPrice;

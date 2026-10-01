@@ -33,273 +33,251 @@ class BusinessHomeScreen extends StatelessWidget {
               builder: (context, state) {
                 return RefreshIndicator(
                   color: Theme.of(context).colorScheme.primary,
-                   onRefresh: () async => BusinessHomeBloc.get(context).add(const BusinessHomeItemsEvent()),
+                  onRefresh: () async => BusinessHomeBloc.get(
+                    context,
+                  ).add(const BusinessHomeItemsEvent()),
                   child: CustomScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
                     slivers: [
-                    SliverToBoxAdapter(
-                      child: HomeHeaderWidget(userLocation: state.location),
-                    ),
-                    SliverToBoxAdapter(
-                      child: SearchItem(
-                        onSubmitted: (value) {
-                          PropertiesListingScreen.open(context, search: value);
-                        },
-                        onFilterTap: () {
-                          showFilterSheet(
-                            context,
-                            onApply: (result) {
-                              PropertiesListingScreen.open(
-                                context,
-                                filter: result,
-                              );
-                            },
-                          );
-                        },
+                      SliverToBoxAdapter(
+                        child: HomeHeaderWidget(userLocation: state.location),
                       ),
-                    ),
-                    if (state.performanceSummary.isNotEmpty)
-                      PerformanceSummaryItem(
-                        performanceSummary: state.performanceSummary,
-                      ),
-
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          bottom: 20.height,
-                          top: 20.height,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            SectionHeaderWidget(
-                              title: AppStrings.allProperties,
-                              onViewAll: () {
-                                RouterHandler.navigate(
+                      SliverToBoxAdapter(
+                        child: SearchItem(
+                          onSubmitted: (value) {
+                            PropertiesListingScreen.open(
+                              context,
+                              search: value,
+                            );
+                          },
+                          onFilterTap: () {
+                            showFilterSheet(
+                              context,
+                              onApply: (result) {
+                                PropertiesListingScreen.open(
                                   context,
-                                  AppRouterKeys.propertiesListing,
+                                  filter: result,
                                 );
                               },
-                              // trailing: Padding(
-                              //   padding: EdgeInsetsDirectional.only(
-                              //     start: 12.width,
-                              //   ),
-                              //   child: InkWell(
-                              //     onTap: () {
-                              //       RouterHandler.navigate(
-                              //         context,
-                              //         AppRouterKeys.propertyLocationMap,
-                              //       );
-                              //     },
-                              //     child: CircleAvatar(
-                              //       radius: 16.width,
-                              //       backgroundColor: AppThemeColors.of(
-                              //         context,
-                              //       ).primaryBrand,
-                              //       child: Icon(
-                              //         Icons.map_outlined,
-                              //         size: 20.width,
-                              //         color: AppThemeColors.of(
-                              //           context,
-                              //         ).onPrimary,
-                              //       ),
-                              //     ),
-                              //   ),
-                              // ),
-                           
-                            ),
-                            SizedBox(
-                              height: ResponsiveUtils.types(
-                                context,
-                                mobilePortrait: 365.height,
-                                mobileLandscape: 370.height,
-                                tabletPortrait: 330.height,
-                                tabletLandscape: 370.height,
-                              ),
-                              child: LoadingProcess(
-                                status: state.businessPropertiesLoadStatus,
-                                errorMsg: state.propertiesErrorMessage,
-                                onTapRefresh: () {
-                                  context.read<BusinessHomeBloc>().add(
-                                    const BusinessPropertiesLoad(),
+                            );
+                          },
+                        ),
+                      ),
+                      if (state.performanceSummary.isNotEmpty)
+                        PerformanceSummaryItem(
+                          performanceSummary: state.performanceSummary,
+                        ),
+
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            bottom: 20.height,
+                            top: 20.height,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              SectionHeaderWidget(
+                                title: AppStrings.allProperties,
+                                onViewAll: () {
+                                  RouterHandler.navigate(
+                                    context,
+                                    AppRouterKeys.propertiesListing,
                                   );
                                 },
-                                emptyMsg: AppStrings.noPropertiesFound,
-                                isEmptyList: state.properties.isEmpty,
-                                childIsLoader: true,
-                                child: ListView.separated(
-                                  itemCount:
-                                      state.businessPropertiesLoadStatus ==
-                                          RequestStatus.loading
-                                      ? 10
-                                      : state.properties.length,
-                                  scrollDirection: Axis.horizontal,
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal:
-                                        context.responsiveHorizontalPadding,
-                                    vertical: 10.height,
-                                  ),
+                              ),
+                              SizedBox(
+                                height: ResponsiveUtils.types(
+                                  context,
+                                  mobilePortrait: 365.height,
+                                  mobileLandscape: 370.height,
+                                  tabletPortrait: 330.height,
+                                  tabletLandscape: 370.height,
+                                ),
+                                child: LoadingProcess(
+                                  status: state.businessPropertiesLoadStatus,
+                                  errorMsg: state.propertiesErrorMessage,
+                                  onTapRefresh: () {
+                                    context.read<BusinessHomeBloc>().add(
+                                      const BusinessPropertiesLoad(),
+                                    );
+                                  },
+                                  emptyMsg: AppStrings.noPropertiesFound,
+                                  isEmptyList: state.properties.isEmpty,
+                                  childIsLoader: true,
+                                  child: ListView.separated(
+                                    itemCount:
+                                        state.businessPropertiesLoadStatus ==
+                                            RequestStatus.loading
+                                        ? 10
+                                        : state.properties.length,
+                                    scrollDirection: Axis.horizontal,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          context.responsiveHorizontalPadding,
+                                      vertical: 10.height,
+                                    ),
 
-                                  separatorBuilder: (_, _) =>
-                                      SizedBox(width: 16.width),
-                                  itemBuilder: (context, index) {
-                                    return PropertyCardWidget(
-                                      isWithWidth: true,
-                                      property:
-                                          state.businessPropertiesLoadStatus ==
+                                    separatorBuilder: (_, _) =>
+                                        SizedBox(width: 16.width),
+                                    itemBuilder: (context, index) {
+                                      return PropertyCardWidget(
+                                        isWithWidth: true,
+                                        property:
+                                            state.businessPropertiesLoadStatus ==
+                                                RequestStatus.loading
+                                            ? null
+                                            : state.properties[index],
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 20.height),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              SectionHeaderWidget(
+                                title: AppStrings.myPortfolio,
+                                onViewAll: () {
+                                  RouterHandler.navigate(
+                                    context,
+                                    AppRouterKeys.myProperties,
+                                  );
+                                },
+                              ),
+                              SizedBox(
+                                height: ResponsiveUtils.types(
+                                  context,
+                                  mobilePortrait: 165.height,
+                                  mobileLandscape: 190.height,
+                                  tabletPortrait: 150.height,
+                                  tabletLandscape: 190.height,
+                                ),
+                                child: LoadingProcess(
+                                  status: state.portfolioLoadStatus,
+                                  errorMsg: state.portfolioErrorMessage,
+                                  onTapRefresh: () {
+                                    context.read<BusinessHomeBloc>().add(
+                                      const PortfolioLoad(),
+                                    );
+                                  },
+                                  emptyMsg: AppStrings.noPortfolioFound,
+                                  childIsLoader: true,
+
+                                  isEmptyList: state.portfolio.isEmpty,
+                                  child: ListView.separated(
+                                    itemCount:
+                                        state.portfolioLoadStatus ==
+                                            RequestStatus.loading
+                                        ? 10
+                                        : state.portfolio.length,
+
+                                    scrollDirection: Axis.horizontal,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          context.responsiveHorizontalPadding,
+                                    ),
+                                    separatorBuilder: (_, _) =>
+                                        SizedBox(width: 12.width),
+                                    itemBuilder: (context, index) {
+                                      return PortfolioCardWidget(
+                                        isWithWidth: true,
+                                        portfolio:
+                                            state.portfolioLoadStatus ==
+                                                RequestStatus.loading
+                                            ? null
+                                            : state.portfolio[index],
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      if (AccountRole.isBroker || AccountRole.isOwner)
+                        SliverToBoxAdapter(
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 20.height),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                SectionHeaderWidget(
+                                  title: AppStrings.viewRequests,
+                                  onViewAll: () {
+                                    RouterHandler.navigate(
+                                      context,
+                                      AppRouterKeys.businessPropertiesScreen,
+                                    );
+                                  },
+                                ),
+                                SizedBox(
+                                  height: ResponsiveUtils.types(
+                                    context,
+                                    mobilePortrait: 120.height,
+                                    mobileLandscape: 150.height,
+                                    tabletPortrait: 150.height,
+                                    tabletLandscape: 150.height,
+                                  ),
+                                  child: LoadingProcess(
+                                    status: state.requestsLoadStatus,
+                                    errorMsg: state.requestsErrorMessage,
+                                    onTapRefresh: () {
+                                      context.read<BusinessHomeBloc>().add(
+                                        const RequestsLoad(),
+                                      );
+                                    },
+                                    emptyMsg: AppStrings.noRequestsFound,
+                                    isEmptyList: state.requests.isEmpty,
+                                    childIsLoader: true,
+
+                                    child: ListView.separated(
+                                      itemCount:
+                                          state.requestsLoadStatus ==
                                               RequestStatus.loading
-                                          ? null
-                                          : state.properties[index],
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 20.height),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            SectionHeaderWidget(
-                              title: AppStrings.myPortfolio,
-                              onViewAll: () {
-                                RouterHandler.navigate(
-                                  context,
-                                  AppRouterKeys.myProperties,
-                                );
-                              },
-                            ),
-                            SizedBox(
-                              height: ResponsiveUtils.types(
-                                context,
-                                mobilePortrait: 165.height,
-                                mobileLandscape: 190.height,
-                                tabletPortrait: 150.height,
-                                tabletLandscape: 190.height,
-                              ),
-                              child: LoadingProcess(
-                                status: state.portfolioLoadStatus,
-                                errorMsg: state.portfolioErrorMessage,
-                                onTapRefresh: () {
-                                  context.read<BusinessHomeBloc>().add(
-                                    const PortfolioLoad(),
-                                  );
-                                },
-                                emptyMsg: AppStrings.noPortfolioFound,
-                                childIsLoader: true,
-
-                                isEmptyList: state.portfolio.isEmpty,
-                                child: ListView.separated(
-                                  itemCount:
-                                      state.portfolioLoadStatus ==
-                                          RequestStatus.loading
-                                      ? 10
-                                      : state.portfolio.length,
-
-                                  scrollDirection: Axis.horizontal,
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal:
-                                        context.responsiveHorizontalPadding,
+                                          ? 10
+                                          : state.requests.length,
+                                      scrollDirection: Axis.horizontal,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal:
+                                            context.responsiveHorizontalPadding,
+                                      ),
+                                      separatorBuilder: (_, _) =>
+                                          SizedBox(width: 12.width),
+                                      itemBuilder: (context, index) {
+                                        return SizedBox(
+                                          width:
+                                              context.screenWidth *
+                                              (context.isTablet ? 0.4 : 0.9),
+                                          child:
+                                              BusinessPropertiesRequestCardWidget(
+                                                isWithActionButtons: false,
+                                                item:
+                                                    state.requestsLoadStatus ==
+                                                        RequestStatus.loading
+                                                    ? null
+                                                    : state.requests[index],
+                                              ),
+                                        );
+                                      },
+                                    ),
                                   ),
-                                  separatorBuilder: (_, _) =>
-                                      SizedBox(width: 12.width),
-                                  itemBuilder: (context, index) {
-                                    return PortfolioCardWidget(
-                                      isWithWidth: true,
-                                      portfolio:
-                                          state.portfolioLoadStatus ==
-                                              RequestStatus.loading
-                                          ? null
-                                          : state.portfolio[index],
-                                    );
-                                  },
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-
-                    if (AccountRole.isBroker||AccountRole.isOwner)
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 20.height),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            SectionHeaderWidget(
-                              title: AppStrings.viewRequests,
-                              onViewAll: () {
-                                RouterHandler.navigate(
-                                  context,
-                                  AppRouterKeys.businessPropertiesScreen,
-                                );
-                              },
-                            ),
-                            SizedBox(
-                              height: ResponsiveUtils.types(
-                                context,
-                                mobilePortrait: 120.height,
-                                mobileLandscape: 150.height,
-                                tabletPortrait: 150.height,
-                                tabletLandscape: 150.height,
-                              ),
-                              child: LoadingProcess(
-                                status: state.requestsLoadStatus,
-                                errorMsg: state.requestsErrorMessage,
-                                onTapRefresh: () {
-                                  context.read<BusinessHomeBloc>().add(
-                                    const RequestsLoad(),
-                                  );
-                                },
-                                emptyMsg: AppStrings.noRequestsFound,
-                                isEmptyList: state.requests.isEmpty,
-                                childIsLoader: true,
-
-                                child: ListView.separated(
-                                  itemCount:
-                                      state.requestsLoadStatus ==
-                                          RequestStatus.loading
-                                      ? 10
-                                      : state.requests.length,
-                                  scrollDirection: Axis.horizontal,
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal:
-                                        context.responsiveHorizontalPadding,
-                                  ),
-                                  separatorBuilder: (_, _) =>
-                                      SizedBox(width: 12.width),
-                                  itemBuilder: (context, index) {
-                                    return SizedBox(
-                                      width:
-                                          context.screenWidth *
-                                          (context.isTablet ? 0.4 : 0.9),
-                                      child:
-                                          BusinessPropertiesRequestCardWidget(
-                                            isWithActionButtons: false,
-                                            item:
-                                                state.requestsLoadStatus ==
-                                                    RequestStatus.loading
-                                                ? null
-                                                : state.requests[index],
-                                          ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SmartServicesPart(),
-                  ],
+                      const SmartServicesPart(),
+                    ],
                   ),
                 );
               },

@@ -23,10 +23,7 @@ class PropertyDetailsImageSectionWidget extends StatelessWidget {
       media: property?.media,
       height: 220.height,
       topEnd: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: 14.width,
-          vertical: 6.height,
-        ),
+        padding: EdgeInsets.symmetric(horizontal: 14.width, vertical: 6.height),
         decoration: BoxDecoration(
           color: colors.hoverColor,
           borderRadius: BorderRadius.circular(20.radius),

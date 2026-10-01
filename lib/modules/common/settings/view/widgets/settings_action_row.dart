@@ -28,7 +28,7 @@ class SettingsActionRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.height),
+      padding: EdgeInsets.symmetric(vertical: 8.height),
 
       child: InkWell(
         onTap: onTap,
@@ -54,7 +54,10 @@ class SettingsActionRow extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: image != null
-                    ? ImageItem(image!, width: 20.width, height: 20.width,
+                    ? ImageItem(
+                        image!,
+                        width: 20.width,
+                        height: 20.width,
                         color: isReadTag
                             ? AppColors.errorColor
                             : colors.primaryBrand,
@@ -68,7 +71,7 @@ class SettingsActionRow extends StatelessWidget {
                       ),
               ),
               SizedBox(width: 12.width),
-      
+
               Expanded(
                 child: Text(
                   label,

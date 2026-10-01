@@ -50,10 +50,7 @@ class ProjectFormHelpers {
     }
     if (stage == null) {
       nextSubs[stageId] = List<String>.from(nextSubs[stageId] ?? const []);
-      return (
-        selectedStageIds: nextStages,
-        selectedSubStageIds: nextSubs,
-      );
+      return (selectedStageIds: nextStages, selectedSubStageIds: nextSubs);
     }
 
     final current = nextSubs[stageId] ?? const <String>[];
@@ -62,10 +59,7 @@ class ProjectFormHelpers {
         .map((s) => s.id)
         .toSet();
     final keptOther = current.where(otherIds.contains);
-    nextSubs[stageId] = [
-      ...selectableSubStageIds(stage),
-      ...keptOther,
-    ];
+    nextSubs[stageId] = [...selectableSubStageIds(stage), ...keptOther];
     return (selectedStageIds: nextStages, selectedSubStageIds: nextSubs);
   }
 

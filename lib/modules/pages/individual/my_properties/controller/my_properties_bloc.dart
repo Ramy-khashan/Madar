@@ -11,7 +11,7 @@ import '../../../../../core/utils/functions/guest_mode.dart';
 import '../../../../../core/utils/functions/print_state.dart';
 import '../../../../../core/utils/functions/service_locator.dart';
 import '../../../business/business_home/model/business_portfolio_property_model.dart';
- 
+
 part 'my_properties_event.dart';
 part 'my_properties_state.dart';
 
@@ -60,7 +60,7 @@ class MyPropertiesBloc extends Bloc<MyPropertiesEvent, MyPropertiesState> {
         (successResponse) {
           final List<MyPropertiesModel> properties = [...state.properties];
           final dataArray = successResponse.response['data'] as List;
-          
+
           for (var element in dataArray) {
             properties.add(MyPropertiesModel.fromJson(element));
           }

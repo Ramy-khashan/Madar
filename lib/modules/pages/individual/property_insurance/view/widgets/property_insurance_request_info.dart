@@ -1,11 +1,11 @@
-
 import 'package:flutter/material.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 
 class PropertyInsuranceRequestInfo extends StatelessWidget {
-  const PropertyInsuranceRequestInfo({super.key, 
+  const PropertyInsuranceRequestInfo({
+    super.key,
     required this.label,
     required this.value,
     required this.colors,

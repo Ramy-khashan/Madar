@@ -1,10 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-/// One entry of the indexed `deeds[i][...]` FormData fields.
-///
-/// [ownershipDocumentPath] is a local file path uploaded as a multipart file
-/// under `deeds[i][ownershipDocument]`, so it is intentionally excluded from
-/// [toFields].
 class PropertyDeedModel extends Equatable {
   const PropertyDeedModel({
     required this.deedType,
@@ -19,7 +14,6 @@ class PropertyDeedModel extends Equatable {
   final String? deedNumber;
   final String? calendarType;
 
-  /// Date string matching [calendarType], e.g. `2025-06-01` or `1446-12-03`.
   final String? deedDate;
   final String? customTypeName;
   final String? ownershipDocumentPath;
@@ -27,7 +21,6 @@ class PropertyDeedModel extends Equatable {
   bool get hasOwnershipDocument =>
       ownershipDocumentPath != null && ownershipDocumentPath!.isNotEmpty;
 
-  /// Flat scalar fields keyed by their `deeds[index][field]` names.
   Map<String, String> toFields(int index) {
     final prefix = 'deeds[$index]';
     return {

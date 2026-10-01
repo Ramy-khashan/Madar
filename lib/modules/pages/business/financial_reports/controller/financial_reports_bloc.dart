@@ -58,10 +58,7 @@ class FinancialReportsBloc
   }
 
   Future<void> _loadOverview(Emitter<FinancialReportsState> emit) async {
-    final result = await DashboardApis.overview(
-      period: state.selectedPeriod,
-      // scope: state.selectedScope,
-    );
+    final result = await DashboardApis.overview(period: state.selectedPeriod);
     result.fold(
       (err) =>
           emit(state.copyWith(status: RequestStatus.failed, errorMessage: err)),
@@ -88,10 +85,7 @@ class FinancialReportsBloc
   }
 
   Future<void> _loadRevenues(Emitter<FinancialReportsState> emit) async {
-    final result = await DashboardApis.revenues(
-      period: state.selectedPeriod,
-      // scope: state.selectedScope,
-    );
+    final result = await DashboardApis.revenues(period: state.selectedPeriod);
     result.fold(
       (err) =>
           emit(state.copyWith(status: RequestStatus.failed, errorMessage: err)),
@@ -118,10 +112,7 @@ class FinancialReportsBloc
   }
 
   Future<void> _loadExpenses(Emitter<FinancialReportsState> emit) async {
-    final result = await DashboardApis.expenses(
-      period: state.selectedPeriod,
-      // scope: state.selectedScope,
-    );
+    final result = await DashboardApis.expenses(period: state.selectedPeriod);
     result.fold(
       (err) =>
           emit(state.copyWith(status: RequestStatus.failed, errorMessage: err)),

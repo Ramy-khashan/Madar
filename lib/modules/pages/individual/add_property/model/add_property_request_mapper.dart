@@ -18,10 +18,6 @@ import 'townhouse_details_model.dart';
 import 'villa_details_model.dart';
 import 'warehouse_details_model.dart';
 
-/// API field names used by the per-type `details` payloads.
-///
-/// The widgets write into [AddPropertyModel.typeDetails] under these keys and
-/// the mapper reads them back, so both sides share one vocabulary.
 class DetailKeys {
   DetailKeys._();
 
@@ -92,9 +88,7 @@ class DetailKeys {
   static const String yardArea = 'yardArea';
 }
 
-/// Translates the wizard's form state into the `POST /properties` request.
 extension AddPropertyRequestMapper on AddPropertyModel {
-  /// JSON body for `POST /evaluations/preview`.
   Map<String, dynamic> toEvaluationPreviewBody() {
     final type = propertyType ?? '';
     final details = type.isEmpty ? null : _buildDetails(type);
@@ -109,8 +103,6 @@ extension AddPropertyRequestMapper on AddPropertyModel {
     };
   }
 
-  /// Returns `null` when the form is missing data the endpoint requires
-  /// (property type or map coordinates).
   CreatePropertyRequestModel? toCreateRequest({
     String? brokerId,
     String? adLicenseNumber,
@@ -143,11 +135,12 @@ extension AddPropertyRequestMapper on AddPropertyModel {
       features: amenities.toList(),
       deeds: _buildDeeds(),
       imagePaths: imagePaths,
-      virtualTourPath:
-          (virtualTourPath != null && virtualTourPath!.isNotEmpty)
+      virtualTourPath: (virtualTourPath != null && virtualTourPath!.isNotEmpty)
           ? virtualTourPath
           : null,
-      videoPath: (videoPath != null && videoPath!.isNotEmpty) ? videoPath : null,
+      videoPath: (videoPath != null && videoPath!.isNotEmpty)
+          ? videoPath
+          : null,
       description: description,
       rentPeriod: PropertyApiEnums.rentPeriodFromUi(rentalPeriod),
       projectName: developerName.isNotEmpty ? developerName : null,
@@ -367,10 +360,6 @@ extension AddPropertyRequestMapper on AddPropertyModel {
     return dimensions.isEmpty ? null : dimensions;
   }
 
-  // ── typeDetails readers ──────────────────────────────────────────────────
-  // Values arrive either already typed (counters, toggles, chips) or as text
-  // from a controller, so each reader accepts both.
-
   String? _detailString(String key) {
     final value = typeDetails[key];
     if (value == null) return null;
@@ -405,7 +394,6 @@ extension AddPropertyRequestMapper on AddPropertyModel {
     return num.tryParse(_digitsOnly(value));
   }
 
-  /// Strips grouping separators and unit suffixes the fields may contain.
   String _digitsOnly(String value) {
     final buffer = StringBuffer();
     for (final char in value.split('')) {

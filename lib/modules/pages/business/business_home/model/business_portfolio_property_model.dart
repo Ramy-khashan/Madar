@@ -33,10 +33,7 @@ class MyPropertiesModel {
     final locationFromString = locationRaw is String ? locationRaw.trim() : '';
     final city = (json['city'] ?? '').toString().trim();
     final district = (json['district'] ?? '').toString().trim();
-    final composed = [
-      district,
-      city,
-    ].where((e) => e.isNotEmpty).join(' , ');
+    final composed = [district, city].where((e) => e.isNotEmpty).join(' , ');
     final performanceRaw = json['financialPerformance'];
     final performance = performanceRaw is Map
         ? FinancialPerformance.fromJson(
@@ -56,15 +53,17 @@ class MyPropertiesModel {
       location: locationFromString.isNotEmpty ? locationFromString : composed,
       imageUrl: PropertyMedia.coverFrom(
         json['media'],
-        fallback: (json['image'] ?? json['imageUrl'] ?? json['propertyImage'] ?? '')
-            .toString(),
+        fallback:
+            (json['image'] ?? json['imageUrl'] ?? json['propertyImage'] ?? '')
+                .toString(),
       ),
       type: (json['type'] ?? json['propertyType'] ?? '').toString(),
-      unitsCount: unitsRaw is num ? unitsRaw.toInt() : int.tryParse('$unitsRaw') ?? 0,
-      publicationRequestStatus: (json['publicationRequestStatus'] ??
-              json['publicationStatus'] ??
-              '')
-          .toString(),
+      unitsCount: unitsRaw is num
+          ? unitsRaw.toInt()
+          : int.tryParse('$unitsRaw') ?? 0,
+      publicationRequestStatus:
+          (json['publicationRequestStatus'] ?? json['publicationStatus'] ?? '')
+              .toString(),
       financialPerformance: performance,
     );
   }

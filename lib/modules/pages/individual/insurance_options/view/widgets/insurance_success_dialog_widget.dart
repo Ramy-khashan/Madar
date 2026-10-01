@@ -17,7 +17,9 @@ class InsuranceSuccessDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = AppThemeColors.of(context);
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.radius)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.radius),
+      ),
       child: Padding(
         padding: EdgeInsets.all(24.width),
         child: Column(
@@ -34,7 +36,11 @@ class InsuranceSuccessDialog extends StatelessWidget {
                     shape: BoxShape.circle,
                     border: Border.all(color: colors.primaryBrand, width: 2),
                   ),
-                  child: Icon(Icons.close, size: 16.width, color: colors.primaryBrand),
+                  child: Icon(
+                    Icons.close,
+                    size: 16.width,
+                    color: colors.primaryBrand,
+                  ),
                 ),
               ),
             ),
@@ -46,7 +52,11 @@ class InsuranceSuccessDialog extends StatelessWidget {
                 shape: BoxShape.circle,
                 color: colors.primaryBrand.withValues(alpha: 0.1),
               ),
-              child: Icon(Icons.check, color: colors.primaryBrand, size: 30.width),
+              child: Icon(
+                Icons.check,
+                color: colors.primaryBrand,
+                size: 30.width,
+              ),
             ),
             SizedBox(height: 16.height),
             Text(
@@ -69,7 +79,7 @@ class InsuranceSuccessDialog extends StatelessWidget {
               ),
             ),
             SizedBox(height: 12.height),
-           Container(
+            Container(
               width: double.infinity,
               padding: EdgeInsets.all(12.width),
               decoration: BoxDecoration(

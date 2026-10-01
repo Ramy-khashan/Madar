@@ -20,8 +20,7 @@ class InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     if (label.isEmpty) {
-
+    if (label.isEmpty) {
       return Padding(
         padding: EdgeInsets.symmetric(vertical: 2.height),
         child: Text(

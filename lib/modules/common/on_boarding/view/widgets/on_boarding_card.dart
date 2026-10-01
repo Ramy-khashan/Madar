@@ -93,37 +93,6 @@ class OnBoardingCard extends StatelessWidget {
                 ),
               ),
             ),
-
-            // AnimatedSwitcher(
-            //   duration: const Duration(milliseconds: 400),
-            //   transitionBuilder: (child, animation) => SlideTransition(
-            //     position:
-            //         Tween<Offset>(
-            //           begin: const Offset(0, 0.5),
-            //           end: Offset.zero,
-            //         ).animate(
-            //           CurvedAnimation(parent: animation, curve: Curves.easeOut),
-            //         ),
-            //     child: FadeTransition(opacity: animation, child: child),
-            //   ),
-            // child: currentPage == OnBoardingBloc.onBoardingData.length - 1
-            //     ? Padding(
-            //         key: const ValueKey('guest'),
-            //         padding: EdgeInsets.only(top: 15.height),
-            //         child: AppTextButton(
-            //           color: AppThemeColors.of(context).primaryBrand,
-            //           text: AppStrings.guestMode,
-            //           onTap: () {
-            //             RouterHandler.navigate(
-            //               context,
-            //               AppRouterKeys.navbar,
-            //               routerType: RouterType.goName,
-            //             );
-            //           },
-            //         ),
-            //       )
-            //     : SizedBox(key: const ValueKey('empty'), height: 8.height),
-            // ),
           ],
         ),
       ),

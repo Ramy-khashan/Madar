@@ -14,10 +14,8 @@ part 'add_building_apartment_state.dart';
 
 class AddBuildingApartmentBloc
     extends Bloc<AddBuildingApartmentEvent, AddBuildingApartmentState> {
-  AddBuildingApartmentBloc({
-    required this.buildingId,
-    this.isShop = false,
-  }) : super(const AddBuildingApartmentState()) {
+  AddBuildingApartmentBloc({required this.buildingId, this.isShop = false})
+    : super(const AddBuildingApartmentState()) {
     on<AddApartmentStatusChanged>(_onStatusChanged);
     on<AddApartmentCalendarChanged>(_onCalendarChanged);
     on<AddApartmentDatePicked>(_onDatePicked);
@@ -66,7 +64,10 @@ class AddBuildingApartmentBloc
     }
   }
 
-  Future<void> requestDate(BuildContext context, {required bool isStart}) async {
+  Future<void> requestDate(
+    BuildContext context, {
+    required bool isStart,
+  }) async {
     final now = DateTime.now();
     final DateTime? picked;
     if (state.isHijri) {
@@ -97,11 +98,15 @@ class AddBuildingApartmentBloc
     final rooms = int.tryParse(roomsController.text.trim());
     final bathrooms = int.tryParse(bathroomsController.text.trim());
     if (!isShop && (unitNumber.isEmpty || area == null || area <= 0)) {
-      emit(state.copyWith(errorMessage: AppStrings.pleaseCompleteApartmentData));
+      emit(
+        state.copyWith(errorMessage: AppStrings.pleaseCompleteApartmentData),
+      );
       return;
     }
     if (isShop && unitNumber.isEmpty) {
-      emit(state.copyWith(errorMessage: AppStrings.pleaseCompleteApartmentData));
+      emit(
+        state.copyWith(errorMessage: AppStrings.pleaseCompleteApartmentData),
+      );
       return;
     }
     final body = <String, dynamic>{
@@ -126,9 +131,7 @@ class AddBuildingApartmentBloc
           rent <= 0 ||
           start.isEmpty ||
           end.isEmpty) {
-        emit(
-          state.copyWith(errorMessage: AppStrings.pleaseCompleteTenantData),
-        );
+        emit(state.copyWith(errorMessage: AppStrings.pleaseCompleteTenantData));
         return;
       }
       body.addAll({
@@ -140,7 +143,9 @@ class AddBuildingApartmentBloc
         'calendarType': state.isHijri ? 'HIJRI' : 'GREGORIAN',
       });
     }
-    emit(state.copyWith(statusRequest: RequestStatus.loading, errorMessage: null));
+    emit(
+      state.copyWith(statusRequest: RequestStatus.loading, errorMessage: null),
+    );
     final result = await PropertyFileApis.createBuildingUnit(
       buildingId: buildingId,
       body: body,

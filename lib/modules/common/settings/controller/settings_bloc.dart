@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:madar_app/core/utils/constants/app_enums.dart';
 
 import '../../../../../config/app_controller/app_controller_bloc.dart';
- import '../../../../../core/utils/functions/service_locator.dart';
+import '../../../../../core/utils/functions/service_locator.dart';
 import '../../../../../core/utils/functions/translation.dart';
 import '../../../../../madar_app.dart';
 import '../../../../core/connection/concept/end_points.dart';
@@ -131,7 +131,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         },
       );
     } catch (e) {
-       emit(
+      emit(
         state.copyWith(savedItem: 0, loadingSavedItems: RequestStatus.failed),
       );
     }
@@ -175,7 +175,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         },
       );
     } catch (e) {
-       emit(state.copyWith(profile: null, loadingProfile: RequestStatus.failed));
+      emit(state.copyWith(profile: null, loadingProfile: RequestStatus.failed));
     }
   }
 
@@ -243,7 +243,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           emit(state.copyWith(updateFullNameStatus: RequestStatus.failed));
         },
         (successResponse) {
-          RouterHandler.pop(event.context); // Close the dialog
+          RouterHandler.pop(event.context);
           emit(
             state.copyWith(
               updateFullNameStatus: RequestStatus.success,
@@ -273,7 +273,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           emit(state.copyWith(updatePhoneStatus: RequestStatus.failed));
         },
         (successResponse) {
-          RouterHandler.pop(event.context); // Close the dialog
+          RouterHandler.pop(event.context);
 
           emit(
             state.copyWith(
@@ -284,7 +284,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         },
       );
     } catch (e) {
-       emit(state.copyWith(updatePhoneStatus: RequestStatus.failed));
+      emit(state.copyWith(updatePhoneStatus: RequestStatus.failed));
     }
   }
 }

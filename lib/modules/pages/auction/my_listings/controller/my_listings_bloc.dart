@@ -75,7 +75,7 @@ class MyListingsBloc extends Bloc<MyListingsEvent, MyListingsState> {
     Emitter<MyListingsState> emit,
   ) async {
     emit(state.copyWith(loadStatus: RequestStatus.loading));
-     emit(
+    emit(
       state.copyWith(loadStatus: RequestStatus.success, allItems: _allItems),
     );
   }

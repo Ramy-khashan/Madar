@@ -36,10 +36,10 @@ class CompanyTile extends StatelessWidget {
                 vertical: 14.height,
               ),
               decoration: BoxDecoration(
-                 borderRadius: BorderRadius.circular(16.radius),
-                border: Border.all(color: isSelected
-                    ? colors.primaryBrand 
-                    : colors.borderColor),
+                borderRadius: BorderRadius.circular(16.radius),
+                border: Border.all(
+                  color: isSelected ? colors.primaryBrand : colors.borderColor,
+                ),
               ),
 
               child: Row(

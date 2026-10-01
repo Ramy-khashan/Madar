@@ -31,8 +31,10 @@ class AddPropertyStep6Screen extends StatelessWidget {
             context: context,
             isScrollControlled: true,
             backgroundColor: Colors.transparent,
-            builder: (_) =>
-                BlocProvider.value(value: bloc, child: const SavePortfolioSheet()),
+            builder: (_) => BlocProvider.value(
+              value: bloc,
+              child: const SavePortfolioSheet(),
+            ),
           ).whenComplete(() {
             if (bloc.state.showPortfolioSheet) {
               bloc.add(const HidePortfolioSheetEvent());

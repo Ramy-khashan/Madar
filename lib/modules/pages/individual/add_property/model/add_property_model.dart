@@ -54,11 +54,10 @@ class AddPropertyModel extends Equatable {
     this.propertyParentTitle = '',
   });
 
-  final String operationType; // 'sell' | 'rent'
+  final String operationType;
   final String? propertyType;
-  final String rentalPeriod; // 'monthly' | 'semi_annual' | 'annual'
+  final String rentalPeriod;
 
-  // Step 3 — Location & Deed
   final String? location;
   final String city;
   final String district;
@@ -69,7 +68,7 @@ class AddPropertyModel extends Equatable {
   final String? deedType;
   final String deedNumber;
   final String customTypeName;
-  final String dateType; // 'hijri' | 'gregorian'
+  final String dateType;
   final String date;
 
   String? get apiDeedType => (deedType == null || deedType!.isEmpty)
@@ -93,7 +92,6 @@ class AddPropertyModel extends Equatable {
   bool get needsDeedElectronic =>
       apiDeedType == PropertyApiEnums.deedElectronic;
 
-  // Step 4 — Images
   final List<String> imagePaths;
   final bool aiEnhancement;
   final bool hasVideo;
@@ -102,7 +100,6 @@ class AddPropertyModel extends Equatable {
   final String? virtualTourPath;
   final String? ownershipDocumentPath;
 
-  // Step 5 — Details
   final String area;
   final String? facade;
   final int streetCount;
@@ -121,8 +118,6 @@ class AddPropertyModel extends Equatable {
   final String developerName;
   final Set<String> amenities;
 
-  /// Per-type `details` values keyed by their API field name, so a new backend
-  /// field only needs a widget and a mapper entry rather than a model field.
   final Map<String, dynamic> typeDetails;
 
   T? detail<T>(String key) {
@@ -137,7 +132,6 @@ class AddPropertyModel extends Equatable {
   List<String> detailList(String key) =>
       (typeDetails[key] as List<dynamic>?)?.cast<String>() ?? const [];
 
-  // Step 6 — Price & Review
   final String price;
   final String title;
   final String description;

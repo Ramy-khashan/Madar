@@ -72,11 +72,10 @@ class ChooseAccountScreen extends StatelessWidget {
                             context.read<ChooseAccountBloc>().add(
                               SelectAccountEvent(index),
                             );
-                            await PreferenceUtils()
-                                .setString(
-                                  StorageKeys.accountType,
-                                  account.accountType,
-                                );
+                            await PreferenceUtils().setString(
+                              StorageKeys.accountType,
+                              account.accountType,
+                            );
                             await PreferenceUtils().setBool(
                               StorageKeys.isGuest,
                               false,
@@ -122,4 +121,3 @@ class ChooseAccountScreen extends StatelessWidget {
     );
   }
 }
-

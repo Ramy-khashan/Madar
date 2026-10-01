@@ -1,5 +1,5 @@
 import '../../../../../core/utils/constants/app_enums.dart';
- 
+
 class PaymentTypeDetailsModel {
   final AuctionDepositPaymentMethod method;
   final String label;

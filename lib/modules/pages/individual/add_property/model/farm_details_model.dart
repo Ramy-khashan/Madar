@@ -1,7 +1,6 @@
 import 'property_details_base.dart';
 import 'property_enums.dart';
 
-/// `details` payload for `type: FARM`.
 class FarmDetailsModel extends PropertyDetailsBase {
   const FarmDetailsModel({
     this.builtArea,
@@ -15,24 +14,18 @@ class FarmDetailsModel extends PropertyDetailsBase {
     this.condition,
   });
 
-  /// Built-up area in square meters.
   final num? builtArea;
 
-  /// One of [PropertyApiEnums.soilClay] and friends.
   final String? soilType;
 
-  /// Values from [PropertyApiEnums.waterSourceWell] and friends.
   final List<String> waterSources;
   final int? wellsCount;
 
-  /// Well depth in meters.
   final num? wellDepth;
   final int? palmTreesCount;
 
-  /// Values from [PropertyApiEnums.farmFacilityRestHouse] and friends.
   final List<String> facilities;
 
-  /// Distance to the nearest city in kilometers.
   final num? distanceToCity;
   final String? condition;
 

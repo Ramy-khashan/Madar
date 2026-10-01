@@ -19,7 +19,6 @@ class ChooseBrokerScreen extends StatelessWidget {
       listenWhen: (prev, curr) => prev.confirmStatus != curr.confirmStatus,
       listener: (ctx, state) {
         if (state.confirmStatus == RequestStatus.success) {
-          
           Navigator.of(ctx).popUntil((route) => route.isFirst);
         }
       },

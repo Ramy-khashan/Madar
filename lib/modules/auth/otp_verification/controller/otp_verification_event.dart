@@ -22,4 +22,3 @@ final class OtpSubmittedEvent extends OtpVerificationEvent {
 final class OtpResendEvent extends OtpVerificationEvent {
   const OtpResendEvent();
 }
-

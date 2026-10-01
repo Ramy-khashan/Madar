@@ -61,7 +61,7 @@ class AppButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         padding: btnPadding ?? EdgeInsets.zero,
         backgroundColor: isOutline
-            ? colorBG??tc.primaryBrand.withValues(alpha: 0.15)
+            ? colorBG ?? tc.primaryBrand.withValues(alpha: 0.15)
             : colorBG ?? tc.primaryBrand,
         shadowColor: AppColors.transparent,
         maximumSize: Size(width ?? double.infinity, height ?? 56),
@@ -91,9 +91,9 @@ class AppButton extends StatelessWidget {
           : childText != null || childIcon != null || childImage != null
           ? Row(
               mainAxisSize: MainAxisSize.min,
-                children: [
-                  Center(
-                    child: Padding(
+              children: [
+                Center(
+                  child: Padding(
                     padding: EdgeInsetsDirectional.only(
                       top: childText != null ? 8.height : 0,
                       end: childText != null ? 6.width : 0,
@@ -109,16 +109,25 @@ class AppButton extends StatelessWidget {
                                   color: textStyle.color,
                                 )
                               : const SizedBox()),
-                                    ),
                   ),
-                if (childText != null) Text(childText ?? '', style: textStyle,textAlign: TextAlign.center,),
-
-              
+                ),
+                if (childText != null)
+                  Text(
+                    childText ?? '',
+                    style: textStyle,
+                    textAlign: TextAlign.center,
+                  ),
               ],
             )
           : SizedBox(
               width: width,
-              child: Center(child: Text(text ?? '', style: textStyle,textAlign: TextAlign.center,)),
+              child: Center(
+                child: Text(
+                  text ?? '',
+                  style: textStyle,
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ),
     );
   }

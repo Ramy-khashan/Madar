@@ -38,24 +38,9 @@ class PropertyInfoCardWidget extends StatelessWidget {
               ),
             ),
           ),
-          // PropertyInfoRowWidget(
-          //   label: AppStrings.bedrooms,
-          //   value: property?.details?.beds.toString() ?? '0',
-          //   icon: AppImages.bedroomIcon,
-          // ),
-          // PropertyInfoRowWidget(
-          //   label: AppStrings.balcony,
-          //   value: property?.details.balconies.toString() ?? '0',
-          //   icon: AppImages.balconyIcon,
-          // ),
-          // PropertyInfoRowWidget(
-          //   label: AppStrings.bathrooms,
-          //   value: property?.details.baths.toString() ?? '0',
-          //   icon: AppImages.bathroomIcon,
-          // ),
           PropertyInfoRowWidget(
             label: AppStrings.area,
-            value:( property?.totalArea ?? '0').toString(),
+            value: (property?.totalArea ?? '0').toString(),
             icon: AppImages.totalSpaceIcon,
           ),
           PropertyInfoRowWidget(
@@ -63,11 +48,6 @@ class PropertyInfoCardWidget extends StatelessWidget {
             value: property?.details?.floor.toString() ?? '0',
             icon: AppImages.floorIcon,
           ),
-          // PropertyInfoRowWidget(
-          //   label: AppStrings.propertyNumber,
-          //   value: property?.details.propertyNumber ?? '12',
-          //   icon: AppImages.propertyNumberIcon,
-          // ),
           PropertyInfoRowWidget(
             label: AppStrings.paymentMethod,
             value: property?.paymentType ?? 'N/A',

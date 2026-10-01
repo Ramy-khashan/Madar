@@ -5,8 +5,6 @@ import '../../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../../../core/utils/functions/responsive.dart';
 
-/// A row showing a property name + amount with a colored status dot.
-/// Shared between expenses category list and revenue rent items.
 class FinancialPropertyRow extends StatelessWidget {
   const FinancialPropertyRow({
     super.key,

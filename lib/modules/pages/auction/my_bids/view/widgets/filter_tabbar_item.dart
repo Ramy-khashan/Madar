@@ -5,8 +5,7 @@ import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../controller/my_bids_bloc.dart';
- 
- 
+
 class FilterTabBar extends StatelessWidget {
   const FilterTabBar({required this.activeFilter, super.key});
   final String activeFilter;
@@ -37,7 +36,9 @@ class FilterTabBar extends StatelessWidget {
                 vertical: 6.height,
               ),
               decoration: BoxDecoration(
-                color: isActive ? AppThemeColors.of(context).primaryBrand: colors.cardBackground,
+                color: isActive
+                    ? AppThemeColors.of(context).primaryBrand
+                    : colors.cardBackground,
                 borderRadius: BorderRadius.circular(20.radius),
                 border: Border.all(
                   color: isActive

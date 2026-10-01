@@ -32,14 +32,12 @@ class PropertyModel extends Equatable {
   });
 
   factory PropertyModel.fromJson(Map<String, dynamic> json) {
-    final locationData =
-        json['location'] as Map<String, dynamic>?;
+    final locationData = json['location'] as Map<String, dynamic>?;
 
     return PropertyModel(
       id: json['propertyId']?.toString() ?? '',
       title: json['title']?.toString() ?? '',
 
-      // Build a readable location from the nested location object
       location: _buildLocation(locationData),
 
       imageUrl: PropertyMedia.coverFrom(
@@ -50,21 +48,16 @@ class PropertyModel extends Equatable {
       beds: _toInt(json['bedrooms']),
       baths: _toInt(json['bathrooms']),
 
-      // API: totalArea: 130
       area: json['totalArea']?.toString() ?? '0',
 
       price: _toDouble(json['price']),
 
-      // You can change this depending on what you want to display
       tag: json['status']?.toString() ?? '',
 
       isBookmarked: false,
 
-      // SALE => true, RENT => false
-      isForSale:
-          json['listingType']?.toString().toUpperCase() == 'SALE',
+      isForSale: json['listingType']?.toString().toUpperCase() == 'SALE',
 
-      // APARTMENT, VILLA, etc.
       typeId: json['type']?.toString() ?? '',
     );
   }
@@ -104,17 +97,17 @@ class PropertyModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        title,
-        location,
-        imageUrl,
-        beds,
-        baths,
-        area,
-        price,
-        tag,
-        isBookmarked,
-        isForSale,
-        typeId,
-      ];
+    id,
+    title,
+    location,
+    imageUrl,
+    beds,
+    baths,
+    area,
+    price,
+    tag,
+    isBookmarked,
+    isForSale,
+    typeId,
+  ];
 }

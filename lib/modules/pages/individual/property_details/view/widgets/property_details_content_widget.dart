@@ -69,10 +69,9 @@ class PropertyDetailsContentWidget extends StatelessWidget {
                     child: Column(
                       children: [
                         AdvertiserSectionWidget(
-                           advertiser: property?.publisher,
+                          advertiser: property?.publisher,
                         ),
                         SizedBox(height: 16.height),
-                        // BuyerRelatedServicesSectionWidget(property: property),
                         SizedBox(height: 24.height),
                         if (isTablet) const PropertyActionsPart(),
                       ],

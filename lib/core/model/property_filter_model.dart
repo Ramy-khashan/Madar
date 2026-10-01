@@ -2,11 +2,11 @@ import 'package:equatable/equatable.dart';
 
 class PropertyFilterModel extends Equatable {
   final bool isForSale;
-  final String? propertyTypeId; // null = all types
+  final String? propertyTypeId;
   final double minPrice;
   final double maxPrice;
-  final String? paymentSystem; // null = any
-  final String? duration; // null = any
+  final String? paymentSystem;
+  final String? duration;
   final String? city;
 
   static const double kMinPrice = 0;
@@ -78,18 +78,15 @@ class PropertyFilterModel extends Equatable {
   }) {
     return PropertyFilterModel(
       isForSale: isForSale ?? this.isForSale,
-      propertyTypeId:
-          propertyTypeId == _sentinel
-              ? this.propertyTypeId
-              : propertyTypeId as String?,
+      propertyTypeId: propertyTypeId == _sentinel
+          ? this.propertyTypeId
+          : propertyTypeId as String?,
       minPrice: minPrice ?? this.minPrice,
       maxPrice: maxPrice ?? this.maxPrice,
-      paymentSystem:
-          paymentSystem == _sentinel
-              ? this.paymentSystem
-              : paymentSystem as String?,
-      duration:
-          duration == _sentinel ? this.duration : duration as String?,
+      paymentSystem: paymentSystem == _sentinel
+          ? this.paymentSystem
+          : paymentSystem as String?,
+      duration: duration == _sentinel ? this.duration : duration as String?,
       city: city == _sentinel ? this.city : city as String?,
     );
   }

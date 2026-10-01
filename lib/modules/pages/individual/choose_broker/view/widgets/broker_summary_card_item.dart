@@ -12,9 +12,8 @@ class BrokerSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  
     return Container(
-      margin: EdgeInsets.only(bottom: 210.height ),
+      margin: EdgeInsets.only(bottom: 210.height),
       padding: EdgeInsets.all(16.width),
       decoration: BoxDecoration(
         color: colors.cardBackground,
@@ -34,7 +33,12 @@ class BrokerSummaryCard extends StatelessWidget {
                   color: colors.primaryBrand.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12.radius),
                 ),
-                child:  ImageItem(broker.imageUrl, width: 48.width, height: 48.width, fit: BoxFit.cover),
+                child: ImageItem(
+                  broker.imageUrl,
+                  width: 48.width,
+                  height: 48.width,
+                  fit: BoxFit.cover,
+                ),
               ),
               SizedBox(width: 10.width),
               Expanded(
@@ -85,20 +89,6 @@ class BrokerSummaryCard extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10.height),
-
-          // SizedBox(height: 6.height),
-          // AgentDetailsRow(
-          //   icon: AppImages.experienceIcon,
-          //   text:
-          //       '${AppStrings.experiencePrefix} ${broker.experienceYears} ${AppStrings.experienceSuffix}',
-          //   colors: colors,
-          // ),
-          // SizedBox(height: 6.height),
-          // AgentDetailsRow(
-          //   icon: AppImages.occupancyIcon,
-          //   text: '${AppStrings.commissionPrefix} ${broker.commissionPercent}%',
-          //   colors: colors,
-          // ),
         ],
       ),
     );

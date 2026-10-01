@@ -29,7 +29,7 @@ class ContractDetailsBloc
     Emitter<ContractDetailsState> emit,
   ) async {
     try {
-        emit(
+      emit(
         state.copyWith(
           loadStatus: RequestStatus.loading,
           contractId: event.contractId,
@@ -114,10 +114,9 @@ class ContractDetailsBloc
     );
   }
 
-  String get _contractId =>
-      state.contractId.isNotEmpty
-          ? state.contractId
-          : (state.contract?.id ?? '');
+  String get _contractId => state.contractId.isNotEmpty
+      ? state.contractId
+      : (state.contract?.id ?? '');
 
   Future<void> _runAction(
     Emitter<ContractDetailsState> emit,

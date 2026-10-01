@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
@@ -7,12 +6,12 @@ import '../../../../../../core/utils/constants/app_constant.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 
 class CompleteAuctionInfoCellItem extends StatelessWidget {
-  const CompleteAuctionInfoCellItem({super.key, 
+  const CompleteAuctionInfoCellItem({
+    super.key,
     required this.label,
     required this.value,
     required this.colors,
     required this.icon,
-
   });
   final String label;
   final String value;
@@ -26,7 +25,7 @@ class CompleteAuctionInfoCellItem extends StatelessWidget {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ImageItem(icon, ),
+            ImageItem(icon),
             SizedBox(width: 3.width),
             Text(
               label,

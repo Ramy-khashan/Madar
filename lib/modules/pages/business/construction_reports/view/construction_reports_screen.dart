@@ -6,6 +6,7 @@ import '../../../../../core/components/app_appbar.dart';
 import '../../../../../core/utils/constants/app_enums.dart';
 import '../../../../../core/utils/constants/app_strings.dart';
 import '../controller/construction_reports_bloc.dart';
+import 'widgets/construction_reports_bar_chart_widget.dart';
 import 'widgets/construction_reports_charts_widget.dart';
 import 'widgets/construction_reports_filter_widget.dart';
 import 'widgets/construction_reports_performance_widget.dart';

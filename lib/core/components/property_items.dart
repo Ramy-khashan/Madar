@@ -25,7 +25,7 @@ class PropertyItem extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 10.width,
-          backgroundColor:  colors.hoverColor,
+          backgroundColor: colors.hoverColor,
           child: ImageItem(
             icon,
             color: isPrimary ? colors.primaryBrand : null,

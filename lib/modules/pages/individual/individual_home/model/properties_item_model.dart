@@ -13,9 +13,9 @@ class PropertiesItemModel {
   String? city;
   String? district;
   String? image;
-      String?   publisherId ;
-      String?  publisherName ;
-    String?   publisherPhone;
+  String? publisherId;
+  String? publisherName;
+  String? publisherPhone;
   PropertiesItemModel({
     this.propertyId,
     this.type,

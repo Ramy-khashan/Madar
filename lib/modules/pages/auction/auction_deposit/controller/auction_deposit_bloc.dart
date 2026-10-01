@@ -25,11 +25,13 @@ class AuctionDepositBloc
     Emitter<AuctionDepositState> emit,
   ) async {
     emit(state.copyWith(loadStatus: RequestStatus.loading));
-     emit(state.copyWith(
-      loadStatus: RequestStatus.success,
-      propertyTitle: 'شقة فاخرة في الملقا',
-      depositAmount: 30000,
-    ));
+    emit(
+      state.copyWith(
+        loadStatus: RequestStatus.success,
+        propertyTitle: 'شقة فاخرة في الملقا',
+        depositAmount: 30000,
+      ),
+    );
   }
 
   void _onMethodSelected(
@@ -43,17 +45,22 @@ class AuctionDepositBloc
     AuctionDepositConfirmPayment event,
     Emitter<AuctionDepositState> emit,
   ) async {
-    emit(state.copyWith(
-      step: AuctionDepositStep.processing,
-      confirmStatus: RequestStatus.loading,
-    ));
-     final txId = 'APL${DateTime.now().millisecondsSinceEpoch}';
-    emit(state.copyWith(
-      confirmStatus: RequestStatus.success,
-      transactionId: txId,
-      step: AuctionDepositStep.success,
-    ));
+    emit(
+      state.copyWith(
+        step: AuctionDepositStep.processing,
+        confirmStatus: RequestStatus.loading,
+      ),
+    );
+    final txId = 'APL${DateTime.now().millisecondsSinceEpoch}';
+    emit(
+      state.copyWith(
+        confirmStatus: RequestStatus.success,
+        transactionId: txId,
+        step: AuctionDepositStep.success,
+      ),
+    );
   }
+
   static List<PaymentTypeDetailsModel> paymentMethods = [
     PaymentTypeDetailsModel(
       method: AuctionDepositPaymentMethod.applePay,

@@ -83,13 +83,13 @@ class ContractCardWidget extends StatelessWidget {
               ),
             ),
             Row(
-               children: [
+              children: [
                 TypeBadge(
                   type: contract?.type ?? 'SALE',
                   label: contract?.typeLabel,
                   colors: colors,
                 ),
-SizedBox(width: 12.width),
+                SizedBox(width: 12.width),
                 Text(
                   contract?.date ?? '12/12/2023',
                   style: TextStyle(
@@ -98,7 +98,8 @@ SizedBox(width: 12.width),
                   ),
                 ),
                 const Spacer(),
-                if(PreferenceUtils().getString(StorageKeys.accountType)==AppConstant.business)
+                if (PreferenceUtils().getString(StorageKeys.accountType) ==
+                    AppConstant.business)
                   Text(
                     '${formatPrice(contract?.amount ?? 1110)} ${AppStrings.currency}',
                     style: TextStyle(

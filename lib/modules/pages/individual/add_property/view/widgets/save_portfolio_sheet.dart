@@ -18,7 +18,9 @@ class SavePortfolioSheet extends StatelessWidget {
     final tc = AppThemeColors.of(context);
     final bloc = AddPropertyBloc.get(context);
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
       child: Container(
         decoration: BoxDecoration(
           color: tc.backgroundPrimary,
@@ -78,7 +80,9 @@ class SavePortfolioSheet extends StatelessWidget {
                   textColor: canSave ? null : tc.textSecondary,
                   onTap: canSave
                       ? () {
-                          if (bloc.portfolioNameController.text.trim().isEmpty) {
+                          if (bloc.portfolioNameController.text
+                              .trim()
+                              .isEmpty) {
                             AppToast(
                               AppStrings.pleaseEnterFileName,
                               isError: true,

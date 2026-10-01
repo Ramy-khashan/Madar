@@ -16,7 +16,7 @@ import '../../../../../common/chats/chat_navigator.dart';
 import '../../../../../common/contract_details/view/widgets/approve_contract_dialog.dart';
 import '../../controller/business_properties_bloc.dart';
 import '../../model/business_property_request_model.dart';
-import 'request_action_dialogs.dart';
+import 'reject_request_dialog.dart';
 
 class BusinessPropertiesPublishedCardWidget extends StatelessWidget {
   const BusinessPropertiesPublishedCardWidget({
@@ -387,7 +387,7 @@ class BusinessPropertiesPublishedCardWidget extends StatelessWidget {
           content: Text(AppStrings.contractRejectConfirmation),
           actions: [
             TextButton(
-              onPressed: () =>RouterHandler.pop(context,[false]),
+              onPressed: () => RouterHandler.pop(context, [false]),
               child: Text(AppStrings.cancel),
             ),
             TextButton(
@@ -414,11 +414,7 @@ class BusinessPropertiesPublishedCardWidget extends StatelessWidget {
     );
     if (reason == null || reason.isEmpty || !context.mounted) return;
     context.read<BusinessPropertiesBloc>().add(
-      BusinessPropertiesReject(
-        item.id,
-        rejectReason: reason,
-        isIncoming: true,
-      ),
+      BusinessPropertiesReject(item.id, rejectReason: reason, isIncoming: true),
     );
   }
 }

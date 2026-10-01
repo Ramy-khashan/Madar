@@ -20,7 +20,7 @@ class AppTextButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(32),
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 2 ),  
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
 
           child: IntrinsicWidth(
             child: Column(

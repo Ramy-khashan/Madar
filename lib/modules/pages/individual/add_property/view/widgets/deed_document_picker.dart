@@ -16,7 +16,8 @@ class DeedDocumentPicker extends StatelessWidget {
     final tc = AppThemeColors.of(context);
     return BlocBuilder<AddPropertyBloc, AddPropertyState>(
       buildWhen: (prev, curr) =>
-          prev.model.ownershipDocumentPath != curr.model.ownershipDocumentPath ||
+          prev.model.ownershipDocumentPath !=
+              curr.model.ownershipDocumentPath ||
           prev.fieldErrors[AddPropertyField.ownershipDocument] !=
               curr.fieldErrors[AddPropertyField.ownershipDocument],
       builder: (context, state) {

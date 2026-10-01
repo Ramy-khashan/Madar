@@ -47,14 +47,12 @@ class ContractModel {
     this.property,
   });
 
-  String get title =>
-      (listingTitle ?? '').trim().isNotEmpty
-          ? listingTitle!
-          : (contractNo ?? '');
-  String get propertyName =>
-      (location ?? '').trim().isNotEmpty
-          ? location!
-          : (property?.title ?? property?.projectName ?? '');
+  String get title => (listingTitle ?? '').trim().isNotEmpty
+      ? listingTitle!
+      : (contractNo ?? '');
+  String get propertyName => (location ?? '').trim().isNotEmpty
+      ? location!
+      : (property?.title ?? property?.projectName ?? '');
   String get date {
     final raw = createdAt ?? startDate ?? '';
     final parsed = DateTime.tryParse(raw);

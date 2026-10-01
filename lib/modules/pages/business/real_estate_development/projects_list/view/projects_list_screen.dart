@@ -65,7 +65,9 @@ class ProjectsListScreen extends StatelessWidget {
                     status: state.status,
                     errorMsg: state.errorMessage,
                     onTapRefresh: () {
-                      ProjectsListBloc.get(context).add(const ProjectsListLoad());
+                      ProjectsListBloc.get(
+                        context,
+                      ).add(const ProjectsListLoad());
                     },
                     emptyMsg: AppStrings.noProjectsExist,
                     isEmptyList: state.projects.isEmpty,
@@ -92,10 +94,14 @@ class ProjectsListScreen extends StatelessWidget {
                           tabletLandscape: 320,
                         ).toDouble(),
                       ),
-                      itemCount: state.status == RequestStatus.loading ? 10:state.projects.length ,
+                      itemCount: state.status == RequestStatus.loading
+                          ? 10
+                          : state.projects.length,
                       itemBuilder: (_, i) => ProjectListItemWidget(
-                        project: state.status == RequestStatus.loading ? null : state.projects[i],
-                       ),
+                        project: state.status == RequestStatus.loading
+                            ? null
+                            : state.projects[i],
+                      ),
                     ),
                   ),
                 ),
@@ -119,12 +125,10 @@ class ProjectsListScreen extends StatelessWidget {
                               context,
                               AppRouterKeys.realEstateDevelopmentAddProject,
                             );
-                          } else if (val ==
-                              AppConstant.commercialProjectType) {
+                          } else if (val == AppConstant.commercialProjectType) {
                             added = await RouterHandler.navigate(
                               context,
-                              AppRouterKeys
-                                  .realEstateDevelopmentAddCommercial,
+                              AppRouterKeys.realEstateDevelopmentAddCommercial,
                             );
                           }
                           if (added == true && context.mounted) {
@@ -143,4 +147,3 @@ class ProjectsListScreen extends StatelessWidget {
     );
   }
 }
-    

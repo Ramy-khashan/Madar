@@ -1,7 +1,6 @@
 import 'property_details_base.dart';
 import 'property_enums.dart';
 
-/// `details` payload for `type: VILLA`.
 class VillaDetailsModel extends PropertyDetailsBase {
   const VillaDetailsModel({
     this.floorsCount,

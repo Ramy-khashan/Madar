@@ -147,24 +147,6 @@ class PhaseDetailsScreen extends StatelessWidget {
                                   tc: tc,
                                 );
                               }),
-
-                              // Divider(color: tc.borderColor, height: 10),
-                              // Padding(
-                              //   padding: EdgeInsets.fromLTRB(
-                              //     12.width,
-                              //     0,
-                              //     12.width,
-                              //     12.height,
-                              //   ),
-                              //   child: AppTextField(
-                              //     title: AppStrings.other,
-                              //     isWithTitle: true,
-                              //     controller: bloc.customTaskController,
-                              //     hint: AppStrings.otherHint,
-                              //     onChanged: (v) =>
-                              //         bloc.add(UpdateCustomTaskEvent(v)),
-                              //   ),
-                              // ),
                             ],
                           ),
                         ),

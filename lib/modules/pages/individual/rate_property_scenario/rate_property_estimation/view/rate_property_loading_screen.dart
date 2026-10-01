@@ -32,9 +32,8 @@ class RatePropertyLoadingScreen extends StatelessWidget {
             routerType: RouterType.pushReplacementNamed,
             extra: RatePropertyEstimationBloc.get(context),
           );
-        }
-        else if (state.analyzeStatus == RequestStatus.failed) {
-         RouterHandler.pop(context);
+        } else if (state.analyzeStatus == RequestStatus.failed) {
+          RouterHandler.pop(context);
         }
       },
       child:
@@ -60,9 +59,8 @@ class RatePropertyLoadingScreen extends StatelessWidget {
                             color: colors.primaryBrand.withValues(alpha: 0.1),
                           ),
                           child: ImageItem(
-                          AppImages.occupancyIcon ,
+                            AppImages.occupancyIcon,
                             color: colors.primaryBrand,
-                            
                           ),
                         ),
                         SizedBox(height: 28.height),
@@ -111,4 +109,3 @@ class RatePropertyLoadingScreen extends StatelessWidget {
     );
   }
 }
-

@@ -30,8 +30,7 @@ class AiComposeBar extends StatelessWidget {
     final colors = AppThemeColors.of(context);
     return BlocBuilder<SmartAssistantChatBloc, SmartAssistantChatState>(
       builder: (context, state) {
-        final isSending =
-            state is SmartAssistantChatLoaded && state.isSending;
+        final isSending = state is SmartAssistantChatLoaded && state.isSending;
         final isBusy =
             isSending ||
             (state is SmartAssistantChatLoaded && state.isLoadingHistory);
@@ -64,14 +63,6 @@ class AiComposeBar extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 12.width),
-                    // IconButton(
-                    //   onPressed: isBusy ? null : () {},
-                    //   icon: Icon(
-                    //     Icons.mic_none_rounded,
-                    //     color: colors.primaryBrand,
-                    //     size: 30.fontSize,
-                    //   ),
-                    // ),
                   ],
                 ),
               ),

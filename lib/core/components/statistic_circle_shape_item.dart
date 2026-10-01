@@ -1,12 +1,14 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../config/theme/app_theme_colors.dart';
 import '../model/statistic_circle_model.dart';
 import '../utils/functions/responsive.dart';
 import 'outline_section.dart';
+import 'statistic_touch_cubit.dart';
 
-class StatisticCircleShapeItem extends StatefulWidget {
+class StatisticCircleShapeItem extends StatelessWidget {
   const StatisticCircleShapeItem({
     required this.title,
     required this.sections,
@@ -19,93 +21,97 @@ class StatisticCircleShapeItem extends StatefulWidget {
   final AppThemeColors colors;
 
   @override
-  State<StatisticCircleShapeItem> createState() =>
-      _StatisticCircleShapeItemState();
-}
-
-class _StatisticCircleShapeItemState extends State<StatisticCircleShapeItem> {
-  int touchedIndex = -1;
-
-  @override
   Widget build(BuildContext context) {
-    return OutlinedSection(
-      title: widget.title,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AspectRatio(
-            aspectRatio: ResponsiveUtils.types(
-              context,
-              mobilePortrait: 1,
-              mobileLandscape: 2.5,
-              tabletPortrait: 3.2,
-              tabletLandscape: 3.2,
-            ),
-            child: PieChart(
-              PieChartData(
-                pieTouchData: PieTouchData(
-                  touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                    setState(() {
-                      if (!event.isInterestedForInteractions ||
-                          pieTouchResponse == null ||
-                          pieTouchResponse.touchedSection == null) {
-                        touchedIndex = -1;
-                        return;
-                      }
-                      touchedIndex =
-                          pieTouchResponse.touchedSection!.touchedSectionIndex;
-                    });
-                  },
-                ),
-                borderData: FlBorderData(show: false),
-                sectionsSpace: 2,
-                centerSpaceRadius: 30.width,
-                sections: _showingSections(),
-              ),
-            ),
-          ),
-          SizedBox(height: 16.height),
-          ...widget.sections.map(
-            (val) => Padding(
-              padding: EdgeInsets.only(bottom: 4.height),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 10.width,
-                    height: 10.width,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: val.color,
-                    ),
+    return BlocProvider(
+      create: (_) => StatisticTouchCubit(),
+      child: BlocBuilder<StatisticTouchCubit, int>(
+        builder: (context, touchedIndex) {
+          return OutlinedSection(
+            title: title,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AspectRatio(
+                  aspectRatio: ResponsiveUtils.types(
+                    context,
+                    mobilePortrait: 1,
+                    mobileLandscape: 2.5,
+                    tabletPortrait: 3.2,
+                    tabletLandscape: 3.2,
                   ),
-                  SizedBox(width: 6.width),
-                  Expanded(
-                    child: Text(
-                      val.label,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: context.responsiveFontScale(14),
-                        color: widget.colors.textFieldTitle,
-                        fontWeight: FontWeight.w500,
+                  child: PieChart(
+                    PieChartData(
+                      pieTouchData: PieTouchData(
+                        touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                          final cubit = context.read<StatisticTouchCubit>();
+                          if (!event.isInterestedForInteractions ||
+                              pieTouchResponse == null ||
+                              pieTouchResponse.touchedSection == null) {
+                            cubit.select(-1);
+                            return;
+                          }
+                          cubit.select(
+                            pieTouchResponse
+                                .touchedSection!
+                                .touchedSectionIndex,
+                          );
+                        },
                       ),
+                      borderData: FlBorderData(show: false),
+                      sectionsSpace: 2,
+                      centerSpaceRadius: 30.width,
+                      sections: _showingSections(context, touchedIndex),
                     ),
                   ),
-                ],
-              ),
+                ),
+                SizedBox(height: 16.height),
+                ...sections.map(
+                  (val) => Padding(
+                    padding: EdgeInsets.only(bottom: 4.height),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 10.width,
+                          height: 10.width,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: val.color,
+                          ),
+                        ),
+                        SizedBox(width: 6.width),
+                        Expanded(
+                          child: Text(
+                            val.label,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: context.responsiveFontScale(14),
+                              color: colors.textFieldTitle,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
 
-  List<PieChartSectionData> _showingSections() {
-    return List.generate(widget.sections.length, (i) {
+  List<PieChartSectionData> _showingSections(
+    BuildContext context,
+    int touchedIndex,
+  ) {
+    return List.generate(sections.length, (i) {
       final isTouched = i == touchedIndex;
-      final section = widget.sections[i];
+      final section = sections[i];
       return PieChartSectionData(
         color: section.color,
         value: section.value * 100,
@@ -114,7 +120,7 @@ class _StatisticCircleShapeItemState extends State<StatisticCircleShapeItem> {
         titleStyle: TextStyle(
           fontSize: context.responsiveFontScale(11),
           fontWeight: FontWeight.bold,
-          color: widget.colors.textPrimary,
+          color: colors.textPrimary,
           shadows: const [Shadow(color: Colors.black, blurRadius: 2)],
         ),
       );

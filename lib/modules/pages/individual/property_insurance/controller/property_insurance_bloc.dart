@@ -100,11 +100,13 @@ class PropertyInsuranceBloc
     PropertyInsuranceLoad event,
     Emitter<PropertyInsuranceState> emit,
   ) {
-    emit(state.copyWith(
-      requests: _mockRequests,
-      offers: _mockOffers,
-      coverageRisks: _mockCoverageRisks,
-    ));
+    emit(
+      state.copyWith(
+        requests: _mockRequests,
+        offers: _mockOffers,
+        coverageRisks: _mockCoverageRisks,
+      ),
+    );
   }
 
   void _onTabChanged(
@@ -114,4 +116,3 @@ class PropertyInsuranceBloc
     emit(state.copyWith(selectedTab: event.tabIndex));
   }
 }
-

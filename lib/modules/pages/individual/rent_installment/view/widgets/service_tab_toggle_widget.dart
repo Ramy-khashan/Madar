@@ -38,7 +38,7 @@ class ServiceTabToggleWidget extends StatelessWidget {
                 onTap: () => onTabChanged(index),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
-                   decoration: BoxDecoration(
+                  decoration: BoxDecoration(
                     color: selectedIndex == index
                         ? colors.primaryBrand
                         : Colors.transparent,

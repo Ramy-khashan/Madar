@@ -35,21 +35,21 @@ class AddAuctionPropertyFormModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        propertyTypeId,
-        location,
-        startingPrice,
-        startDate,
-        startTime,
-        endDate,
-        endTime,
-        rooms,
-        bathrooms,
-        area,
-        balcony,
-        floor,
-        propertyNumber,
-        description,
-      ];
+    propertyTypeId,
+    location,
+    startingPrice,
+    startDate,
+    startTime,
+    endDate,
+    endTime,
+    rooms,
+    bathrooms,
+    area,
+    balcony,
+    floor,
+    propertyNumber,
+    description,
+  ];
 
   AddAuctionPropertyFormModel copyWith({
     String? propertyTypeId,

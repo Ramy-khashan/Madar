@@ -5,7 +5,6 @@ import '../../../config/router/app_router_keys.dart';
 import '../../../madar_app.dart';
 import '../../utils/constants/app_enums.dart';
 import '../../utils/functions/router_handler.dart';
- 
 
 class ServerException extends Equatable implements Exception {
   final String? message;

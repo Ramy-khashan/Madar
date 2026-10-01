@@ -43,9 +43,7 @@ class ForgetPasswordScreen extends StatelessWidget {
       },
       builder: (context, state) {
         return Scaffold(
-          appBar: AppAppbar(
-            title: AppStrings.changePassword,
-          ),
+          appBar: AppAppbar(title: AppStrings.changePassword),
           body: SafeArea(
             child: Form(
               key: bloc.formKey,
@@ -74,7 +72,9 @@ class ForgetPasswordScreen extends StatelessWidget {
                               children: [
                                 Icon(
                                   Icons.info_outline,
-                                  color: AppThemeColors.of(context).textFieldTitle,
+                                  color: AppThemeColors.of(
+                                    context,
+                                  ).textFieldTitle,
                                 ),
                                 Expanded(
                                   child: Padding(
@@ -84,7 +84,9 @@ class ForgetPasswordScreen extends StatelessWidget {
                                     child: Text(
                                       AppStrings.forgetPasswordTitle,
                                       style: TextStyle(
-                                        fontSize: context.responsiveFontScale(14),
+                                        fontSize: context.responsiveFontScale(
+                                          14,
+                                        ),
                                         color: AppThemeColors.of(
                                           context,
                                         ).textFieldTitle,

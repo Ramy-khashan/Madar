@@ -35,7 +35,6 @@ class AddResidentialProjectBloc
     on<AddResidentialCustomSubStageAdded>(_onCustomSubStageAdded);
     on<AddResidentialCustomSubStageRemoved>(_onCustomSubStageRemoved);
 
-    // Auto-fetch stages on initialization
     add(const AddResidentialFetchStages());
   }
 

@@ -85,43 +85,44 @@ class NotificationScreen extends StatelessWidget {
           body: GuestMode.isGuest
               ? const GuestLockedView()
               : Container(
-            decoration: BoxDecoration(
-              color: AppThemeColors.of(context).backgroundPrimary,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(32),
-                topRight: Radius.circular(32),
-              ),
-            ),
-            child: LoadingProcess(
-              status: state.isLoadMore
-                  ? RequestStatus.success
-                  : state.notificationStatus,
-              errorMsg: AppStrings.somethingWentWrong,
-              onTapRefresh: () => context.read<NotificationBloc>().add(
-                const NotificationLoad(),
-              ),
-              emptyMsg: AppStrings.noNotifications,
-              isEmptyList: state.notifications.isEmpty,
-              loader: const NotificationLoadingItem(),
-              child: PaginationView(
-                isListView: context.isMobilePortrait,
-                pageSize: NotificationBloc.get(context).pageSize,
-                items: state.notifications,
-                itemBuilder: (context, index) {
-                  final item = state.notifications[index];
-                  return NotificationItem(
-                    item: item,
-                    onTap: () => _onNotificationTap(context, item),
-                  );
-                },
-                requestStatus: state.notificationStatus,
-                hasReachedMax: state.notifications.length >= state.totalCount,
-                onLoadMore: (page) => context.read<NotificationBloc>().add(
-                  NotificationLoad(page: page, isLoadMore: true),
+                  decoration: BoxDecoration(
+                    color: AppThemeColors.of(context).backgroundPrimary,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(32),
+                      topRight: Radius.circular(32),
+                    ),
+                  ),
+                  child: LoadingProcess(
+                    status: state.isLoadMore
+                        ? RequestStatus.success
+                        : state.notificationStatus,
+                    errorMsg: AppStrings.somethingWentWrong,
+                    onTapRefresh: () => context.read<NotificationBloc>().add(
+                      const NotificationLoad(),
+                    ),
+                    emptyMsg: AppStrings.noNotifications,
+                    isEmptyList: state.notifications.isEmpty,
+                    loader: const NotificationLoadingItem(),
+                    child: PaginationView(
+                      isListView: context.isMobilePortrait,
+                      pageSize: NotificationBloc.get(context).pageSize,
+                      items: state.notifications,
+                      itemBuilder: (context, index) {
+                        final item = state.notifications[index];
+                        return NotificationItem(
+                          item: item,
+                          onTap: () => _onNotificationTap(context, item),
+                        );
+                      },
+                      requestStatus: state.notificationStatus,
+                      hasReachedMax:
+                          state.notifications.length >= state.totalCount,
+                      onLoadMore: (page) => context
+                          .read<NotificationBloc>()
+                          .add(NotificationLoad(page: page, isLoadMore: true)),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
         );
       },
     );

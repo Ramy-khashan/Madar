@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
@@ -37,8 +36,9 @@ class AuctionDocItem extends StatelessWidget {
               color: colors.textFieldFill,
               borderRadius: BorderRadius.circular(12.radius),
               border: Border.all(
-                  color: colors.textFieldBorder,
-                  style: BorderStyle.solid),
+                color: colors.textFieldBorder,
+                style: BorderStyle.solid,
+              ),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

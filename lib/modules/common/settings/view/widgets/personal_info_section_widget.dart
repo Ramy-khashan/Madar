@@ -55,4 +55,3 @@ class PersonalInfoSectionWidget extends StatelessWidget {
     );
   }
 }
-

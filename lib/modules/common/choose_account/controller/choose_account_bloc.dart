@@ -13,7 +13,9 @@ class ChooseAccountBloc extends Bloc<ChooseAccountEvent, ChooseAccountState> {
   ChooseAccountBloc() : super(const ChooseAccountInitial()) {
     on<SelectAccountEvent>((event, emit) {
       if (state is ChooseAccountInitial) {
-        emit((state as ChooseAccountInitial).copyWith(selectedIndex: event.index));
+        emit(
+          (state as ChooseAccountInitial).copyWith(selectedIndex: event.index),
+        );
       }
     });
   }
@@ -50,11 +52,7 @@ class ChooseAccountBloc extends Bloc<ChooseAccountEvent, ChooseAccountState> {
       image: AppImages.businessIcon,
       accountType: AppConstant.developer,
       badge: AppStrings.accountBadge3,
-      features: [
-        AppStrings.accountFeature3_1,
-        AppStrings.accountFeature3_2,
-      ],
+      features: [AppStrings.accountFeature3_1, AppStrings.accountFeature3_2],
     ),
   ];
 }
-

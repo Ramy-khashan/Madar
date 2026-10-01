@@ -31,17 +31,17 @@ class AuctionItemModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        title,
-        location,
-        currentBid,
-        startingBid,
-        imageUrl,
-        endTime,
-        bidsCount,
-        tag,
-        status,
-      ];
+    id,
+    title,
+    location,
+    currentBid,
+    startingBid,
+    imageUrl,
+    endTime,
+    bidsCount,
+    tag,
+    status,
+  ];
 
   factory AuctionItemModel.fromJson(Map<String, dynamic> json) {
     final property = json['property'] as Map<String, dynamic>? ?? {};

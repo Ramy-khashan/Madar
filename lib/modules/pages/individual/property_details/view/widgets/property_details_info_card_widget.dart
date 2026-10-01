@@ -178,4 +178,3 @@ class PropertyDetailsInfoCardWidget extends StatelessWidget {
     );
   }
 }
-

@@ -34,7 +34,7 @@ class BrokerPropertiesState extends Equatable {
     brokerImageUrl,
     isLoadMore,
     totalCount,
-    isBroker
+    isBroker,
   ];
   BrokerPropertiesState copyWith({
     String? errorMsg,

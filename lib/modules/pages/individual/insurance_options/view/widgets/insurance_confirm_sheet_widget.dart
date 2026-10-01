@@ -11,6 +11,7 @@ import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 import '../../../../../../core/utils/functions/router_handler.dart';
 import '../../controller/insurance_options_bloc.dart';
+import 'confirm_card.dart';
 
 class InsuranceConfirmSheetWidget extends StatelessWidget {
   const InsuranceConfirmSheetWidget({super.key});
@@ -59,7 +60,10 @@ class InsuranceConfirmSheetWidget extends StatelessWidget {
                           height: 28.width,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            border: Border.all(color: colors.primaryBrand,width: 2),
+                            border: Border.all(
+                              color: colors.primaryBrand,
+                              width: 2,
+                            ),
                           ),
                           child: Icon(
                             Icons.close,
@@ -279,48 +283,6 @@ class InsuranceConfirmSheetWidget extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class ConfirmCard extends StatelessWidget {
-  const ConfirmCard({
-    required this.title,
-    required this.children,
-    required this.colors,
-    super.key,
-  });
-
-  final String title;
-  final List<Widget> children;
-  final AppThemeColors colors;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(14.width),
-      decoration: BoxDecoration(
-        color: colors.cardBackground,
-        borderRadius: BorderRadius.circular(12.radius),
-        border: Border.all(color: colors.borderColor),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: context.responsiveFontScale(14),
-              fontWeight: FontWeight.w700,
-              fontFamily: AppConstant.appHeaderFont,
-              color: colors.textFieldTitle,
-            ),
-          ),
-          SizedBox(height: 8.height),
-          ...children,
-        ],
-      ),
     );
   }
 }

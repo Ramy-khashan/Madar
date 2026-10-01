@@ -61,11 +61,7 @@ class PropertyFileOverflowMenu extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 10.width),
-                Icon(
-                  Icons.add,
-                  size: 18.width,
-                  color: colors.primaryBrand,
-                ),
+                Icon(Icons.add, size: 18.width, color: colors.primaryBrand),
               ],
             ),
           ),

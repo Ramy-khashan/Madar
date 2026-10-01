@@ -59,7 +59,7 @@ class AppTheme {
         onSecondary: AppColors.darkSurface,
         secondaryContainer: AppColors.grey800,
         onSecondaryContainer: AppColors.white,
-        surface:AppColors.darkSurface,
+        surface: AppColors.darkSurface,
         onSurface: c.textPrimary,
         error: const Color(0xFFCF6679),
         onError: AppColors.darkSurface,
@@ -76,8 +76,6 @@ class AppTheme {
       elevatedButtonTheme: _buildElevatedButton(c),
     );
   }
-
-  // ── Helpers ──────────────────────────────────────────────────────────────
 
   static TextTheme _buildTextTheme(Color primary, Color secondary) {
     return TextTheme(

@@ -25,101 +25,105 @@ class ContractsScreen extends StatelessWidget {
       body: GuestMode.isGuest
           ? const GuestLockedView()
           : SafeArea(
-        child: BlocBuilder<ContractsBloc, ContractsState>(
-          builder: (context, state) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ContractsFilterTabsWidget(
-                  selectedFilter: state.selectedFilter,
-                  totalCount: state.totalCount,
-                  counts: state.counts,
-                  onFilterChanged: (filter) => ContractsBloc.get(
-                    context,
-                  ).add(ContractsFilterChanged(filter)),
-                ),
-                Expanded(
-                  child: LoadingProcess(
-                    status: state.isLoadMore
-                        ? RequestStatus.success
-                        : state.contractsStatus,
-                    errorMsg: AppStrings.somethingWentWrong,
-                    onTapRefresh: () => context.read<ContractsBloc>().add(
-                      const ContractsLoad(),
-                    ),
-                    loader: GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: ResponsiveUtils.types(
+              child: BlocBuilder<ContractsBloc, ContractsState>(
+                builder: (context, state) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ContractsFilterTabsWidget(
+                        selectedFilter: state.selectedFilter,
+                        totalCount: state.totalCount,
+                        counts: state.counts,
+                        onFilterChanged: (filter) => ContractsBloc.get(
                           context,
-                          mobilePortrait: 1,
-                          mobileLandscape: 2,
-                          tabletPortrait: 2,
-                          tabletLandscape: 3,
-                        ).toInt(),
-                        mainAxisSpacing: 12.height,
-                        crossAxisSpacing: 12.width,
-                        mainAxisExtent: ResponsiveUtils.types(
-                          context,
-                          mobilePortrait: 120.height,
-                          mobileLandscape: 125.height,
-                          tabletPortrait: 85.height,
-                          tabletLandscape: 120.height,
+                        ).add(ContractsFilterChanged(filter)),
+                      ),
+                      Expanded(
+                        child: LoadingProcess(
+                          status: state.isLoadMore
+                              ? RequestStatus.success
+                              : state.contractsStatus,
+                          errorMsg: AppStrings.somethingWentWrong,
+                          onTapRefresh: () => context.read<ContractsBloc>().add(
+                            const ContractsLoad(),
+                          ),
+                          loader: GridView.builder(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: ResponsiveUtils.types(
+                                    context,
+                                    mobilePortrait: 1,
+                                    mobileLandscape: 2,
+                                    tabletPortrait: 2,
+                                    tabletLandscape: 3,
+                                  ).toInt(),
+                                  mainAxisSpacing: 12.height,
+                                  crossAxisSpacing: 12.width,
+                                  mainAxisExtent: ResponsiveUtils.types(
+                                    context,
+                                    mobilePortrait: 120.height,
+                                    mobileLandscape: 125.height,
+                                    tabletPortrait: 85.height,
+                                    tabletLandscape: 120.height,
+                                  ),
+                                ),
+                            itemCount: 6,
+                            itemBuilder: (context, index) =>
+                                const ContractCardWidget(
+                                  contract: null,
+                                  onTap: null,
+                                ),
+                          ),
+                          emptyMsg: AppStrings.noContracts,
+                          isEmptyList: state.contracts.isEmpty,
+                          child: PaginationView(
+                            key: ValueKey(state.selectedFilter),
+                            pageSize: ContractsBloc.get(context).pageSize,
+                            items: state.contracts,
+                            mainAxisExtent: ResponsiveUtils.types(
+                              context,
+                              mobilePortrait: 120.height,
+                              mobileLandscape: 125.height,
+                              tabletPortrait: 85.height,
+                              tabletLandscape: 120.height,
+                            ),
+                            countItemInRow: ResponsiveUtils.types(
+                              context,
+                              mobilePortrait: 1,
+                              mobileLandscape: 2,
+                              tabletPortrait: 2,
+                              tabletLandscape: 3,
+                            ).toInt(),
+                            requestStatus: state.contractsStatus,
+                            hasReachedMax:
+                                !state.hasNext &&
+                                state.contracts.length >= state.totalCount,
+                            onLoadMore: (page) =>
+                                context.read<ContractsBloc>().add(
+                                  ContractsLoad(page: page, isLoadMore: true),
+                                ),
+                            itemBuilder: (context, index) => ContractCardWidget(
+                              contract: state.contracts[index],
+                              onTap: () =>
+                                  RouterHandler.navigate(
+                                    context,
+                                    AppRouterKeys.contractDetails,
+                                    extra: state.contracts[index].id,
+                                  ).then((_) {
+                                    if (!context.mounted) return;
+                                    context.read<ContractsBloc>().add(
+                                      const ContractsLoad(),
+                                    );
+                                  }),
+                            ),
+                          ),
                         ),
                       ),
-                      itemCount: 6,
-                      itemBuilder: (context, index) =>
-                          const ContractCardWidget(
-                            contract: null,
-                            onTap: null,
-                          ),
-                    ),
-                    emptyMsg: AppStrings.noContracts,
-                    isEmptyList: state.contracts.isEmpty,
-                    child: PaginationView(
-                      key: ValueKey(state.selectedFilter),
-                      pageSize: ContractsBloc.get(context).pageSize,
-                      items: state.contracts,
-                      mainAxisExtent: ResponsiveUtils.types(
-                        context,
-                        mobilePortrait: 120.height,
-                        mobileLandscape: 125.height,
-                        tabletPortrait: 85.height,
-                        tabletLandscape: 120.height,
-                      ),
-                      countItemInRow: ResponsiveUtils.types(
-                        context,
-                        mobilePortrait: 1,
-                        mobileLandscape: 2,
-                        tabletPortrait: 2,
-                        tabletLandscape: 3,
-                      ).toInt(),
-                      requestStatus: state.contractsStatus,
-                      hasReachedMax: !state.hasNext &&
-                          state.contracts.length >= state.totalCount,
-                      onLoadMore: (page) => context.read<ContractsBloc>().add(
-                        ContractsLoad(page: page, isLoadMore: true),
-                      ),
-                      itemBuilder: (context, index) => ContractCardWidget(
-                        contract: state.contracts[index],
-                        onTap: () => RouterHandler.navigate(
-                          context,
-                          AppRouterKeys.contractDetails,
-                          extra: state.contracts[index].id,
-                        ).then((_) {
-                          if (!context.mounted) return;
-                          context.read<ContractsBloc>().add(
-                            const ContractsLoad(),
-                          );
-                        }),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
-      ),
+                    ],
+                  );
+                },
+              ),
+            ),
     );
   }
 }

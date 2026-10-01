@@ -47,9 +47,9 @@ class Step6Buttons extends StatelessWidget {
               )) {
                 return;
               }
-              AddPropertyBloc.get(context).add(
-                const ConfirmSaveEvent(openChooseBrokerOnSuccess: true),
-              );
+              AddPropertyBloc.get(
+                context,
+              ).add(const ConfirmSaveEvent(openChooseBrokerOnSuccess: true));
             },
           ),
         ],

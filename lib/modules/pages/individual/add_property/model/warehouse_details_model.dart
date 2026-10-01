@@ -1,7 +1,6 @@
 import 'property_details_base.dart';
 import 'property_enums.dart';
 
-/// `details` payload for `type: WAREHOUSE`.
 class WarehouseDetailsModel extends PropertyDetailsBase {
   const WarehouseDetailsModel({
     this.height,
@@ -16,25 +15,19 @@ class WarehouseDetailsModel extends PropertyDetailsBase {
     this.condition,
   });
 
-  /// Internal clear height in meters.
   final num? height;
   final int? doorsCount;
 
-  /// One of [PropertyApiEnums.doorTypeNormal] and friends.
   final String? doorType;
 
-  /// One of [PropertyApiEnums.coolingNone] and friends.
   final String? coolingType;
   final bool? hasOffice;
 
-  /// Electrical capacity in kilowatts.
   final num? electricityKW;
 
-  /// One of [PropertyApiEnums.flooringConcrete] and friends.
   final String? floorType;
   final bool? hasYard;
 
-  /// Outdoor yard area in square meters.
   final num? yardArea;
   final String? condition;
 

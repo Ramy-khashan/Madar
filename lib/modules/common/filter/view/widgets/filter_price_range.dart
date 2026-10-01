@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../../../../../core/model/property_filter_model.dart';
- import '../../../../../../core/utils/constants/app_strings.dart';
+import '../../../../../../core/utils/constants/app_strings.dart';
 import '../../../../../../core/utils/functions/common_fun.dart';
 import '../../../../../../core/utils/functions/responsive.dart';
 
@@ -48,7 +48,9 @@ class FilterPriceRange extends StatelessWidget {
           data: SliderTheme.of(context).copyWith(
             activeTrackColor: AppThemeColors.of(context).primaryBrand,
             thumbColor: AppThemeColors.of(context).primaryBrand,
-            inactiveTrackColor: AppThemeColors.of(context).primaryBrand.withValues(alpha: 0.2),
+            inactiveTrackColor: AppThemeColors.of(
+              context,
+            ).primaryBrand.withValues(alpha: 0.2),
             trackHeight: 4,
             rangeThumbShape: const RoundRangeSliderThumbShape(
               enabledThumbRadius: 10,

@@ -33,8 +33,7 @@ class RatePropertyEstimationSuccessDialog extends StatelessWidget {
                   height: 28.width,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border:
-                        Border.all(color: colors.primaryBrand, width: 2),
+                    border: Border.all(color: colors.primaryBrand, width: 2),
                   ),
                   child: Icon(
                     Icons.close,
@@ -74,8 +73,12 @@ class RatePropertyEstimationSuccessDialog extends StatelessWidget {
               text: AppStrings.goHome,
               textSize: 14,
               height: 48.height,
-              onTap: (){
-                RouterHandler.navigate(context,AppRouterKeys.navbar,routerType: RouterType.goName);
+              onTap: () {
+                RouterHandler.navigate(
+                  context,
+                  AppRouterKeys.navbar,
+                  routerType: RouterType.goName,
+                );
               },
             ),
           ],

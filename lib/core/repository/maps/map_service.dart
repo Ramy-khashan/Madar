@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../model/google_map_model.dart';
 
- 
 abstract class MapService {
   Widget buildMap({
     required ValueChanged<PositionModel> onTap,

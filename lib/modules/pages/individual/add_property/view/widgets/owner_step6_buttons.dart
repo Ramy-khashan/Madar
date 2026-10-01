@@ -33,10 +33,7 @@ class OwnerStep6Buttons extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(16.width, 8.height, 16.width, 24.height),
       child: Column(
         children: [
-          AppButton(
-            text: AppStrings.publishAd,
-            onTap: () => _publish(context),
-          ),
+          AppButton(text: AppStrings.publishAd, onTap: () => _publish(context)),
           12.height.toSizedBox,
           AppButton(
             text: AppStrings.saveToMyPropertyFiles,

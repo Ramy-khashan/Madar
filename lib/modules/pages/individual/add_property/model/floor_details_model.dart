@@ -1,7 +1,6 @@
 import 'property_details_base.dart';
 import 'property_enums.dart';
 
-/// `details` payload for `type: FLOOR`.
 class FloorDetailsModel extends PropertyDetailsBase {
   const FloorDetailsModel({
     this.floorType,
@@ -13,7 +12,6 @@ class FloorDetailsModel extends PropertyDetailsBase {
     this.condition,
   });
 
-  /// One of [PropertyApiEnums.floorTypeGround], `floorTypeUpper`, etc.
   final String? floorType;
   final int? bedrooms;
   final int? bathrooms;

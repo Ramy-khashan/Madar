@@ -50,7 +50,7 @@ class RatePropertyMainTabWidget extends StatelessWidget {
                             child: const ImageItem(AppImages.rateIcon),
                           ),
                           SizedBox(width: 8.width),
-            
+
                           Expanded(
                             child: Text(
                               AppStrings.ratePropertyTitle,
@@ -67,7 +67,7 @@ class RatePropertyMainTabWidget extends StatelessWidget {
                       SizedBox(height: 8.height),
                       Text(
                         AppStrings.ratePropertyWhatIsDesc,
-                         style: TextStyle(
+                        style: TextStyle(
                           fontSize: context.responsiveFontScale(16),
                           color: colors.textSecondary,
                           fontFamily: AppConstant.appFont,
@@ -85,7 +85,10 @@ class RatePropertyMainTabWidget extends StatelessWidget {
                   timeSuffix: AppStrings.ratePropertyEstimationCardTime,
                   icon: AppImages.freeRateIcon,
                   colors: colors,
-                  onTap: () => RouterHandler.navigate(context, AppRouterKeys.ratePropertyEstimationForm),
+                  onTap: () => RouterHandler.navigate(
+                    context,
+                    AppRouterKeys.ratePropertyEstimationForm,
+                  ),
                 ),
                 SizedBox(height: 12.height),
                 RateOptionCard(
@@ -96,7 +99,10 @@ class RatePropertyMainTabWidget extends StatelessWidget {
                   timeSuffix: AppStrings.ratePropertyCertifiedCardTime,
                   icon: AppImages.paidRateIcon,
                   colors: colors,
-                  onTap: () => RouterHandler.navigate(context, AppRouterKeys.ratePropertyCertifiedInfo),
+                  onTap: () => RouterHandler.navigate(
+                    context,
+                    AppRouterKeys.ratePropertyCertifiedInfo,
+                  ),
                 ),
               ],
             ),

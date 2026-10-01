@@ -104,11 +104,11 @@ class ContractActionsPart extends StatelessWidget {
         content: Text(AppStrings.contractRejectConfirmation),
         actions: [
           TextButton(
-            onPressed: () =>RouterHandler.pop(context,[false]),
+            onPressed: () => RouterHandler.pop(context, [false]),
             child: Text(AppStrings.cancel),
           ),
           TextButton(
-            onPressed: () => RouterHandler.pop(context,[true]),
+            onPressed: () => RouterHandler.pop(context, [true]),
             child: Text(AppStrings.confirm),
           ),
         ],
@@ -138,10 +138,7 @@ class ContractActionsPart extends StatelessWidget {
     );
   }
 
-  Future<void> _renew(
-    BuildContext context,
-    ContractDetailsState state,
-  ) async {
+  Future<void> _renew(BuildContext context, ContractDetailsState state) async {
     final result = await showDialog<RenewContractResult>(
       context: context,
       builder: (_) => RenewContractDialog(

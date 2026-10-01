@@ -49,13 +49,9 @@ class DioConsumer implements ApiConsumer {
       ..responseType = ResponseType.plain
       ..followRedirects = false
       ..validateStatus = (status) {
-        return status != null  ;
+        return status != null;
       };
   }
-
-  // ---------------------------------------------------------------------------
-  // Public API methods
-  // ---------------------------------------------------------------------------
 
   @override
   Future<Either<String, ApiModel>> globalApiGet(
@@ -251,7 +247,6 @@ class DioConsumer implements ApiConsumer {
       return left('Unexpected error occurred');
     }
   }
- 
 
   @override
   Future<Either<String, ApiModel>> patch(
@@ -463,10 +458,6 @@ class DioConsumer implements ApiConsumer {
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // Response helpers
-  // ---------------------------------------------------------------------------
-
   @override
   Map<String, dynamic> handleResponseAsJson(Response response) {
     final data = response.data;
@@ -583,10 +574,6 @@ class DioConsumer implements ApiConsumer {
     return path == EndPoints.properties ||
         path.endsWith('/${EndPoints.properties}');
   }
-
-  // ---------------------------------------------------------------------------
-  // Logout helper — clears token and navigates to the choose-account screen.
-  // ---------------------------------------------------------------------------
 
   Future<void> _logOut() async {
     if (_isLoggingOut) return;
@@ -712,10 +699,6 @@ class DioConsumer implements ApiConsumer {
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // Header sanitization helpers
-  // ---------------------------------------------------------------------------
-
   Map<String, dynamic>? _sanitizeHeaders(Map<String, dynamic>? headers) {
     if (headers == null) return null;
     final sanitized = Map<String, dynamic>.from(headers);
@@ -733,10 +716,6 @@ class DioConsumer implements ApiConsumer {
     });
     return _sanitizeHeaders(map);
   }
-
-  // ---------------------------------------------------------------------------
-  // Interceptors
-  // ---------------------------------------------------------------------------
 
   InterceptorsWrapper _authInterceptor() {
     return InterceptorsWrapper(
@@ -761,7 +740,9 @@ class DioConsumer implements ApiConsumer {
         if (response.statusCode != StatusCode.unauthorized) {
           return handler.next(response);
         }
-        final retried = await _retryUnauthorizedRequest(response.requestOptions);
+        final retried = await _retryUnauthorizedRequest(
+          response.requestOptions,
+        );
         if (retried != null) {
           return handler.resolve(retried);
         }
@@ -794,7 +775,6 @@ class DioConsumer implements ApiConsumer {
           return handler.reject(e);
         }
 
-        // Network / timeout — show toast and retry up to 3 times.
         if (e.type == DioExceptionType.connectionError ||
             e.error is SocketException ||
             e.type == DioExceptionType.connectionTimeout ||

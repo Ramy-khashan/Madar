@@ -310,7 +310,6 @@ class AuctionDetailsContentWidget extends StatelessWidget {
                                   RouterHandler.navigate(
                                     context,
                                     AppRouterKeys.brokerProperties,
-                                    
                                   );
                                 },
                                 text: AppStrings.viewSellerProfile,

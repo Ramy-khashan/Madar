@@ -40,7 +40,12 @@ class AddBuildingApartmentView extends StatelessWidget {
           child: BlocBuilder<AddBuildingApartmentBloc, AddBuildingApartmentState>(
             builder: (context, state) {
               return ListView(
-                padding: EdgeInsets.fromLTRB(16.width, 12.height, 16.width, 24.height),
+                padding: EdgeInsets.fromLTRB(
+                  16.width,
+                  12.height,
+                  16.width,
+                  24.height,
+                ),
                 children: [
                   if (buildingName.isNotEmpty)
                     Padding(
@@ -64,117 +69,117 @@ class AddBuildingApartmentView extends StatelessWidget {
                     textInputType: TextInputType.text,
                   ),
                   if (!bloc.isShop) ...[
-                  AppTextField(
-                    controller: bloc.areaController,
-                    title: AppStrings.areaSqmRequired,
-                    hint: AppStrings.areaSqmRequired,
-                    textInputType: TextInputType.number,
-                  ),
-                  AppTextField(
-                    controller: bloc.roomsController,
-                    title: AppStrings.numberOfRooms,
-                    hint: AppStrings.numberOfRooms,
-                    textInputType: TextInputType.number,
-                  ),
-                  AppTextField(
-                    controller: bloc.bathroomsController,
-                    title: AppStrings.numberOfBathrooms,
-                    hint: AppStrings.numberOfBathrooms,
-                    textInputType: TextInputType.number,
-                  ),
-                  AppTextField(
-                    controller: bloc.livingRoomsController,
-                    title: AppStrings.numberOfLivingRooms,
-                    hint: AppStrings.numberOfLivingRooms,
-                    textInputType: TextInputType.number,
-                  ),
+                    AppTextField(
+                      controller: bloc.areaController,
+                      title: AppStrings.areaSqmRequired,
+                      hint: AppStrings.areaSqmRequired,
+                      textInputType: TextInputType.number,
+                    ),
+                    AppTextField(
+                      controller: bloc.roomsController,
+                      title: AppStrings.numberOfRooms,
+                      hint: AppStrings.numberOfRooms,
+                      textInputType: TextInputType.number,
+                    ),
+                    AppTextField(
+                      controller: bloc.bathroomsController,
+                      title: AppStrings.numberOfBathrooms,
+                      hint: AppStrings.numberOfBathrooms,
+                      textInputType: TextInputType.number,
+                    ),
+                    AppTextField(
+                      controller: bloc.livingRoomsController,
+                      title: AppStrings.numberOfLivingRooms,
+                      hint: AppStrings.numberOfLivingRooms,
+                      textInputType: TextInputType.number,
+                    ),
                   ],
                   if (AccountRole.isBusiness) ...[
-                  SizedBox(height: 8.height),
-                  Text(
-                    AppStrings.unitStatus,
-                    style: TextStyle(
-                      fontSize: context.responsiveFontScale(13),
-                      fontWeight: FontWeight.w600,
-                      color: colors.textFieldTitle,
-                    ),
-                  ),
-                  SizedBox(height: 8.height),
-                  Row(
-                    children: [
-                      ApartmentStatusChip(
-                        label: AppStrings.vacantStatus,
-                        selected: !state.isRented,
-                        onTap: () => bloc.add(
-                          const AddApartmentStatusChanged('VACANT'),
-                        ),
+                    SizedBox(height: 8.height),
+                    Text(
+                      AppStrings.unitStatus,
+                      style: TextStyle(
+                        fontSize: context.responsiveFontScale(13),
+                        fontWeight: FontWeight.w600,
+                        color: colors.textFieldTitle,
                       ),
-                      SizedBox(width: 8.width),
-                      ApartmentStatusChip(
-                        label: AppStrings.rentedStatus,
-                        selected: state.isRented,
-                        onTap: () => bloc.add(
-                          const AddApartmentStatusChanged('RENTED'),
+                    ),
+                    SizedBox(height: 8.height),
+                    Row(
+                      children: [
+                        ApartmentStatusChip(
+                          label: AppStrings.vacantStatus,
+                          selected: !state.isRented,
+                          onTap: () => bloc.add(
+                            const AddApartmentStatusChanged('VACANT'),
+                          ),
                         ),
+                        SizedBox(width: 8.width),
+                        ApartmentStatusChip(
+                          label: AppStrings.rentedStatus,
+                          selected: state.isRented,
+                          onTap: () => bloc.add(
+                            const AddApartmentStatusChanged('RENTED'),
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (state.isRented) ...[
+                      SizedBox(height: 16.height),
+                      AppTextField(
+                        controller: bloc.tenantNameController,
+                        title: AppStrings.tenantNameLabel,
+                        hint: AppStrings.tenantNameLabel,
+                      ),
+                      PhoneNumberField(
+                        key: ValueKey(
+                          'add-tenant-phone-${bloc.tenantPhoneController.text}',
+                        ),
+                        initialCountryCode: 'SA',
+                        initialValue: bloc.tenantPhoneController.text,
+                        title: AppStrings.phoneNumber,
+                        hint: AppStrings.enterPhoneNumber,
+                        onChanged: (val) {
+                          bloc.tenantPhoneController.text = val.completeNumber;
+                        },
+                      ),
+                      AppTextField(
+                        controller: bloc.rentController,
+                        title: AppStrings.yearlyRent,
+                        hint: AppStrings.yearlyRent,
+                        textInputType: TextInputType.number,
+                        isPrice: true,
+                      ),
+                      SizedBox(height: 8.height),
+                      ApartmentCalendarToggle(
+                        isHijri: state.isHijri,
+                        onChanged: (hijri) =>
+                            bloc.add(AddApartmentCalendarChanged(hijri)),
+                      ),
+                      SizedBox(height: 8.height),
+                      AppTextField(
+                        controller: bloc.startDateController,
+                        title: AppStrings.contractStartLabel,
+                        hint: state.isHijri
+                            ? AppStrings.enterHijriDateHint
+                            : AppStrings.deedDate,
+                        isReadOnly: true,
+                        prefixIcon: Icons.calendar_today_rounded,
+                        onTapField: () =>
+                            bloc.requestDate(context, isStart: true),
+                      ),
+                      AppTextField(
+                        controller: bloc.endDateController,
+                        title: AppStrings.contractEndLabel,
+                        hint: state.isHijri
+                            ? AppStrings.enterHijriDateHint
+                            : AppStrings.deedDate,
+                        isReadOnly: true,
+                        prefixIcon: Icons.calendar_today_rounded,
+                        onTapField: () =>
+                            bloc.requestDate(context, isStart: false),
                       ),
                     ],
-                  ),
-                  if (state.isRented) ...[
-                    SizedBox(height: 16.height),
-                    AppTextField(
-                      controller: bloc.tenantNameController,
-                      title: AppStrings.tenantNameLabel,
-                      hint: AppStrings.tenantNameLabel,
-                    ),
-                    PhoneNumberField(
-                      key: ValueKey(
-                        'add-tenant-phone-${bloc.tenantPhoneController.text}',
-                      ),
-                      initialCountryCode: 'SA',
-                      initialValue: bloc.tenantPhoneController.text,
-                      title: AppStrings.phoneNumber,
-                      hint: AppStrings.enterPhoneNumber,
-                      onChanged: (val) {
-                        bloc.tenantPhoneController.text = val.completeNumber;
-                      },
-                    ),
-                    AppTextField(
-                      controller: bloc.rentController,
-                      title: AppStrings.yearlyRent,
-                      hint: AppStrings.yearlyRent,
-                      textInputType: TextInputType.number,
-                      isPrice: true,
-                    ),
-                    SizedBox(height: 8.height),
-                    ApartmentCalendarToggle(
-                      isHijri: state.isHijri,
-                      onChanged: (hijri) =>
-                          bloc.add(AddApartmentCalendarChanged(hijri)),
-                    ),
-                    SizedBox(height: 8.height),
-                    AppTextField(
-                      controller: bloc.startDateController,
-                      title: AppStrings.contractStartLabel,
-                      hint: state.isHijri
-                          ? AppStrings.enterHijriDateHint
-                          : AppStrings.deedDate,
-                      isReadOnly: true,
-                      prefixIcon: Icons.calendar_today_rounded,
-                      onTapField: () =>
-                          bloc.requestDate(context, isStart: true),
-                    ),
-                    AppTextField(
-                      controller: bloc.endDateController,
-                      title: AppStrings.contractEndLabel,
-                      hint: state.isHijri
-                          ? AppStrings.enterHijriDateHint
-                          : AppStrings.deedDate,
-                      isReadOnly: true,
-                      prefixIcon: Icons.calendar_today_rounded,
-                      onTapField: () =>
-                          bloc.requestDate(context, isStart: false),
-                    ),
-                  ],
                   ],
                   if (state.errorMessage != null &&
                       state.errorMessage!.isNotEmpty) ...[

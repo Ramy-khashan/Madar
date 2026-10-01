@@ -235,10 +235,9 @@ final GoRouter appRouter = GoRouter(
         search = (extra['search'] as String?)?.trim() ?? '';
       }
       return BlocProvider(
-        create: (_) => PropertiesBloc(
-          initialFilter: filter,
-          initialSearch: search,
-        )..add(const PropertiesLoad()),
+        create: (_) =>
+            PropertiesBloc(initialFilter: filter, initialSearch: search)
+              ..add(const PropertiesLoad()),
         child: const PropertiesListingScreen(),
       );
     }),
@@ -278,8 +277,9 @@ final GoRouter appRouter = GoRouter(
     getRouteInstance(
       AppRouterKeys.myPropertyDetails,
       (state) => BlocProvider(
-        create: (_) => PropertyFileBloc()
-          ..add(PropertyFileLoad(propertyId: state.extra as String? ?? '')),
+        create: (_) =>
+            PropertyFileBloc()
+              ..add(PropertyFileLoad(propertyId: state.extra as String? ?? '')),
         child: const PropertyFileScreen(),
       ),
     ),
@@ -372,7 +372,6 @@ final GoRouter appRouter = GoRouter(
       (state) =>
           RatePropertyCertifiedFormScreen(bloc: RatePropertyCertifiedBloc()),
     ),
-    //Auction routes
     getRouteInstance(
       AppRouterKeys.auctionNavbar,
       (state) => BlocProvider(
@@ -474,13 +473,6 @@ final GoRouter appRouter = GoRouter(
         ),
       ),
     ),
-    // getRouteInstance(
-    //   AppRouterKeys.ownerProperties,
-    //   (state) => BlocProvider(
-    //     create: (_) => OwnerPropertiesBloc()..add(const OwnerPropertiesLoad()),
-    //     child: const OwnerPropertiesScreen(),
-    //   ),
-    // ),
     getRouteInstance(
       AppRouterKeys.propertyLocationMap,
       (state) =>

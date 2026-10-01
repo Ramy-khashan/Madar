@@ -35,5 +35,11 @@ class InsuranceCompanyModel extends Equatable {
   });
 
   @override
-  List<Object?> get props => [id, name, rating, processingHours, discountPercent];
+  List<Object?> get props => [
+    id,
+    name,
+    rating,
+    processingHours,
+    discountPercent,
+  ];
 }

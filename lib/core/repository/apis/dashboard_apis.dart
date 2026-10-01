@@ -12,13 +12,11 @@ class DashboardApis {
   static Future<Either<String, Map<String, dynamic>>> fetch(
     String path, {
     String? period,
-    // String? scope,
     List<String>? propertyTypes,
   }) async {
     try {
       final query = <String, dynamic>{};
       if (period != null && period.isNotEmpty) query['period'] = period;
-      // if (scope != null && scope.isNotEmpty) query['scope'] = scope;
       if (propertyTypes != null && propertyTypes.isNotEmpty) {
         query['type'] = propertyTypes.join(',');
       }
@@ -42,36 +40,26 @@ class DashboardApis {
 
   static Future<Either<String, Map<String, dynamic>>> overview({
     required String period,
-    // String? scope,
-  }) => fetch(
-    EndPoints.financialReports,
-    period: period,
-    // scope: scope,
-  );
+  }) => fetch(EndPoints.financialReports, period: period);
 
   static Future<Either<String, Map<String, dynamic>>> revenues({
     required String period,
-    // String? scope,
   }) => fetch(EndPoints.dashboardRevenues, period: period /* , scope: scope */);
 
   static Future<Either<String, Map<String, dynamic>>> expenses({
     required String period,
-    // String? scope,
   }) => fetch(EndPoints.dashboardExpenses, period: period /* , scope: scope */);
 
   static Future<Either<String, Map<String, dynamic>>> profitLoss({
     String? period,
-    // String? scope,
   }) => fetch(EndPoints.netProfitLoss, period: period /* , scope: scope */);
 
   static Future<Either<String, Map<String, dynamic>>> performance({
     required String period,
-    // String? scope,
     List<String>? propertyTypes,
   }) => fetch(
     EndPoints.performanceReports,
     period: period,
-    // scope: scope,
     propertyTypes: propertyTypes,
   );
 

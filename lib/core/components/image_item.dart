@@ -37,7 +37,7 @@ class ImageItem extends StatelessWidget {
               colorFilter: color != null
                   ? ColorFilter.mode(color!, BlendMode.srcIn)
                   : null,
-             )
+            )
           : Image.asset(
               img,
               width: width,

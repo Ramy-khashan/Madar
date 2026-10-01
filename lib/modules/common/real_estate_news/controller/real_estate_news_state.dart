@@ -4,25 +4,23 @@ class RealEstateNewsState extends Equatable {
   const RealEstateNewsState({
     this.newsStatus = RequestStatus.init,
     this.items = const [],
-     this.errorMsg = '',
+    this.errorMsg = '',
   });
 
   final RequestStatus newsStatus;
   final List<RealEstateNewsItemModel> items;
-   final String errorMsg;
-
-  
+  final String errorMsg;
 
   RealEstateNewsState copyWith({
     RequestStatus? newsStatus,
     List<RealEstateNewsItemModel>? items,
-    String  ? selectedCategory,
+    String? selectedCategory,
     String? errorMsg,
   }) {
     return RealEstateNewsState(
       newsStatus: newsStatus ?? this.newsStatus,
       items: items ?? this.items,
-       errorMsg: errorMsg ?? this.errorMsg,
+      errorMsg: errorMsg ?? this.errorMsg,
     );
   }
 

@@ -9,11 +9,7 @@ import '../../../../business/real_estate_development/business_project_details/mo
 import 'project_status_badge.dart';
 
 class ProjectSummaryCard extends StatelessWidget {
-  const ProjectSummaryCard({
-    super.key,
-      this.project,
-    required this.tc,
-  });
+  const ProjectSummaryCard({super.key, this.project, required this.tc});
   final RealStateProjectModel? project;
   final AppThemeColors tc;
 

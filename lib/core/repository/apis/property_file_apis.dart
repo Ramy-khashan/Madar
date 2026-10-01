@@ -41,7 +41,7 @@ class PropertyFileApis {
     try {
       final response = await sl.get<ApiConsumer>().put(
         EndPoints.tenancyUpdate(propertyId),
-        body:   tenancy,
+        body: tenancy,
       );
       return response.fold(Left.new, (success) {
         final data = success.response['data'];
@@ -79,7 +79,9 @@ class PropertyFileApis {
             PropertyDetailsModel.fromJson(Map<String, dynamic>.from(data)),
           );
         }
-        return Right(PropertyDetailsModel(propertyId: propertyId, title: title));
+        return Right(
+          PropertyDetailsModel(propertyId: propertyId, title: title),
+        );
       });
     } catch (e) {
       printState('updateProperty error: $e');
@@ -133,9 +135,7 @@ class PropertyFileApis {
           jsonEncode(
             expenses
                 .where((e) => !e.isRemote)
-                .map(
-                  (e) => {'type': e.description, 'amount': e.amount},
-                )
+                .map((e) => {'type': e.description, 'amount': e.amount})
                 .toList(),
           ),
         ),
@@ -144,10 +144,7 @@ class PropertyFileApis {
         form.files.add(
           MapEntry(
             'file',
-            await MultipartFile.fromFile(
-              path,
-              filename: path.split('/').last,
-            ),
+            await MultipartFile.fromFile(path, filename: path.split('/').last),
           ),
         );
       }
@@ -190,7 +187,8 @@ class PropertyFileApis {
     }
   }
 
-  static Future<Either<String, BuildingApartmentModel>> createBuildingApartment({
+  static Future<Either<String, BuildingApartmentModel>>
+  createBuildingApartment({
     required String buildingId,
     required Map<String, dynamic> body,
   }) async {
@@ -267,12 +265,9 @@ class PropertyFileApis {
     }
   }
 
-  static Future<Either<String, BuildingApartmentModel>> updateBuildingApartment({
+  static Future<Either<String, BuildingApartmentModel>>
+  updateBuildingApartment({
     required String propertyId,
     required Map<String, dynamic> body,
-  }) => updateBuildingUnit(
-    propertyId: propertyId,
-    body: body,
-    isShop: false,
-  );
+  }) => updateBuildingUnit(propertyId: propertyId, body: body, isShop: false);
 }

@@ -4,9 +4,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../core/utils/constants/app_enums.dart'; 
+import '../../../../../core/utils/constants/app_enums.dart';
 import '../../property_details/model/property_details_model.dart';
- 
+
 part 'my_property_details_event.dart';
 part 'my_property_details_state.dart';
 
@@ -26,22 +26,17 @@ class MyPropertyDetailsBloc
   static MyPropertyDetailsBloc get(BuildContext context) =>
       BlocProvider.of<MyPropertyDetailsBloc>(context);
 
-  // ── Handlers ──────────────────────────────────────────────────────────────
-
   Future<void> _onLoad(
     MyPropertyDetailsLoad event,
     Emitter<MyPropertyDetailsState> emit,
   ) async {
     emit(const MyPropertyDetailsState(getDetailsStatus: RequestStatus.loading));
-     }
+  }
 
   void _onToggleBookmark(
     MyPropertyDetailsToggleBookmark event,
     Emitter<MyPropertyDetailsState> emit,
-  ) {
-    
-    // emit(current.copyWith(property: updated));
-  }
+  ) {}
 
   void _onImageViewStarted(
     MyPropertyDetailsImageViewStarted event,
@@ -49,8 +44,9 @@ class MyPropertyDetailsBloc
   ) {
     if (event.imageCount <= 1) return;
     _autoScrollSubscription?.cancel();
-    _autoScrollSubscription = Stream.periodic(const Duration(seconds: 3))
-        .listen((_) => add(const _MyPropertyDetailsAutoScrollTick()));
+    _autoScrollSubscription = Stream.periodic(
+      const Duration(seconds: 3),
+    ).listen((_) => add(const _MyPropertyDetailsAutoScrollTick()));
   }
 
   void _onPageChanged(

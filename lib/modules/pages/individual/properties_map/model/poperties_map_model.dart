@@ -1,14 +1,10 @@
 import '../../property_details/model/property_details_model.dart';
 
-/// Response model for GET `properties/map?latitude=..&longitude=..&page=..`
 class PropertiesMapResponseModel {
   final List<PropertyDetailsModel> properties;
   final PropertiesMapPagination? pagination;
 
-  const PropertiesMapResponseModel({
-    required this.properties,
-    this.pagination,
-  });
+  const PropertiesMapResponseModel({required this.properties, this.pagination});
 
   factory PropertiesMapResponseModel.fromJson(Map<String, dynamic> json) {
     final data = json['data'] is Map
@@ -19,9 +15,8 @@ class PropertiesMapResponseModel {
         ? raw
               .whereType<Map>()
               .map(
-                (e) => PropertyDetailsModel.fromJson(
-                  Map<String, dynamic>.from(e),
-                ),
+                (e) =>
+                    PropertyDetailsModel.fromJson(Map<String, dynamic>.from(e)),
               )
               .toList()
         : <PropertyDetailsModel>[];
