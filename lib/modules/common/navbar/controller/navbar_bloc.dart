@@ -50,9 +50,17 @@ class NavbarBloc extends Bloc<NavbarEvent, NavbarState> {
     emit(
       state.copyWith(
         navbarItems: AccountRole.isIndividual
-            ? buildIndividualItems(nextRefresh)
-            : buildBusinessItems(nextRefresh),
-        selectedItem: resetToHome ? 0 : state.selectedItem,
+            ? buildIndividualItems(
+                nextRefresh,
+                resetToHome ? 0 : state.selectedItem,
+              )
+            : buildBusinessItems(
+                nextRefresh,
+                resetToHome ? 0 : state.selectedItem,
+              ),
+        selectedItem: resetToHome
+            ? 0
+            : state.selectedItem.clamp(0, 4),
         refreshId: nextRefresh,
       ),
     );
@@ -65,12 +73,15 @@ class NavbarBloc extends Bloc<NavbarEvent, NavbarState> {
     emit(state.copyWith(selectedItem: event.selectedItem));
   }
 
-  static List<NavbarModel> buildIndividualItems(int refreshId) => [
+  static List<NavbarModel> buildIndividualItems(
+    int refreshId,
+    int selectedItem,
+  ) => [
     NavbarModel(
       title: 'home',
       icon: AppImages.homeIcon,
       screen: BlocProvider(
-        key: ValueKey('individual_home_$refreshId'),
+        key: ValueKey(_tabKey('individual_home', 0, selectedItem, refreshId)),
         create: (context) =>
             IndividualHomeBloc()..add(const IndividualHomeLoad()),
         child: const IndividualHomeView(),
@@ -80,7 +91,7 @@ class NavbarBloc extends Bloc<NavbarEvent, NavbarState> {
       title: 'chat',
       icon: AppImages.chatIcon,
       screen: BlocProvider(
-        key: ValueKey('individual_chat_$refreshId'),
+        key: ValueKey(_tabKey('individual_chat', 1, selectedItem, refreshId)),
         create: (context) =>
             ConversationsBloc()..add(const ConversationsLoad()),
         child: const ConversationsScreen(),
@@ -91,7 +102,7 @@ class NavbarBloc extends Bloc<NavbarEvent, NavbarState> {
       title: 'documents',
       icon: AppImages.documentsIcon,
       screen: BlocProvider(
-        key: ValueKey('individual_docs_$refreshId'),
+        key: ValueKey(_tabKey('individual_docs', 3, selectedItem, refreshId)),
         create: (_) => ContractsBloc()..add(const ContractsLoad()),
         child: const ContractsScreen(),
       ),
@@ -100,18 +111,23 @@ class NavbarBloc extends Bloc<NavbarEvent, NavbarState> {
       title: 'account',
       icon: AppImages.accountIcon,
       screen: BlocProvider(
-        key: ValueKey('individual_account_$refreshId'),
+        key: ValueKey(
+          _tabKey('individual_account', 4, selectedItem, refreshId),
+        ),
         create: (_) => SettingsBloc()..add(const SettingsLoad()),
         child: const SettingsScreen(),
       ),
     ),
   ];
-  static List<NavbarModel> buildBusinessItems(int refreshId) => [
+  static List<NavbarModel> buildBusinessItems(
+    int refreshId,
+    int selectedItem,
+  ) => [
     NavbarModel(
       title: 'home',
       icon: AppImages.homeIcon,
       screen: BlocProvider(
-        key: ValueKey('business_home_$refreshId'),
+        key: ValueKey(_tabKey('business_home', 0, selectedItem, refreshId)),
         create: (context) =>
             BusinessHomeBloc()..add(const BusinessHomeItemsEvent()),
         child: const BusinessHomeScreen(),
@@ -121,7 +137,7 @@ class NavbarBloc extends Bloc<NavbarEvent, NavbarState> {
       title: 'chat',
       icon: AppImages.chatIcon,
       screen: BlocProvider(
-        key: ValueKey('business_chat_$refreshId'),
+        key: ValueKey(_tabKey('business_chat', 1, selectedItem, refreshId)),
         create: (context) =>
             ConversationsBloc()..add(const ConversationsLoad()),
         child: const ConversationsScreen(),
@@ -132,7 +148,7 @@ class NavbarBloc extends Bloc<NavbarEvent, NavbarState> {
       title: 'documents',
       icon: AppImages.documentsIcon,
       screen: BlocProvider(
-        key: ValueKey('business_docs_$refreshId'),
+        key: ValueKey(_tabKey('business_docs', 3, selectedItem, refreshId)),
         create: (_) => ContractsBloc()..add(const ContractsLoad()),
         child: const ContractsScreen(),
       ),
@@ -141,7 +157,7 @@ class NavbarBloc extends Bloc<NavbarEvent, NavbarState> {
       title: 'account',
       icon: AppImages.accountIcon,
       screen: BlocProvider(
-        key: ValueKey('business_account_$refreshId'),
+        key: ValueKey(_tabKey('business_account', 4, selectedItem, refreshId)),
         create: (_) => SettingsBloc()
           ..add(const SettingsLoad())
           ..add(const SettingsGetSavedCount()),
@@ -149,6 +165,13 @@ class NavbarBloc extends Bloc<NavbarEvent, NavbarState> {
       ),
     ),
   ];
+
+  static String _tabKey(
+    String name,
+    int index,
+    int selectedItem,
+    int refreshId,
+  ) => '$name${index == selectedItem ? refreshId : 0}';
 
   @override
   Future<void> close() {

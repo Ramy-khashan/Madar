@@ -58,19 +58,35 @@ class MyPropertiesBloc extends Bloc<MyPropertiesEvent, MyPropertiesState> {
           );
         },
         (successResponse) {
-          final List<MyPropertiesModel> properties = [...state.properties];
-          final dataArray = successResponse.response['data'] as List;
-
-          for (var element in dataArray) {
-            properties.add(MyPropertiesModel.fromJson(element));
+          final rawData = successResponse.response['data'];
+          if (rawData is! List) {
+            emit(
+              state.copyWith(
+                propertiesStatus: RequestStatus.failed,
+                errorMsg: AppStrings.somethingWentWrong,
+              ),
+            );
+            return;
           }
-
-          final pagination = successResponse.response['pagination'] as Map;
+          final List<MyPropertiesModel> properties = event.isLoadMore
+              ? [...state.properties]
+              : [];
+          for (final element in rawData) {
+            if (element is Map) {
+              properties.add(
+                MyPropertiesModel.fromJson(Map<String, dynamic>.from(element)),
+              );
+            }
+          }
+          final pagination = successResponse.response['pagination'];
+          final total = pagination is Map
+              ? (pagination['total'] as num?)?.toInt() ?? properties.length
+              : properties.length;
           emit(
             state.copyWith(
               propertiesStatus: RequestStatus.success,
               properties: properties,
-              totalCount: pagination['total'] as int? ?? 0,
+              totalCount: total,
             ),
           );
         },

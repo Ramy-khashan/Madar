@@ -13,6 +13,9 @@ class VideoSlideViewState {
 class VideoSlideCubit extends Cubit<VideoSlideViewState> {
   VideoSlideCubit() : super(const VideoSlideViewState());
 
+  bool? _appliedActive;
+  bool? get appliedActive => _appliedActive;
+
   Future<void> toggle({required String? url, required bool isActive}) async {
     if (url == null || url.isEmpty) return;
     VideoPlayerController? initializing;
@@ -24,25 +27,19 @@ class VideoSlideCubit extends Cubit<VideoSlideViewState> {
           await initializing.dispose();
           return;
         }
-        initializing.addListener(() {
-          if (!isClosed && state.controller != null) {
-            emit(
-              VideoSlideViewState(controller: state.controller, ready: true),
-            );
-          }
-        });
         await initializing.setLooping(true);
         if (isActive) await initializing.play();
         emit(VideoSlideViewState(controller: initializing, ready: true));
         return;
       }
-      if (state.controller!.value.isPlaying) {
-        await state.controller!.pause();
-      } else {
-        await state.controller!.play();
+      final controller = state.controller!;
+      if (controller.value.isPlaying) {
+        await controller.pause();
+      } else if (isActive) {
+        await controller.play();
       }
       if (!isClosed) {
-        emit(VideoSlideViewState(controller: state.controller, ready: true));
+        emit(VideoSlideViewState(controller: controller, ready: true));
       }
     } catch (_) {
       await initializing?.dispose();
@@ -52,8 +49,15 @@ class VideoSlideCubit extends Cubit<VideoSlideViewState> {
     }
   }
 
-  void pauseIfInactive(bool isActive) {
-    if (!isActive) state.controller?.pause();
+  void syncActive(bool isActive) {
+    if (_appliedActive == isActive) return;
+    _appliedActive = isActive;
+    final controller = state.controller;
+    if (isActive || controller == null || !controller.value.isPlaying) return;
+    controller.pause();
+    if (!isClosed) {
+      emit(VideoSlideViewState(controller: controller, ready: state.ready));
+    }
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../../../../../../config/theme/app_theme_colors.dart';
 import '../../controller/phase_details_bloc.dart';
@@ -20,17 +21,23 @@ class ImageTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+    final cachePx = (MediaQuery.sizeOf(context).width / 3 * pixelRatio)
+        .round()
+        .clamp(64, 800);
     return Stack(
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: isReadOnly || path.startsWith('http')
-              ? Image.network(
-                  path,
+              ? CachedNetworkImage(
+                  imageUrl: path,
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: double.infinity,
-                  errorBuilder: (_, _, _) => Container(
+                  memCacheWidth: cachePx,
+                  memCacheHeight: cachePx,
+                  errorWidget: (_, _, _) => Container(
                     color: tc.borderColor.withValues(alpha: 0.3),
                     child: Icon(Icons.image_rounded, color: tc.textSecondary),
                   ),
@@ -40,6 +47,8 @@ class ImageTile extends StatelessWidget {
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: double.infinity,
+                  cacheWidth: cachePx,
+                  cacheHeight: cachePx,
                   errorBuilder: (_, _, _) => Container(
                     color: tc.borderColor.withValues(alpha: 0.3),
                     child: Icon(Icons.image_rounded, color: tc.textSecondary),

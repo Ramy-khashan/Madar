@@ -23,8 +23,18 @@ class ImageItem extends StatelessWidget {
   final Color? color;
   final BorderRadius? borderRadius;
 
+  int? _decodePx(double? logical, double pixelRatio) {
+    if (logical == null || !logical.isFinite || logical <= 0) return null;
+    return (logical * pixelRatio).round().clamp(1, 1600);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+    final memCacheWidth = _decodePx(width, pixelRatio);
+    final memCacheHeight = memCacheWidth == null
+        ? _decodePx(height, pixelRatio)
+        : null;
     Widget imageWidget;
 
     if (img.isNotEmpty && img.contains('assets/')) {
@@ -42,12 +52,8 @@ class ImageItem extends StatelessWidget {
               img,
               width: width,
               height: height,
-              cacheHeight: (height != null && height!.isFinite)
-                  ? height!.toInt()
-                  : null,
-              cacheWidth: (width != null && width!.isFinite)
-                  ? width!.toInt()
-                  : null,
+              cacheHeight: memCacheHeight,
+              cacheWidth: memCacheWidth,
               fit: fit,
               color: color,
             );
@@ -58,6 +64,8 @@ class ImageItem extends StatelessWidget {
         width: width,
         fit: fit,
         color: color,
+        memCacheWidth: memCacheWidth,
+        memCacheHeight: memCacheHeight,
         errorListener: (_) {},
         placeholder: (context, url) =>
             SizedBox(width: width, height: height, child: const LoadingItem()),

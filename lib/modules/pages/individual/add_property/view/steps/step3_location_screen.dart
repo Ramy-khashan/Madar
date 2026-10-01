@@ -169,22 +169,26 @@ class AddPropertyStep3Screen extends StatelessWidget {
                             errorText:
                                 state.fieldErrors[AddPropertyField.deedDate],
                             onTapField: () async {
+                              if (!context.mounted) return;
                               final now = DateTime.now();
                               final isHijri = state.model.dateType == 'hijri';
-                              final picked = isHijri
-                                  ? await showHijriDatePicker(
-                                      context: context,
-                                      initialDate: bloc.deedPickedAt ?? now,
-                                      firstDate: DateTime(1950),
-                                      lastDate: now,
-                                    )
-                                  : await showDatePicker(
-                                      context: context,
-                                      initialDate: bloc.deedPickedAt ?? now,
-                                      firstDate: DateTime(1950),
-                                      lastDate: now,
-                                    );
-                              if (picked == null) return;
+                              final DateTime? picked;
+                              if (isHijri) {
+                                picked = await showHijriDatePicker(
+                                  context: context,
+                                  initialDate: bloc.deedPickedAt ?? now,
+                                  firstDate: DateTime(1950),
+                                  lastDate: now,
+                                );
+                              } else {
+                                picked = await showDatePicker(
+                                  context: context,
+                                  initialDate: bloc.deedPickedAt ?? now,
+                                  firstDate: DateTime(1950),
+                                  lastDate: now,
+                                );
+                              }
+                              if (!context.mounted || picked == null) return;
                               bloc.add(DeedDatePickedEvent(picked));
                             },
                           ),

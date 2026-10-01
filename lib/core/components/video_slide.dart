@@ -28,7 +28,12 @@ class VideoSlide extends StatelessWidget {
       child: BlocBuilder<VideoSlideCubit, VideoSlideViewState>(
         builder: (context, state) {
           final cubit = context.read<VideoSlideCubit>();
-          cubit.pauseIfInactive(isActive);
+          final active = isActive;
+          if (cubit.appliedActive != active) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!cubit.isClosed) cubit.syncActive(active);
+            });
+          }
           final colors = AppThemeColors.of(context);
           final controller = state.controller;
           final playing = state.playing;

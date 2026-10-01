@@ -62,10 +62,10 @@ class MyWishlistScreen extends StatelessWidget {
                                   mainAxisSpacing: 8.height,
                                   mainAxisExtent: ResponsiveUtils.types(
                                     context,
-                                    mobilePortrait: 395.height,
-                                    mobileLandscape: 420.height,
-                                    tabletPortrait: 375.height,
-                                    tabletLandscape: 435.height,
+                                    mobilePortrait: 405.height,
+                                    mobileLandscape: 430.height,
+                                    tabletPortrait: 395.height,
+                                    tabletLandscape: 445.height,
                                   ),
                                 ),
                             itemBuilder: (context, index) {
